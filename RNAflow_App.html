@@ -71,141 +71,175 @@ body { font-family: var(--font); background: var(--bg); color: var(--text); font
 .server-banner-title { font-weight: 600; color: var(--yellow); font-size: 0.9em; margin-bottom: 10px; }
 .server-banner pre { background: #0d1117; border-radius: 8px; padding: 10px 14px; font-family: var(--mono); font-size: 0.82em; color: var(--green); border: 1px solid var(--border); margin: 8px 0; }
 
-/* ── MODE ACCORDION PANELS ── */
-.mode-accordion-bar {
+
+/* ── COMPACT SETTINGS BAR ── */
+.settings-bar {
   background: var(--bg2);
-  border-bottom: 2px solid var(--border);
-  display: flex;
-  flex-direction: column;
-  flex-shrink: 0;
-}
-
-/* Each accordion panel */
-.acc-panel {
   border-bottom: 1px solid var(--border);
-  overflow: hidden;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 50;
 }
-.acc-panel:last-child { border-bottom: none; }
-
-/* Clickable header row */
-.acc-header {
+.settings-row {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 11px 20px;
+  padding: 0 20px;
+  height: 48px;
+  gap: 0;
+}
+.sbar-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1;
+  min-width: 0;
+  padding: 0 16px 0 0;
+}
+.sbar-icon { font-size: 1em; flex-shrink: 0; }
+.sbar-content { flex: 1; min-width: 0; }
+.sbar-label {
+  font-size: 0.65em;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  color: var(--text3);
+  font-weight: 600;
+  line-height: 1;
+  margin-bottom: 3px;
+}
+.sbar-select {
+  width: 100%;
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--text);
+  font-family: var(--fb);
+  font-size: 0.82em;
+  padding: 4px 8px;
   cursor: pointer;
-  user-select: none;
-  transition: background 0.12s;
-  background: var(--bg2);
+  transition: border-color 0.15s;
+  outline: none;
 }
-.acc-header:hover { background: rgba(255,255,255,0.03); }
-.acc-header.open  { background: rgba(255,255,255,0.025); }
+.sbar-select:hover, .sbar-select:focus { border-color: var(--border2); }
+.sbar-select option, .sbar-select optgroup { background: var(--bg2); }
+.sbar-help {
+  flex-shrink: 0;
+  width: 22px; height: 22px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background: var(--bg3);
+  color: var(--text3);
+  font-size: 0.72em;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s;
+}
+.sbar-help:hover { border-color: var(--green); color: var(--green); background: rgba(63,185,80,0.1); }
+.sbar-help.active { border-color: var(--green); color: var(--green); background: rgba(63,185,80,0.15); }
+.sbar-divider {
+  width: 1px; height: 28px;
+  background: var(--border);
+  flex-shrink: 0;
+  margin: 0 16px 0 0;
+}
 
-.acc-header-icon { font-size: 1em; flex-shrink: 0; }
-.acc-header-title {
-  font-weight: 600; font-size: 0.88em; color: var(--text); flex: 1;
-}
-.acc-header-subtitle { font-size: 0.75em; color: var(--text3); }
-.acc-header-badge {
-  font-size: 0.68em; font-weight: 600; padding: 2px 9px;
-  border-radius: 10px; flex-shrink: 0;
-}
-.acc-header-badge.green  { background: rgba(63,185,80,0.15);  color: var(--green); border: 1px solid rgba(63,185,80,0.3); }
-.acc-header-badge.blue   { background: rgba(88,166,255,0.15); color: var(--blue);  border: 1px solid rgba(88,166,255,0.3); }
-.acc-header-badge.yellow { background: rgba(227,179,65,0.15); color: var(--yellow);border: 1px solid rgba(227,179,65,0.3); }
-.acc-header-badge.none   { display: none; }
-.acc-chevron { color: var(--text3); font-size: 0.72em; transition: transform 0.22s; flex-shrink: 0; }
-.acc-header.open .acc-chevron { transform: rotate(90deg); }
-
-/* Expandable body */
-.acc-body {
+/* Detail panel — slides down from settings bar */
+.sbar-detail {
   max-height: 0;
   overflow: hidden;
-  transition: max-height 0.35s cubic-bezier(0.4,0,0.2,1);
+  transition: max-height 0.4s cubic-bezier(0.4,0,0.2,1);
   background: var(--bg);
   border-top: 0px solid var(--border);
 }
-.acc-body.open {
-  max-height: 700px;
+.sbar-detail.open {
+  max-height: 600px;
   border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
 }
-.acc-body-inner { padding: 20px 24px; }
+.sbar-detail-inner {
+  padding: 20px 24px;
+  position: relative;
+}
+.sbar-detail-close {
+  position: absolute; top: 16px; right: 20px;
+  width: 28px; height: 28px; border-radius: 50%;
+  background: var(--bg3); border: 1px solid var(--border);
+  color: var(--text3); cursor: pointer; display: flex;
+  align-items: center; justify-content: center; font-size: 0.9em;
+  transition: all 0.15s;
+}
+.sbar-detail-close:hover { border-color: var(--red); color: var(--red); }
+.sbar-detail-title {
+  font-family: var(--fh);
+  font-weight: 700;
+  font-size: 1em;
+  color: var(--text);
+  margin-bottom: 2px;
+  padding-right: 40px;
+}
 
-/* Mode cards inside accordion */
-.mode-cards-row { display: flex; gap: 12px; margin-bottom: 16px; }
-.mode-card {
-  flex: 1; border-radius: 10px; padding: 16px 18px;
-  display: flex; align-items: flex-start; gap: 14px;
-  cursor: pointer; border: 1.5px solid var(--border);
-  transition: all 0.15s; background: var(--bg2); position: relative;
+/* ── COMPUTE ENV CARDS ── */
+.env-cards-row { display:flex; gap:12px; flex-wrap:wrap; margin-bottom:14px; }
+.env-card {
+  flex:1; min-width:160px; border-radius:10px; padding:14px 16px;
+  display:flex; align-items:flex-start; gap:12px; cursor:pointer;
+  border:1.5px solid var(--border); background:var(--bg2); position:relative;
+  transition:all 0.15s;
 }
-.mode-card:hover { border-color: var(--border2); background: rgba(255,255,255,0.03); }
-.mode-card.selected-run  { border-color: var(--green); background: rgba(63,185,80,0.07); }
-.mode-card.selected-copy { border-color: var(--blue);  background: rgba(88,166,255,0.07); }
-.mode-card-icon { font-size: 1.8em; flex-shrink: 0; }
-.mode-card-content { flex: 1; }
-.mode-card-title { font-weight: 700; font-size: 0.93em; margin-bottom: 5px; color: var(--text); }
-.mode-card.selected-run  .mode-card-title { color: var(--green); }
-.mode-card.selected-copy .mode-card-title { color: var(--blue); }
-.mode-card-desc { font-size: 0.8em; color: var(--text2); line-height: 1.6; }
-.mode-card-tag {
-  position: absolute; top: 10px; right: 12px;
-  font-size: 0.67em; font-weight: 600; padding: 2px 8px;
-  border-radius: 10px; text-transform: uppercase; letter-spacing: 0.4px; display: none;
+.env-card:hover { border-color:var(--border2); background:rgba(255,255,255,0.03); }
+.env-card.sel-local  { border-color:var(--green);  background:rgba(63,185,80,0.07); }
+.env-card.sel-slurm  { border-color:var(--purple); background:rgba(124,95,245,0.07); }
+.env-card.sel-pbs    { border-color:var(--blue);   background:rgba(0,150,255,0.07); }
+.env-card.sel-lsf    { border-color:var(--orange); background:rgba(240,136,62,0.07); }
+.env-card.sel-aws    { border-color:#ff9900; background:rgba(255,153,0,0.07); }
+.env-card.sel-gcp    { border-color:#4285f4; background:rgba(66,133,244,0.07); }
+.env-card.sel-azure  { border-color:#0078d4; background:rgba(0,120,212,0.07); }
+.env-card-icon { font-size:1.5em; flex-shrink:0; }
+.env-card-name { font-weight:700; font-size:0.88em; color:var(--text); }
+.env-card-sub  { font-size:0.73em; color:var(--text3); line-height:1.4; margin-top:2px; }
+.env-card-badge {
+  position:absolute; top:8px; right:8px;
+  font-size:0.65em; font-weight:600; padding:1px 7px; border-radius:10px; display:none;
 }
-.mode-card.selected-run  .mode-card-tag { display:inline-block; background:rgba(63,185,80,0.2); color:var(--green); border:1px solid rgba(63,185,80,0.4); }
-.mode-card.selected-copy .mode-card-tag { display:inline-block; background:rgba(88,166,255,0.2); color:var(--blue);  border:1px solid rgba(88,166,255,0.4); }
+.env-card.sel-local  .env-card-badge { display:inline-block; background:rgba(63,185,80,0.2);  color:var(--green); }
+.env-card.sel-slurm  .env-card-badge { display:inline-block; background:rgba(124,95,245,0.2); color:var(--purple); }
+.env-card.sel-pbs    .env-card-badge { display:inline-block; background:rgba(0,150,255,0.2);  color:var(--blue); }
+.env-card.sel-lsf    .env-card-badge { display:inline-block; background:rgba(240,136,62,0.2); color:var(--orange); }
+.env-card.sel-aws    .env-card-badge { display:inline-block; background:rgba(255,153,0,0.2);  color:#ff9900; }
+.env-card.sel-gcp    .env-card-badge { display:inline-block; background:rgba(66,133,244,0.2); color:#4285f4; }
+.env-card.sel-azure  .env-card-badge { display:inline-block; background:rgba(0,120,212,0.2);  color:#0078d4; }
 
-/* Server setup inner panel */
-.server-setup-grid {
-  display: grid;
-  grid-template-columns: 1fr 2px 2fr;
-  gap: 20px;
-  background: var(--bg2);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 18px 20px;
-  margin-top: 4px;
+/* HPC config form */
+.hpc-config-grid {
+  display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px;
+  background:var(--bg3); border:1px solid var(--border);
+  border-radius:10px; padding:16px; margin-top:12px;
 }
-.server-setup-divider { background: var(--border); align-self: stretch; }
-
-/* OS tabs */
-.os-tab {
-  padding: 5px 13px; border-radius: 7px; font-size: 0.76em; font-weight: 500;
-  cursor: pointer; border: 1px solid var(--border); background: var(--bg3);
-  color: var(--text2); font-family: var(--font); transition: all 0.12s;
+.hpc-config-grid .field label { font-size:0.72em; color:var(--text3); text-transform:uppercase; letter-spacing:0.5px; }
+.hpc-config-grid .field input,
+.hpc-config-grid .field select {
+  width:100%; padding:7px 10px; border-radius:7px;
+  background:var(--bg2); border:1px solid var(--border);
+  color:var(--text); font-family:var(--mono); font-size:0.82em; margin-top:5px;
 }
-.os-tab:hover { border-color: var(--border2); color: var(--text); }
-.os-tab.active { background: var(--blue2); border-color: var(--blue); color: white; }
-.os-panel { }
-.os-step-row { display:flex; gap:10px; margin-bottom:9px; align-items:flex-start; font-size:0.82em; color:var(--text2); line-height:1.55; }
-.os-step-num { width:22px; height:22px; border-radius:50%; background:var(--blue2); color:white; display:flex; align-items:center; justify-content:center; font-size:0.72em; font-weight:700; flex-shrink:0; margin-top:1px; }
-.os-cmd { background:#060a0f; border:1px solid var(--border); border-radius:7px; padding:8px 12px; font-family:var(--mono); font-size:0.84em; color:var(--green); margin:5px 0; display:flex; align-items:center; justify-content:space-between; gap:8px; }
-.os-cmd-main { border-color: var(--green2); border-left-width: 3px; }
-.os-note { font-size:0.77em; color:var(--text3); background:rgba(255,255,255,0.025); border-radius:6px; padding:7px 11px; margin:5px 0; line-height:1.5; border-left:2px solid var(--border2); }
-.mode-copy-cmd-btn {
-  background: var(--bg3); border: 1px solid var(--border); color: var(--text3);
-  border-radius: 5px; padding: 3px 9px; font-size: 0.72em; cursor: pointer;
-  font-family: var(--font); flex-shrink: 0; transition: all 0.12s;
+.cloud-path-box {
+  background:var(--bg3); border:1px solid var(--border); border-radius:10px;
+  padding:16px; margin-top:12px;
 }
-.mode-copy-cmd-btn:hover { background: var(--green2); color: white; border-color: var(--green2); }
-
-/* Mode indicator pill in topbar */
-.mode-indicator {
-  display: flex; align-items: center; gap: 6px;
-  font-size: 0.78em; color: var(--text2); cursor: pointer;
-  padding: 3px 10px; border-radius: 20px;
-  border: 1px solid var(--border); transition: all 0.12s;
+.cloud-path-box .field textarea {
+  width:100%; padding:8px 10px; border-radius:7px;
+  background:var(--bg2); border:1px solid var(--border);
+  color:var(--text); font-family:var(--mono); font-size:0.82em; margin-top:5px;
+  resize:vertical; min-height:52px;
 }
-.mode-indicator:hover { border-color: var(--border2); color: var(--text); }
-.mode-indicator.run-mode  { border-color: rgba(63,185,80,0.4);  color: var(--green); background: rgba(63,185,80,0.08); }
-.mode-indicator.copy-mode { border-color: rgba(88,166,255,0.4); color: var(--blue);  background: rgba(88,166,255,0.08); }
-
-
-.code-toolbar-run {
-  display: flex; align-items: center; padding: 8px 14px;
-  border-bottom: 1px solid var(--border); gap: 8px;
+.env-note {
+  font-size:0.79em; color:var(--text3); line-height:1.55;
+  background:rgba(255,255,255,0.03); border-radius:8px;
+  padding:10px 12px; margin-top:10px; border-left:2px solid var(--border2);
 }
+/* ── RUN BUTTON ── */
 .run-btn {
   background: var(--green2); border: 1px solid var(--green);
   color: white; border-radius: 6px; padding: 4px 14px;
@@ -218,14 +252,65 @@ body { font-family: var(--font); background: var(--bg); color: var(--text); font
 .run-btn.running { background: rgba(63,185,80,0.15); border-color: var(--green2); color: var(--green); animation: pulse 1s infinite; }
 .run-btn.success { background: rgba(63,185,80,0.2); border-color: var(--green); color: var(--green); }
 .run-btn.failed  { background: rgba(248,81,73,0.15); border-color: var(--red); color: var(--red); }
-.stop-btn {
-  background: rgba(248,81,73,0.12); border: 1px solid var(--red);
-  color: var(--red); border-radius: 6px; padding: 4px 10px;
-  font-size: 0.75em; cursor: pointer; font-family: var(--font);
-  display: none;
+
+/* ── GENE FAMILY SCOPE TILES ── */
+.gf-scope-tile {
+  flex: 1; min-width: 220px; max-width: 340px;
+  border: 2px solid var(--border); border-radius: 12px;
+  padding: 18px 20px; cursor: pointer; position: relative;
+  background: var(--bg2); transition: all 0.15s;
 }
-.stop-btn.show { display: inline-flex; }
-.stop-btn:hover { background: rgba(248,81,73,0.25); }
+.gf-scope-tile:hover { border-color: var(--border2); background: rgba(255,255,255,0.03); }
+.gf-scope-tile.active { border-color: var(--purple); background: rgba(188,140,255,0.07); }
+.gf-scope-check {
+  position: absolute; top: 12px; right: 12px;
+  width: 22px; height: 22px; border-radius: 50%;
+  border: 2px solid var(--border); display: flex;
+  align-items: center; justify-content: center;
+  font-size: 0.8em; font-weight: 800; color: transparent;
+  transition: all 0.15s;
+}
+.gf-scope-tile.active .gf-scope-check {
+  border-color: var(--purple); background: var(--purple); color: #03080f;
+}
+.gf-scope-icon { font-size: 1.6em; margin-bottom: 8px; }
+.gf-scope-title { font-family: var(--fh); font-weight: 700; font-size: 1em; margin-bottom: 6px; }
+.gf-scope-desc { font-size: 0.8em; color: var(--text2); line-height: 1.55; }
+
+/* ── GENE FAMILY CATEGORY CHIPS ── */
+.gf-cat-chip {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 5px 12px; border-radius: 20px;
+  border: 1px solid var(--border); background: var(--bg3);
+  font-size: 0.8em; color: var(--text2); cursor: pointer;
+  transition: all 0.12s; user-select: none;
+}
+.gf-cat-chip:hover { border-color: var(--border2); color: var(--text); }
+.gf-cat-chip input { display: none; }
+.gf-cat-chip:has(input:checked) {
+  border-color: var(--purple); background: rgba(188,140,255,0.12);
+  color: var(--purple); font-weight: 600;
+}
+.gf-fam-chip {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 4px 11px; border-radius: 20px;
+  border: 1px solid var(--border); background: var(--bg3);
+  font-size: 0.77em; color: var(--text2); cursor: pointer;
+  transition: all 0.12s; user-select: none;
+}
+.gf-fam-chip:has(input:checked) {
+  border-color: var(--green); background: rgba(63,185,80,0.1);
+  color: var(--green); font-weight: 600;
+}
+.gf-fam-chip input { display: none; }
+/* HPC badge on code blocks */
+.hpc-badge {
+  display:inline-flex; align-items:center; gap:4px;
+  padding:2px 8px; border-radius:10px; font-size:0.68em; font-weight:600;
+  background:rgba(124,95,245,0.15); color:var(--purple);
+  border:1px solid rgba(124,95,245,0.3); margin-left:8px;
+}
+
 
 /* ── TERMINAL OUTPUT PANEL ── */
 .term-panel {
@@ -434,6 +519,68 @@ p { font-size: 0.86em; color: var(--text2); line-height: 1.6; margin: 6px 0; }
 .tag-yellow { background: rgba(227,179,65,0.15); color: var(--yellow); border: 1px solid rgba(227,179,65,0.3); }
 .tag-red    { background: rgba(248,81,73,0.15);  color: var(--red); border: 1px solid rgba(248,81,73,0.3); }
 .divider { border: none; border-top: 1px solid var(--border); margin: 16px 0; }
+
+
+
+/* ── MODE CARDS & OS TABS (restored) ── */
+.mode-cards-row { display: flex; gap: 12px; margin-bottom: 16px; }
+.mode-card {
+  flex: 1; border-radius: 10px; padding: 16px 18px;
+  display: flex; align-items: flex-start; gap: 14px;
+  cursor: pointer; border: 1.5px solid var(--border);
+  transition: all 0.15s; background: var(--bg2); position: relative;
+}
+.mode-card:hover { border-color: var(--border2); background: rgba(255,255,255,0.03); }
+.mode-card.selected-run  { border-color: var(--green); background: rgba(63,185,80,0.07); }
+.mode-card.selected-copy { border-color: var(--blue);  background: rgba(88,166,255,0.07); }
+.mode-card-icon { font-size: 1.8em; flex-shrink: 0; }
+.mode-card-content { flex: 1; }
+.mode-card-title { font-weight: 700; font-size: 0.93em; margin-bottom: 5px; color: var(--text); }
+.mode-card.selected-run  .mode-card-title { color: var(--green); }
+.mode-card.selected-copy .mode-card-title { color: var(--blue); }
+.mode-card-desc { font-size: 0.8em; color: var(--text2); line-height: 1.6; }
+.mode-card-tag {
+  position: absolute; top: 10px; right: 12px;
+  font-size: 0.67em; font-weight: 600; padding: 2px 8px;
+  border-radius: 10px; text-transform: uppercase; letter-spacing: 0.4px; display: none;
+}
+.mode-card.selected-run  .mode-card-tag { display:inline-block; background:rgba(63,185,80,0.2); color:var(--green); border:1px solid rgba(63,185,80,0.4); }
+.mode-card.selected-copy .mode-card-tag { display:inline-block; background:rgba(88,166,255,0.2); color:var(--blue);  border:1px solid rgba(88,166,255,0.4); }
+.os-tab {
+  padding: 5px 13px; border-radius: 7px; font-size: 0.76em; font-weight: 500;
+  cursor: pointer; border: 1px solid var(--border); background: var(--bg3);
+  color: var(--text2); font-family: var(--font); transition: all 0.12s;
+}
+.os-tab:hover { border-color: var(--border2); color: var(--text); }
+.os-tab.active { background: var(--blue2); border-color: var(--blue); color: white; }
+.os-panel { }
+.os-step-row { display:flex; gap:10px; margin-bottom:9px; align-items:flex-start; font-size:0.82em; color:var(--text2); line-height:1.55; }
+.os-cmd { background:#060a0f; border:1px solid var(--border); border-radius:7px; padding:8px 12px; font-family:var(--mono); font-size:0.84em; color:var(--green); margin:5px 0; display:flex; align-items:center; justify-content:space-between; gap:8px; }
+.os-cmd-main { border-color: var(--green2); border-left-width: 3px; }
+.os-note { font-size:0.77em; color:var(--text3); background:rgba(255,255,255,0.025); border-radius:6px; padding:7px 11px; margin:5px 0; line-height:1.5; border-left:2px solid var(--border2); }
+.server-setup-grid {
+  display: grid;
+  grid-template-columns: 1fr 2px 2fr;
+  gap: 20px;
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 18px 20px;
+  margin-top: 4px;
+}
+.server-setup-divider { background: var(--border); align-self: stretch; }
+.mode-copy-cmd-btn {
+  background: var(--bg3); border: 1px solid var(--border); color: var(--text3);
+  border-radius: 5px; padding: 3px 9px; font-size: 0.72em; cursor: pointer;
+  font-family: var(--font); flex-shrink: 0; transition: all 0.12s;
+}
+.mode-copy-cmd-btn:hover { background: var(--green2); color: white; border-color: var(--green2); }
+.selected-run  { border-color: var(--green); background: rgba(63,185,80,0.07); }
+.selected-run  .mode-card-title { color: var(--green); }
+.selected-run  .mode-card-tag { display:inline-block; background:rgba(63,185,80,0.2); color:var(--green); border:1px solid rgba(63,185,80,0.4); }
+.selected-copy { border-color: var(--blue);  background: rgba(88,166,255,0.07); }
+.selected-copy .mode-card-title { color: var(--blue); }
+.selected-copy .mode-card-tag { display:inline-block; background:rgba(88,166,255,0.2); color:var(--blue);  border:1px solid rgba(88,166,255,0.4); }
 </style>
 </head>
 <body>
@@ -462,113 +609,258 @@ p { font-size: 0.86em; color: var(--text2); line-height: 1.6; margin: 6px 0; }
   </div>
 </div>
 
-<!-- MODE ACCORDION BAR -->
-<div class="mode-accordion-bar" id="mode-accordion-bar">
+<!-- SETTINGS BAR -->
+<div class="settings-bar" id="settings-bar">
 
-  <!-- PANEL 1: How would you like to run commands? -->
-  <div class="acc-panel" id="acc-panel-mode">
-    <div class="acc-header open" id="acc-header-mode" onclick="toggleAcc('mode')">
-      <span class="acc-header-icon">⚡</span>
-      <span class="acc-header-title">How would you like to run commands?</span>
-      <span class="acc-header-subtitle">Choose once — your preference is remembered</span>
-      <span class="acc-header-badge none" id="acc-mode-badge"></span>
-      <span class="acc-chevron" id="acc-chevron-mode" style="transform:rotate(90deg);">▶</span>
+  <!-- Three compact dropdowns in one row -->
+  <div class="settings-row">
+
+    <!-- Dropdown 1: Run mode -->
+    <div class="sbar-item" id="sbar-item-mode">
+      <span class="sbar-icon">⚡</span>
+      <div class="sbar-content">
+        <div class="sbar-label">Run mode</div>
+        <select class="sbar-select" id="sbar-mode-select" onchange="onModeSelect(this.value)">
+          <option value="">Choose...</option>
+          <option value="run">Mode A — Run from app</option>
+          <option value="copy">Mode B — Run on terminal</option>
+        </select>
+      </div>
+      <button class="sbar-help" onclick="toggleDetail('mode')" title="More info">?</button>
     </div>
-    <div class="acc-body open" id="acc-body-mode">
-      <div class="acc-body-inner">
-        <div class="mode-cards-row">
-          <div class="mode-card" id="mode-card-run" onclick="selectMode('run')">
-            <div class="mode-card-tag">✅ Active</div>
-            <div class="mode-card-icon">⚡</div>
-            <div class="mode-card-content">
-              <div class="mode-card-title">Mode A — Run directly from this app</div>
-              <div class="mode-card-desc">
-                Every code block gets a <strong style="color:var(--green)">▶ Run</strong> button. Click it — the command executes in your terminal automatically, live output streams into the app, and steps tick off as they complete.<br><br>
-                <strong style="color:var(--text);">Requires:</strong> run <code style="color:var(--green); background:rgba(63,185,80,0.1); padding:1px 6px; border-radius:4px;">rnaflow_server.py</code> once in your Terminal before opening this app. Works on macOS, Linux, and Windows.
-              </div>
-            </div>
+
+    <div class="sbar-divider"></div>
+
+    <!-- Dropdown 2: How running / server -->
+    <div class="sbar-item" id="sbar-item-server">
+      <span class="sbar-icon">ℹ️</span>
+      <div class="sbar-content">
+        <div class="sbar-label">Using RNAflow as</div>
+        <select class="sbar-select" id="sbar-how-select" onchange="onHowSelect(this.value)">
+          <option value="desktop">Desktop app (installed)</option>
+          <option value="html">HTML file in browser</option>
+        </select>
+      </div>
+      <button class="sbar-help" onclick="toggleDetail('server')" title="Setup instructions">?</button>
+    </div>
+
+    <div class="sbar-divider"></div>
+
+    <!-- Dropdown 3: Compute environment -->
+    <div class="sbar-item" id="sbar-item-env">
+      <span class="sbar-icon">🖥️</span>
+      <div class="sbar-content">
+        <div class="sbar-label">Compute environment</div>
+        <select class="sbar-select" id="sbar-env-select" onchange="onEnvSelect(this.value)">
+          <optgroup label="Local">
+            <option value="local">💻 Local computer</option>
+          </optgroup>
+          <optgroup label="HPC cluster">
+            <option value="slurm">🏢 SLURM (sbatch)</option>
+            <option value="pbs">🏗️ PBS / Torque (qsub)</option>
+            <option value="lsf">🔵 LSF / IBM (bsub)</option>
+          </optgroup>
+          <optgroup label="Cloud">
+            <option value="aws">☁️ AWS (S3 + EC2)</option>
+            <option value="gcp">🌐 Google Cloud (GCS)</option>
+            <option value="azure">🔷 Azure (Blob Storage)</option>
+          </optgroup>
+        </select>
+      </div>
+      <button class="sbar-help" onclick="toggleDetail('env')" title="Environment settings">⚙</button>
+    </div>
+
+  </div><!-- end settings-row -->
+
+  <!-- Detail panels — slide open when ? button clicked -->
+
+  <!-- Mode detail -->
+  <div class="sbar-detail" id="sbar-detail-mode">
+    <div class="sbar-detail-inner">
+      <div class="sbar-detail-close" onclick="toggleDetail('mode')">✕</div>
+      <div class="sbar-detail-title">⚡ How would you like to run commands?</div>
+      <div class="mode-cards-row" style="margin-top:14px;">
+        <div class="mode-card" id="mode-card-run" onclick="selectMode('run');onModeSelect('run')">
+          <div class="mode-card-tag">✅ Active</div>
+          <div class="mode-card-icon">⚡</div>
+          <div class="mode-card-content">
+            <div class="mode-card-title">Mode A — Run directly from this app</div>
+            <div class="mode-card-desc">Every code block gets a <strong style="color:var(--green)">▶ Run</strong> button. Click it — the command executes automatically, live output streams in, steps tick off. <strong style="color:var(--text)">Requires:</strong> <code style="color:var(--green);background:rgba(63,185,80,0.1);padding:1px 5px;border-radius:4px;">rnaflow_server.py</code> running in Terminal first.</div>
           </div>
-          <div class="mode-card" id="mode-card-copy" onclick="selectMode('copy')">
-            <div class="mode-card-tag">✅ Active</div>
-            <div class="mode-card-icon">📋</div>
-            <div class="mode-card-content">
-              <div class="mode-card-title">Mode B — Copy &amp; paste manually</div>
-              <div class="mode-card-desc">
-                Every code block has a <strong style="color:var(--blue)">Copy</strong> button. Copy the command → paste into your Terminal → run it yourself. Tick each step checkbox in the sidebar when it is done.<br><br>
-                <strong style="color:var(--text);">No server needed</strong> — works entirely offline on any computer and any operating system.
-              </div>
-            </div>
+        </div>
+        <div class="mode-card" id="mode-card-copy" onclick="selectMode('copy');onModeSelect('copy')">
+          <div class="mode-card-tag">✅ Active</div>
+          <div class="mode-card-icon">📋</div>
+          <div class="mode-card-content">
+            <div class="mode-card-title">Mode B — Run on terminal manually</div>
+            <div class="mode-card-desc">Every code block has a <strong style="color:var(--blue)">Copy</strong> button. Copy → paste into Terminal → run yourself. <strong style="color:var(--text)">No server needed.</strong> Works offline on any OS.</div>
           </div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- PANEL 2: What is rnaflow_server.py? -->
-  <div class="acc-panel" id="acc-panel-server">
-    <div class="acc-header" id="acc-header-server" onclick="toggleAcc('server')">
-      <span class="acc-header-icon">ℹ️</span>
-      <span class="acc-header-title">What is rnaflow_server.py? — and how to start it on your OS</span>
-      <span class="acc-header-subtitle">Works on macOS · Linux · Windows · WSL2</span>
-      <span class="acc-header-badge yellow" id="acc-server-badge">Needed for Mode A only</span>
-      <span class="acc-chevron" id="acc-chevron-server">▶</span>
-    </div>
-    <div class="acc-body" id="acc-body-server">
-      <div class="acc-body-inner">
-        <div class="server-setup-grid">
-          <div>
-            <div style="font-size:0.72em; text-transform:uppercase; letter-spacing:0.6px; color:var(--text3); font-weight:600; margin-bottom:10px;">What is it?</div>
-            <div style="font-size:0.83em; color:var(--text2); line-height:1.65;">
-              A tiny Python script — <strong style="color:var(--text)">no extra packages needed</strong> — that runs only on your own computer. It creates a bridge between this HTML app and your terminal so the app can send commands and receive live output.<br><br>
-              It listens on <code>127.0.0.1:7788</code> — your local machine only. <strong style="color:var(--green);">No other computer on the internet or your network can see or reach it.</strong><br><br>
-              Each person who uses RNAflow runs their own private copy locally. It is architecturally impossible for one person's server to interfere with another's.
-            </div>
-            <div style="margin-top:12px; padding:10px 12px; background:rgba(63,185,80,0.07); border:1px solid rgba(63,185,80,0.25); border-radius:8px; font-size:0.78em; color:var(--green); line-height:1.5;">
-              🔒 <strong>100% local.</strong> Runs on your computer. Stops when you press Ctrl+C. Your data never leaves your machine.
-            </div>
-          </div>
-          <div class="server-setup-divider"></div>
-          <div>
-            <div style="font-size:0.72em; text-transform:uppercase; letter-spacing:0.6px; color:var(--text3); font-weight:600; margin-bottom:10px;">How to start it — select your operating system:</div>
-            <div style="display:flex; gap:6px; margin-bottom:12px;" id="os-tabs">
-              <button class="os-tab active" onclick="showOS('mac',   this)">🍎 macOS</button>
-              <button class="os-tab"        onclick="showOS('linux', this)">🐧 Linux</button>
-              <button class="os-tab"        onclick="showOS('win',   this)">🪟 Windows</button>
-              <button class="os-tab"        onclick="showOS('wsl',   this)">🪟+🐧 WSL2</button>
-            </div>
-            <div id="os-mac" class="os-panel">
-              <div class="os-step-row"><span class="os-step-num">1</span><div>Open <strong>Terminal</strong> &nbsp;(Cmd+Space → type Terminal → Enter)</div></div>
-              <div class="os-step-row"><span class="os-step-num">2</span><div>Go to the folder where you saved the file:<div class="os-cmd">cd ~/Desktop <span style="color:var(--text3);"># change if saved elsewhere</span></div></div></div>
-              <div class="os-step-row"><span class="os-step-num">3</span><div>Start the server:<div class="os-cmd os-cmd-main">python3 rnaflow_server.py <button class="mode-copy-cmd-btn" onclick="copyText('python3 rnaflow_server.py',this)">Copy</button></div></div></div>
-              <div class="os-step-row"><span class="os-step-num">4</span><div>Leave that Terminal window open. Reload this page — the <strong style="color:var(--green)">green dot</strong> in the top bar confirms connection ✅</div></div>
-            </div>
-            <div id="os-linux" class="os-panel" style="display:none;">
-              <div class="os-step-row"><span class="os-step-num">1</span><div>Open your terminal (GNOME Terminal, Konsole, xterm, etc.)</div></div>
-              <div class="os-step-row"><span class="os-step-num">2</span><div>Navigate to the file:<div class="os-cmd">cd ~/Desktop</div></div></div>
-              <div class="os-step-row"><span class="os-step-num">3</span><div>Start the server:<div class="os-cmd os-cmd-main">python3 rnaflow_server.py <button class="mode-copy-cmd-btn" onclick="copyText('python3 rnaflow_server.py',this)">Copy</button></div></div></div>
-              <div class="os-note">💡 Python not found? <code>sudo apt install python3</code> (Ubuntu) · <code>sudo dnf install python3</code> (Fedora)</div>
-            </div>
-            <div id="os-win" class="os-panel" style="display:none;">
-              <div class="os-step-row"><span class="os-step-num">1</span><div>Open <strong>Anaconda Prompt</strong> (search Start menu) or PowerShell</div></div>
-              <div class="os-step-row"><span class="os-step-num">2</span><div>Navigate:<div class="os-cmd">cd %USERPROFILE%\Desktop</div></div></div>
-              <div class="os-step-row"><span class="os-step-num">3</span><div>Start the server:<div class="os-cmd os-cmd-main">python rnaflow_server.py <button class="mode-copy-cmd-btn" onclick="copyText('python rnaflow_server.py',this)">Copy</button></div></div></div>
-              <div class="os-note">⚠️ Windows Defender may ask to allow network access — click <strong>Allow</strong>. Server only uses 127.0.0.1, never the internet.</div>
-              <div class="os-note">💡 Bioinformatics tools (HISAT2, samtools) do <strong>not</strong> run natively on Windows — use the <strong>WSL2</strong> tab for the full pipeline.</div>
-            </div>
-            <div id="os-wsl" class="os-panel" style="display:none;">
-              <div class="os-step-row"><span class="os-step-num">1</span><div>Open <strong>WSL terminal</strong> (search Start menu for "WSL" or "Ubuntu")</div></div>
-              <div class="os-step-row"><span class="os-step-num">2</span><div>Navigate to Windows Desktop from WSL:<div class="os-cmd">cd /mnt/c/Users/$USER/Desktop</div></div></div>
-              <div class="os-step-row"><span class="os-step-num">3</span><div>Start the server:<div class="os-cmd os-cmd-main">python3 rnaflow_server.py <button class="mode-copy-cmd-btn" onclick="copyText('python3 rnaflow_server.py',this)">Copy</button></div></div></div>
-              <div class="os-step-row"><span class="os-step-num">4</span><div>Open RNAflow_App.html in your <strong>Windows browser</strong> (Chrome/Edge) — WSL2 and Windows share localhost ✅</div></div>
-              <div class="os-note">💡 WSL2 is the best option for Windows users — all bioinformatics tools run perfectly in the Linux environment.</div>
-            </div>
-          </div>
+  <!-- Server detail -->
+  <!-- Server detail — auto-detects OS, shows only relevant info -->
+  <div class="sbar-detail" id="sbar-detail-server">
+    <div class="sbar-detail-inner">
+      <div class="sbar-detail-close" onclick="toggleDetail('server')">&#x2715;</div>
+      <div class="sbar-detail-title">&#x2139;&#xFE0F; What is rnaflow_server.py? &mdash; setup for your system</div>
+
+      <!-- Desktop app panel (default) -->
+      <div id="how-desktop">
+        <div style="margin-top:14px;padding:14px 16px;background:rgba(63,185,80,0.07);border:1px solid rgba(63,185,80,0.25);border-radius:10px;font-size:0.85em;line-height:1.7;">
+          <strong style="color:var(--green);">&#x1F389; Nothing to do &mdash; server starts automatically!</strong><br>
+          <span style="color:var(--text2);">The RNAflow desktop app bundles <code>rnaflow_server.py</code> internally. It starts the moment you open the app and stops when you close it. No Terminal commands are ever needed.</span>
+        </div>
+        <div style="margin-top:12px;font-size:0.8em;color:var(--text3);line-height:1.6;">
+          &#x1F512; Runs only on <code>127.0.0.1:7788</code> &mdash; your machine only. Data never leaves your computer.
         </div>
       </div>
+
+      <!-- HTML file panel -->
+      <div id="how-html" style="display:none;">
+        <div style="margin-top:14px;" id="server-os-content">
+          <!-- Filled dynamically by showHow() based on detected OS -->
+        </div>
+        <div style="margin-top:10px;padding:10px 12px;background:rgba(88,166,255,0.07);border:1px solid rgba(88,166,255,0.2);border-radius:8px;font-size:0.79em;color:var(--blue);">
+          &#x1F4A1; Prefer no Terminal? Switch to <strong>Mode B (Run on terminal)</strong> &mdash; Copy button always works without the server.
+        </div>
+      </div>
+
     </div>
   </div>
 
-</div><!-- end mode-accordion-bar -->
+  <!-- Env detail -->
+  <!-- Env detail panel -->
+  <div class="sbar-detail" id="sbar-detail-env">
+    <div class="sbar-detail-inner">
+      <div class="sbar-detail-close" onclick="toggleDetail('env')">&#x2715;</div>
+      <div class="sbar-detail-title">&#x1F5A5;&#xFE0F; Compute environment settings</div>
+
+      <!-- LOCAL ─────────────────────────────────────── -->
+      <div id="env-local-panel" style="margin-top:14px;">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:start;">
+
+          <!-- Option A: Download from SRA -->
+          <div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:16px;">
+            <div style="font-size:0.75em;text-transform:uppercase;letter-spacing:0.6px;color:var(--green);font-weight:700;margin-bottom:10px;">&#x2193; Download from NCBI SRA</div>
+            <p style="font-size:0.81em;color:var(--text2);line-height:1.6;margin-bottom:12px;">Enter SRA accession numbers in the Configure page. RNAflow will download the raw FASTQ files directly from NCBI to your local project folder using <code>fasterq-dump</code>.</p>
+            <div style="font-size:0.78em;color:var(--text3);line-height:1.6;">
+              &#x1F4A1; Find SRA accessions at <strong>ncbi.nlm.nih.gov/sra</strong><br>
+              Accessions start with <code>SRR</code>, <code>ERR</code>, or <code>DRR</code>
+            </div>
+          </div>
+
+          <!-- Option B: Browse local files -->
+          <div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:16px;">
+            <div style="font-size:0.75em;text-transform:uppercase;letter-spacing:0.6px;color:var(--blue);font-weight:700;margin-bottom:10px;">&#x1F4C2; Use files already on this computer</div>
+            <p style="font-size:0.81em;color:var(--text2);line-height:1.6;margin-bottom:10px;">If your FASTQ files are already downloaded, enter their folder path below. RNAflow will use these instead of downloading.</p>
+            <div class="field">
+              <label style="font-size:0.7em;color:var(--text3);text-transform:uppercase;letter-spacing:0.5px;">Local FASTQ folder path</label>
+              <div style="display:flex;gap:6px;margin-top:5px;">
+                <input id="local-fastq-path" type="text" placeholder="/Users/you/data/fastq/" style="flex:1;padding:7px 10px;border-radius:7px;background:var(--bg3);border:1px solid var(--border);color:var(--text);font-family:var(--mono);font-size:0.82em;">
+                <button onclick="browseLocalFolder()" style="padding:6px 12px;background:var(--bg3);border:1px solid var(--border);border-radius:7px;color:var(--text2);cursor:pointer;font-size:0.78em;white-space:nowrap;">&#x1F4C2; Browse</button>
+              </div>
+            </div>
+            <div style="font-size:0.75em;color:var(--text3);margin-top:8px;line-height:1.5;">Files should be named: <code>SRR123.fastq</code> or <code>SRR123_1.fastq</code> / <code>SRR123_2.fastq</code></div>
+          </div>
+
+        </div>
+        <div style="margin-top:12px;padding:10px 14px;background:rgba(63,185,80,0.05);border:1px solid rgba(63,185,80,0.15);border-radius:8px;font-size:0.79em;color:var(--text2);">
+          &#x2705; <strong style="color:var(--green);">Local computer selected.</strong> All analysis runs on your machine. Make sure your <code>rnaseq</code> conda environment is active before running commands.
+        </div>
+      </div>
+
+      <!-- HPC ────────────────────────────────────────── -->
+      <div id="env-hpc-panel" style="display:none;margin-top:14px;">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:start;">
+
+          <!-- Connection settings -->
+          <div style="background:var(--bg2);border:1px solid rgba(124,95,245,0.25);border-radius:10px;padding:16px;">
+            <div style="font-size:0.75em;text-transform:uppercase;letter-spacing:0.6px;color:var(--purple);font-weight:700;margin-bottom:12px;">&#x1F517; Connect to HPC cluster</div>
+            <div class="field" style="margin-bottom:10px;">
+              <label style="font-size:0.7em;color:var(--text3);text-transform:uppercase;letter-spacing:0.5px;">SSH host (login node)</label>
+              <input id="hpc-host" type="text" placeholder="hpc.university.edu" oninput="updateAll()" style="width:100%;padding:7px 10px;border-radius:7px;background:var(--bg3);border:1px solid var(--border);color:var(--text);font-family:var(--mono);font-size:0.82em;margin-top:5px;">
+            </div>
+            <div class="field" style="margin-bottom:10px;">
+              <label style="font-size:0.7em;color:var(--text3);text-transform:uppercase;letter-spacing:0.5px;">Username</label>
+              <input id="hpc-user" type="text" placeholder="your_username" oninput="updateAll()" style="width:100%;padding:7px 10px;border-radius:7px;background:var(--bg3);border:1px solid var(--border);color:var(--text);font-family:var(--mono);font-size:0.82em;margin-top:5px;">
+            </div>
+            <div style="margin-top:8px;padding:8px 10px;background:var(--bg3);border:1px solid var(--border);border-radius:7px;font-size:0.75em;color:var(--text3);line-height:1.5;">
+              Generated commands include: <code style="color:var(--purple);">ssh <span id="hpc-ssh-preview">user@hpc.university.edu</span></code><br>
+              Copy &amp; run each script on the cluster via this connection.
+            </div>
+          </div>
+
+          <!-- Raw data location on HPC -->
+          <div style="background:var(--bg2);border:1px solid rgba(124,95,245,0.25);border-radius:10px;padding:16px;">
+            <div style="font-size:0.75em;text-transform:uppercase;letter-spacing:0.6px;color:var(--purple);font-weight:700;margin-bottom:12px;">&#x1F4C2; Raw data path on cluster</div>
+            <div class="field" style="margin-bottom:10px;">
+              <label style="font-size:0.7em;color:var(--text3);text-transform:uppercase;letter-spacing:0.5px;">Path to FASTQ files on HPC</label>
+              <input id="hpc-data-path" type="text" placeholder="/scratch/username/rnaseq/raw_data/" oninput="updateAll()" style="width:100%;padding:7px 10px;border-radius:7px;background:var(--bg3);border:1px solid var(--border);color:var(--text);font-family:var(--mono);font-size:0.82em;margin-top:5px;">
+            </div>
+            <div style="font-size:0.75em;color:var(--text3);line-height:1.5;margin-bottom:12px;">This path is used in all generated job scripts so they find your data automatically.</div>
+            <div style="font-size:0.75em;text-transform:uppercase;letter-spacing:0.6px;color:var(--text3);margin-bottom:8px;margin-top:4px;">Job resource settings</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;">
+              <div class="field"><label style="font-size:0.68em;color:var(--text3);">CPUs</label><input id="hpc-cpus" value="8" oninput="updateAll()" style="width:100%;padding:5px 8px;border-radius:6px;background:var(--bg3);border:1px solid var(--border);color:var(--text);font-size:0.82em;margin-top:4px;"></div>
+              <div class="field"><label style="font-size:0.68em;color:var(--text3);">Memory (GB)</label><input id="hpc-mem" value="32" oninput="updateAll()" style="width:100%;padding:5px 8px;border-radius:6px;background:var(--bg3);border:1px solid var(--border);color:var(--text);font-size:0.82em;margin-top:4px;"></div>
+              <div class="field"><label style="font-size:0.68em;color:var(--text3);">Wall time (hrs)</label><input id="hpc-time" value="24" oninput="updateAll()" style="width:100%;padding:5px 8px;border-radius:6px;background:var(--bg3);border:1px solid var(--border);color:var(--text);font-size:0.82em;margin-top:4px;"></div>
+              <div class="field"><label style="font-size:0.68em;color:var(--text3);">Job name</label><input id="hpc-jobname" value="rnaflow" oninput="updateAll()" style="width:100%;padding:5px 8px;border-radius:6px;background:var(--bg3);border:1px solid var(--border);color:var(--text);font-size:0.82em;margin-top:4px;"></div>
+              <div class="field"><label style="font-size:0.68em;color:var(--text3);">Partition/Queue</label><input id="hpc-partition" value="normal" oninput="updateAll()" style="width:100%;padding:5px 8px;border-radius:6px;background:var(--bg3);border:1px solid var(--border);color:var(--text);font-size:0.82em;margin-top:4px;"></div>
+              <div class="field"><label style="font-size:0.68em;color:var(--text3);">Email alerts</label><input id="hpc-email" placeholder="you@uni.edu" oninput="updateAll()" style="width:100%;padding:5px 8px;border-radius:6px;background:var(--bg3);border:1px solid var(--border);color:var(--text);font-size:0.82em;margin-top:4px;"></div>
+            </div>
+          </div>
+
+        </div>
+        <div class="env-note" style="margin-top:10px;">Each pipeline step generates a <code>.sh</code> job script. Submit with <code>sbatch</code> (SLURM), <code>qsub</code> (PBS), or <code>bsub</code> (LSF). &nbsp;&#x26A0;&#xFE0F; Large genome tip: human/wheat/maize need 16&ndash;32 CPUs and 64&ndash;128 GB RAM for the alignment index step.</div>
+      </div>
+
+      <!-- CLOUD ──────────────────────────────────────── -->
+      <div id="env-cloud-panel" style="display:none;margin-top:14px;">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:start;">
+
+          <!-- Cloud connection -->
+          <div style="background:var(--bg2);border:1px solid rgba(0,150,255,0.25);border-radius:10px;padding:16px;">
+            <div style="font-size:0.75em;text-transform:uppercase;letter-spacing:0.6px;color:var(--blue);font-weight:700;margin-bottom:12px;">&#x1F517; Connect to cloud instance</div>
+            <div class="field" style="margin-bottom:10px;">
+              <label style="font-size:0.7em;color:var(--text3);text-transform:uppercase;letter-spacing:0.5px;">Instance IP / hostname</label>
+              <input id="cloud-host" type="text" placeholder="34.123.45.67 or ec2-34.compute.amazonaws.com" oninput="updateAll()" style="width:100%;padding:7px 10px;border-radius:7px;background:var(--bg3);border:1px solid var(--border);color:var(--text);font-family:var(--mono);font-size:0.82em;margin-top:5px;">
+            </div>
+            <div class="field" style="margin-bottom:10px;">
+              <label style="font-size:0.7em;color:var(--text3);text-transform:uppercase;letter-spacing:0.5px;">SSH username</label>
+              <input id="cloud-user" type="text" placeholder="ubuntu" oninput="updateAll()" style="width:100%;padding:7px 10px;border-radius:7px;background:var(--bg3);border:1px solid var(--border);color:var(--text);font-family:var(--mono);font-size:0.82em;margin-top:5px;">
+            </div>
+            <div class="field">
+              <label style="font-size:0.7em;color:var(--text3);text-transform:uppercase;letter-spacing:0.5px;">Working directory on instance</label>
+              <input id="cloud-work-dir" value="/home/ubuntu/rnaseq_project" oninput="updateAll()" style="width:100%;padding:7px 10px;border-radius:7px;background:var(--bg3);border:1px solid var(--border);color:var(--text);font-family:var(--mono);font-size:0.82em;margin-top:5px;">
+            </div>
+          </div>
+
+          <!-- Cloud data paths -->
+          <div style="background:var(--bg2);border:1px solid rgba(0,150,255,0.25);border-radius:10px;padding:16px;">
+            <div style="font-size:0.75em;text-transform:uppercase;letter-spacing:0.6px;color:var(--blue);font-weight:700;margin-bottom:12px;">&#x1F4C2; Raw data in cloud storage</div>
+            <div class="field" style="margin-bottom:10px;">
+              <label style="font-size:0.7em;color:var(--text3);text-transform:uppercase;letter-spacing:0.5px;">Data bucket path</label>
+              <input id="cloud-data-path" type="text" placeholder="s3://bucket/fastq/  or  gs://bucket/data/" oninput="updateAll()" style="width:100%;padding:7px 10px;border-radius:7px;background:var(--bg3);border:1px solid var(--border);color:var(--text);font-family:var(--mono);font-size:0.82em;margin-top:5px;">
+            </div>
+            <div class="field" style="margin-bottom:10px;">
+              <label style="font-size:0.7em;color:var(--text3);text-transform:uppercase;letter-spacing:0.5px;">Results output bucket path</label>
+              <input id="cloud-out-path" type="text" placeholder="s3://bucket/results/  or  gs://bucket/results/" oninput="updateAll()" style="width:100%;padding:7px 10px;border-radius:7px;background:var(--bg3);border:1px solid var(--border);color:var(--text);font-family:var(--mono);font-size:0.82em;margin-top:5px;">
+            </div>
+            <div id="cloud-env-note" style="margin-top:10px;padding:10px 12px;background:var(--bg3);border:1px solid var(--border);border-radius:8px;font-size:0.75em;color:var(--text3);line-height:1.6;">
+              &#x2601;&#xFE0F; Commands will include sync steps: pull data from bucket to instance, run analysis, push results back to bucket.
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div><!-- end settings-bar -->
+
 
 <!-- APP BODY -->
 <div class="app-body">
@@ -617,18 +909,17 @@ p { font-size: 0.86em; color: var(--text2); line-height: 1.6; margin: 6px 0; }
     <span class="nav-check">○</span>
   </div>
 
+  <div class="sidebar-section">Analysis</div>
   <div class="nav-item" onclick="goTo('page-genefamily', this)" id="nav-genefamily">
-    <div class="nav-num" style="font-size:0.75em;">🧬</div> Gene family
+    <div class="nav-num">8</div> Gene family analysis
     <span class="nav-check">○</span>
   </div>
-
-  <div class="sidebar-section">Analysis</div>
   <div class="nav-item" onclick="goTo('page-deseq2', this)" id="nav-deseq2">
-    <div class="nav-num">8</div> DESeq2 in R
+    <div class="nav-num">9</div> DESeq2 in R
     <span class="nav-check">○</span>
   </div>
   <div class="nav-item" onclick="goTo('page-plots', this)" id="nav-plots">
-    <div class="nav-num">9</div> Plots &amp; results
+    <div class="nav-num">10</div> Plots &amp; results
     <span class="nav-check">○</span>
   </div>
 
@@ -1336,7 +1627,7 @@ install.packages(c(<span class="cs">"ggplot2"</span>, <span class="cs">"pheatmap
     </div>
   </div>
   <div class="step-nav">
-    <button class="btn btn-ghost" onclick="markDone('nav-counts'); goTo('page-deseq2', document.getElementById('nav-deseq2'))">Mark done &amp; next →</button>
+    <button class="btn btn-ghost" onclick="markDone('nav-counts'); goTo('page-genefamily', document.getElementById('nav-genefamily'))">Mark done &amp; next → Gene Family Analysis</button>
   </div>
 </div>
 
@@ -1405,7 +1696,7 @@ top20 &lt;- <span class="cf">head</span>(sig[<span class="cf">order</span>(sig$p
     </div>
   </div>
   <div class="step-nav">
-    <button class="btn btn-ghost" onclick="markDone('nav-plots')">✅ Mark analysis complete</button>
+    <button class="btn btn-ghost" onclick="markDone('nav-plots')">✅ Mark analysis complete — Step 10 of 10 🎉</button>
   </div>
 </div>
 
@@ -1414,164 +1705,227 @@ top20 &lt;- <span class="cf">head</span>(sig[<span class="cf">order</span>(sig$p
 <!-- ═══════════════════════════════════════════════════════ -->
 <div class="page" id="page-genefamily">
   <div class="page-header">
-    <h1>🧬 Gene Family Analysis</h1>
-    <p>For large genomes (wheat, maize, human, soybean), subset your DESeq2 results to a specific gene family. Useful when you want to focus on one biological pathway or functional group.</p>
+    <h1>🧬 Step 8 — Gene Family Analysis</h1>
+    <p>Select what to analyse — run the whole dataset, focus on one or more gene families, or both together. Each option produces separate R scripts and output files.</p>
   </div>
 
-  <!-- SELECTOR -->
+  <!-- ── STEP 1: WHAT TO ANALYSE ─────────────────────────────────────── -->
   <div class="card">
     <div class="card-head" style="background:rgba(188,140,255,0.08);">
-      <span class="card-icon">🎯</span> Select a gene family to analyse
+      <span class="card-icon">☑️</span> Step 1 — What would you like to analyse?
+      <span style="margin-left:auto;font-size:0.75em;color:var(--text3);font-weight:400;">Tick one or both — independent selections</span>
     </div>
     <div class="card-body">
-      <div class="alert info">
+
+      <div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:14px;">
+
+        <!-- Tile A: Whole analysis -->
+        <div class="gf-scope-tile active" id="gf-scope-whole" onclick="toggleScope('whole')">
+          <div class="gf-scope-check" id="gf-scope-check-whole">✓</div>
+          <div class="gf-scope-icon">🔬</div>
+          <div class="gf-scope-title">Whole RNA-seq Analysis</div>
+          <div class="gf-scope-desc">
+            Run DESeq2 on <strong>all genes</strong> in your count matrix.<br>
+            Produces: full volcano plot, heatmap of top 40 DE genes, PCA.
+            <div style="margin-top:8px;padding:6px 10px;background:rgba(63,185,80,0.07);border:1px solid rgba(63,185,80,0.15);border-radius:6px;font-size:0.85em;color:var(--green);">✓ Ticked by default — standard starting point</div>
+          </div>
+        </div>
+
+        <!-- Tile B: Gene family subset -->
+        <div class="gf-scope-tile" id="gf-scope-family" onclick="toggleScope('family')">
+          <div class="gf-scope-check" id="gf-scope-check-family"></div>
+          <div class="gf-scope-icon">🧬</div>
+          <div class="gf-scope-title">Gene Family Subset</div>
+          <div class="gf-scope-desc">
+            Filter results to <strong>specific gene families</strong> — transcription factors, kinases, hormone pathways, and 40+ more.<br>
+            <strong>Multi-select:</strong> choose as many categories and families as you want.
+            <div style="margin-top:8px;padding:6px 10px;background:rgba(188,140,255,0.07);border:1px solid rgba(188,140,255,0.2);border-radius:6px;font-size:0.85em;color:var(--purple);">Tick to reveal family selector below</div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Hint row -->
+      <div class="alert info" id="gf-scope-hint">
         <span class="alert-icon">💡</span>
-        <div>This works best after you have run the full DESeq2 analysis (Step 8). The code below will filter your results to only the genes belonging to the selected family, then produce a focused volcano plot and heatmap.</div>
+        <div id="gf-scope-hint-text">Whole analysis ticked. You can also tick Gene Family Subset to add focused analysis — both can run together and produce separate output files.</div>
       </div>
 
-      <div class="field-row cols-2" style="margin-bottom:16px;">
-        <div class="field">
-          <label>Gene family category</label>
-          <select id="gf-category" onchange="updateGFsubcat()">
-            <optgroup label="── Universal (all organisms) ──">
-              <option value="tf">Transcription Factors</option>
-              <option value="kinase">Protein Kinases</option>
-              <option value="phosphatase">Protein Phosphatases</option>
-              <option value="transporter">Transporters &amp; Channels</option>
-              <option value="ubiquitin">Ubiquitin / Proteasome</option>
-              <option value="hsp">Heat Shock Proteins (HSP)</option>
-              <option value="rrp">RNA-binding Proteins</option>
-              <option value="ribosomal">Ribosomal Proteins</option>
-              <option value="cytoskeleton">Cytoskeleton &amp; Motor Proteins</option>
-            </optgroup>
-            <optgroup label="── Plant-specific ──">
-              <option value="hormone_plant">Plant Hormone Signalling</option>
-              <option value="defense_plant">Plant Defense &amp; Resistance</option>
-              <option value="cellwall">Cell Wall Biosynthesis &amp; Modification</option>
-              <option value="photosynthesis">Photosynthesis &amp; Chloroplast</option>
-              <option value="metabolism_plant">Plant Secondary Metabolism</option>
-              <option value="flowering">Flowering Time &amp; Circadian</option>
-              <option value="root">Root Development</option>
-              <option value="seed">Seed Development &amp; Storage</option>
-            </optgroup>
-            <optgroup label="── Animal-specific ──">
-              <option value="gpcr">G-Protein Coupled Receptors (GPCR)</option>
-              <option value="nuclear_receptor">Nuclear Receptors</option>
-              <option value="immune">Immune System Genes</option>
-              <option value="signaling_animal">Animal Signalling Pathways</option>
-              <option value="ion_channel">Ion Channels</option>
-              <option value="ecm">Extracellular Matrix (ECM)</option>
-              <option value="apoptosis">Apoptosis &amp; Cell Death</option>
-              <option value="cancer">Cancer-associated Genes</option>
-              <option value="epigenetic">Epigenetic Regulators</option>
-              <option value="noncoding">Non-coding RNA Biogenesis</option>
-            </optgroup>
-            <optgroup label="── Microbial / Yeast ──">
-              <option value="yeast_metabolism">Yeast Core Metabolism</option>
-              <option value="yeast_stress">Yeast Stress Response</option>
-            </optgroup>
-          </select>
-        </div>
-        <div class="field">
-          <label>Specific gene family</label>
-          <select id="gf-family" onchange="updateGFcode()">
-            <option>— Select category first —</option>
-          </select>
-        </div>
+    </div>
+  </div>
+
+  <!-- ── STEP 2: FAMILY SELECTOR (only shown when Tile B ticked) ──────── -->
+  <div class="card" id="gf-family-selector" style="display:none;">
+    <div class="card-head" style="background:rgba(188,140,255,0.08);">
+      <span class="card-icon">🗂️</span> Step 2 — Select gene families
+      <span style="margin-left:auto;font-size:0.75em;font-weight:400;color:var(--purple);" id="gf-selected-count">0 families selected</span>
+    </div>
+    <div class="card-body">
+
+      <!-- Quick-select shortcuts -->
+      <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;padding:10px 14px;background:var(--bg3);border:1px solid var(--border);border-radius:9px;margin-bottom:16px;">
+        <span style="font-size:0.78em;color:var(--text3);font-weight:600;flex-shrink:0;">Quick select:</span>
+        <button class="btn btn-outline" style="font-size:0.73em;padding:3px 10px;" onclick="selectAllCats(true);selectAllFamilies(true)">✅ All families</button>
+        <button class="btn btn-outline" style="font-size:0.73em;padding:3px 10px;" onclick="selectCatGroup('plant')">🌱 All plant</button>
+        <button class="btn btn-outline" style="font-size:0.73em;padding:3px 10px;" onclick="selectCatGroup('animal')">🐾 All animal</button>
+        <button class="btn btn-outline" style="font-size:0.73em;padding:3px 10px;" onclick="selectCatGroup('yeast')">🍺 All yeast</button>
+        <button class="btn btn-outline" style="font-size:0.73em;padding:3px 10px;" onclick="selectCatGroup('universal')">🔬 Universal</button>
+        <button class="btn btn-outline" style="font-size:0.73em;padding:3px 10px;color:var(--red);border-color:var(--red);" onclick="selectAllCats(false);updateGFfamilyList()">✕ Clear all</button>
       </div>
 
-      <!-- FAMILY INFO BOX -->
-      <div id="gf-info-box" style="background:var(--bg3); border:1px solid var(--border); border-radius:var(--radius); padding:14px 16px; margin-bottom:14px; display:none;">
-        <div style="display:flex; gap:16px; align-items:flex-start; flex-wrap:wrap;">
-          <div style="flex:1; min-width:200px;">
-            <div style="font-size:0.7em; text-transform:uppercase; letter-spacing:0.5px; color:var(--text3); margin-bottom:4px;">Family</div>
-            <div id="gf-name" style="font-weight:700; font-size:1.05em; color:var(--purple);"></div>
+      <!-- Category multi-select -->
+      <div style="margin-bottom:6px;font-size:0.72em;text-transform:uppercase;letter-spacing:0.6px;color:var(--text3);font-weight:600;">
+        ① Tick one or more categories — you can select from multiple at once
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;" id="gf-cat-chips">
+        <label class="gf-cat-chip"><input type="checkbox" value="tf"               onchange="updateGFfamilyList()"> Transcription Factors</label>
+        <label class="gf-cat-chip"><input type="checkbox" value="kinase"           onchange="updateGFfamilyList()"> Protein Kinases</label>
+        <label class="gf-cat-chip"><input type="checkbox" value="phosphatase"      onchange="updateGFfamilyList()"> Phosphatases</label>
+        <label class="gf-cat-chip"><input type="checkbox" value="transporter"      onchange="updateGFfamilyList()"> Transporters &amp; Channels</label>
+        <label class="gf-cat-chip"><input type="checkbox" value="ubiquitin"        onchange="updateGFfamilyList()"> Ubiquitin / Proteasome</label>
+        <label class="gf-cat-chip"><input type="checkbox" value="hsp"              onchange="updateGFfamilyList()"> Heat Shock Proteins</label>
+        <label class="gf-cat-chip"><input type="checkbox" value="rrp"              onchange="updateGFfamilyList()"> RNA-binding Proteins</label>
+        <label class="gf-cat-chip"><input type="checkbox" value="ribosomal"        onchange="updateGFfamilyList()"> Ribosomal Proteins</label>
+        <label class="gf-cat-chip"><input type="checkbox" value="hormone_plant"    onchange="updateGFfamilyList()"> 🌱 Plant Hormones</label>
+        <label class="gf-cat-chip"><input type="checkbox" value="defense_plant"    onchange="updateGFfamilyList()"> 🌱 Plant Defense</label>
+        <label class="gf-cat-chip"><input type="checkbox" value="cellwall"         onchange="updateGFfamilyList()"> 🌱 Cell Wall</label>
+        <label class="gf-cat-chip"><input type="checkbox" value="photosynthesis"   onchange="updateGFfamilyList()"> 🌱 Photosynthesis</label>
+        <label class="gf-cat-chip"><input type="checkbox" value="metabolism_plant" onchange="updateGFfamilyList()"> 🌱 Plant Metabolism</label>
+        <label class="gf-cat-chip"><input type="checkbox" value="flowering"        onchange="updateGFfamilyList()"> 🌱 Flowering / Circadian</label>
+        <label class="gf-cat-chip"><input type="checkbox" value="immune"           onchange="updateGFfamilyList()"> 🐾 Immune System</label>
+        <label class="gf-cat-chip"><input type="checkbox" value="signaling_animal" onchange="updateGFfamilyList()"> 🐾 Animal Signalling</label>
+        <label class="gf-cat-chip"><input type="checkbox" value="apoptosis"        onchange="updateGFfamilyList()"> 🐾 Apoptosis</label>
+        <label class="gf-cat-chip"><input type="checkbox" value="cancer"           onchange="updateGFfamilyList()"> 🐾 Cancer Genes</label>
+        <label class="gf-cat-chip"><input type="checkbox" value="epigenetic"       onchange="updateGFfamilyList()"> 🐾 Epigenetic</label>
+        <label class="gf-cat-chip"><input type="checkbox" value="gpcr"             onchange="updateGFfamilyList()"> 🐾 GPCRs</label>
+        <label class="gf-cat-chip"><input type="checkbox" value="yeast_metabolism" onchange="updateGFfamilyList()"> 🍺 Yeast Metabolism</label>
+        <label class="gf-cat-chip"><input type="checkbox" value="yeast_stress"     onchange="updateGFfamilyList()"> 🍺 Yeast Stress</label>
+      </div>
+
+      <!-- Specific families multi-select -->
+      <div id="gf-specific-panel" style="display:none;">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+          <div style="font-size:0.72em;text-transform:uppercase;letter-spacing:0.6px;color:var(--text3);font-weight:600;">
+            ② Tick which specific families to include — multiple selections welcome
           </div>
-          <div style="flex:2; min-width:260px;">
-            <div style="font-size:0.7em; text-transform:uppercase; letter-spacing:0.5px; color:var(--text3); margin-bottom:4px;">Description</div>
-            <div id="gf-desc" style="font-size:0.85em; color:var(--text2); line-height:1.5;"></div>
+          <div style="display:flex;gap:6px;margin-left:auto;flex-shrink:0;">
+            <button class="btn btn-outline" style="font-size:0.72em;padding:2px 10px;" onclick="selectAllFamilies(true)">✅ All</button>
+            <button class="btn btn-outline" style="font-size:0.72em;padding:2px 10px;color:var(--red);border-color:var(--red);" onclick="selectAllFamilies(false)">✕ None</button>
           </div>
-          <div style="flex:1; min-width:160px;">
-            <div style="font-size:0.7em; text-transform:uppercase; letter-spacing:0.5px; color:var(--text3); margin-bottom:4px;">Best database</div>
-            <div id="gf-db" style="font-size:0.82em; color:var(--blue);"></div>
+        </div>
+        <!-- Families grouped by category with a header per category -->
+        <div id="gf-specific-list" style="display:flex;gap:8px;flex-wrap:wrap;"></div>
+        <!-- Counter bar -->
+        <div id="gf-fam-counter" style="display:none;margin-top:10px;padding:8px 12px;background:rgba(63,185,80,0.07);border:1px solid rgba(63,185,80,0.2);border-radius:8px;font-size:0.8em;color:var(--green);"></div>
+      </div>
+
+      <!-- Custom gene list -->
+      <div style="margin-top:16px;padding:14px 16px;background:var(--bg3);border:1px solid var(--border);border-radius:10px;">
+        <div style="font-size:0.72em;text-transform:uppercase;letter-spacing:0.6px;color:var(--text3);font-weight:600;margin-bottom:8px;">
+          ③ Custom gene list (optional) — add your own specific genes
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+          <div>
+            <label style="font-size:0.78em;color:var(--text2);">Paste gene IDs — one per line or comma-separated</label>
+            <textarea id="gf-custom-genes" rows="4" placeholder="AT1G01010&#10;AT2G39730&#10;Os01g0100100&#10;..." oninput="updateGFsummary()" style="width:100%;margin-top:6px;padding:8px 10px;background:var(--bg2);border:1px solid var(--border);border-radius:7px;color:var(--text);font-family:var(--mono);font-size:0.8em;resize:vertical;"></textarea>
           </div>
           <div>
-            <div style="font-size:0.7em; text-transform:uppercase; letter-spacing:0.5px; color:var(--text3); margin-bottom:4px;">Organisms</div>
-            <div id="gf-org" style="font-size:0.82em;"></div>
+            <label style="font-size:0.78em;color:var(--text2);">Custom list name (used in output files)</label>
+            <input id="gf-custom-name" type="text" placeholder="my_gene_list" oninput="updateGFsummary()" style="width:100%;margin-top:6px;padding:7px 10px;background:var(--bg2);border:1px solid var(--border);border-radius:7px;color:var(--text);font-family:var(--mono);font-size:0.82em;">
+            <div style="font-size:0.75em;color:var(--text3);margin-top:8px;line-height:1.5;">Combine with selected families above, or use alone. Accepts any gene ID matching your count matrix.</div>
           </div>
         </div>
       </div>
-    </div>
-  </div>
 
-  <!-- METHOD SELECTOR -->
-  <div class="card" id="gf-method-card" style="display:none;">
-    <div class="card-head" style="background:rgba(63,185,80,0.08);">
-      <span class="card-icon">🔬</span> How to get the gene list for this family
-    </div>
-    <div class="card-body">
-      <div class="alert warning">
-        <span class="alert-icon">⚠️</span>
-        <div><strong>For large genomes (wheat, maize, human):</strong> Gene family membership is stored in specialist databases. You must download the gene list first, then use it to filter your count matrix. The app generates both approaches below.</div>
+      <!-- Live selection summary -->
+      <div id="gf-selection-summary" style="display:none;margin-top:14px;padding:12px 14px;background:rgba(63,185,80,0.07);border:1px solid rgba(63,185,80,0.2);border-radius:9px;">
+        <div style="font-size:0.72em;text-transform:uppercase;letter-spacing:0.6px;color:var(--green);font-weight:600;margin-bottom:6px;">✅ Selection summary</div>
+        <div id="gf-selection-text" style="font-size:0.83em;color:var(--text2);line-height:1.7;"></div>
       </div>
 
-      <h3>Method A — Download from specialist database (recommended for large genomes):</h3>
-      <div class="code-block"><div class="code-toolbar"><span class="code-lang">bash — download gene family list</span><div class="code-toolbar-spacer"></div><button class="copy-btn" onclick="copyBlock(this)">Copy</button></div>
-      <pre class="code" id="gf-cmd-download">...</pre></div>
-
-      <h3>Method B — Pattern-based filtering (quick, works for all organisms):</h3>
-      <div class="alert info"><span class="alert-icon">💡</span> This uses gene name patterns from the count table. Works well for named gene families. Less complete than database method but requires no extra downloads.</div>
-      <div class="code-block"><div class="code-toolbar"><span class="code-lang">R — filter by gene name patterns</span><div class="code-toolbar-spacer"></div><button class="copy-btn" onclick="copyBlock(this)">Copy</button></div>
-      <pre class="code" id="gf-cmd-filter">...</pre></div>
     </div>
   </div>
 
-  <!-- ANALYSIS CODE -->
-  <div class="card" id="gf-analysis-card" style="display:none;">
-    <div class="card-head" style="background:rgba(240,136,62,0.08);">
-      <span class="card-icon">📊</span> Gene family DESeq2 analysis — run in RStudio
-    </div>
-    <div class="card-body">
-      <div class="code-block"><div class="code-toolbar"><span class="code-lang">R — complete gene family analysis pipeline</span><div class="code-toolbar-spacer"></div><button class="copy-btn" onclick="copyBlock(this)">Copy</button></div>
-      <pre class="code" id="gf-cmd-analysis">...</pre></div>
-    </div>
+  <!-- ── GENERATE BUTTON ───────────────────────────────────────────────── -->
+  <div id="gf-generate-row" style="margin:0 0 16px;display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
+    <button class="btn btn-green" style="font-size:0.9em;padding:10px 24px;" onclick="generateGFcode()">⚡ Generate analysis code</button>
+    <span style="font-size:0.8em;color:var(--text3);" id="gf-generate-label">Whole analysis ready — click to generate R scripts</span>
   </div>
 
-  <!-- PLOTS CODE -->
-  <div class="card" id="gf-plots-card" style="display:none;">
-    <div class="card-head" style="background:rgba(88,166,255,0.08);">
-      <span class="card-icon">🌋</span> Gene family focused plots — run in RStudio
+  <!-- ── GENERATED CODE CARDS ─────────────────────────────────────────── -->
+  <div id="gf-code-section" style="display:none;">
+
+    <div class="card" id="gf-whole-card" style="display:none;">
+      <div class="card-head" style="background:rgba(63,185,80,0.08);">
+        <span class="card-icon">🔬</span> Whole RNA-seq DESeq2 analysis — run in RStudio
+        <span style="margin-left:auto;font-size:0.75em;color:var(--text3);font-weight:400;">All genes · Volcano · Heatmap · PCA</span>
+      </div>
+      <div class="card-body">
+        <div class="alert info"><span class="alert-icon">💡</span><div>Standard full analysis — all genes in your count matrix. Run this first. Results saved to <code>results/deseq2_results_whole.csv</code>.</div></div>
+        <div class="code-block"><div class="code-toolbar"><span class="code-lang">R — full DESeq2 + plots</span><div class="code-toolbar-spacer"></div><button class="copy-btn" onclick="copyBlock(this)">Copy</button></div>
+        <pre class="code" id="gf-cmd-whole">...</pre></div>
+      </div>
     </div>
-    <div class="card-body">
-      <div class="code-block"><div class="code-toolbar"><span class="code-lang">R — volcano + heatmap for this gene family only</span><div class="code-toolbar-spacer"></div><button class="copy-btn" onclick="copyBlock(this)">Copy</button></div>
-      <pre class="code" id="gf-cmd-plots">...</pre></div>
+
+    <div class="card" id="gf-filter-card" style="display:none;">
+      <div class="card-head" style="background:rgba(188,140,255,0.08);">
+        <span class="card-icon">🧬</span> Step 1 — Filter count matrix to selected gene families
+        <span style="margin-left:auto;font-size:0.75em;color:var(--text3);font-weight:400;" id="gf-filter-card-label"></span>
+      </div>
+      <div class="card-body">
+        <div class="alert warning"><span class="alert-icon">⚠️</span><div>For large genomes (human, wheat, maize): also download curated gene lists from PlantTFDB / AnimalTFDB / KEGG for the most complete results. Pattern-based filtering below works well for most cases.</div></div>
+        <div class="code-block"><div class="code-toolbar"><span class="code-lang">R — filter count matrix to selected families</span><div class="code-toolbar-spacer"></div><button class="copy-btn" onclick="copyBlock(this)">Copy</button></div>
+        <pre class="code" id="gf-cmd-filter">...</pre></div>
+      </div>
     </div>
+
+    <div class="card" id="gf-analysis-card" style="display:none;">
+      <div class="card-head" style="background:rgba(240,136,62,0.08);">
+        <span class="card-icon">📊</span> Step 2 — DESeq2 on filtered gene subset
+      </div>
+      <div class="card-body">
+        <div class="code-block"><div class="code-toolbar"><span class="code-lang">R — DESeq2 on gene family subset</span><div class="code-toolbar-spacer"></div><button class="copy-btn" onclick="copyBlock(this)">Copy</button></div>
+        <pre class="code" id="gf-cmd-analysis">...</pre></div>
+      </div>
+    </div>
+
+    <div class="card" id="gf-plots-card" style="display:none;">
+      <div class="card-head" style="background:rgba(88,166,255,0.08);">
+        <span class="card-icon">🌋</span> Step 3 — Volcano plot + heatmap for selected families
+      </div>
+      <div class="card-body">
+        <div class="code-block"><div class="code-toolbar"><span class="code-lang">R — volcano + heatmap per family</span><div class="code-toolbar-spacer"></div><button class="copy-btn" onclick="copyBlock(this)">Copy</button></div>
+        <pre class="code" id="gf-cmd-plots">...</pre></div>
+      </div>
+    </div>
+
   </div>
 
-  <!-- DATABASE REFERENCE -->
+  <!-- ── DATABASE REFERENCE ────────────────────────────────────────────── -->
   <div class="card">
-    <div class="card-head"><span class="card-icon">🗂️</span> Gene family database reference — all organisms</div>
+    <div class="card-head"><span class="card-icon">🗂️</span> Gene family database reference</div>
     <div class="card-body">
       <table class="ref-table">
         <tr><th>Database</th><th>What it contains</th><th>URL</th><th>Best for</th></tr>
-        <tr><td>PlantTFDB</td><td>All plant transcription factor families</td><td><code>planttfdb.gao-lab.org</code></td><td>Arabidopsis, rice, maize, wheat, soybean, tomato</td></tr>
-        <tr><td>iTAK</td><td>Plant TF + protein kinase database</td><td><code>itak.bioinfotoolkits.net</code></td><td>All plant species</td></tr>
-        <tr><td>TF Checkpoint (AnimalTFDB)</td><td>Animal transcription factor families</td><td><code>animaltfdb.bioinfotoolkits.net</code></td><td>Human, mouse, rat, zebrafish</td></tr>
-        <tr><td>KEGG Pathway</td><td>Metabolic &amp; signalling pathway genes</td><td><code>kegg.jp</code></td><td>All organisms with KEGG annotation</td></tr>
-        <tr><td>Pfam</td><td>Protein domain families</td><td><code>pfam.xfam.org</code></td><td>Any organism with protein sequences</td></tr>
-        <tr><td>InterPro</td><td>Integrated protein family database</td><td><code>ebi.ac.uk/interpro</code></td><td>Any organism</td></tr>
+        <tr><td>PlantTFDB</td><td>All plant TF families</td><td><code>planttfdb.gao-lab.org</code></td><td>Arabidopsis, rice, maize, wheat, soybean, tomato</td></tr>
+        <tr><td>iTAK</td><td>Plant TF + protein kinase</td><td><code>itak.bioinfotoolkits.net</code></td><td>All plant species</td></tr>
+        <tr><td>AnimalTFDB</td><td>Animal TF families</td><td><code>animaltfdb.bioinfotoolkits.net</code></td><td>Human, mouse, rat, zebrafish</td></tr>
+        <tr><td>KEGG Pathway</td><td>Metabolic &amp; signalling pathways</td><td><code>kegg.jp</code></td><td>All organisms</td></tr>
+        <tr><td>Pfam / InterPro</td><td>Protein domain families</td><td><code>ebi.ac.uk/interpro</code></td><td>Any organism</td></tr>
         <tr><td>PANTHER</td><td>Protein families + subfamilies</td><td><code>pantherdb.org</code></td><td>Human, mouse, Drosophila, worm</td></tr>
-        <tr><td>Ensembl BioMart</td><td>Gene family / Pfam domain filtering</td><td><code>ensembl.org/biomart</code></td><td>All Ensembl organisms</td></tr>
-        <tr><td>TAIR (plants)</td><td>Arabidopsis gene family annotations</td><td><code>arabidopsis.org</code></td><td>Arabidopsis thaliana</td></tr>
-        <tr><td>RAP-DB (rice)</td><td>Rice gene annotations and families</td><td><code>rapdb.dna.affrc.go.jp</code></td><td>Oryza sativa</td></tr>
-        <tr><td>MaizeGDB</td><td>Maize gene family annotations</td><td><code>maizegdb.org</code></td><td>Zea mays</td></tr>
-        <tr><td>SoyBase</td><td>Soybean gene family annotations</td><td><code>soybase.org</code></td><td>Glycine max</td></tr>
-        <tr><td>SGD (yeast)</td><td>Saccharomyces gene families</td><td><code>yeastgenome.org</code></td><td>S. cerevisiae</td></tr>
-        <tr><td>NCBI Gene</td><td>Gene families for any NCBI organism</td><td><code>ncbi.nlm.nih.gov/gene</code></td><td>Universal</td></tr>
+        <tr><td>Ensembl BioMart</td><td>Gene family / Pfam filtering</td><td><code>ensembl.org/biomart</code></td><td>All Ensembl organisms</td></tr>
       </table>
     </div>
   </div>
+
+  <!-- Done button -->
+  <div style="margin:8px 0 20px;display:flex;gap:10px;align-items:center;">
+    <button class="btn btn-ghost" onclick="markDone('nav-genefamily'); goTo('page-deseq2', document.getElementById('nav-deseq2'))">Mark done &amp; next → DESeq2 in R</button>
+    <span style="font-size:0.8em;color:var(--text3);">Step 8 of 10</span>
+  </div>
+
 </div>
+
 
 </div><!-- end main -->
 </div><!-- end app-body -->
@@ -1638,14 +1992,16 @@ function goTo(pageId, navEl) {
 }
 
 const doneSteps = new Set();
+const TOTAL_STEPS = 10;
 function markDone(navId) {
   doneSteps.add(navId);
   const el = document.getElementById(navId);
   if (el) { el.classList.add('done'); el.querySelector('.nav-check').textContent = '✓'; }
   const n = doneSteps.size;
-  document.getElementById('sb-prog-fill').style.width = (n/10*100)+'%';
-  document.getElementById('sb-prog-label').textContent = `${n} / 10`;
-  document.getElementById('tb-progress').textContent = `${n} / 10`;
+  const pct = Math.min(n / TOTAL_STEPS * 100, 100);
+  document.getElementById('sb-prog-fill').style.width = pct + '%';
+  document.getElementById('sb-prog-label').textContent = n + ' / ' + TOTAL_STEPS;
+  document.getElementById('tb-progress').textContent   = n + ' / ' + TOTAL_STEPS;
 }
 
 // ── MAIN COMMAND GENERATOR ─────────────────────────────────────────────────
@@ -1695,7 +2051,7 @@ function updateAll() {
   tSamp.forEach(s => dl += paired
     ? `fasterq-dump ${s} --outdir ${base}/raw_data --progress --split-files\n`
     : `fasterq-dump ${s} --outdir ${base}/raw_data --progress\n`);
-  set('cmd-download', dl.trim());
+  set('cmd-download', envWrap(dl.trim(), 'step2_download'));
   set('cmd-check-dl', `ls -lh ${base}/raw_data/`);
 
   // FastQC
@@ -1703,8 +2059,8 @@ function updateAll() {
   all.forEach(s => fqc += paired
     ? `fastqc ${base}/raw_data/${s}_1.fastq ${base}/raw_data/${s}_2.fastq -o ${base}/qc/\n`
     : `fastqc ${base}/raw_data/${s}.fastq -o ${base}/qc/\n`);
-  set('cmd-fastqc', fqc.trim());
-  set('cmd-multiqc', `multiqc ${base}/qc/ -o ${base}/qc/\nopen ${base}/qc/multiqc_report.html`);
+  set('cmd-fastqc', envWrap(fqc.trim(), 'step3_fastqc'));
+  set('cmd-multiqc', envWrap(`multiqc ${base}/qc/ -o ${base}/qc/\nopen ${base}/qc/multiqc_report.html`, 'step3_multiqc'));
 
   // Trim
   let trim = '';
@@ -1719,8 +2075,8 @@ function updateAll() {
     trim += `      --trim_front1 5 --qualified_quality_phred 20 --length_required 36 \\\n`;
     trim += `      --html ${base}/qc/${s}_fastp.html -j ${base}/qc/${s}_fastp.json\n\n`;
   });
-  set('cmd-trim', trim.trim());
-  set('cmd-check-trim', `ls -lh ${base}/trimmed/`);
+  set('cmd-trim', envWrap(trim.trim(), 'step4_trim'));
+  set('cmd-check-trim', envWrap(`ls -lh ${base}/trimmed/`, 'step4_check'));
 
   // Genome
   let gCmd = `# ─── Download genome FASTA ───\ncd ${base}/genome\ncurl -L -o ${org}_genome.fa.gz "${gUrl}"\ngunzip ${base}/genome/${org}_genome.fa.gz\n\n`;
@@ -1728,8 +2084,8 @@ function updateAll() {
   gCmd += `# ─── Verify (genome ~5–800 MB, annotation ~5–50 MB) ───\nls -lh ${base}/genome/ && ls -lh ${base}/reference/`;
   set('cmd-genome', gCmd);
 
-  set('cmd-index',
-    `# Build once — reuse for all future samples with the same organism\nhisat2-build ${base}/genome/${org}_genome.fa \\\n             ${base}/genome/${org}_index\n\n# Verify: should see 8 files ending in .ht2\nls -lh ${base}/genome/`);
+  set('cmd-index', envWrap(
+    `# Build once — reuse for all future samples with the same organism\nhisat2-build ${base}/genome/${org}_genome.fa \\\n             ${base}/genome/${org}_index\n\n# Verify: should see 8 files ending in .ht2\nls -lh ${base}/genome/`, 'step5_index'));
 
   // Align
   let align='', bam='';
@@ -1743,8 +2099,8 @@ function updateAll() {
     align += `       -S ${base}/aligned/${s}.sam \\\n       --summary-file ${base}/aligned/${s}_summary.txt -p 4\n\n`;
     bam += `samtools sort ${base}/aligned/${s}.sam -o ${base}/aligned/${s}.bam && \\\nsamtools index ${base}/aligned/${s}.bam && \\\nrm ${base}/aligned/${s}.sam\n\n`;
   });
-  set('cmd-align', align.trim());
-  set('cmd-bam', bam.trim());
+  set('cmd-align', envWrap(align.trim(), 'step6_align'));
+  set('cmd-bam', envWrap(bam.trim(), 'step6_bam'));
 
   // Counts
   const pe  = paired ? '\n  -p \\' : '';
@@ -2050,191 +2406,269 @@ const GF = {
 };
 
 // ── SUBCATEGORY POPULATION ─────────────────────────────────────────────────
-function updateGFsubcat() {
-  const cat = document.getElementById('gf-category').value;
-  const sel = document.getElementById('gf-family');
-  sel.innerHTML = '<option value="">— Select gene family —</option>';
-  (GF[cat] || []).forEach(f => {
-    const o = document.createElement('option');
-    o.value = f.id; o.textContent = f.name;
-    sel.appendChild(o);
-  });
-  document.getElementById('gf-info-box').style.display = 'none';
-  document.getElementById('gf-method-card').style.display = 'none';
-  document.getElementById('gf-analysis-card').style.display = 'none';
-  document.getElementById('gf-plots-card').style.display = 'none';
+// ── GENE FAMILY — SCOPE TOGGLE ───────────────────────────────────────────
+const gfScope = { whole: true, family: false };  // whole ON by default
+
+function toggleScope(which) {
+  gfScope[which] = !gfScope[which];
+  const tile  = document.getElementById('gf-scope-' + which);
+  const check = document.getElementById('gf-scope-check-' + which);
+  if (tile)  tile.classList.toggle('active', gfScope[which]);
+  if (check) check.textContent = gfScope[which] ? '✓' : '';
+
+  // Show/hide family selector card
+  const famSel = document.getElementById('gf-family-selector');
+  if (famSel) famSel.style.display = gfScope.family ? '' : 'none';
+
+  updateGFsummary();
 }
 
-function updateGFcode() {
-  const cat = document.getElementById('gf-category').value;
-  const fid = document.getElementById('gf-family').value;
-  if (!fid) return;
-  const fam = (GF[cat] || []).find(f => f.id === fid);
-  if (!fam) return;
-
-  const base   = document.getElementById('folder-preview-text')?.textContent || '~/Desktop/RNA-Seq_organism';
-  const ctrl   = document.getElementById('cfg-ctrl')?.value  || 'control';
-  const treat  = document.getElementById('cfg-treat')?.value || 'treatment';
-
-  // Show info box
-  document.getElementById('gf-name').textContent = fam.name;
-  document.getElementById('gf-desc').textContent = fam.desc;
-  document.getElementById('gf-db').textContent   = fam.db;
-  document.getElementById('gf-org').innerHTML    = fam.org;
-  document.getElementById('gf-info-box').style.display = 'block';
-
-  // Show cards
-  ['gf-method-card','gf-analysis-card','gf-plots-card'].forEach(id => {
-    document.getElementById(id).style.display = 'block';
-  });
-
-  // ─ Method A: database download command ─
-  const dbNote = `# ─── ${fam.name} ───────────────────────────────────────────
-# Best database: ${fam.db}
-#
-# OPTION 1 — PlantTFDB (plants):
-#   Go to: http://planttfdb.gao-lab.org/
-#   Select species → Select family → Download → Save as ${fam.id}_genes.txt
-#
-# OPTION 2 — AnimalTFDB (animals):
-#   Go to: http://animaltfdb.bioinfotoolkits.net/
-#   Select species → Select family → Download gene list
-#
-# OPTION 3 — Ensembl BioMart (any organism):
-curl -s "https://www.ensembl.org/biomart/martservice" \\
-  -d "query=<?xml version='1.0' encoding='UTF-8'?><!DOCTYPE Query><Query formatter='CSV' header='0'><Dataset name='hsapiens_gene_ensembl'><Filter name='go_parent_term' value='${fam.keyw}'/><Attribute name='ensembl_gene_id'/><Attribute name='external_gene_name'/></Dataset></Query>" \\
-  > ${base}/results/${fam.id}_genelist.txt
-
-# OPTION 4 — KEGG API (for pathway-based families):
-# Go to: https://www.genome.jp/kegg/pathway.html
-# Search '${fam.name}' → click pathway → Download gene list
-#
-# After downloading, place the file at:
-# ${base}/results/${fam.id}_genelist.txt`;
-  set('gf-cmd-download', dbNote);
-
-  // ─ Method B: pattern filter in R ─
-  const patterns = fam.patterns.map(p => `"${p}"`).join(', ');
-  const filterCode = `# ─── Filter count matrix to ${fam.name} ─────────────────────────
-library(DESeq2); library(dplyr)
-base_path <- "${base}"
-
-# Load full count results (must have run Step 8 first)
-res_df <- read.csv(paste0(base_path, "/results/deseq2_results.csv"))
-
-# Method B — pattern matching on gene names
-# Patterns used: ${fam.patterns.join(', ')}
-family_patterns <- c(${patterns})
-pattern_regex <- paste(family_patterns, collapse="|")
-
-gf_genes <- res_df[grepl(pattern_regex, res_df$gene, ignore.case=TRUE), ]
-cat("Genes matching '${fam.name}' pattern: ", nrow(gf_genes), "\\n")
-cat("Significant (padj<0.05): ", sum(gf_genes$padj<0.05, na.rm=TRUE), "\\n")
-head(gf_genes[order(gf_genes$padj, na.last=TRUE), c("gene","log2FoldChange","padj")], 20)`;
-  set('gf-cmd-filter', filterCode);
-
-  // ─ Full DESeq2 analysis for gene family ─
-  const nc = document.querySelectorAll('#ctrl-rows input').length + document.querySelectorAll('#treat-rows input').length;
-  const analysisCode = `# ─── ${fam.name} — DESeq2 subset analysis ─────────────────────
-library(DESeq2); library(ggplot2); library(pheatmap); library(ggrepel); library(dplyr)
-base_path <- "${base}"
-
-# ── Step 1: Load your FULL count table ───────────────────────
-counts_raw <- read.table(paste0(base_path, "/counts/gene_counts_all.txt"),
-                          header=TRUE, skip=1, row.names=1)
-counts_full <- counts_raw[, (ncol(counts_raw)-${nc-1}):ncol(counts_raw)]
-
-# ── Step 2: Filter to ${fam.name} genes ──────────────────────
-# Method A — from database file (recommended for large genomes):
-# gf_list <- read.table(paste0(base_path, "/results/${fam.id}_genelist.txt"),
-#                        header=FALSE, stringsAsFactors=FALSE)$V1
-# counts_gf <- counts_full[rownames(counts_full) %in% gf_list, ]
-
-# Method B — pattern matching (use if no database file yet):
-patterns_gf <- c(${patterns})
-pattern_regex_gf <- paste(patterns_gf, collapse="|")
-keep_genes <- grepl(pattern_regex_gf, rownames(counts_full), ignore.case=TRUE)
-counts_gf <- counts_full[keep_genes, ]
-cat("Genes in ${fam.name} subset: ", nrow(counts_gf), "\\n")
-
-if (nrow(counts_gf) < 3) stop("Too few genes matched — check patterns or use database file")
-
-# ── Step 3: Run DESeq2 on gene family subset ─────────────────
-sample_info_gf <- data.frame(
-  condition = factor(c(${[...Array(document.querySelectorAll('#ctrl-rows input').length)].map(()=>`"${ctrl}"`).join(', ')}, ${[...Array(document.querySelectorAll('#treat-rows input').length)].map(()=>`"${treat}"`).join(', ')})),
-  row.names = colnames(counts_gf)
-)
-
-dds_gf <- DESeqDataSetFromMatrix(countData=counts_gf, colData=sample_info_gf, design=~condition)
-dds_gf <- dds_gf[rowSums(counts(dds_gf)) >= 5, ]  # lower threshold for small families
-dds_gf <- DESeq(dds_gf)
-
-# ── Step 4: Results ───────────────────────────────────────────
-res_gf <- results(dds_gf, contrast=c("condition","${treat}","${ctrl}"), alpha=0.05)
-summary(res_gf)
-
-# Save gene family results
-res_gf_df <- as.data.frame(res_gf)
-res_gf_df$gene <- rownames(res_gf_df)
-write.csv(res_gf_df,
-          paste0(base_path, "/results/${fam.id}_deseq2_results.csv"),
-          row.names=FALSE)
-cat("\\n${fam.name} analysis complete!\\n")
-cat("Significant genes (padj<0.05): ", sum(res_gf_df$padj<0.05, na.rm=TRUE), "\\n")
-cat("Upregulated in ${treat}: ", sum(res_gf_df$padj<0.05 & res_gf_df$log2FoldChange>0, na.rm=TRUE), "\\n")
-cat("Downregulated in ${treat}: ", sum(res_gf_df$padj<0.05 & res_gf_df$log2FoldChange<0, na.rm=TRUE), "\\n")`;
-  set('gf-cmd-analysis', analysisCode);
-
-  // ─ Plots for gene family ─
-  const plotsCode = `# ─── ${fam.name} — Volcano + Heatmap ─────────────────────────
-# (run after the DESeq2 subset analysis above)
-
-# ── Volcano plot ──────────────────────────────────────────────
-res_gf_df_plot <- res_gf_df[!is.na(res_gf_df$padj), ]
-res_gf_df_plot$sig <- "Not significant"
-res_gf_df_plot$sig[res_gf_df_plot$padj<0.05 & res_gf_df_plot$log2FoldChange>1]  <- "Up"
-res_gf_df_plot$sig[res_gf_df_plot$padj<0.05 & res_gf_df_plot$log2FoldChange< -1] <- "Down"
-top_gf <- res_gf_df_plot %>% filter(padj<0.05) %>% arrange(padj) %>% head(20)
-
-p_gf <- ggplot(res_gf_df_plot, aes(log2FoldChange, -log10(padj), color=sig)) +
-  geom_point(alpha=0.7, size=2) +
-  scale_color_manual(values=c("Up"="#f0883e","Down"="#58a6ff","Not significant"="#6e7681")) +
-  geom_text_repel(data=top_gf, aes(label=gene), size=3, max.overlaps=20) +
-  geom_vline(xintercept=c(-1,1), linetype="dashed", color="#444") +
-  geom_hline(yintercept=-log10(0.05), linetype="dashed", color="#444") +
-  labs(title=paste0("${fam.name}: ${treat} vs ${ctrl}"),
-       subtitle=paste0(sum(res_gf_df_plot$sig=="Up"), " up | ",
-                       sum(res_gf_df_plot$sig=="Down"), " down"),
-       x="Log2 fold change", y="-Log10 adjusted p-value") +
-  theme_minimal(base_size=13)
-print(p_gf)
-ggsave(paste0(base_path, "/results/${fam.id}_volcano.png"),
-       plot=p_gf, width=10, height=7, dpi=300)
-
-# ── Heatmap of top 30 significant family genes ────────────────
-sig_gf_genes <- res_gf_df %>%
-  filter(padj<0.05) %>% arrange(padj) %>% head(30) %>% pull(gene)
-
-if (length(sig_gf_genes) >= 3) {
-  vst_gf <- vst(dds_gf, blind=FALSE)
-  mat_gf <- assay(vst_gf)[sig_gf_genes, ]
-  mat_gf_sc <- t(scale(t(mat_gf)))
-  pheatmap(mat_gf_sc,
-    cluster_rows=TRUE, cluster_cols=FALSE,
-    color=colorRampPalette(c("#58a6ff","white","#f0883e"))(100),
-    main=paste0("${fam.name} — top significant genes"),
-    fontsize_row=8,
-    filename=paste0(base_path, "/results/${fam.id}_heatmap.png"),
-    width=9, height=11)
-  cat("Heatmap saved!\\n")
-} else { cat("Not enough significant genes for heatmap (need ≥3)\\n") }
-
-cat("All ${fam.name} plots saved to: ", base_path, "/results/\\n")`;
-  set('gf-cmd-plots', plotsCode);
+// ── SELECT ALL CATS / FAMILIES ────────────────────────────────────────────
+function selectAllCats(val) {
+  document.querySelectorAll('#gf-cat-chips input[type=checkbox]')
+    .forEach(cb => { cb.checked = val; });
+  updateGFfamilyList();
 }
 
-// Initialise subcategory on load
-updateGFsubcat();
+function selectAllFamilies(val) {
+  document.querySelectorAll('#gf-specific-list input[type=checkbox]')
+    .forEach(cb => { cb.checked = val; });
+  updateGFsummary();
+}
+
+// ── QUICK GROUP SELECT ────────────────────────────────────────────────────
+const CAT_GROUPS = {
+  plant:     ['hormone_plant','defense_plant','cellwall','photosynthesis','metabolism_plant','flowering'],
+  animal:    ['immune','signaling_animal','apoptosis','cancer','epigenetic','gpcr'],
+  yeast:     ['yeast_metabolism','yeast_stress'],
+  universal: ['tf','kinase','phosphatase','transporter','ubiquitin','hsp','rrp','ribosomal']
+};
+
+function selectCatGroup(group) {
+  const cats = CAT_GROUPS[group] || [];
+  // First clear all, then check only this group's cats
+  document.querySelectorAll('#gf-cat-chips input[type=checkbox]')
+    .forEach(cb => { cb.checked = cats.includes(cb.value); });
+  updateGFfamilyList();
+}
+
+// ── BUILD SPECIFIC FAMILY LIST ────────────────────────────────────────────
+function updateGFfamilyList() {
+  const checked = [...document.querySelectorAll('#gf-cat-chips input:checked')]
+    .map(cb => cb.value);
+
+  const panel   = document.getElementById('gf-specific-panel');
+  const list    = document.getElementById('gf-specific-list');
+  const counter = document.getElementById('gf-fam-counter');
+  if (!list) return;
+
+  if (checked.length === 0) {
+    if (panel) panel.style.display = 'none';
+    updateGFsummary();
+    return;
+  }
+
+  // Preserve previously checked family IDs
+  const prevChecked = new Set(
+    [...document.querySelectorAll('#gf-specific-list input:checked')].map(cb => cb.value)
+  );
+
+  list.innerHTML = '';
+
+  checked.forEach(cat => {
+    const families = GF[cat] || [];
+    if (!families.length) return;
+
+    // Category header label
+    const catLabel = document.querySelector('#gf-cat-chips input[value="' + cat + '"]')
+      ?.parentElement?.textContent?.trim() || cat;
+    const header = document.createElement('div');
+    header.style.cssText = 'width:100%;font-size:0.68em;text-transform:uppercase;letter-spacing:0.8px;color:var(--purple);font-weight:700;margin:8px 0 4px;display:flex;align-items:center;gap:8px;';
+    header.innerHTML = catLabel
+      + '<span style="flex:1;height:1px;background:rgba(188,140,255,0.2);"></span>'
+      + '<button onclick="selectCatFamilies(\'' + cat + '\',true)" style="background:none;border:none;font-size:1em;color:var(--text3);cursor:pointer;padding:0 4px;font-weight:400;text-transform:none;letter-spacing:0;">all</button>'
+      + '<button onclick="selectCatFamilies(\'' + cat + '\',false)" style="background:none;border:none;font-size:1em;color:var(--text3);cursor:pointer;padding:0 4px;font-weight:400;text-transform:none;letter-spacing:0;">none</button>';
+    list.appendChild(header);
+
+    families.forEach(f => {
+      const label = document.createElement('label');
+      label.className = 'gf-fam-chip';
+      const isChecked = prevChecked.size === 0 || prevChecked.has(f.id);
+      label.innerHTML = '<input type="checkbox" value="' + f.id + '" data-cat="' + cat + '"'
+        + (isChecked ? ' checked' : '') + ' onchange="updateGFsummary()"> ' + f.name;
+      list.appendChild(label);
+    });
+  });
+
+  if (panel) panel.style.display = '';
+  updateGFsummary();
+}
+
+// Select / deselect all families within one category
+function selectCatFamilies(cat, val) {
+  document.querySelectorAll('#gf-specific-list input[data-cat="' + cat + '"]')
+    .forEach(cb => { cb.checked = val; });
+  updateGFsummary();
+}
+
+// ── UPDATE SUMMARY BOX ────────────────────────────────────────────────────
+function updateGFsummary() {
+  const summaryBox  = document.getElementById('gf-selection-summary');
+  const summaryText = document.getElementById('gf-selection-text');
+  const hintText    = document.getElementById('gf-scope-hint-text');
+  const genLabel    = document.getElementById('gf-generate-label');
+  const countBadge  = document.getElementById('gf-selected-count');
+  const famCounter  = document.getElementById('gf-fam-counter');
+  const filterLabel = document.getElementById('gf-filter-card-label');
+
+  const selectedFamEls = [...document.querySelectorAll('#gf-specific-list input:checked')];
+  const selectedFams   = selectedFamEls.map(cb => cb.parentElement.textContent.trim());
+  const customRaw   = (document.getElementById('gf-custom-genes')?.value || '').trim();
+  const customName  = (document.getElementById('gf-custom-name')?.value  || 'custom_list').trim() || 'custom_list';
+  const hasCustom   = customRaw.length > 0;
+  const customCount = hasCustom ? customRaw.split(/[\n,]+/).filter(g => g.trim()).length : 0;
+
+  const doWhole  = gfScope.whole;
+  const doFamily = gfScope.family;
+
+  // Update family count badge
+  if (countBadge) countBadge.textContent = selectedFams.length + ' ' + (selectedFams.length === 1 ? 'family' : 'families') + ' selected';
+
+  // Live counter in specific panel
+  if (famCounter) {
+    if (selectedFams.length > 0) {
+      famCounter.style.display = '';
+      famCounter.innerHTML = '✅ <strong>' + selectedFams.length + ' ' + (selectedFams.length===1?'family':'families') + ' selected:</strong> '
+        + selectedFams.slice(0,6).join(', ') + (selectedFams.length>6 ? ' + '+(selectedFams.length-6)+' more' : '');
+    } else {
+      famCounter.style.display = 'none';
+    }
+  }
+
+  // Filter card label
+  if (filterLabel && selectedFams.length > 0) {
+    filterLabel.textContent = selectedFams.slice(0,3).join(', ') + (selectedFams.length>3 ? ' + '+(selectedFams.length-3)+' more' : '');
+  }
+
+  if (!doWhole && !doFamily && !hasCustom) {
+    if (summaryBox) summaryBox.style.display = 'none';
+    if (hintText)   hintText.textContent = 'Tick one or both options above to get started.';
+    if (genLabel)   genLabel.textContent  = 'Select an analysis type above first.';
+    return;
+  }
+
+  let parts = [], labelParts = [];
+
+  if (doWhole) {
+    parts.push('🔬 <strong>Whole analysis</strong> — DESeq2 on all genes, volcano plot, heatmap, PCA');
+    labelParts.push('Whole analysis');
+  }
+  if (doFamily && selectedFams.length > 0) {
+    const catCount = new Set(selectedFamEls.map(cb => cb.dataset.cat)).size;
+    parts.push('🧬 <strong>' + selectedFams.length + ' gene ' + (selectedFams.length===1?'family':'families') + '</strong> across ' + catCount + ' ' + (catCount===1?'category':'categories') + ': '
+      + selectedFams.slice(0,4).join(', ') + (selectedFams.length>4 ? ' + '+(selectedFams.length-4)+' more' : ''));
+    labelParts.push(selectedFams.length + ' ' + (selectedFams.length===1?'family':'families'));
+  } else if (doFamily && selectedFams.length === 0 && !hasCustom) {
+    parts.push('🧬 <em style="color:var(--orange)">Gene Family Subset — tick at least one category and family above ↑</em>');
+  }
+  if (hasCustom) {
+    parts.push('📋 <strong>Custom list</strong>: ' + customCount + ' genes (' + customName + ')');
+    labelParts.push(customCount + ' custom genes');
+  }
+
+  if (summaryText) summaryText.innerHTML = parts.join('<br>');
+  if (summaryBox)  summaryBox.style.display = parts.length ? '' : 'none';
+
+  const allReady = doWhole || (doFamily && selectedFams.length > 0) || hasCustom;
+  if (hintText) hintText.textContent = allReady
+    ? '✅ Ready — click "Generate analysis code" to create your R scripts.'
+    : (doFamily && selectedFams.length === 0)
+      ? '⚠️ Gene Family Subset ticked — tick at least one category chip and one family below.'
+      : 'Tick one or both options above.';
+
+  if (genLabel) genLabel.textContent = labelParts.length
+    ? labelParts.join(' + ') + ' — click to generate'
+    : 'Select an analysis type above first.';
+}
+
+// ── GENERATE CODE ─────────────────────────────────────────────────────────
+function generateGFcode() {
+  const base  = document.getElementById('folder-preview-text')?.textContent || '~/Desktop/RNA-Seq_organism';
+  const ctrl  = document.getElementById('cfg-ctrl')?.value  || 'control';
+  const treat = document.getElementById('cfg-treat')?.value || 'treatment';
+  const nCtrl  = document.querySelectorAll('#ctrl-rows input').length  || 3;
+  const nTreat = document.querySelectorAll('#treat-rows input').length || 3;
+
+  const doWhole  = gfScope.whole;
+  const doFamily = gfScope.family;
+
+  const selectedFamEls = [...document.querySelectorAll('#gf-specific-list input:checked')];
+  const selectedFamIds = selectedFamEls.map(cb => ({ id: cb.value, cat: cb.dataset.cat }));
+  const customRaw  = (document.getElementById('gf-custom-genes')?.value || '').trim();
+  const customName = (document.getElementById('gf-custom-name')?.value || 'custom_list').trim() || 'custom_list';
+  const hasCustom  = customRaw.length > 0;
+
+  const codeSection = document.getElementById('gf-code-section');
+  if (codeSection) codeSection.style.display = '';
+
+  // ── Whole analysis code ──────────────────────────────────────────────
+  const wholeCard = document.getElementById('gf-whole-card');
+  if (wholeCard) wholeCard.style.display = doWhole ? '' : 'none';
+
+  if (doWhole) {
+    const ctrlCols  = Array(nCtrl).fill('"' + ctrl + '"').join(', ');
+    const treatCols = Array(nTreat).fill('"' + treat + '"').join(', ');
+    const nc = nCtrl + nTreat;
+    const wholeCode = '# ─── Whole RNA-seq DESeq2 analysis ────────────────────────────────\nlibrary(DESeq2); library(ggplot2); library(pheatmap); library(ggrepel); library(dplyr)\nbase_path <- "' + base + '"\n\n# Load count matrix\ncounts_raw <- read.table(paste0(base_path, "/counts/gene_counts_all.txt"),\n                          header=TRUE, skip=1, row.names=1)\ncounts <- counts_raw[, (ncol(counts_raw)-' + (nc-1) + '):ncol(counts_raw)]\n\n# Sample metadata\nsample_info <- data.frame(\n  condition = factor(c(' + ctrlCols + ', ' + treatCols + ')),\n  row.names = colnames(counts)\n)\n\n# DESeq2\ndds <- DESeqDataSetFromMatrix(countData=counts, colData=sample_info, design=~condition)\ndds <- dds[rowSums(counts(dds)) >= 10, ]\ndds <- DESeq(dds)\nres <- results(dds, contrast=c("condition", "' + treat + '", "' + ctrl + '"), alpha=0.05)\nsummary(res)\n\nres_df <- as.data.frame(res); res_df$gene <- rownames(res_df)\nwrite.csv(res_df, paste0(base_path, "/results/deseq2_results_whole.csv"), row.names=FALSE)\n\n# Volcano\nres_plot <- res_df[!is.na(res_df$padj), ]\nres_plot$sig <- "NS"\nres_plot$sig[res_plot$padj<0.05 & res_plot$log2FoldChange>1]  <- "Up"\nres_plot$sig[res_plot$padj<0.05 & res_plot$log2FoldChange< -1] <- "Down"\np <- ggplot(res_plot, aes(log2FoldChange, -log10(padj), color=sig)) +\n  geom_point(alpha=0.6, size=1.5) +\n  scale_color_manual(values=c("Up"="#f0883e","Down"="#58a6ff","NS"="#6e7681")) +\n  geom_text_repel(data=filter(res_plot, padj<0.05) %>% arrange(padj) %>% head(15), aes(label=gene), size=3) +\n  geom_vline(xintercept=c(-1,1), linetype="dashed", alpha=0.5) +\n  geom_hline(yintercept=-log10(0.05), linetype="dashed", alpha=0.5) +\n  labs(title="Whole analysis: ' + treat + ' vs ' + ctrl + '", x="Log2 fold change", y="-Log10 padj") +\n  theme_minimal(base_size=13)\nggsave(paste0(base_path, "/results/volcano_whole.png"), plot=p, width=10, height=7, dpi=300)\n\n# Heatmap top 40\ntop40 <- res_df %>% filter(padj<0.05) %>% arrange(padj) %>% head(40) %>% pull(gene)\nif(length(top40) >= 3) {\n  vst_d <- vst(dds, blind=FALSE)\n  mat   <- t(scale(t(assay(vst_d)[top40, ])))\n  pheatmap(mat, cluster_rows=TRUE, cluster_cols=FALSE,\n    color=colorRampPalette(c("#58a6ff","white","#f0883e"))(100),\n    main="Top 40 DE genes: ' + treat + ' vs ' + ctrl + '",\n    filename=paste0(base_path, "/results/heatmap_whole.png"), width=9, height=12)\n}\ncat("Whole analysis complete!\\n")';
+    set('gf-cmd-whole', wholeCode);
+  }
+
+  // ── Gene family filter + analysis ────────────────────────────────────
+  const filterCard   = document.getElementById('gf-filter-card');
+  const analysisCard = document.getElementById('gf-analysis-card');
+  const plotsCard    = document.getElementById('gf-plots-card');
+  const hasFamily = (doFamily && selectedFamIds.length > 0) || hasCustom;
+
+  if (filterCard)   filterCard.style.display   = hasFamily ? '' : 'none';
+  if (analysisCard) analysisCard.style.display = hasFamily ? '' : 'none';
+  if (plotsCard)    plotsCard.style.display     = hasFamily ? '' : 'none';
+
+  if (hasFamily) {
+    // Collect all patterns from all selected families
+    const allPatterns = [];
+    const familyNames = [];
+    const outputId    = selectedFamIds.map(f => f.id).join('_').slice(0, 40) || customName;
+
+    selectedFamIds.forEach(({ id, cat }) => {
+      const fam = (GF[cat] || []).find(f => f.id === id);
+      if (fam) {
+        familyNames.push(fam.name);
+        fam.patterns.forEach(p => { if (!allPatterns.includes(p)) allPatterns.push(p); });
+      }
+    });
+    if (hasCustom) familyNames.push(customName);
+
+    const patternsR = allPatterns.map(p => '"' + p + '"').join(', ');
+    const title     = familyNames.slice(0,3).join(' + ') + (familyNames.length>3 ? ' +...' : '');
+
+    // Custom genes block
+    const customLines = hasCustom
+      ? customRaw.split(/[\n,]+/).map(g => g.trim()).filter(Boolean).map(g => '"' + g + '"').join(', ')
+      : '';
+
+    const filterCode = '# ─── Filter to selected gene families ─────────────────────────\nlibrary(DESeq2); library(dplyr)\nbase_path <- "' + base + '"\n\ncounts_raw <- read.table(paste0(base_path, "/counts/gene_counts_all.txt"),\n                          header=TRUE, skip=1, row.names=1)\nnc <- ncol(counts_raw)\ncounts_full <- counts_raw[, (nc-' + (nCtrl+nTreat-1) + '):nc]\n\n# Families selected: ' + familyNames.join(', ') + (allPatterns.length>0 ? '\nall_patterns <- c(' + patternsR + ')\npattern_regex <- paste(all_patterns, collapse="|")\ngenes_by_pattern <- rownames(counts_full)[grepl(pattern_regex, rownames(counts_full), ignore.case=TRUE)]' : '') + (hasCustom ? '\n\n# Custom gene list: ' + customName + '\ncustom_genes <- c(' + customLines + ')\ngenes_custom <- intersect(custom_genes, rownames(counts_full))' : '') + '\n\n# Combine all selected genes\nall_selected <- unique(c(' + (allPatterns.length>0 ? 'genes_by_pattern' : '') + (allPatterns.length>0 && hasCustom ? ', ' : '') + (hasCustom ? 'genes_custom' : '') + '))\ncat("Total genes in selection: ", length(all_selected), "\\n")\n\ncounts_gf <- counts_full[rownames(counts_full) %in% all_selected, ]\ncat("Genes retained in count matrix: ", nrow(counts_gf), "\\n")';
+    set('gf-cmd-filter', filterCode);
+
+    const ctrlCols  = Array(nCtrl).fill('"' + ctrl + '"').join(', ');
+    const treatCols = Array(nTreat).fill('"' + treat + '"').join(', ');
+
+    const analysisCode = '# ─── DESeq2 on gene family subset ─────────────────────────────\n# Run the filter code above first!\n\nsample_info_gf <- data.frame(\n  condition = factor(c(' + ctrlCols + ', ' + treatCols + ')),\n  row.names = colnames(counts_gf)\n)\n\ndds_gf <- DESeqDataSetFromMatrix(countData=counts_gf, colData=sample_info_gf, design=~condition)\ndds_gf <- dds_gf[rowSums(counts(dds_gf)) >= 5, ]\ndds_gf <- DESeq(dds_gf)\n\nres_gf <- results(dds_gf, contrast=c("condition","' + treat + '","' + ctrl + '"), alpha=0.05)\nsummary(res_gf)\n\nres_gf_df <- as.data.frame(res_gf); res_gf_df$gene <- rownames(res_gf_df)\nwrite.csv(res_gf_df, paste0(base_path, "/results/' + outputId + '_results.csv"), row.names=FALSE)\ncat("Analysis complete: ' + title + '\\n")';
+    set('gf-cmd-analysis', analysisCode);
+
+    const plotsCode = '# ─── Plots for: ' + title + ' ─────────────────────────────────────\n# Run filter + analysis code above first!\n\n# ── Volcano ──\nres_p <- res_gf_df[!is.na(res_gf_df$padj), ]\nres_p$sig <- "NS"\nres_p$sig[res_p$padj<0.05 & res_p$log2FoldChange>1]  <- "Up"\nres_p$sig[res_p$padj<0.05 & res_p$log2FoldChange< -1] <- "Down"\n\np_gf <- ggplot(res_p, aes(log2FoldChange, -log10(padj), color=sig)) +\n  geom_point(alpha=0.7, size=2) +\n  scale_color_manual(values=c("Up"="#f0883e","Down"="#58a6ff","NS"="#6e7681")) +\n  geom_text_repel(data=filter(res_p,padj<0.05) %>% arrange(padj) %>% head(20), aes(label=gene), size=3) +\n  geom_vline(xintercept=c(-1,1), linetype="dashed", alpha=0.5) +\n  geom_hline(yintercept=-log10(0.05), linetype="dashed", alpha=0.5) +\n  labs(title="' + title + ': ' + treat + ' vs ' + ctrl + '",\n       subtitle=paste0(sum(res_p$sig=="Up")," up | ",sum(res_p$sig=="Down")," down"),\n       x="Log2 fold change", y="-Log10 padj") +\n  theme_minimal(base_size=13)\nggsave(paste0(base_path, "/results/' + outputId + '_volcano.png"), plot=p_gf, width=10, height=7, dpi=300)\n\n# ── Heatmap ──\ntop_genes <- res_gf_df %>% filter(padj<0.05) %>% arrange(padj) %>% head(40) %>% pull(gene)\nif(length(top_genes)>=3) {\n  vst_gf <- vst(dds_gf, blind=FALSE)\n  mat_gf <- t(scale(t(assay(vst_gf)[top_genes, ])))\n  pheatmap(mat_gf, cluster_rows=TRUE, cluster_cols=FALSE,\n    color=colorRampPalette(c("#58a6ff","white","#f0883e"))(100),\n    main=paste0("' + title + ' — top significant genes"),\n    fontsize_row=8,\n    filename=paste0(base_path, "/results/' + outputId + '_heatmap.png"), width=9, height=12)\n  cat("Heatmap saved!\\n")\n} else { cat("Not enough significant genes for heatmap\\n") }\ncat("Plots saved to:", base_path, "/results/\\n")';
+    set('gf-cmd-plots', plotsCode);
+  }
+}
 
 // ── SERVER CONNECTION ─────────────────────────────────────────────────────
 const SERVER = "http://127.0.0.1:7788";
@@ -2284,7 +2718,7 @@ const STEP_MAP = {
   'cmd-index':      { step: 'nav-genome',  next: ['page-align','nav-align'] },
   'cmd-align':      { step: null,          next: null },
   'cmd-bam':        { step: 'nav-align',   next: ['page-counts','nav-counts'] },
-  'cmd-counts':     { step: 'nav-counts',  next: ['page-deseq2','nav-deseq2'] },
+  'cmd-counts':     { step: 'nav-counts',  next: ['page-genefamily','nav-genefamily'] },
   'cmd-preview':    { step: null,          next: null },
   'cmd-deseq2':     { step: 'nav-deseq2',  next: ['page-plots','nav-plots'] },
   'cmd-volcano':    { step: null,          next: null },
@@ -2458,32 +2892,56 @@ window.updateAll = function() {
   setTimeout(buildAllRunButtons, 80);
 };
 
-// ── ACCORDION TOGGLE ─────────────────────────────────────────────────────
-function toggleAcc(which) {
-  const body    = document.getElementById('acc-body-'    + which);
-  const header  = document.getElementById('acc-header-'  + which);
-  const chevron = document.getElementById('acc-chevron-' + which);
-  if (!body) return;
-  const isOpen = body.classList.contains('open');
-  body.classList.toggle('open', !isOpen);
-  if (header) header.classList.toggle('open', !isOpen);
-  if (chevron) chevron.style.transform = isOpen ? '' : 'rotate(90deg)';
-}
-function toggleBanner() { toggleAcc('mode'); }
+// ── SETTINGS BAR ─────────────────────────────────────────────────────────
 
-// ── OS TAB SWITCHING ──────────────────────────────────────────────────────
-function showOS(os, btn) {
-  document.querySelectorAll('.os-panel').forEach(p => p.style.display = 'none');
-  document.querySelectorAll('.os-tab').forEach(b => b.classList.remove('active'));
-  const panel = document.getElementById('os-' + os);
-  if (panel) panel.style.display = '';
-  if (btn) btn.classList.add('active');
+// Toggle a detail panel open/closed
+function toggleDetail(which) {
+  ['mode','server','env'].forEach(id => {
+    const panel = document.getElementById('sbar-detail-' + id);
+    const btn   = document.querySelector('#sbar-item-' + id + ' .sbar-help');
+    if (id === which) {
+      const isOpen = panel && panel.classList.contains('open');
+      if (panel) panel.classList.toggle('open', !isOpen);
+      if (btn)   btn.classList.toggle('active', !isOpen);
+    } else {
+      if (panel) panel.classList.remove('open');
+      if (btn)   btn.classList.remove('active');
+    }
+  });
 }
-function autoDetectOS() {
-  const ua = navigator.userAgent.toLowerCase();
-  if (ua.includes('win')) return 'win';
-  if (ua.includes('linux')) return 'linux';
-  return 'mac';
+
+// Keep old toggleAcc/toggleBanner as no-ops (referenced in old HTML that may still exist)
+function toggleAcc(which) { toggleDetail(which); }
+function toggleBanner()   { toggleDetail('mode'); }
+
+// ── MODE SELECT (dropdown) ────────────────────────────────────────────────
+function onModeSelect(val) {
+  if (!val) return;
+  selectMode(val);
+  // Sync the dropdown
+  const sel = document.getElementById('sbar-mode-select');
+  if (sel) sel.value = val;
+  // Close detail panel after selection
+  setTimeout(() => {
+    const p = document.getElementById('sbar-detail-mode');
+    const b = document.querySelector('#sbar-item-mode .sbar-help');
+    if (p) p.classList.remove('open');
+    if (b) b.classList.remove('active');
+  }, 600);
+}
+
+// ── HOW SELECT (dropdown) ─────────────────────────────────────────────────
+function onHowSelect(val) {
+  showHow(val, null);
+  const sel = document.getElementById('sbar-how-select');
+  if (sel) sel.value = val;
+}
+
+// ── ENV SELECT (dropdown) ─────────────────────────────────────────────────
+function onEnvSelect(val) {
+  selectEnv(val);
+  const sel = document.getElementById('sbar-env-select');
+  if (sel) sel.value = val;
 }
 
 // ── MODE SELECTION ────────────────────────────────────────────────────────
@@ -2493,87 +2951,387 @@ function selectMode(mode) {
   currentMode = mode;
   const runCard  = document.getElementById('mode-card-run');
   const copyCard = document.getElementById('mode-card-copy');
-  runCard.classList.remove('selected-run', 'selected-copy');
-  copyCard.classList.remove('selected-run', 'selected-copy');
+  if (runCard)  { runCard.classList.remove('selected-run','selected-copy'); }
+  if (copyCard) { copyCard.classList.remove('selected-run','selected-copy'); }
 
-  const ind      = document.getElementById('mode-indicator');
-  const icon     = document.getElementById('mode-indicator-icon');
-  const label    = document.getElementById('mode-indicator-label');
-  const badge    = document.getElementById('acc-mode-badge');
-  const srvBadge = document.getElementById('acc-server-badge');
+  const ind   = document.getElementById('mode-indicator');
+  const icon  = document.getElementById('mode-indicator-icon');
+  const label = document.getElementById('mode-indicator-label');
+  const sel   = document.getElementById('sbar-mode-select');
 
   if (mode === 'run') {
-    runCard.classList.add('selected-run');
+    if (runCard)  runCard.classList.add('selected-run');
     if (ind)   ind.className     = 'mode-indicator run-mode';
     if (icon)  icon.textContent  = '⚡';
-    if (label) label.textContent = 'Mode A — Run';
-    if (badge) { badge.textContent = '⚡ Run mode active'; badge.className = 'acc-header-badge green'; }
-    if (srvBadge) { srvBadge.textContent = 'Needed for Mode A'; srvBadge.className = 'acc-header-badge yellow'; }
-    document.querySelectorAll('.run-btn').forEach(b => { b.style.display = ''; if (connected) b.disabled = false; });
-    // Auto-open server panel so user sees instructions
-    const srvBody = document.getElementById('acc-body-server');
-    const srvHead = document.getElementById('acc-header-server');
-    const srvChev = document.getElementById('acc-chevron-server');
-    if (srvBody && !srvBody.classList.contains('open')) {
-      srvBody.classList.add('open');
-      if (srvHead) srvHead.classList.add('open');
-      if (srvChev) srvChev.style.transform = 'rotate(90deg)';
+    if (label) label.textContent = 'Run from app';
+    if (sel)   sel.value         = 'run';
+    // Show Run buttons only — hide Copy buttons
+    document.querySelectorAll('.run-btn').forEach(b  => { b.style.display = ''; if (connected) b.disabled = false; });
+    document.querySelectorAll('.stop-btn').forEach(b => b.style.display = '');
+    document.querySelectorAll('.copy-btn').forEach(b => b.style.display = 'none');
+    // Auto-open server instructions
+    const srvPanel = document.getElementById('sbar-detail-server');
+    const srvBtn   = document.querySelector('#sbar-item-server .sbar-help');
+    if (srvPanel && !srvPanel.classList.contains('open')) {
+      srvPanel.classList.add('open');
+      if (srvBtn) srvBtn.classList.add('active');
     }
   } else {
-    copyCard.classList.add('selected-copy');
+    // Mode B — Run on terminal: show Copy buttons only, hide Run buttons
+    if (copyCard) copyCard.classList.add('selected-copy');
     if (ind)   ind.className     = 'mode-indicator copy-mode';
     if (icon)  icon.textContent  = '📋';
-    if (label) label.textContent = 'Mode B — Copy';
-    if (badge) { badge.textContent = '📋 Copy mode active'; badge.className = 'acc-header-badge blue'; }
-    if (srvBadge) { srvBadge.textContent = 'Not needed for Mode B'; srvBadge.className = 'acc-header-badge none'; }
-    document.querySelectorAll('.run-btn').forEach(b => b.style.display = 'none');
-    document.querySelectorAll('.stop-btn').forEach(b => b.classList.remove('show'));
+    if (label) label.textContent = 'Terminal';
+    if (sel)   sel.value         = 'copy';
+    document.querySelectorAll('.run-btn').forEach(b  => b.style.display = 'none');
+    document.querySelectorAll('.stop-btn').forEach(b => { b.style.display = 'none'; b.classList.remove('show'); });
+    document.querySelectorAll('.copy-btn').forEach(b => b.style.display = '');
   }
-
-  // Collapse mode-selection panel after 0.8s
-  setTimeout(() => {
-    const mb = document.getElementById('acc-body-mode');
-    const mh = document.getElementById('acc-header-mode');
-    const mc = document.getElementById('acc-chevron-mode');
-    if (mb) mb.classList.remove('open');
-    if (mh) mh.classList.remove('open');
-    if (mc) mc.style.transform = '';
-  }, 800);
 
   try { localStorage.setItem('rnaflow-mode', mode); } catch(e) {}
 }
-
-function copyText(text, btn) {
-  navigator.clipboard.writeText(text).then(() => {
-    const orig = btn.textContent;
-    btn.textContent = 'Copied!';
-    btn.style.background = 'var(--green2)';
-    btn.style.color = 'white';
-    setTimeout(() => { btn.textContent = orig; btn.style.background = ''; btn.style.color = ''; }, 2000);
-  });
-}
-function copyServerCmd(btn) { copyText('python3 rnaflow_server.py', btn); }
 
 function restoreMode() {
   let saved;
   try { saved = localStorage.getItem('rnaflow-mode'); } catch(e) {}
   if (saved === 'run' || saved === 'copy') {
-    setTimeout(() => selectMode(saved), 150);
+    setTimeout(() => { selectMode(saved); onModeSelect(saved); }, 150);
   }
+}
+
+// ── REBUILD RUN BUTTONS WHENEVER updateAll IS CALLED ─────────────────────
+// ── OS TAB SWITCHING ──────────────────────────────────────────────────────
+function showOS(os, btn) {
+  document.querySelectorAll('#how-html .os-panel').forEach(p => {
+    if (p.id && p.id.startsWith('os-')) p.style.display = 'none';
+  });
+  document.querySelectorAll('#os-tabs .os-tab').forEach(b => b.classList.remove('active'));
+  const panel = document.getElementById('os-' + os);
+  if (panel) panel.style.display = '';
+  if (btn) btn.classList.add('active');
+}
+
+// ── HOW ARE YOU RUNNING RNAFLOW ───────────────────────────────────────────
+const OS_SERVER_INSTRUCTIONS = {
+  mac: {
+    icon: '🍎', name: 'macOS',
+    steps: [
+      ['Open <strong>Terminal</strong>', 'Cmd+Space &rarr; type Terminal &rarr; Enter'],
+      ['Navigate to where you saved the files', '<div class="os-cmd">cd ~/Desktop <span style="color:var(--text3)"># or wherever you saved it</span></div>'],
+      ['Start the server', '<div class="os-cmd os-cmd-main">python3 rnaflow_server.py <button class="mode-copy-cmd-btn" onclick="copyText(\'python3 rnaflow_server.py\',this)">Copy</button></div>'],
+      ['Keep Terminal open', 'The <strong style="color:var(--green)">green dot</strong> in the top bar confirms connection &#x2705;']
+    ],
+    note: '&#x1F4A1; Python not installed? Run: <code>brew install miniforge</code> or download from <strong>github.com/conda-forge/miniforge</strong>'
+  },
+  linux: {
+    icon: '🐧', name: 'Linux',
+    steps: [
+      ['Open your terminal', 'GNOME Terminal, Konsole, xterm, etc.'],
+      ['Navigate to the files', '<div class="os-cmd">cd ~/Desktop</div>'],
+      ['Start the server', '<div class="os-cmd os-cmd-main">python3 rnaflow_server.py <button class="mode-copy-cmd-btn" onclick="copyText(\'python3 rnaflow_server.py\',this)">Copy</button></div>'],
+      ['Keep terminal open', '<strong style="color:var(--green)">Green dot</strong> confirms connection &#x2705;']
+    ],
+    note: '&#x1F4A1; Python not found? <code>sudo apt install python3</code> (Ubuntu) &middot; <code>sudo dnf install python3</code> (Fedora)'
+  },
+  win: {
+    icon: '🪟', name: 'Windows (WSL2)',
+    steps: [
+      ['Open <strong>Ubuntu / WSL</strong>', 'Search Start menu for &ldquo;Ubuntu&rdquo; or &ldquo;WSL&rdquo;'],
+      ['Navigate to Windows Desktop from WSL', '<div class="os-cmd">cd /mnt/c/Users/$USER/Desktop</div>'],
+      ['Start the server', '<div class="os-cmd os-cmd-main">python3 rnaflow_server.py <button class="mode-copy-cmd-btn" onclick="copyText(\'python3 rnaflow_server.py\',this)">Copy</button></div>'],
+      ['Open HTML in Windows browser', 'Chrome/Edge &mdash; WSL2 and Windows share localhost &#x2705;']
+    ],
+    note: '&#x2705; WSL2 is the best option on Windows &mdash; all bioinformatics tools run perfectly inside Ubuntu. &nbsp; WSL2 not installed? In PowerShell (Admin): <code>wsl --install</code>'
+  }
+};
+
+function showHow(which, btn) {
+  const desktopDiv = document.getElementById('how-desktop');
+  const htmlDiv    = document.getElementById('how-html');
+  if (desktopDiv) desktopDiv.style.display = which === 'desktop' ? '' : 'none';
+  if (htmlDiv)    htmlDiv.style.display    = which === 'html'    ? '' : 'none';
+
+  // Sync the sbar dropdown
+  const sel = document.getElementById('sbar-how-select');
+  if (sel) sel.value = which;
+
+  // Fill OS-specific instructions for HTML mode
+  if (which === 'html') {
+    const os      = autoDetectOS();
+    const info    = OS_SERVER_INSTRUCTIONS[os] || OS_SERVER_INSTRUCTIONS.mac;
+    const content = document.getElementById('server-os-content');
+    if (content) {
+      let html = '<div style="margin-bottom:10px;display:flex;align-items:center;gap:8px;">';
+      html += '<span style="font-size:1.3em;">' + info.icon + '</span>';
+      html += '<strong style="font-size:0.9em;">' + info.name + ' detected</strong>';
+      html += '<span style="font-size:0.72em;color:var(--text3);margin-left:4px;">(instructions match your OS)</span></div>';
+      info.steps.forEach((s, i) => {
+        html += '<div class="os-step-row"><span class="os-step-num">' + (i+1) + '</span><div>';
+        html += '<strong>' + s[0] + '</strong>';
+        if (s[1]) html += '<div style="margin-top:4px;">' + s[1] + '</div>';
+        html += '</div></div>';
+      });
+      if (info.note) html += '<div class="os-note">' + info.note + '</div>';
+      content.innerHTML = html;
+    }
+  }
+
+  try { localStorage.setItem('rnaflow-how', which); } catch(e) {}
+}
+
+// ── DESKTOP OS TABS ───────────────────────────────────────────────────────
+function showOSDesktop(os, btn) {
+  ['mac-app','win-app','linux-app'].forEach(id => {
+    const el = document.getElementById('os-' + id);
+    if (el) el.style.display = id === os ? '' : 'none';
+  });
+  document.querySelectorAll('#os-tabs-desktop .os-tab').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+}
+
+// ── LINUX FORMAT TABS ─────────────────────────────────────────────────────
+function showLinuxFmt(fmt, btn) {
+  ['appimage','deb','rpm'].forEach(id => {
+    const el = document.getElementById('linux-' + id);
+    if (el) el.style.display = id === fmt ? '' : 'none';
+  });
+  const parent = btn?.closest('.os-panel');
+  if (parent) parent.querySelectorAll('.os-tab').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+}
+
+function autoDetectOS() {
+  const ua = navigator.userAgent.toLowerCase();
+  if (ua.includes('win')) return 'win';
+  if (ua.includes('linux')) return 'linux';
+  return 'mac';
+}
+
+
+// ── COMPUTE ENVIRONMENT ───────────────────────────────────────────────────
+let currentEnv = 'local';  // local | slurm | pbs | lsf | aws | gcp | azure
+
+const ENV_COLORS = {
+  local:'green', slurm:'purple', pbs:'blue', lsf:'orange',
+  aws:'#ff9900', gcp:'#4285f4', azure:'#0078d4'
+};
+const ENV_LABELS = {
+  local:'Local', slurm:'SLURM HPC', pbs:'PBS HPC', lsf:'LSF HPC',
+  aws:'AWS Cloud', gcp:'GCP Cloud', azure:'Azure Cloud'
+};
+const ENV_ICONS = {
+  local:'💻', slurm:'🏢', pbs:'🏗️', lsf:'🔵',
+  aws:'☁️', gcp:'🌐', azure:'🔷'
+};
+
+function selectEnv(env) {
+  currentEnv = env;
+
+  // Update card highlighting
+  document.querySelectorAll('.env-card').forEach(c => c.className = 'env-card');
+  const card = document.getElementById('env-card-' + env);
+  if (card) card.classList.add('sel-' + env);
+
+  // Show correct sub-panel in env detail
+  const isHPC   = ['slurm','pbs','lsf'].includes(env);
+  const isCloud = ['aws','gcp','azure'].includes(env);
+  const isLocal = env === 'local';
+
+  const localPanel = document.getElementById('env-local-panel');
+  const hpcPanel   = document.getElementById('env-hpc-panel');
+  const cloudPanel = document.getElementById('env-cloud-panel');
+  if (localPanel) localPanel.style.display = isLocal ? '' : 'none';
+  if (hpcPanel)   hpcPanel.style.display   = isHPC   ? '' : 'none';
+  if (cloudPanel) cloudPanel.style.display = isCloud ? '' : 'none';
+
+  // Update SSH preview line
+  if (isHPC) {
+    const user = document.getElementById('hpc-user')?.value || 'user';
+    const host = document.getElementById('hpc-host')?.value || 'hpc.university.edu';
+    const prev = document.getElementById('hpc-ssh-preview');
+    if (prev) prev.textContent = user + '@' + host;
+  }
+
+  // Update cloud note text
+  if (isCloud) {
+    const notes = {
+      aws:   '&#x2601;&#xFE0F; Commands include <code>aws s3 sync</code> to pull from S3 and push results back. Install: <code>pip install awscli</code> then <code>aws configure</code>.',
+      gcp:   '&#x2601;&#xFE0F; Commands include <code>gsutil rsync</code> to pull from GCS and push results back. Install: <code>gcloud components install gsutil</code>.',
+      azure: '&#x2601;&#xFE0F; Commands include <code>azcopy sync</code> to pull from Azure Blob and push results back. Download AzCopy from microsoft.com/azcopy.'
+    };
+    const noteEl = document.getElementById('cloud-env-note');
+    if (noteEl) noteEl.innerHTML = notes[env] || '';
+  }
+
+  // Update badge on sbar
+  const badge = document.getElementById('acc-env-badge');
+  if (badge) {
+    badge.textContent = ENV_ICONS[env] + ' ' + ENV_LABELS[env];
+    badge.className   = 'acc-header-badge ' + (isHPC ? 'purple' : isCloud ? 'blue' : 'green');
+    badge.style.display = 'inline-block';
+  }
+
+  // Auto-open env detail if HPC or Cloud so user fills in settings
+  if (isHPC || isCloud) {
+    const envDetail = document.getElementById('sbar-detail-env');
+    const envBtn    = document.querySelector('#sbar-item-env .sbar-help');
+    if (envDetail && !envDetail.classList.contains('open')) {
+      envDetail.classList.add('open');
+      if (envBtn) envBtn.classList.add('active');
+    }
+  }
+
+  updateAll();
+  try { localStorage.setItem('rnaflow-env', env); } catch(e) {}
+}
+
+// Browse local folder (Electron desktop app) or show path hint (HTML browser)
+function browseLocalFolder() {
+  // If running inside Electron, use native dialog via IPC
+  if (window.electronAPI && window.electronAPI.openFolder) {
+    window.electronAPI.openFolder().then(path => {
+      if (path) document.getElementById('local-fastq-path').value = path;
+    });
+    return;
+  }
+  // In browser — show instruction
+  const inp = document.getElementById('local-fastq-path');
+  if (inp) {
+    inp.placeholder = 'Type your full folder path here, e.g. /Users/you/Desktop/fastq/';
+    inp.focus();
+    // Show a helper note
+    const note = document.createElement('div');
+    note.style.cssText = 'font-size:0.73em;color:var(--blue);margin-top:5px;';
+    note.textContent = 'In the browser version, type the path manually. In the desktop app, the Browse button opens a native folder picker.';
+    inp.parentNode.appendChild(note);
+    setTimeout(() => note.remove(), 5000);
+  }
+}
+
+function restoreEnv() {
+  let saved;
+  try { saved = localStorage.getItem('rnaflow-env'); } catch(e) {}
+  if (saved && ENV_LABELS[saved]) setTimeout(() => selectEnv(saved), 200);
+}
+
+// ── HPC SCRIPT WRAPPER ────────────────────────────────────────────────────
+function wrapHPC(cmdBody, stepName) {
+  const name      = (document.getElementById('hpc-jobname')?.value  || 'rnaflow').trim();
+  const cpus      = (document.getElementById('hpc-cpus')?.value     || '8').trim();
+  const mem       = (document.getElementById('hpc-mem')?.value      || '32').trim();
+  const hrs       = (document.getElementById('hpc-time')?.value     || '24').trim();
+  const partition = (document.getElementById('hpc-partition')?.value || 'normal').trim();
+  const email     = (document.getElementById('hpc-email')?.value    || '').trim();
+  const jobname   = name + '_' + stepName;
+  const base      = document.getElementById('folder-preview-text')?.textContent || '~/rnaseq';
+  const NL        = '\n';
+
+  if (currentEnv === 'slurm') {
+    let hdr  = '#!/bin/bash' + NL;
+    hdr += '#SBATCH --job-name=' + jobname + NL;
+    hdr += '#SBATCH --cpus-per-task=' + cpus + NL;
+    hdr += '#SBATCH --mem=' + mem + 'G' + NL;
+    hdr += '#SBATCH --time=' + hrs + ':00:00' + NL;
+    hdr += '#SBATCH --partition=' + partition + NL;
+    hdr += '#SBATCH --output=' + base + '/logs/' + stepName + '_%j.out' + NL;
+    hdr += '#SBATCH --error='  + base + '/logs/' + stepName + '_%j.err';
+    if (email) { hdr += NL + '#SBATCH --mail-type=END,FAIL' + NL + '#SBATCH --mail-user=' + email; }
+    hdr += NL + NL + '# Activate conda environment' + NL;
+    hdr += 'source ~/.bashrc 2>/dev/null' + NL;
+    hdr += 'conda activate rnaseq 2>/dev/null' + NL + NL;
+    hdr += '# Commands' + NL;
+    hdr += cmdBody;
+    hdr += NL + NL + '# Submit with: sbatch ' + stepName + '.sh';
+    return hdr;
+  }
+  if (currentEnv === 'pbs') {
+    let hdr  = '#!/bin/bash' + NL;
+    hdr += '#PBS -N ' + jobname + NL;
+    hdr += '#PBS -l nodes=1:ppn=' + cpus + NL;
+    hdr += '#PBS -l mem=' + mem + 'gb' + NL;
+    hdr += '#PBS -l walltime=' + hrs + ':00:00' + NL;
+    hdr += '#PBS -q ' + partition + NL;
+    hdr += '#PBS -o ' + base + '/logs/' + stepName + '.out' + NL;
+    hdr += '#PBS -e ' + base + '/logs/' + stepName + '.err';
+    if (email) { hdr += NL + '#PBS -m ae' + NL + '#PBS -M ' + email; }
+    hdr += NL + NL + '# Activate conda environment' + NL;
+    hdr += 'source ~/.bashrc 2>/dev/null' + NL;
+    hdr += 'conda activate rnaseq 2>/dev/null' + NL;
+    hdr += 'cd $PBS_O_WORKDIR' + NL + NL;
+    hdr += '# Commands' + NL;
+    hdr += cmdBody;
+    hdr += NL + NL + '# Submit with: qsub ' + stepName + '.sh';
+    return hdr;
+  }
+  if (currentEnv === 'lsf') {
+    let hdr  = '#!/bin/bash' + NL;
+    hdr += '#BSUB -J ' + jobname + NL;
+    hdr += '#BSUB -n ' + cpus + NL;
+    hdr += '#BSUB -M ' + (parseInt(mem) * 1000) + NL;
+    hdr += '#BSUB -W ' + hrs + ':00' + NL;
+    hdr += '#BSUB -q ' + partition + NL;
+    hdr += '#BSUB -o ' + base + '/logs/' + stepName + '_%J.out' + NL;
+    hdr += '#BSUB -e ' + base + '/logs/' + stepName + '_%J.err';
+    if (email) { hdr += NL + '#BSUB -N' + NL + '#BSUB -u ' + email; }
+    hdr += NL + NL + '# Activate conda environment' + NL;
+    hdr += 'source ~/.bashrc 2>/dev/null' + NL;
+    hdr += 'conda activate rnaseq 2>/dev/null' + NL + NL;
+    hdr += '# Commands' + NL;
+    hdr += cmdBody;
+    hdr += NL + NL + '# Submit with: bsub < ' + stepName + '.sh';
+    return hdr;
+  }
+  return cmdBody;
+}
+
+function wrapCloud(cmdBody, stepName) {
+  const dataPath = (document.getElementById('cloud-data-path')?.value || '').trim();
+  const outPath  = (document.getElementById('cloud-out-path')?.value  || '').trim();
+  const workDir  = (document.getElementById('cloud-work-dir')?.value  || '~/rnaseq').trim();
+  const NL = '\n';
+  const cmds = {
+    aws:   { pull: dataPath ? 'aws s3 sync "' + dataPath + '" "' + workDir + '/raw_data/" --only-show-errors' : '',
+             push: outPath  ? 'aws s3 sync "' + workDir + '/results/" "' + outPath + '" --only-show-errors' : '' },
+    gcp:   { pull: dataPath ? 'gsutil -m rsync -r "' + dataPath + '" "' + workDir + '/raw_data/"' : '',
+             push: outPath  ? 'gsutil -m rsync -r "' + workDir + '/results/" "' + outPath + '"' : '' },
+    azure: { pull: dataPath ? 'azcopy sync "' + dataPath + '" "' + workDir + '/raw_data/" --recursive' : '',
+             push: outPath  ? 'azcopy sync "' + workDir + '/results/" "' + outPath + '" --recursive' : '' }
+  };
+  const s = cmds[currentEnv] || { pull: '', push: '' };
+  let out = '';
+  if (s.pull) out += '# Pull data from cloud storage' + NL + s.pull + NL + NL;
+  out += cmdBody;
+  if (s.push) out += NL + NL + '# Push results to cloud storage' + NL + s.push;
+  return out;
+}
+
+function envWrap(cmdBody, stepName) {
+  if (currentEnv === 'local') return cmdBody;
+  if (['slurm','pbs','lsf'].includes(currentEnv)) return wrapHPC(cmdBody, stepName);
+  if (['aws','gcp','azure'].includes(currentEnv)) return wrapCloud(cmdBody, stepName);
+  return cmdBody;
 }
 
 // ── INIT ─────────────────────────────────────────────────────────────────
 updateAll();
 setTimeout(buildAllRunButtons, 300);
 restoreMode();
-const detectedOS  = autoDetectOS();
-const allOSTabs   = document.querySelectorAll('.os-tab');
-allOSTabs.forEach(b => {
-  const oc = b.getAttribute('onclick') || '';
-  if (oc.includes("showOS('" + detectedOS + "'")) {
-    showOS(detectedOS, b);
-  }
-});
+restoreEnv();
+
+// Auto-detect OS and pre-fill server instructions for HTML mode
+const detectedOS = autoDetectOS();
+const desktopOsMap = { mac: 'mac-app', win: 'win-app', linux: 'linux-app' };
+const desktopTarget = desktopOsMap[detectedOS] || 'mac-app';
+const desktopTab = document.querySelector('#os-tabs-desktop .os-tab[onclick*="' + desktopTarget + '"]');
+if (desktopTab) showOSDesktop(desktopTarget, desktopTab);
+
+// Restore how preference (desktop vs html)
+let savedHow;
+try { savedHow = localStorage.getItem('rnaflow-how'); } catch(e) {}
+showHow(savedHow === 'html' ? 'html' : 'desktop', null);
+
+// Show correct env sub-panel for current env
+selectEnv(currentEnv || 'local');
 
 </script>
 

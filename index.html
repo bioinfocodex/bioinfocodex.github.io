@@ -11,16 +11,16 @@
 <meta property="og:url" content="https://bioinfocodex.com">
 <meta property="og:type" content="website">
 <link rel="canonical" href="https://bioinfocodex.com">
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=DM+Mono:wght@400;500&family=Playfair+Display:ital,wght@0,700;0,800;0,900;1,700;1,800&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
 /* ══════════════════════════════════════════
    RESET & TOKENS
 ══════════════════════════════════════════ */
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 :root{
-  --bg:#03080f; --bg2:#070e1a; --bg3:#0c1624; --surf:#111d2e;
-  --border:rgba(255,255,255,0.07); --border2:rgba(255,255,255,0.13);
-  --text:#e8f0fe; --text2:#8ba3c7; --text3:#4a6080;
+  --bg:#ffffff; --bg2:#f4f7fb; --bg3:#eaeff6; --surf:#ffffff;
+  --border:rgba(0,0,0,0.08); --border2:rgba(0,0,0,0.14);
+  --text:#0d1117; --text2:#4a5568; --text3:#8a96a8;
   --green:#00d4a0; --blue:#0096ff; --purple:#7c5ff5;
   --orange:#f0883e; --red:#f85149;
   --fh:'Syne',sans-serif; --fb:'DM Sans',sans-serif; --fm:'DM Mono',monospace;
@@ -37,8 +37,8 @@ a{color:inherit;text-decoration:none;}
 #bg-canvas{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:0.55;}
 .bg-grid{
   position:fixed;inset:0;z-index:0;pointer-events:none;
-  background-image:linear-gradient(rgba(0,212,160,0.025) 1px,transparent 1px),
-                   linear-gradient(90deg,rgba(0,212,160,0.025) 1px,transparent 1px);
+  background-image:linear-gradient(rgba(0,0,0,0.04) 1px,transparent 1px),
+                   linear-gradient(90deg,rgba(0,0,0,0.04) 1px,transparent 1px);
   background-size:60px 60px;
   mask-image:radial-gradient(ellipse 90% 70% at 50% 0%,black 30%,transparent 100%);
 }
@@ -49,13 +49,14 @@ a{color:inherit;text-decoration:none;}
 nav{
   position:fixed;top:0;left:0;right:0;z-index:200;
   height:64px;display:flex;align-items:center;padding:0 5vw;gap:0;
-  background:rgba(3,8,15,0.82);backdrop-filter:blur(24px);
+  background:rgba(255,255,255,0.92);backdrop-filter:blur(24px);
   border-bottom:1px solid var(--border);
 }
 .nav-logo{display:flex;align-items:center;gap:10px;margin-right:40px;flex-shrink:0;}
 .nav-logo svg{width:34px;height:34px;}
 .nav-logo-text{font-family:var(--fh);font-weight:800;font-size:1.3em;letter-spacing:-0.5px;}
 .nav-logo-text span{color:var(--green);}
+/* Space Grotesk used for logo and hero sub-text */
 .nav-tabs{display:flex;gap:2px;flex:1;}
 .nav-tab{
   padding:8px 20px;border-radius:8px;font-size:0.88em;font-weight:500;
@@ -69,13 +70,14 @@ nav{
   padding:8px 20px;border-radius:8px;background:var(--green);
   color:#03080f;font-weight:700;font-size:0.84em;cursor:pointer;
   transition:all 0.15s;white-space:nowrap;border:none;font-family:var(--fb);
+  box-shadow:0 2px 8px rgba(0,212,160,0.25);
 }
 .nav-dl:hover{background:#00f0b8;transform:translateY(-1px);}
 /* Mobile hamburger */
 .nav-burger{display:none;background:none;border:none;color:var(--text);font-size:1.4em;cursor:pointer;margin-left:auto;}
 .mobile-menu{
   display:none;position:fixed;top:64px;left:0;right:0;
-  background:rgba(3,8,15,0.97);backdrop-filter:blur(24px);
+  background:rgba(255,255,255,0.97);backdrop-filter:blur(24px);
   border-bottom:1px solid var(--border);z-index:199;padding:12px 16px;
 }
 .mobile-menu.open{display:block;}
@@ -144,54 +146,324 @@ em.p{font-style:normal;color:var(--purple);}
 /* ══════════════════════════════════════════
    HOME PAGE
 ══════════════════════════════════════════ */
+
+/* ─── Ambient orbs ─── */
+.orb{position:absolute;border-radius:50%;pointer-events:none;filter:blur(80px);opacity:0.12;animation:orbFloat 8s ease-in-out infinite;}
+.orb-1{width:600px;height:600px;background:radial-gradient(circle,#00d4a0,transparent);top:-200px;right:-100px;animation-delay:0s;}
+.orb-2{width:500px;height:500px;background:radial-gradient(circle,#0096ff,transparent);bottom:-100px;left:-150px;animation-delay:-3s;}
+.orb-3{width:400px;height:400px;background:radial-gradient(circle,#7c5ff5,transparent);top:40%;left:40%;animation-delay:-5s;}
+@keyframes orbFloat{0%,100%{transform:translateY(0) scale(1);}50%{transform:translateY(-30px) scale(1.05);}}
+
+/* ─── Hero ─── */
 .hero{
-  min-height:calc(100vh - 64px);display:flex;align-items:center;
-  padding:80px 6vw 60px;
+  min-height:100vh;display:flex;align-items:center;
+  padding:120px 6vw 80px;position:relative;overflow:hidden;
+  background:radial-gradient(ellipse 120% 80% at 70% 50%,rgba(0,212,160,0.06) 0%,transparent 60%);
 }
-.hero-inner{max-width:780px;}
-.hero-badge{
-  display:inline-flex;align-items:center;gap:8px;padding:4px 14px 4px 6px;
-  border-radius:20px;border:1px solid rgba(0,212,160,0.3);background:rgba(0,212,160,0.07);
-  font-size:0.76em;font-weight:500;color:var(--green);margin-bottom:28px;
+.hero-inner{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center;width:100%;max-width:1400px;margin:0 auto;}
+.hero-eyebrow{
+  display:inline-flex;align-items:center;gap:10px;
+  padding:6px 16px;background:rgba(0,212,160,0.08);
+  border:1px solid rgba(0,212,160,0.2);border-radius:40px;
+  font-size:0.78em;font-weight:600;color:var(--green);letter-spacing:0.3px;
+  margin-bottom:28px;
 }
-.hero-dot{width:8px;height:8px;border-radius:50%;background:var(--green);animation:pulse 2s infinite;}
-@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.4;transform:scale(0.7)}}
-.hero-ctas{display:flex;gap:12px;flex-wrap:wrap;margin-top:36px;}
-.hero-scroll{
-  display:flex;gap:32px;margin-top:64px;padding-top:48px;
-  border-top:1px solid var(--border);flex-wrap:wrap;
+.hero-pulse{width:8px;height:8px;border-radius:50%;background:var(--green);flex-shrink:0;
+  animation:hpulse 2s ease-in-out infinite;}
+@keyframes hpulse{0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(0,212,160,0.4);}50%{opacity:0.7;box-shadow:0 0 0 8px rgba(0,212,160,0);}}
+.hero-h1{
+  font-family:'Playfair Display',Georgia,serif;
+  font-weight:800;font-style:italic;
+  font-size:clamp(2.8em,5.5vw,5.2em);
+  line-height:1.04;letter-spacing:-1px;margin-bottom:24px;
+  color:#0d1117;
 }
-.hero-stat .val{font-family:var(--fh);font-size:2em;font-weight:800;color:var(--text);}
-.hero-stat .lbl{font-size:0.76em;color:var(--text3);text-transform:uppercase;letter-spacing:0.6px;}
+.hero-h1 em{font-style:normal;}
+.hero-h1 .grad{
+  background:linear-gradient(135deg,#00d4a0 0%,#0096ff 50%,#7c5ff5 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+.hero-sub{
+  font-size:1.1em;color:var(--text2);line-height:1.75;
+  max-width:520px;font-weight:300;margin-bottom:36px;
+}
+.hero-ctas{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:48px;}
+.hero-cta-primary{
+  padding:14px 28px;border-radius:10px;background:var(--green);
+  color:#03080f;font-weight:700;font-size:0.95em;cursor:pointer;
+  border:none;font-family:var(--fb);transition:all 0.2s;
+  display:inline-flex;align-items:center;gap:8px;
+}
+.hero-cta-primary:hover{background:#00f0b8;transform:translateY(-2px);box-shadow:0 8px 30px rgba(0,212,160,0.35);}
+.hero-cta-secondary{
+  padding:14px 28px;border-radius:10px;background:transparent;
+  color:var(--text);font-weight:600;font-size:0.95em;cursor:pointer;
+  border:1px solid rgba(0,0,0,0.15);font-family:var(--fb);transition:all 0.2s;
+  display:inline-flex;align-items:center;gap:8px;
+}
+.hero-cta-secondary:hover{border-color:var(--green);color:var(--green);transform:translateY(-2px);}
+.hero-stats{display:flex;gap:32px;flex-wrap:wrap;}
+.hero-stat-item{display:flex;flex-direction:column;gap:4px;}
+.hstat-val{font-family:var(--fh);font-weight:800;font-size:2em;letter-spacing:-1px;color:var(--text);}
+.hstat-lbl{font-size:0.72em;color:var(--text3);text-transform:uppercase;letter-spacing:1px;font-weight:500;}
 
-/* Team / About */
-.team-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;margin-top:40px;}
-.team-card{
-  background:var(--surf);border:1px solid var(--border);border-radius:var(--r2);
-  padding:28px;text-align:center;
+/* ─── Hero right visual ─── */
+.hero-visual{position:relative;display:flex;align-items:center;justify-content:center;}
+.hero-visual-card{
+  background:#0d1117;
+  border:1px solid rgba(0,212,160,0.2);
+  border-radius:20px;padding:0;overflow:hidden;
+  box-shadow:0 40px 120px rgba(0,0,0,0.6),0 0 0 1px rgba(255,255,255,0.03);
+  backdrop-filter:blur(12px);width:100%;max-width:480px;
 }
-.team-avatar{
-  width:72px;height:72px;border-radius:50%;background:var(--bg3);
-  border:2px solid var(--border2);margin:0 auto 16px;
-  display:flex;align-items:center;justify-content:center;font-size:2em;
+.hvc-bar{
+  background:rgba(255,255,255,0.04);border-bottom:1px solid rgba(255,255,255,0.07);
+  padding:12px 18px;display:flex;align-items:center;gap:8px;
 }
-.team-name{font-family:var(--fh);font-weight:700;font-size:1em;margin-bottom:4px;}
-.team-role{font-size:0.8em;color:var(--green);margin-bottom:8px;}
-.team-bio{font-size:0.82em;color:var(--text2);line-height:1.6;}
+.hvc-dot{width:11px;height:11px;border-radius:50%;}
+.hvc-title{font-size:0.76em;color:var(--text3);font-family:var(--fm);margin-left:6px;}
+.hvc-badge{margin-left:auto;padding:2px 10px;background:rgba(0,212,160,0.12);border:1px solid rgba(0,212,160,0.25);border-radius:20px;font-size:0.68em;color:var(--green);font-weight:600;}
+.hvc-steps{padding:16px 18px;display:flex;flex-direction:column;gap:6px;}
+.hvc-step{
+  display:flex;align-items:center;gap:12px;padding:9px 12px;
+  border-radius:9px;font-size:0.82em;transition:background 0.15s;
+}
+.hvc-step.done{color:var(--text3);}
+.hvc-step.done .hvc-snum{background:rgba(63,185,80,0.15);color:var(--green);border-color:rgba(63,185,80,0.3);}
+.hvc-step.running{background:rgba(0,212,160,0.06);border:1px solid rgba(0,212,160,0.15);color:var(--text);}
+.hvc-step.running .hvc-snum{background:var(--green);color:#03080f;border-color:transparent;}
+.hvc-step.pending{color:var(--text3);}
+.hvc-snum{
+  width:26px;height:26px;border-radius:50%;flex-shrink:0;
+  border:1px solid var(--border);font-size:0.75em;font-weight:700;
+  display:flex;align-items:center;justify-content:center;font-family:var(--fm);
+}
+.hvc-sname{flex:1;}
+.hvc-sbadge{font-size:0.68em;padding:2px 8px;border-radius:10px;font-weight:600;
+  background:rgba(0,212,160,0.12);color:var(--green);border:1px solid rgba(0,212,160,0.2);
+  animation:hpulse 2s ease-in-out infinite;}
+.hvc-terminal{
+  margin:0 14px 14px;background:#060d14;border:1px solid rgba(255,255,255,0.05);
+  border-radius:10px;padding:12px 14px;font-family:var(--fm);font-size:0.75em;
+  color:#7ee8c8;line-height:1.7;
+}
+.hvc-terminal .cc{color:#4a6080;font-style:italic;}
+.hvc-progress{
+  margin:0 14px 14px;background:rgba(255,255,255,0.03);
+  border:1px solid rgba(255,255,255,0.05);border-radius:10px;padding:12px 14px;
+}
+.hvc-prog-row{display:flex;justify-content:space-between;font-size:0.73em;color:var(--text3);margin-bottom:6px;}
+.hvc-prog-track{height:4px;background:rgba(255,255,255,0.06);border-radius:2px;}
+.hvc-prog-fill{height:4px;background:linear-gradient(90deg,var(--green),var(--blue));border-radius:2px;animation:fillAnim 3s ease-in-out infinite alternate;}
+@keyframes fillAnim{from{width:40%;}to{width:70%;}}
 
-/* Mission pillars */
-.pillars{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;margin-top:40px;}
-.pillar{
-  background:var(--surf);border:1px solid var(--border);border-radius:var(--r);
-  padding:22px;border-top:3px solid;
+/* ─── Trust strip ─── */
+.trust-strip{
+  padding:28px 6vw;border-top:1px solid var(--border);border-bottom:1px solid var(--border);
+  background:#f4f7fb;
+  display:flex;align-items:center;gap:40px;flex-wrap:wrap;justify-content:center;
 }
-.pillar:nth-child(1){border-top-color:var(--green);}
-.pillar:nth-child(2){border-top-color:var(--blue);}
-.pillar:nth-child(3){border-top-color:var(--purple);}
-.pillar:nth-child(4){border-top-color:var(--orange);}
-.pillar-icon{font-size:1.5em;margin-bottom:12px;}
-.pillar-title{font-family:var(--fh);font-weight:700;font-size:0.95em;margin-bottom:6px;}
-.pillar-desc{font-size:0.82em;color:var(--text2);line-height:1.6;}
+.trust-label{font-size:0.72em;color:var(--text3);text-transform:uppercase;letter-spacing:1.5px;font-weight:600;white-space:nowrap;}
+.trust-tools{display:flex;align-items:center;gap:28px;flex-wrap:wrap;}
+.trust-tool{
+  display:flex;align-items:center;gap:7px;font-size:0.82em;color:var(--text2);
+  font-family:var(--fm);transition:color 0.15s;cursor:default;
+}
+.trust-tool:hover{color:var(--text);}
+.trust-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;}
+
+/* ─── Stats bar ─── */
+.stats-bar{
+  padding:72px 6vw;
+  background:linear-gradient(180deg,rgba(0,212,160,0.04) 0%,#f4f7fb 100%);
+  position:relative;overflow:hidden;
+}
+.stats-bar::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse 60% 100% at 50% 0%,rgba(0,212,160,0.05) 0%,transparent 70%);
+}
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:24px;position:relative;}
+.stat-card{
+  background:#ffffff;border:1px solid var(--border);box-shadow:0 2px 12px rgba(0,0,0,0.05);
+  border-radius:var(--r2);padding:32px 24px;text-align:center;
+  transition:all 0.2s;position:relative;overflow:hidden;
+}
+.stat-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,transparent,var(--green),transparent);
+  transform:scaleX(0);transition:transform 0.3s;
+}
+.stat-card:hover{border-color:rgba(0,212,160,0.2);transform:translateY(-4px);}
+.stat-card:hover::before{transform:scaleX(1);}
+.stat-num{font-family:var(--fh);font-size:3em;font-weight:800;letter-spacing:-2px;
+  background:linear-gradient(135deg,#00d4a0,#0096ff);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.stat-desc{font-size:0.85em;color:var(--text2);margin-top:6px;line-height:1.4;}
+.stat-icon{font-size:1.8em;margin-bottom:12px;display:block;}
+
+/* ─── Section divider ─── */
+.grad-divider{height:1px;background:linear-gradient(90deg,transparent,rgba(0,212,160,0.3),rgba(0,150,255,0.3),transparent);margin:0 6vw;}
+
+/* ─── Feature sections ─── */
+.feature-section{
+  display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;
+  padding:100px 6vw;max-width:1400px;margin:0 auto;
+}
+.feature-section.flip{direction:rtl;}
+.feature-section.flip > *{direction:ltr;}
+.feature-text .label{margin-bottom:12px;}
+.feature-text .h2{margin-bottom:16px;}
+.feature-text .lead{margin-bottom:32px;}
+.feature-points{display:flex;flex-direction:column;gap:20px;margin-bottom:36px;}
+.fp-item{display:flex;gap:16px;align-items:flex-start;}
+.fp-icon{
+  width:40px;height:40px;border-radius:10px;flex-shrink:0;
+  background:rgba(0,212,160,0.08);border:1px solid rgba(0,212,160,0.15);
+  display:flex;align-items:center;justify-content:center;font-size:1.1em;
+  transition:all 0.2s;
+}
+.fp-item:hover .fp-icon{background:rgba(0,212,160,0.15);transform:scale(1.05);}
+.fp-text{display:flex;flex-direction:column;gap:4px;}
+.fp-text strong{font-size:0.92em;font-weight:700;color:var(--text);}
+.fp-text span{font-size:0.84em;color:var(--text2);line-height:1.55;}
+
+/* ─── App mockup visual ─── */
+.feature-visual{position:relative;}
+.fv-card{
+  background:#0d1117;border:1px solid rgba(255,255,255,0.07);
+  border-radius:18px;overflow:hidden;
+  box-shadow:0 32px 80px rgba(0,0,0,0.5),0 0 0 1px rgba(255,255,255,0.03);
+}
+.fv-header{
+  background:rgba(255,255,255,0.04);border-bottom:1px solid rgba(255,255,255,0.07);
+  padding:12px 16px;display:flex;align-items:center;gap:6px;
+}
+.fv-dot{width:11px;height:11px;border-radius:50%;}
+.fv-title{font-size:0.75em;color:var(--text3);margin-left:8px;font-family:var(--fm);}
+.fv-body{padding:16px;}
+.fv-step{
+  display:flex;align-items:center;gap:10px;padding:8px 10px;
+  border-radius:8px;font-size:0.8em;margin-bottom:4px;color:var(--text3);
+}
+.fv-step.done{color:var(--text2);}
+.fv-step.done .fv-step-num{color:var(--green);font-weight:700;}
+.fv-step.active{background:rgba(0,212,160,0.06);color:var(--text);border:1px solid rgba(0,212,160,0.12);}
+.fv-step.active .fv-step-num{color:var(--green);font-weight:700;}
+.fv-step-num{width:22px;flex-shrink:0;font-family:var(--fm);font-size:0.9em;}
+.fv-step-label{flex:1;}
+.fv-step-badge{
+  font-size:0.65em;padding:2px 7px;border-radius:8px;font-weight:600;
+  background:rgba(0,212,160,0.12);color:var(--green);border:1px solid rgba(0,212,160,0.2);
+  animation:hpulse 2s ease-in-out infinite;
+}
+.fv-code{
+  background:#060d14;border:1px solid rgba(255,255,255,0.05);border-radius:9px;
+  padding:12px 14px;font-family:var(--fm);font-size:0.76em;color:#7ee8c8;
+  line-height:1.7;margin-top:10px;
+}
+.fv-code .cc{color:#4a6080;font-style:italic;}
+
+/* ─── Pipeline visual ─── */
+.pipeline-section{
+  padding:100px 6vw;background:#f4f7fb;
+  border-top:1px solid var(--border);border-bottom:1px solid var(--border);
+}
+.pipeline-section-inner{max-width:1200px;margin:0 auto;}
+.pipeline-grid{
+  display:grid;grid-template-columns:repeat(5,1fr);gap:0;
+  margin-top:48px;position:relative;
+}
+.pipeline-grid::before{
+  content:'';position:absolute;top:36px;left:10%;right:10%;height:2px;
+  background:linear-gradient(90deg,transparent,rgba(0,212,160,0.3),rgba(0,150,255,0.3),rgba(124,95,245,0.3),transparent);
+  z-index:0;
+}
+.pipe-step{
+  display:flex;flex-direction:column;align-items:center;gap:10px;
+  padding:16px 8px;position:relative;z-index:1;
+  cursor:pointer;transition:transform 0.2s;
+}
+.pipe-step:hover{transform:translateY(-4px);}
+.pipe-icon-wrap{
+  width:72px;height:72px;border-radius:50%;
+  border:2px solid rgba(0,0,0,0.1);background:#ffffff;box-shadow:0 2px 10px rgba(0,0,0,0.06);
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.5em;transition:all 0.2s;position:relative;
+}
+.pipe-step:hover .pipe-icon-wrap{border-color:var(--green);background:rgba(0,212,160,0.08);box-shadow:0 0 20px rgba(0,212,160,0.2);}
+.pipe-num{
+  position:absolute;top:-4px;right:-4px;width:22px;height:22px;
+  border-radius:50%;background:var(--green);color:#03080f;
+  font-size:0.65em;font-weight:800;display:flex;align-items:center;justify-content:center;
+  font-family:var(--fm);
+}
+.pipe-name{font-size:0.78em;font-weight:600;text-align:center;color:var(--text2);line-height:1.3;}
+.pipe-step.highlight .pipe-icon-wrap{border-color:var(--blue);background:rgba(0,150,255,0.08);}
+.pipe-step.highlight:hover .pipe-icon-wrap{box-shadow:0 0 20px rgba(0,150,255,0.2);}
+.pipe-step.highlight .pipe-num{background:var(--blue);}
+
+/* ─── 3-col feature grid ─── */
+.why-section{padding:100px 6vw;}
+.why-section-inner{max-width:1200px;margin:0 auto;}
+.why-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:48px;}
+.why-card{
+  background:#ffffff;border:1px solid var(--border);box-shadow:0 2px 12px rgba(0,0,0,0.05);
+  border-radius:var(--r2);padding:32px 28px;transition:all 0.2s;
+  position:relative;overflow:hidden;
+}
+.why-card::after{
+  content:'';position:absolute;bottom:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,transparent,var(--c,var(--green)),transparent);
+  transform:scaleX(0);transition:transform 0.3s;
+}
+.why-card:hover{border-color:rgba(255,255,255,0.1);transform:translateY(-4px);box-shadow:0 20px 60px rgba(0,0,0,0.3);}
+.why-card:hover::after{transform:scaleX(1);}
+.why-icon{font-size:2.2em;margin-bottom:18px;display:block;}
+.why-title{font-family:var(--fh);font-weight:700;font-size:1.05em;margin-bottom:10px;}
+.why-desc{font-size:0.85em;color:var(--text2);line-height:1.65;}
+
+/* ─── CTA banner ─── */
+.cta-banner{
+  margin:0 6vw 80px;border-radius:24px;
+  background:linear-gradient(135deg,rgba(0,212,160,0.08) 0%,rgba(0,150,255,0.06) 50%,rgba(124,95,245,0.06) 100%);
+  border:1px solid rgba(0,212,160,0.2);
+  padding:72px 6vw;text-align:center;position:relative;overflow:hidden;
+}
+.cta-banner::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse 60% 80% at 50% 50%,rgba(0,212,160,0.06) 0%,transparent 70%);
+}
+.cta-banner-content{position:relative;}
+.cta-banner h2{
+  font-family:var(--fh);font-weight:800;font-size:clamp(1.8em,3.5vw,3em);
+  letter-spacing:-1px;margin-bottom:16px;
+}
+.cta-banner p{font-size:1.05em;color:var(--text2);max-width:500px;margin:0 auto 36px;line-height:1.7;}
+.cta-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;}
+
+/* Reveal animation */
+.reveal{opacity:0;transform:translateY(24px);transition:opacity 0.6s ease,transform 0.6s ease;}
+.reveal.visible{opacity:1;transform:translateY(0);}
+
+/* ─── Responsive ─── */
+@media(max-width:900px){
+  .hero-inner{grid-template-columns:1fr;}
+  .hero-visual{display:none;}
+  .feature-section,.feature-section.flip{grid-template-columns:1fr;gap:40px;}
+  .pipeline-grid{grid-template-columns:repeat(3,1fr);}
+  .why-grid{grid-template-columns:1fr 1fr;}
+  .stats-grid{grid-template-columns:1fr 1fr;}
+}
+@media(max-width:640px){
+  .hero{padding:100px 5vw 60px;}
+  .hero-h1{font-size:2.5em;}
+  .stats-grid{grid-template-columns:1fr 1fr;}
+  .why-grid{grid-template-columns:1fr;}
+  .pipeline-grid{grid-template-columns:repeat(2,1fr);}
+  .pipeline-grid::before{display:none;}
+}
+
 
 /* ══════════════════════════════════════════
    TOOLS PAGE
@@ -307,7 +579,7 @@ em.p{font-style:normal;color:var(--purple);}
 }
 .tutorial-step.open .tutorial-step-body{max-height:600px;padding:0 18px 16px;}
 .code-block{
-  background:#060d14;border:1px solid var(--border);border-left:3px solid var(--purple);
+  background:#0d1117;border:1px solid rgba(0,0,0,0.1);border-left:3px solid var(--purple);
   border-radius:10px;padding:14px 16px;margin:10px 0;
   font-family:var(--fm);font-size:0.82em;color:#a5d6ff;
   position:relative;overflow:auto;
@@ -422,7 +694,7 @@ em.p{font-style:normal;color:var(--purple);}
    FOOTER
 ══════════════════════════════════════════ */
 footer{
-  background:var(--bg2);border-top:1px solid var(--border);
+  background:#f4f7fb;border-top:1px solid var(--border);
   padding:48px 6vw 28px;position:relative;z-index:1;
 }
 .footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:40px;margin-bottom:40px;}
@@ -456,6 +728,120 @@ footer{
   .footer-grid{grid-template-columns:1fr;}
   .section{padding:52px 5vw;}
 }
+
+/* ══ TOOL DETAIL PAGE ══ */
+.tool-detail-hero{
+  padding:72px 6vw 40px;
+  background:linear-gradient(180deg,rgba(0,212,160,0.05) 0%,transparent 100%);
+  border-bottom:1px solid var(--border);
+}
+.tool-detail-layout{display:grid;grid-template-columns:260px 1fr;gap:32px;padding:40px 6vw;align-items:start;}
+.tool-detail-sidebar{
+  position:sticky;top:80px;background:#ffffff;
+  border:1px solid var(--border);border-radius:var(--r2);padding:20px;
+}
+.tool-nav-item{
+  padding:9px 14px;border-radius:9px;font-size:0.85em;color:var(--text2);
+  cursor:pointer;transition:all 0.12s;margin-bottom:2px;display:flex;align-items:center;gap:8px;
+}
+.tool-nav-item:hover{background:rgba(255,255,255,0.04);color:var(--text);}
+.tool-nav-item.active{background:rgba(0,212,160,0.1);color:var(--green);}
+.tool-nav-group{margin-top:14px;}
+.tool-nav-group-title{font-size:0.68em;text-transform:uppercase;letter-spacing:1px;color:var(--text3);padding:0 14px;margin-bottom:6px;}
+.tool-section{display:none;}
+.tool-section.active{display:block;animation:pageIn 0.3s ease both;}
+.tool-section-title{
+  font-family:var(--fh);font-weight:800;font-size:1.5em;letter-spacing:-0.5px;
+  margin-bottom:8px;color:var(--text);
+}
+.tool-section-sub{font-size:0.9em;color:var(--text2);line-height:1.65;margin-bottom:24px;font-weight:300;}
+/* Manual steps */
+.manual-step{
+  background:var(--surf);border:1px solid var(--border);border-radius:var(--r2);
+  margin-bottom:16px;overflow:hidden;
+}
+.manual-step-head{
+  padding:16px 20px;display:flex;align-items:center;gap:14px;cursor:pointer;
+  transition:background 0.12s;
+}
+.manual-step-head:hover{background:rgba(255,255,255,0.025);}
+.ms-num{
+  width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--green),var(--blue));
+  color:#03080f;font-weight:800;font-size:0.82em;display:flex;align-items:center;
+  justify-content:center;flex-shrink:0;
+}
+.ms-title{font-family:var(--fh);font-weight:700;font-size:1em;flex:1;}
+.ms-tag{font-size:0.68em;padding:2px 9px;border-radius:10px;font-weight:600;}
+.ms-chev{color:var(--text3);font-size:0.75em;transition:transform 0.2s;flex-shrink:0;}
+.manual-step.open .ms-chev{transform:rotate(90deg);}
+.manual-step-body{
+  max-height:0;overflow:hidden;transition:max-height 0.4s ease;
+  border-top:0px solid var(--border);
+}
+.manual-step.open .manual-step-body{max-height:2000px;border-top:1px solid var(--border);}
+.msb-inner{padding:20px 22px;}
+/* Result cards */
+.result-explain{
+  background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);
+  padding:16px 18px;margin:12px 0;
+}
+.result-explain-title{font-weight:700;font-size:0.9em;margin-bottom:6px;display:flex;align-items:center;gap:8px;}
+.result-explain-text{font-size:0.84em;color:var(--text2);line-height:1.65;}
+.result-good{border-left:3px solid var(--green);}
+.result-warn{border-left:3px solid var(--orange);}
+.result-bad {border-left:3px solid var(--red);}
+.result-info{border-left:3px solid var(--blue);}
+/* Stat grid */
+.stat-row{display:flex;gap:12px;flex-wrap:wrap;margin:12px 0;}
+.stat-box{
+  background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);
+  padding:12px 16px;flex:1;min-width:140px;
+}
+.stat-box-val{font-family:var(--fh);font-size:1.4em;font-weight:800;color:var(--green);}
+.stat-box-lbl{font-size:0.72em;color:var(--text3);margin-top:2px;}
+/* Breadcrumb */
+.breadcrumb{
+  display:flex;align-items:center;gap:8px;font-size:0.78em;color:var(--text3);
+  margin-bottom:20px;
+}
+.breadcrumb span{cursor:pointer;transition:color 0.12s;}
+.breadcrumb span:hover{color:var(--green);}
+.breadcrumb-sep{color:var(--border2);}
+/* Download box in manual */
+.dl-banner{
+  background:linear-gradient(135deg,rgba(0,212,160,0.08),rgba(0,150,255,0.05));
+  border:1px solid rgba(0,212,160,0.2);border-radius:var(--r2);
+  padding:24px 28px;display:flex;align-items:center;gap:20px;flex-wrap:wrap;
+  margin-bottom:28px;
+}
+.dl-banner-text h3{font-family:var(--fh);font-weight:800;font-size:1.1em;margin-bottom:4px;}
+.dl-banner-text p{font-size:0.84em;color:var(--text2);}
+.dl-banner-btns{display:flex;gap:10px;flex-wrap:wrap;margin-left:auto;}
+/* Tool hub cards */
+.tool-hub-card{
+  background:var(--surf);border:1px solid var(--border);border-radius:var(--r2);
+  padding:28px;position:relative;overflow:hidden;transition:all 0.2s;cursor:pointer;
+}
+.tool-hub-card.live{border-color:rgba(0,212,160,0.2);}
+.tool-hub-card.live::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,transparent,var(--green),transparent);
+}
+.tool-hub-card:hover{transform:translateY(-4px);box-shadow:0 20px 60px rgba(0,0,0,0.4);}
+.tool-hub-card.coming{opacity:0.5;cursor:default;}
+.tool-hub-card.coming:hover{transform:none;box-shadow:none;}
+.tool-hub-arrow{
+  position:absolute;bottom:22px;right:22px;
+  width:36px;height:36px;border-radius:50%;background:rgba(0,212,160,0.1);
+  border:1px solid rgba(0,212,160,0.2);display:flex;align-items:center;
+  justify-content:center;color:var(--green);font-size:1em;transition:all 0.15s;
+}
+.tool-hub-card:hover .tool-hub-arrow{background:var(--green);color:#03080f;}
+@media(max-width:900px){
+  .tool-detail-layout{grid-template-columns:1fr;}
+  .tool-detail-sidebar{position:static;}
+}
+
 </style>
 </head>
 <body>
@@ -466,19 +852,45 @@ footer{
      NAVIGATION
 ══════════════════════════════════════════ -->
 <nav>
-  <div class="nav-logo" onclick="showPage('home')" style="cursor:pointer;">
-    <svg viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <circle cx="17" cy="17" r="16" stroke="#00d4a0" stroke-width="1" opacity="0.35"/>
-      <path d="M9 7 Q13 11.5 9 17 Q5 22.5 9 27" stroke="#00d4a0" stroke-width="2" stroke-linecap="round" fill="none"/>
-      <path d="M25 7 Q21 11.5 25 17 Q29 22.5 25 27" stroke="#0096ff" stroke-width="2" stroke-linecap="round" fill="none"/>
-      <line x1="9" y1="10.5" x2="25" y2="10.5" stroke="#00d4a0" stroke-width="1.4" stroke-linecap="round" opacity="0.55"/>
-      <line x1="9" y1="17" x2="25" y2="17" stroke="#7c5ff5" stroke-width="1.4" stroke-linecap="round" opacity="0.8"/>
-      <line x1="9" y1="23.5" x2="25" y2="23.5" stroke="#00d4a0" stroke-width="1.4" stroke-linecap="round" opacity="0.55"/>
-      <circle cx="17" cy="10.5" r="2.2" fill="#00d4a0"/>
-      <circle cx="17" cy="17"   r="2.2" fill="#7c5ff5"/>
-      <circle cx="17" cy="23.5" r="2.2" fill="#0096ff"/>
+  <div class="nav-logo" onclick="showPage('home')" style="cursor:pointer;gap:12px;">
+    <!-- Logo mark: hexagon with DNA strand inside -->
+    <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:38px;height:38px;">
+      <defs>
+        <linearGradient id="logoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#00d4a0"/>
+          <stop offset="100%" stop-color="#0096ff"/>
+        </linearGradient>
+        <linearGradient id="logoGrad2" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#00d4a0" stop-opacity="0.15"/>
+          <stop offset="100%" stop-color="#0096ff" stop-opacity="0.15"/>
+        </linearGradient>
+        <clipPath id="hexClip">
+          <polygon points="20,2 36,11 36,29 20,38 4,29 4,11"/>
+        </clipPath>
+      </defs>
+      <!-- Hex background fill -->
+      <polygon points="20,2 36,11 36,29 20,38 4,29 4,11" fill="url(#logoGrad2)"/>
+      <!-- Hex border -->
+      <polygon points="20,2 36,11 36,29 20,38 4,29 4,11" fill="none" stroke="url(#logoGrad)" stroke-width="1.8"/>
+      <!-- Left DNA strand -->
+      <path d="M13 8 Q17 14 13 20 Q9 26 13 32" stroke="#00d4a0" stroke-width="2" stroke-linecap="round" fill="none" clip-path="url(#hexClip)"/>
+      <!-- Right DNA strand -->
+      <path d="M27 8 Q23 14 27 20 Q31 26 27 32" stroke="#0096ff" stroke-width="2" stroke-linecap="round" fill="none" clip-path="url(#hexClip)"/>
+      <!-- Rungs -->
+      <line x1="13" y1="11.5" x2="27" y2="11.5" stroke="url(#logoGrad)" stroke-width="1.5" stroke-linecap="round" opacity="0.7" clip-path="url(#hexClip)"/>
+      <line x1="11" y1="17"   x2="29" y2="17"   stroke="#7c5ff5"          stroke-width="1.5" stroke-linecap="round" opacity="0.9" clip-path="url(#hexClip)"/>
+      <line x1="13" y1="22.5" x2="27" y2="22.5" stroke="url(#logoGrad)"  stroke-width="1.5" stroke-linecap="round" opacity="0.7" clip-path="url(#hexClip)"/>
+      <line x1="11" y1="28"   x2="29" y2="28"   stroke="#7c5ff5"          stroke-width="1.5" stroke-linecap="round" opacity="0.6" clip-path="url(#hexClip)"/>
+      <!-- Accent dots on strand nodes -->
+      <circle cx="20" cy="11.5" r="2.5" fill="url(#logoGrad)"/>
+      <circle cx="20" cy="17"   r="2.5" fill="#7c5ff5"/>
+      <circle cx="20" cy="22.5" r="2.5" fill="url(#logoGrad)"/>
     </svg>
-    <span class="nav-logo-text">BioInfo<span>Codex</span></span>
+    <!-- Logo text: two-tone wordmark -->
+    <div style="display:flex;flex-direction:column;line-height:1;gap:1px;">
+      <span style="font-family:'Space Grotesk','Syne',sans-serif;font-weight:700;font-size:1em;letter-spacing:-0.5px;color:#0d1117;">BioInfo</span>
+      <span style="font-family:'Space Grotesk','Syne',sans-serif;font-weight:700;font-size:1em;letter-spacing:-0.5px;background:linear-gradient(90deg,#00d4a0,#0096ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">Codex</span>
+    </div>
   </div>
 
   <div class="nav-tabs">
@@ -506,108 +918,328 @@ footer{
 ══════════════════════════════════════════ -->
 <div class="page active" id="page-home">
 
-  <!-- Hero -->
+  <!-- Ambient orbs -->
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+
+  <!-- ═══ HERO ══════════════════════════════════════════════════════════ -->
   <div class="hero">
     <div class="hero-inner">
-      <div class="hero-badge">
-        <span class="hero-dot"></span>
-        Open-source · Free forever · bioinfocodex.com
+
+      <!-- Left: copy -->
+      <div class="hero-left reveal">
+        <div class="hero-eyebrow">
+          <span class="hero-pulse"></span>
+          Open-source &nbsp;·&nbsp; bioinfocodex.com
+        </div>
+
+        <h1 class="hero-h1">
+          <em style="font-style:italic;font-weight:700;color:#4a5568;font-size:0.72em;letter-spacing:0px;font-family:'Space Grotesk',sans-serif;display:block;margin-bottom:4px;">The open</em>
+          <span class="grad" style="font-style:italic;">bioinformatics</span><br>
+          <span style="font-style:normal;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:0.72em;letter-spacing:-1px;color:#0d1117;">platform.</span>
+        </h1>
+
+        <p class="hero-sub">
+          Free, guided pipelines for every major genomics workflow.
+          Every step explained. Every result interpreted. Runs on your computer — your data never leaves your machine.
+        </p>
+
+        <div class="hero-ctas">
+          <button class="hero-cta-primary" onclick="showPage('page-tools')">
+            🧬 Explore tools
+          </button>
+          <button class="hero-cta-secondary" onclick="showPage('page-tool-rnaflow')">
+            📖 Read the manual →
+          </button>
+        </div>
+
+        <div class="hero-stats">
+          <div class="hero-stat-item">
+            <div class="hstat-val" data-count="15" data-suffix="+">0+</div>
+            <div class="hstat-lbl">Organisms</div>
+          </div>
+          <div class="hero-stat-item">
+            <div class="hstat-val" data-count="40" data-suffix="+">0+</div>
+            <div class="hstat-lbl">Gene families</div>
+          </div>
+          <div class="hero-stat-item">
+            <div class="hstat-val" data-count="10">0</div>
+            <div class="hstat-lbl">Pipeline steps</div>
+          </div>
+          <div class="hero-stat-item">
+            <div class="hstat-val" data-count="100" data-suffix="%">0%</div>
+            <div class="hstat-lbl">Free forever</div>
+          </div>
+        </div>
       </div>
-      <h1 class="h1">Decode biology.<br><em class="g">One analysis at a time.</em></h1>
-      <p class="lead">BioInfoCodex is your free, open-source bioinformatics codex — guided tools, step-by-step tutorials, and education resources that make powerful genomics analysis accessible to every researcher, regardless of coding experience.</p>
-      <div class="hero-ctas">
-        <button class="btn btn-green" onclick="showPage('tools')">🧬 Explore Tools</button>
-        <button class="btn btn-outline" onclick="showPage('edu')">📚 Start Learning →</button>
+
+      <!-- Right: app mockup -->
+      <div class="hero-visual reveal" style="animation-delay:0.15s;">
+        <div class="hero-visual-card">
+          <div class="hvc-bar">
+            <div class="hvc-dot" style="background:#f85149;"></div>
+            <div class="hvc-dot" style="background:#e3b341;"></div>
+            <div class="hvc-dot" style="background:#3fb950;"></div>
+            <span class="hvc-title">RNAflow — pipeline progress</span>
+            <span class="hvc-badge">⚡ Running</span>
+          </div>
+          <div class="hvc-steps">
+            <div class="hvc-step done"><span class="hvc-snum">✓</span><span class="hvc-sname">System check &amp; configure</span></div>
+            <div class="hvc-step done"><span class="hvc-snum">✓</span><span class="hvc-sname">Download SRR8490157–162</span></div>
+            <div class="hvc-step done"><span class="hvc-snum">✓</span><span class="hvc-sname">FastQC quality control</span></div>
+            <div class="hvc-step done"><span class="hvc-snum">✓</span><span class="hvc-sname">fastp adapter trimming</span></div>
+            <div class="hvc-step done"><span class="hvc-snum">✓</span><span class="hvc-sname">Genome + HISAT2 index</span></div>
+            <div class="hvc-step running"><span class="hvc-snum">6</span><span class="hvc-sname">HISAT2 alignment</span><span class="hvc-sbadge">⚡ live</span></div>
+            <div class="hvc-step pending"><span class="hvc-snum">7</span><span class="hvc-sname">featureCounts gene counting</span></div>
+            <div class="hvc-step pending"><span class="hvc-snum">8</span><span class="hvc-sname">Gene family analysis</span></div>
+            <div class="hvc-step pending"><span class="hvc-snum">9</span><span class="hvc-sname">DESeq2 differential expression</span></div>
+            <div class="hvc-step pending"><span class="hvc-snum">10</span><span class="hvc-sname">Volcano + heatmap + PCA</span></div>
+          </div>
+          <div class="hvc-terminal">
+            <span class="cc"># Step 6 — HISAT2 alignment</span><br>
+            hisat2 -x rice_index -U SRR8490157.fastq \<br>
+            &nbsp;&nbsp;&nbsp;-S aligned/SRR8490157.sam -p 8<br>
+            <span style="color:#3fb950;">94.2% overall alignment rate ✓</span>
+          </div>
+          <div class="hvc-progress">
+            <div class="hvc-prog-row"><span>Pipeline progress</span><span style="color:var(--green);">5 / 10 steps</span></div>
+            <div class="hvc-prog-track"><div class="hvc-prog-fill"></div></div>
+          </div>
+        </div>
       </div>
-      <div class="hero-scroll">
-        <div class="hero-stat"><div class="val">100%</div><div class="lbl">Free & open-source</div></div>
-        <div class="hero-stat"><div class="val">15+</div><div class="lbl">Organisms supported</div></div>
-        <div class="hero-stat"><div class="val">3</div><div class="lbl">Operating systems</div></div>
-        <div class="hero-stat"><div class="val">40+</div><div class="lbl">Gene families</div></div>
+
+    </div>
+  </div><!-- /hero -->
+
+  <!-- ═══ TRUST STRIP ════════════════════════════════════════════════════ -->
+  <div class="trust-strip">
+    <span class="trust-label">Powered by</span>
+    <div class="trust-tools">
+      <div class="trust-tool"><div class="trust-dot" style="background:#00d4a0;"></div>FastQC</div>
+      <div class="trust-tool"><div class="trust-dot" style="background:#0096ff;"></div>HISAT2</div>
+      <div class="trust-tool"><div class="trust-dot" style="background:#7c5ff5;"></div>fastp</div>
+      <div class="trust-tool"><div class="trust-dot" style="background:#f0883e;"></div>featureCounts</div>
+      <div class="trust-tool"><div class="trust-dot" style="background:#00d4a0;"></div>DESeq2</div>
+      <div class="trust-tool"><div class="trust-dot" style="background:#0096ff;"></div>samtools</div>
+      <div class="trust-tool"><div class="trust-dot" style="background:#7c5ff5;"></div>ggplot2</div>
+      <div class="trust-tool"><div class="trust-dot" style="background:#f0883e;"></div>MultiQC</div>
+      <div class="trust-tool"><div class="trust-dot" style="background:#00d4a0;"></div>Ensembl</div>
+    </div>
+  </div>
+
+  <!-- ═══ STATS ══════════════════════════════════════════════════════════ -->
+  <div class="stats-bar">
+    <div class="stats-grid">
+      <div class="stat-card reveal">
+        <span class="stat-icon">🧬</span>
+        <div class="stat-num">15+</div>
+        <div class="stat-desc">Built-in organisms with pre-loaded Ensembl genome URLs</div>
+      </div>
+      <div class="stat-card reveal" style="animation-delay:0.1s;">
+        <span class="stat-icon">🔬</span>
+        <div class="stat-num">40+</div>
+        <div class="stat-desc">Gene families across 22 categories — TF, kinases, hormones and more</div>
+      </div>
+      <div class="stat-card reveal" style="animation-delay:0.2s;">
+        <span class="stat-icon">🖥️</span>
+        <div class="stat-num">7</div>
+        <div class="stat-desc">Compute environments — local, SLURM, PBS, LSF, AWS, GCP, Azure</div>
+      </div>
+      <div class="stat-card reveal" style="animation-delay:0.3s;">
+        <span class="stat-icon">💸</span>
+        <div class="stat-num">$0</div>
+        <div class="stat-desc">Forever free, open source, no account required, runs offline</div>
       </div>
     </div>
   </div>
 
-  <div class="divider"></div>
+  <div class="grad-divider"></div>
 
-  <!-- Who we are -->
-  <div class="section reveal">
-    <div class="label">Who we are</div>
-    <h2 class="h2">About BioInfoCodex</h2>
-    <p class="lead">We are researchers who spent too much time fighting with software and too little time doing biology. BioInfoCodex exists to fix that — one guided tool, one tutorial, one pipeline at a time.</p>
+  <!-- ═══ FEATURE 1 — RNAflow ════════════════════════════════════════════ -->
+  <div class="feature-section">
+    <div class="feature-text reveal">
+      <div class="label">Featured tool</div>
+      <h2 class="h2">RNAflow — the complete<br>RNA-seq pipeline</h2>
+      <p class="lead">From raw FASTQ files to publication-ready figures in one guided workflow. Every command explained. Every result interpreted. No bioinformatics PhD required.</p>
+      <div class="feature-points">
+        <div class="fp-item">
+          <div class="fp-icon">⚡</div>
+          <div class="fp-text">
+            <strong>One-click execution</strong>
+            <span>Click ▶ Run on any command block — it executes live in your terminal with real-time streaming output.</span>
+          </div>
+        </div>
+        <div class="fp-item">
+          <div class="fp-icon">🌍</div>
+          <div class="fp-text">
+            <strong>15+ organisms built-in</strong>
+            <span>Human, mouse, Arabidopsis, rice, wheat, maize, soybean, tomato, zebrafish and more — genome URLs pre-loaded from Ensembl.</span>
+          </div>
+        </div>
+        <div class="fp-item">
+          <div class="fp-icon">🏢</div>
+          <div class="fp-text">
+            <strong>HPC &amp; cloud ready</strong>
+            <span>Generates SLURM, PBS, and LSF job scripts. Wraps commands with AWS S3, Google Cloud, and Azure sync operations for large-scale data.</span>
+          </div>
+        </div>
+        <div class="fp-item">
+          <div class="fp-icon">📊</div>
+          <div class="fp-text">
+            <strong>Results fully explained</strong>
+            <span>Every plot and every number is explained in plain English — volcano plots, heatmaps, PCA, DESeq2 tables and fold-change values.</span>
+          </div>
+        </div>
+      </div>
+      <div style="display:flex;gap:12px;flex-wrap:wrap;">
+        <button class="hero-cta-primary" onclick="showPage('page-tool-rnaflow')">📖 Read full manual</button>
+        <button class="hero-cta-secondary" onclick="downloadTool('app')">⬇ Download free</button>
+      </div>
+    </div>
 
-    <div class="pillars" style="margin-top:40px;">
-      <div class="pillar">
-        <div class="pillar-icon">🎯</div>
-        <div class="pillar-title">Our mission</div>
-        <p class="pillar-desc">Remove technical barriers between researchers and their data. Every tool includes step-by-step guidance, so your biological question comes first.</p>
-      </div>
-      <div class="pillar">
-        <div class="pillar-icon">🔓</div>
-        <div class="pillar-title">Always free</div>
-        <p class="pillar-desc">Every tool, tutorial, and resource on BioInfoCodex is and will remain free and open-source. No subscriptions, no paywalls, no hidden limits.</p>
-      </div>
-      <div class="pillar">
-        <div class="pillar-icon">🌍</div>
-        <div class="pillar-title">For everyone</div>
-        <p class="pillar-desc">Designed for beginners with no coding background, and flexible enough for experienced bioinformaticians who want to move faster.</p>
-      </div>
-      <div class="pillar">
-        <div class="pillar-icon">🔬</div>
-        <div class="pillar-title">Research-grade</div>
-        <p class="pillar-desc">Built on the same tools used in published research — HISAT2, DESeq2, GATK, samtools — properly configured and ready to use.</p>
+    <div class="feature-visual reveal" style="animation-delay:0.15s;">
+      <div class="fv-card">
+        <div class="fv-header">
+          <div class="fv-dot" style="background:#f85149;"></div>
+          <div class="fv-dot" style="background:#e3b341;margin-left:5px;"></div>
+          <div class="fv-dot" style="background:#3fb950;margin-left:5px;"></div>
+          <span class="fv-title">RNAflow_App.html — analysis progress</span>
+        </div>
+        <div class="fv-body">
+          <div class="fv-step done"><span class="fv-step-num">✓</span><span class="fv-step-label">Configure project</span></div>
+          <div class="fv-step done"><span class="fv-step-num">✓</span><span class="fv-step-label">Download data from NCBI SRA</span></div>
+          <div class="fv-step done"><span class="fv-step-num">✓</span><span class="fv-step-label">FastQC quality control</span></div>
+          <div class="fv-step done"><span class="fv-step-num">✓</span><span class="fv-step-label">fastp adapter trimming</span></div>
+          <div class="fv-step done"><span class="fv-step-num">✓</span><span class="fv-step-label">Genome download + HISAT2 index</span></div>
+          <div class="fv-step active"><span class="fv-step-num">6</span><span class="fv-step-label">HISAT2 alignment</span><span class="fv-step-badge">⚡ running</span></div>
+          <div class="fv-step"><span class="fv-step-num">7</span><span class="fv-step-label">featureCounts gene counting</span></div>
+          <div class="fv-step"><span class="fv-step-num">8</span><span class="fv-step-label">Gene family analysis</span></div>
+          <div class="fv-step"><span class="fv-step-num">9</span><span class="fv-step-label">DESeq2 differential expression</span></div>
+          <div class="fv-step"><span class="fv-step-num">10</span><span class="fv-step-label">Volcano + heatmap + PCA</span></div>
+          <div class="fv-code">
+            <span class="cc"># Aligning sample SRR8490157</span><br>
+            hisat2 -x rice_index -U trimmed.fastq \<br>
+            &nbsp;&nbsp;-S aligned/SRR8490157.sam -p 8<br>
+            <span style="color:#3fb950;">94.2% overall alignment rate ✓</span>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 
-  <div class="divider"></div>
+  <div class="grad-divider"></div>
 
-  <!-- Team -->
-  <div class="section reveal">
-    <div class="label">The team</div>
-    <h2 class="h2">People behind BioInfoCodex</h2>
-    <p class="lead">Researchers and developers who believe great science software should be accessible to everyone.</p>
-
-    <div class="team-grid">
-      <div class="team-card">
-        <div class="team-avatar">👨‍🔬</div>
-        <div class="team-name">Matrika Bhattarai</div>
-        <div class="team-role">Founder & Lead Developer</div>
-        <p class="team-bio">Researcher specialising in RNA-seq and functional genomics. Researcher specialising in RNA-seq and functional genomics. Built RNAflow and founded BioInfoCodex to make bioinformatics accessible to every researcher worldwide.</p>
+  <!-- ═══ PIPELINE STEPS ═════════════════════════════════════════════════ -->
+  <div class="pipeline-section">
+    <div class="pipeline-section-inner">
+      <div class="center reveal">
+        <div class="label">How it works</div>
+        <h2 class="h2">10 steps from raw data to discovery</h2>
+        <p class="sub" style="max-width:600px;margin:0 auto;">Each step generates ready-to-run commands with full explanations. Follow in order, or jump to any step — the app remembers where you left off.</p>
       </div>
-      <div class="team-card" style="opacity:0.5; border-style:dashed;">
-        <div class="team-avatar">➕</div>
-        <div class="team-name">Your name here</div>
-        <div class="team-role">Contributor</div>
-        <p class="team-bio">BioInfoCodex is open-source. If you want to contribute a tool, tutorial, or bug fix, we'd love to have you on the team.</p>
-      </div>
-      <div class="team-card" style="opacity:0.5; border-style:dashed;">
-        <div class="team-avatar">➕</div>
-        <div class="team-name">Collaborators welcome</div>
-        <div class="team-role">Any expertise</div>
-        <p class="team-bio">Bioinformaticians, biologists, statisticians, web developers — all contributions welcome. Get in touch via the Contact page.</p>
+      <div class="pipeline-grid">
+        <div class="pipe-step reveal" onclick="showPage('page-tool-rnaflow')">
+          <div class="pipe-icon-wrap">⚙️<span class="pipe-num">1</span></div>
+          <div class="pipe-name">Configure</div>
+        </div>
+        <div class="pipe-step reveal" style="animation-delay:0.05s;" onclick="showPage('page-tool-rnaflow')">
+          <div class="pipe-icon-wrap">⬇️<span class="pipe-num">2</span></div>
+          <div class="pipe-name">Download data</div>
+        </div>
+        <div class="pipe-step reveal" style="animation-delay:0.1s;" onclick="showPage('page-tool-rnaflow')">
+          <div class="pipe-icon-wrap">🔍<span class="pipe-num">3</span></div>
+          <div class="pipe-name">Quality control</div>
+        </div>
+        <div class="pipe-step reveal" style="animation-delay:0.15s;" onclick="showPage('page-tool-rnaflow')">
+          <div class="pipe-icon-wrap">✂️<span class="pipe-num">4</span></div>
+          <div class="pipe-name">Trimming</div>
+        </div>
+        <div class="pipe-step reveal" style="animation-delay:0.2s;" onclick="showPage('page-tool-rnaflow')">
+          <div class="pipe-icon-wrap">🧬<span class="pipe-num">5</span></div>
+          <div class="pipe-name">Genome &amp; index</div>
+        </div>
+        <div class="pipe-step highlight reveal" style="animation-delay:0.25s;" onclick="showPage('page-tool-rnaflow')">
+          <div class="pipe-icon-wrap">📍<span class="pipe-num">6</span></div>
+          <div class="pipe-name">Alignment</div>
+        </div>
+        <div class="pipe-step highlight reveal" style="animation-delay:0.3s;" onclick="showPage('page-tool-rnaflow')">
+          <div class="pipe-icon-wrap">🔢<span class="pipe-num">7</span></div>
+          <div class="pipe-name">Gene counting</div>
+        </div>
+        <div class="pipe-step highlight reveal" style="animation-delay:0.35s;" onclick="showPage('page-tool-rnaflow')">
+          <div class="pipe-icon-wrap">🧬<span class="pipe-num">8</span></div>
+          <div class="pipe-name">Gene family</div>
+        </div>
+        <div class="pipe-step reveal" style="animation-delay:0.4s;" onclick="showPage('page-tool-rnaflow')">
+          <div class="pipe-icon-wrap">📊<span class="pipe-num">9</span></div>
+          <div class="pipe-name">DESeq2</div>
+        </div>
+        <div class="pipe-step reveal" style="animation-delay:0.45s;" onclick="showPage('page-tool-rnaflow')">
+          <div class="pipe-icon-wrap">🌋<span class="pipe-num">10</span></div>
+          <div class="pipe-name">Plots &amp; results</div>
+        </div>
       </div>
     </div>
   </div>
 
-  <div class="divider"></div>
+  <!-- ═══ WHY BIOINFOCODEX ══════════════════════════════════════════════ -->
+  <div class="why-section">
+    <div class="why-section-inner">
+      <div class="center reveal">
+        <div class="label">Why BioInfoCodex</div>
+        <h2 class="h2">Built for real researchers,<br>not just bioinformaticians</h2>
+      </div>
+      <div class="why-grid">
+        <div class="why-card reveal" style="--c:var(--green);">
+          <span class="why-icon">🔒</span>
+          <div class="why-title">Your data stays yours</div>
+          <div class="why-desc">Every tool runs entirely on your own computer. No cloud upload, no account, no server. Your raw data, intermediate files, and results never leave your machine.</div>
+        </div>
+        <div class="why-card reveal" style="--c:var(--blue);animation-delay:0.1s;">
+          <span class="why-icon">📖</span>
+          <div class="why-title">Everything explained</div>
+          <div class="why-desc">Every command has a plain-English explanation. Every result — volcano plots, heatmaps, alignment rates, DESeq2 tables — is interpreted so you understand what it means biologically.</div>
+        </div>
+        <div class="why-card reveal" style="--c:var(--purple);animation-delay:0.2s;">
+          <span class="why-icon">⚡</span>
+          <div class="why-title">From zero to results</div>
+          <div class="why-desc">No bioinformatics PhD required. Open the HTML file, enter your SRA accessions, and follow the guided steps. The app generates every command and walks you through each one.</div>
+        </div>
+        <div class="why-card reveal" style="--c:var(--orange);animation-delay:0.1s;">
+          <span class="why-icon">🖥️</span>
+          <div class="why-title">HPC and cloud support</div>
+          <div class="why-desc">Working with large genomes on a supercomputer? Generates SLURM, PBS, and LSF job scripts automatically. Data on AWS, GCP, or Azure? Commands include the sync steps.</div>
+        </div>
+        <div class="why-card reveal" style="--c:var(--green);animation-delay:0.2s;">
+          <span class="why-icon">🌍</span>
+          <div class="why-title">15+ organisms ready</div>
+          <div class="why-desc">Human, mouse, Arabidopsis, rice, wheat, maize, soybean, tomato, zebrafish, Drosophila, C. elegans, yeast and more — Ensembl genome and annotation URLs pre-loaded.</div>
+        </div>
+        <div class="why-card reveal" style="--c:var(--blue);animation-delay:0.3s;">
+          <span class="why-icon">💸</span>
+          <div class="why-title">Free forever, open source</div>
+          <div class="why-desc">BioInfoCodex is MIT-licensed and will always be free. No subscription, no feature paywalls, no tracking. Download and use it indefinitely, even without internet access.</div>
+        </div>
+      </div>
+    </div>
+  </div>
 
-  <!-- What's coming -->
-  <div class="section reveal">
-    <div class="label">Roadmap</div>
-    <h2 class="h2">What's coming</h2>
-    <p class="lead">BioInfoCodex is a growing platform. Here's what's in development — new tools and tutorials added regularly.</p>
-    <div class="card-grid card-grid-3" style="margin-top:36px;">
-      <div class="card"><div style="font-size:1.4em;margin-bottom:10px;">🧬</div><div class="h3">RNAflow v1.0</div><span class="tag tag-green">Live now</span><p class="sub" style="margin-top:8px;">Complete RNA-seq pipeline with gene family analysis, 15 organisms, Run mode.</p></div>
-      <div class="card"><div style="font-size:1.4em;margin-bottom:10px;">🔬</div><div class="h3">NGSuite</div><span class="tag tag-dim">Q3 2025</span><p class="sub" style="margin-top:8px;">Whole-genome sequencing, variant calling, SNP/INDEL annotation.</p></div>
-      <div class="card"><div style="font-size:1.4em;margin-bottom:10px;">⭕</div><div class="h3">PlasmidMap</div><span class="tag tag-dim">Q4 2025</span><p class="sub" style="margin-top:8px;">Plasmid design, restriction site analysis, GenBank import/export.</p></div>
-      <div class="card"><div style="font-size:1.4em;margin-bottom:10px;">🏔️</div><div class="h3">ChIPflow</div><span class="tag tag-dim">2026</span><p class="sub" style="margin-top:8px;">ChIP-seq and ATAC-seq — peak calling, motif analysis, chromatin accessibility.</p></div>
-      <div class="card"><div style="font-size:1.4em;margin-bottom:10px;">🌿</div><div class="h3">MetaFlow</div><span class="tag tag-dim">2026</span><p class="sub" style="margin-top:8px;">Metagenomics, 16S rRNA, microbiome diversity and differential abundance.</p></div>
-      <div class="card"><div style="font-size:1.4em;margin-bottom:10px;">📚</div><div class="h3">Education portal</div><span class="tag tag-orange">In progress</span><p class="sub" style="margin-top:8px;">Step-by-step tutorials for every major bioinformatics method.</p></div>
+  <!-- ═══ CTA BANNER ══════════════════════════════════════════════════════ -->
+  <div class="cta-banner reveal">
+    <div class="cta-banner-content">
+      <h2>Start your first RNA-seq analysis today</h2>
+      <p>Download RNAflow — a single HTML file, no installation wizard, no sign-up. Open it in your browser and follow the guided steps.</p>
+      <div class="cta-btns">
+        <button class="hero-cta-primary" onclick="downloadTool('app')">⬇ Download RNAflow free</button>
+        <button class="hero-cta-secondary" onclick="showPage('page-tool-rnaflow')">📖 Read the manual first</button>
+      </div>
     </div>
   </div>
 
 </div><!-- /home -->
+
+
 
 <!-- ══════════════════════════════════════════
      TOOLS PAGE
@@ -617,7 +1249,7 @@ footer{
   <div class="tools-hero">
     <div class="label">Software</div>
     <h1 class="h1">Bioinfo Tools</h1>
-    <p class="lead">Free, guided pipelines for every major bioinformatics workflow. Each tool runs on your own computer — your data never leaves your machine.</p>
+    <p class="lead">Free, guided pipelines for every major bioinformatics workflow. Each tool has its own complete manual — click any tool to read the documentation, download, and get started.</p>
   </div>
 
   <div class="section">
@@ -637,9 +1269,10 @@ footer{
       <div class="tool-category-title">✦ Available now</div>
       <div class="card-grid card-grid-2">
 
-        <!-- RNAflow -->
-        <div class="tool-card live" data-tags="rna live plant">
-          <div class="tool-top">
+        <!-- RNAflow hub card -->
+        <div class="tool-hub-card live" data-tags="rna live plant" onclick="showPage('page-tool-rnaflow')">
+          <div class="tool-hub-arrow">→</div>
+          <div class="tool-top" style="margin-bottom:12px;">
             <div class="tool-icon-wrap">🧬</div>
             <div class="tool-meta">
               <div class="tool-name">RNAflow</div>
@@ -647,19 +1280,17 @@ footer{
             </div>
             <span class="tag tag-green">Live</span>
           </div>
-          <p class="tool-desc">Complete RNA-seq analysis pipeline — download raw data from NCBI, quality control, adapter trimming, genome alignment, gene counting, DESeq2 differential expression, volcano plots, heatmaps, PCA, and gene family analysis. Works on 15+ organisms including all major crop plants.</p>
-          <div class="chips">
+          <p class="tool-desc">Complete RNA-seq analysis pipeline — from raw FASTQ files to differential expression, volcano plots, heatmaps, PCA and gene family analysis. Works on 15+ organisms including all major crop plants.</p>
+          <div class="chips" style="margin-bottom:50px;">
             <span class="chip">RNA-seq</span><span class="chip">DESeq2</span><span class="chip">HISAT2</span>
             <span class="chip">FastQC</span><span class="chip">fastp</span><span class="chip">featureCounts</span>
             <span class="chip">ggplot2</span><span class="chip">15 organisms</span>
           </div>
-          <div class="tool-actions" style="margin-top:18px;">
-            <button class="tool-btn dl" onclick="downloadTool('app')">⬇ Download App (.html)</button>
-            <button class="tool-btn dl" onclick="downloadTool('server')" style="background:#0096ff;">⬇ Download Server (.py)</button>
-            <button class="tool-btn doc" onclick="showPage('edu')">📖 Tutorial</button>
-          </div>
-          <div style="margin-top:14px;padding:10px 14px;background:rgba(0,212,160,0.05);border:1px solid rgba(0,212,160,0.1);border-radius:8px;font-size:0.78em;color:var(--text2);">
-            🍎 macOS &nbsp;·&nbsp; 🐧 Linux &nbsp;·&nbsp; 🪟 Windows (WSL2) &nbsp;·&nbsp; 🐍 Python 3.6+ &nbsp;·&nbsp; 📊 R 4.0+
+          <div style="display:flex;gap:8px;flex-wrap:wrap;">
+            <span style="font-size:0.78em;color:var(--text3);">🍎 macOS</span>
+            <span style="font-size:0.78em;color:var(--text3);">🐧 Linux</span>
+            <span style="font-size:0.78em;color:var(--text3);">🪟 Windows WSL2</span>
+            <span style="font-size:0.78em;color:var(--green);margin-left:auto;font-weight:600;">Full manual →</span>
           </div>
         </div>
 
@@ -671,7 +1302,7 @@ footer{
       <div class="tool-category-title" style="color:var(--text3);">In development</div>
       <div class="card-grid card-grid-2">
 
-        <div class="tool-card coming" data-tags="dna live">
+        <div class="tool-hub-card coming" data-tags="dna live" onclick="showPage('page-tool-ngsuite')">
           <div class="tool-top">
             <div class="tool-icon-wrap" style="opacity:0.6;">🔬</div>
             <div class="tool-meta">
@@ -687,7 +1318,7 @@ footer{
           </div>
         </div>
 
-        <div class="tool-card coming" data-tags="dna">
+        <div class="tool-hub-card coming" data-tags="dna" onclick="showPage('page-tool-plasmidmap')">
           <div class="tool-top">
             <div class="tool-icon-wrap" style="opacity:0.6;">⭕</div>
             <div class="tool-meta">
@@ -703,7 +1334,7 @@ footer{
           </div>
         </div>
 
-        <div class="tool-card coming" data-tags="epi">
+        <div class="tool-hub-card coming" data-tags="epi" onclick="showPage('page-tool-chipflow')">
           <div class="tool-top">
             <div class="tool-icon-wrap" style="opacity:0.6;">🏔️</div>
             <div class="tool-meta">
@@ -719,7 +1350,7 @@ footer{
           </div>
         </div>
 
-        <div class="tool-card coming" data-tags="micro">
+        <div class="tool-hub-card coming" data-tags="micro" onclick="showPage('page-tool-metaflow')">
           <div class="tool-top">
             <div class="tool-icon-wrap" style="opacity:0.6;">🌿</div>
             <div class="tool-meta">
@@ -735,7 +1366,7 @@ footer{
           </div>
         </div>
 
-        <div class="tool-card coming" data-tags="rna">
+        <div class="tool-hub-card coming" data-tags="rna" onclick="showPage('page-tool-scrnaflow')">
           <div class="tool-top">
             <div class="tool-icon-wrap" style="opacity:0.6;">🔭</div>
             <div class="tool-meta">
@@ -751,7 +1382,7 @@ footer{
           </div>
         </div>
 
-        <div class="tool-card coming" data-tags="plant rna">
+        <div class="tool-hub-card coming" data-tags="plant rna" onclick="showPage('page-tool-proteomics')">
           <div class="tool-top">
             <div class="tool-icon-wrap" style="opacity:0.6;">⚗️</div>
             <div class="tool-meta">
@@ -772,6 +1403,756 @@ footer{
   </div>
 
 </div><!-- /tools -->
+
+<!-- ══════════════════════════════════════════
+     TOOL PAGE: RNAflow
+══════════════════════════════════════════ -->
+<div class="page" id="page-tool-rnaflow">
+
+  <!-- Hero -->
+  <div class="tool-detail-hero">
+    <div class="breadcrumb">
+      <span onclick="showPage('page-tools')">🧬 Bioinfo Tools</span>
+      <span class="breadcrumb-sep">›</span>
+      <span style="color:var(--text);">RNAflow</span>
+    </div>
+    <div style="display:flex;align-items:flex-start;gap:20px;flex-wrap:wrap;">
+      <div style="flex:1;">
+        <div class="label">RNA-seq Analysis Software</div>
+        <h1 class="h1" style="font-size:clamp(1.8em,4vw,3em);">RNAflow <span style="color:var(--green);font-size:0.6em;vertical-align:middle;">v1.0</span></h1>
+        <p class="lead">Complete RNA-seq analysis pipeline — from raw sequencing files to publication-ready figures. Works on 15+ organisms with a full manual explaining every step and every result.</p>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:8px;padding:20px;background:var(--surf);border:1px solid rgba(0,212,160,0.2);border-radius:var(--r2);min-width:200px;">
+        <div style="font-size:0.72em;text-transform:uppercase;letter-spacing:1px;color:var(--text3);margin-bottom:4px;">Quick download</div>
+        <button class="btn btn-green" onclick="downloadTool('app')" style="justify-content:center;">⬇ RNAflow App (.html)</button>
+        <button class="btn btn-outline" onclick="downloadTool('server')" style="justify-content:center;">⬇ Server (.py)</button>
+        <div style="font-size:0.72em;color:var(--text3);text-align:center;margin-top:4px;">Free · No sign-up · Runs locally</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sidebar + content -->
+  <div class="tool-detail-layout">
+
+    <!-- Sidebar navigation -->
+    <div class="tool-detail-sidebar">
+      <div style="font-size:0.7em;text-transform:uppercase;letter-spacing:1.5px;color:var(--text3);margin-bottom:12px;">Contents</div>
+
+      <div class="tool-nav-item active" onclick="showToolSection('ts-overview',this)">📋 Overview</div>
+      <div class="tool-nav-item" onclick="showToolSection('ts-requirements',this)">💻 Requirements</div>
+      <div class="tool-nav-item" onclick="showToolSection('ts-install',this)">⚙️ Installation</div>
+
+      <div class="tool-nav-group">
+        <div class="tool-nav-group-title">Pipeline Manual</div>
+        <div class="tool-nav-item" onclick="showToolSection('ts-step1',this)">1 · Configure project</div>
+        <div class="tool-nav-item" onclick="showToolSection('ts-step2',this)">2 · Download data</div>
+        <div class="tool-nav-item" onclick="showToolSection('ts-step3',this)">3 · Quality control</div>
+        <div class="tool-nav-item" onclick="showToolSection('ts-step4',this)">4 · Trimming</div>
+        <div class="tool-nav-item" onclick="showToolSection('ts-step5',this)">5 · Genome &amp; index</div>
+        <div class="tool-nav-item" onclick="showToolSection('ts-step6',this)">6 · Alignment</div>
+        <div class="tool-nav-item" onclick="showToolSection('ts-step7',this)">7 · Gene counting</div>
+        <div class="tool-nav-item" onclick="showToolSection('ts-genefam',this)">8 · Gene family analysis</div>
+        <div class="tool-nav-item" onclick="showToolSection('ts-step8',this)">9 · DESeq2 analysis</div>
+        <div class="tool-nav-item" onclick="showToolSection('ts-step9',this)">10 · Plots &amp; results</div>
+      </div>
+
+      <div class="tool-nav-group">
+        <div class="tool-nav-group-title">Reference</div>
+        <div class="tool-nav-item" onclick="showToolSection('ts-interpret',this)">📊 Interpreting results</div>
+        <div class="tool-nav-item" onclick="showToolSection('ts-organisms',this)">🌍 Supported organisms</div>
+        <div class="tool-nav-item" onclick="showToolSection('ts-faq',this)">❓ Troubleshooting</div>
+      </div>
+    </div>
+
+    <!-- Main content -->
+    <div>
+
+      <!-- OVERVIEW -->
+      <div class="tool-section active" id="ts-overview">
+        <div class="tool-section-title">What is RNAflow?</div>
+        <p class="tool-section-sub">RNAflow is a guided RNA-seq analysis application. Open it in any browser, enter your experiment details, and it generates every command you need — with explanations of what each command does and what good results look like. You can run commands automatically with one click, or copy them to your terminal manually.</p>
+
+        <div class="stat-row">
+          <div class="stat-box"><div class="stat-box-val">9</div><div class="stat-box-lbl">Analysis steps</div></div>
+          <div class="stat-box"><div class="stat-box-val">15+</div><div class="stat-box-lbl">Organisms built-in</div></div>
+          <div class="stat-box"><div class="stat-box-val">40+</div><div class="stat-box-lbl">Gene families</div></div>
+          <div class="stat-box"><div class="stat-box-val">3</div><div class="stat-box-lbl">Operating systems</div></div>
+        </div>
+
+        <h3 class="h3" style="margin-top:24px;">What does RNA-seq measure?</h3>
+        <p class="sub">RNA sequencing measures <strong style="color:var(--text);">gene expression</strong> — which genes are active in a cell and by how much. Every cell contains the same DNA, but different cells (or the same cell under different conditions) activate different genes. RNA-seq captures a snapshot of this activity by sequencing the RNA molecules present at a specific moment.</p>
+        <div class="info-box note" style="margin-top:12px;"><span>🔬</span><div>Think of it this way: DNA is the instruction manual for your entire body. RNA is the specific page that is currently being read. RNA-seq tells you which pages are being read, in which cells, and how intensively.</div></div>
+
+        <h3 class="h3" style="margin-top:24px;">What biological questions can RNAflow answer?</h3>
+        <div class="card-grid card-grid-2" style="margin-top:0;">
+          <div class="card" style="padding:16px;"><strong>Which genes change between conditions?</strong><p class="sub" style="margin-top:4px;">Compare wildtype vs mutant, treated vs untreated, healthy vs diseased. RNAflow identifies statistically significant changes.</p></div>
+          <div class="card" style="padding:16px;"><strong>How much does each gene change?</strong><p class="sub" style="margin-top:4px;">Fold change values show whether genes double, halve, or show more dramatic changes in expression.</p></div>
+          <div class="card" style="padding:16px;"><strong>Which biological pathways are affected?</strong><p class="sub" style="margin-top:4px;">Gene family analysis groups DE genes into pathways — transcription factors, kinases, hormone signalling and more.</p></div>
+          <div class="card" style="padding:16px;"><strong>How similar are my samples to each other?</strong><p class="sub" style="margin-top:4px;">PCA and heatmaps reveal whether replicates cluster correctly and how distinct your conditions are.</p></div>
+        </div>
+
+        <h3 class="h3" style="margin-top:24px;">The complete RNAflow pipeline</h3>
+        <div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--r2);padding:20px;margin-top:8px;">
+          <div style="display:flex;align-items:center;gap:0;flex-wrap:wrap;row-gap:8px;">
+            <div style="text-align:center;padding:8px 14px;background:rgba(0,212,160,0.1);border:1px solid rgba(0,212,160,0.2);border-radius:8px;font-size:0.8em;font-weight:600;color:var(--green);">Raw FASTQ</div>
+            <div style="color:var(--text3);padding:0 6px;font-size:0.8em;">→</div>
+            <div style="text-align:center;padding:8px 14px;background:var(--bg3);border:1px solid var(--border);border-radius:8px;font-size:0.8em;color:var(--text2);">FastQC / QC</div>
+            <div style="color:var(--text3);padding:0 6px;font-size:0.8em;">→</div>
+            <div style="text-align:center;padding:8px 14px;background:var(--bg3);border:1px solid var(--border);border-radius:8px;font-size:0.8em;color:var(--text2);">fastp Trim</div>
+            <div style="color:var(--text3);padding:0 6px;font-size:0.8em;">→</div>
+            <div style="text-align:center;padding:8px 14px;background:var(--bg3);border:1px solid var(--border);border-radius:8px;font-size:0.8em;color:var(--text2);">HISAT2 Align</div>
+            <div style="color:var(--text3);padding:0 6px;font-size:0.8em;">→</div>
+            <div style="text-align:center;padding:8px 14px;background:var(--bg3);border:1px solid var(--border);border-radius:8px;font-size:0.8em;color:var(--text2);">featureCounts</div>
+            <div style="color:var(--text3);padding:0 6px;font-size:0.8em;">→</div>
+            <div style="text-align:center;padding:8px 14px;background:var(--bg3);border:1px solid var(--border);border-radius:8px;font-size:0.8em;color:var(--text2);">DESeq2</div>
+            <div style="color:var(--text3);padding:0 6px;font-size:0.8em;">→</div>
+            <div style="text-align:center;padding:8px 14px;background:rgba(0,150,255,0.1);border:1px solid rgba(0,150,255,0.2);border-radius:8px;font-size:0.8em;font-weight:600;color:var(--blue);">Figures + Results</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- REQUIREMENTS -->
+      <div class="tool-section" id="ts-requirements">
+        <div class="tool-section-title">System requirements</div>
+        <p class="tool-section-sub">RNAflow runs on your own computer. You need a Conda environment with bioinformatics tools and R for the statistical analysis steps.</p>
+
+        <div class="card-grid card-grid-2" style="margin-bottom:20px;">
+          <div class="card" style="padding:20px;">
+            <div style="font-size:1.4em;margin-bottom:10px;">💻</div>
+            <strong>Operating system</strong>
+            <ul style="margin-top:8px;padding-left:16px;font-size:0.84em;color:var(--text2);line-height:1.8;">
+              <li>🍎 macOS 10.15 or newer</li>
+              <li>🐧 Linux — Ubuntu, Fedora, Debian, Arch</li>
+              <li>🪟 Windows via WSL2 (Ubuntu recommended)</li>
+            </ul>
+          </div>
+          <div class="card" style="padding:20px;">
+            <div style="font-size:1.4em;margin-bottom:10px;">🔧</div>
+            <strong>Required software</strong>
+            <ul style="margin-top:8px;padding-left:16px;font-size:0.84em;color:var(--text2);line-height:1.8;">
+              <li>Python 3.6+ (for the local server)</li>
+              <li>Conda / Miniforge (to install tools)</li>
+              <li>R 4.0+ with DESeq2 and ggplot2</li>
+              <li>RStudio (recommended for R steps)</li>
+              <li>Any modern web browser (Chrome, Firefox, Safari, Edge)</li>
+            </ul>
+          </div>
+          <div class="card" style="padding:20px;">
+            <div style="font-size:1.4em;margin-bottom:10px;">⚡</div>
+            <strong>Hardware (minimum)</strong>
+            <ul style="margin-top:8px;padding-left:16px;font-size:0.84em;color:var(--text2);line-height:1.8;">
+              <li>RAM: 8 GB minimum, 16 GB recommended</li>
+              <li>Storage: 50 GB free space per experiment</li>
+              <li>CPU: any modern processor (more cores = faster)</li>
+            </ul>
+          </div>
+          <div class="card" style="padding:20px;">
+            <div style="font-size:1.4em;margin-bottom:10px;">🌐</div>
+            <strong>Internet</strong>
+            <ul style="margin-top:8px;padding-left:16px;font-size:0.84em;color:var(--text2);line-height:1.8;">
+              <li>Required only for: downloading data (SRA), downloading genome files</li>
+              <li>Analysis itself runs completely offline</li>
+              <li>Large genomes (human, wheat) need fast connection — files can be 10–30 GB</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="info-box tip"><span>💡</span><div><strong>Large genome note:</strong> For human, mouse, wheat, and maize, genome files are 3–30 GB. Use the app on a computer with a fast internet connection for the download steps.</div></div>
+      </div>
+
+      <!-- INSTALLATION -->
+      <div class="tool-section" id="ts-install">
+        <div class="tool-section-title">Installation</div>
+        <p class="tool-section-sub">RNAflow is an HTML file — no installation wizard needed. Download it, download the server file, and open it in your browser. The app guides you through installing all the bioinformatics tools.</p>
+
+        <div class="manual-step open" onclick="toggleManualStep(this)">
+          <div class="manual-step-head"><span class="ms-num">1</span><span class="ms-title">Download RNAflow</span><span class="ms-chev">▶</span></div>
+          <div class="manual-step-body"><div class="msb-inner">
+            <p class="sub" style="margin-bottom:14px;">Download both files and save them to the same folder (e.g. your Desktop):</p>
+            <div class="dl-banner">
+              <div class="dl-banner-text"><h3>RNAflow v1.0</h3><p>Two files — keep them in the same folder</p></div>
+              <div class="dl-banner-btns">
+                <button class="btn btn-green" onclick="downloadTool('app');event.stopPropagation()">⬇ RNAflow_App.html</button>
+                <button class="btn btn-outline" onclick="downloadTool('server');event.stopPropagation()">⬇ rnaflow_server.py</button>
+              </div>
+            </div>
+            <p class="sub">Open <code>RNAflow_App.html</code> in your browser — you will see the BioInfoCodex RNAflow interface immediately.</p>
+          </div></div>
+        </div>
+
+        <div class="manual-step" onclick="toggleManualStep(this)">
+          <div class="manual-step-head"><span class="ms-num">2</span><span class="ms-title">Install Conda (Miniforge) — if not already installed</span><span class="ms-chev">▶</span></div>
+          <div class="manual-step-body"><div class="msb-inner">
+            <p class="sub" style="margin-bottom:10px;">Conda is a package manager that installs bioinformatics tools. If you already have Anaconda or Miniconda, skip this step. The app's System Check will detect it automatically.</p>
+            <div class="info-box note"><span>🌐</span><div>Download Miniforge from: <strong>github.com/conda-forge/miniforge/releases</strong> — scroll to the latest release and download the installer for your operating system.</div></div>
+            <div class="code-block"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button><span class="code-comment"># macOS / Linux — run in Terminal after downloading:</span>
+bash Miniforge3-MacOSX-arm64.sh   <span class="code-comment"># macOS Apple Silicon</span>
+bash Miniforge3-MacOSX-x86_64.sh  <span class="code-comment"># macOS Intel</span>
+bash Miniforge3-Linux-x86_64.sh   <span class="code-comment"># Linux</span>
+<span class="code-comment"># Follow the prompts, accept the licence, allow it to initialise conda</span>
+<span class="code-comment"># Close and reopen Terminal when finished</span></div>
+            <div class="info-box warn"><span>⚠️</span><div>On Windows: install WSL2 first (search "Turn Windows features on or off" → enable "Windows Subsystem for Linux"), then install Ubuntu from the Microsoft Store. Open Ubuntu, then install Miniforge inside Ubuntu.</div></div>
+          </div></div>
+        </div>
+
+        <div class="manual-step" onclick="toggleManualStep(this)">
+          <div class="manual-step-head"><span class="ms-num">3</span><span class="ms-title">Create the rnaseq environment and install tools</span><span class="ms-chev">▶</span></div>
+          <div class="manual-step-body"><div class="msb-inner">
+            <p class="sub" style="margin-bottom:10px;">RNAflow uses a dedicated Conda environment called <code>rnaseq</code>. This keeps all bioinformatics tools isolated from your other software.</p>
+            <div class="code-block"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button><span class="code-comment"># Create the environment (takes 5-10 minutes)</span>
+conda create -n rnaseq python=3.10 -y
+
+<span class="code-comment"># Activate it</span>
+conda activate rnaseq
+
+<span class="code-comment"># Install all required bioinformatics tools</span>
+conda install -c bioconda -c conda-forge   fastqc fastp hisat2 samtools subread sra-tools multiqc -y</div>
+            <p class="sub" style="margin-top:10px;">This installs: FastQC (quality control), fastp (trimming), HISAT2 (alignment), samtools (BAM processing), featureCounts/subread (gene counting), fasterq-dump/sra-tools (data download), MultiQC (report generation).</p>
+          </div></div>
+        </div>
+
+        <div class="manual-step" onclick="toggleManualStep(this)">
+          <div class="manual-step-head"><span class="ms-num">4</span><span class="ms-title">Install R and required packages</span><span class="ms-chev">▶</span></div>
+          <div class="manual-step-body"><div class="msb-inner">
+            <p class="sub" style="margin-bottom:10px;">R and RStudio are used for the DESeq2 statistical analysis and all plots. Download R from <strong>r-project.org</strong> and RStudio from <strong>posit.co/download/rstudio-desktop</strong>.</p>
+            <div class="code-block"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button><span class="code-comment"># Open RStudio and run this to install all required R packages:</span>
+if (!require("BiocManager")) install.packages("BiocManager")
+BiocManager::install("DESeq2")
+install.packages(c("ggplot2", "pheatmap", "ggrepel", "dplyr", "RColorBrewer"))</div>
+            <div class="info-box tip"><span>💡</span><div>Package installation takes 10–20 minutes the first time. You only need to do this once.</div></div>
+          </div></div>
+        </div>
+
+        <div class="manual-step" onclick="toggleManualStep(this)">
+          <div class="manual-step-head"><span class="ms-num">5</span><span class="ms-title">Start the local server (for Run mode)</span><span class="ms-chev">▶</span></div>
+          <div class="manual-step-body"><div class="msb-inner">
+            <p class="sub" style="margin-bottom:10px;">If you want to use Run mode (commands execute automatically with one click), start the server in a Terminal window before opening the app. Keep this window open while working.</p>
+            <div class="code-block"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button><span class="code-comment"># Navigate to your Desktop (or wherever you saved the files)</span>
+cd ~/Desktop
+
+<span class="code-comment"># Start the server</span>
+python3 rnaflow_server.py</div>
+            <p class="sub" style="margin-top:10px;">You will see: <em style="color:var(--green);">RNAflow Local Server — ready · Listening on 127.0.0.1:7788</em></p>
+            <div class="info-box note"><span>🔒</span><div>The server only listens on <code>127.0.0.1</code> (your own computer). It is completely invisible to any other computer on your network or the internet. Your data never leaves your machine.</div></div>
+          </div></div>
+        </div>
+      </div>
+
+      <!-- STEP 1 -->
+      <div class="tool-section" id="ts-step1">
+        <div class="tool-section-title">Step 1 — Configure your project</div>
+        <p class="tool-section-sub">Before running any commands, you set up your experiment details in the Configure page. RNAflow uses these settings to automatically generate every command throughout the pipeline.</p>
+
+        <div class="manual-step open" onclick="toggleManualStep(this)">
+          <div class="manual-step-head"><span class="ms-num">1</span><span class="ms-title">Select your organism</span><span class="ms-chev">▶</span></div>
+          <div class="manual-step-body"><div class="msb-inner">
+            <p class="sub">Choose from 15 pre-loaded organisms or enter custom genome URLs. When you select an organism, the genome FASTA and GTF annotation URLs are automatically filled in with the correct Ensembl links.</p>
+            <div class="card-grid card-grid-2" style="margin-top:10px;">
+              <div class="card" style="padding:14px;"><strong>🐾 Animals</strong><p class="sub" style="margin-top:4px;">Human, Mouse, Rat, Zebrafish, Drosophila, C. elegans, Yeast</p></div>
+              <div class="card" style="padding:14px;"><strong>🌱 Plants</strong><p class="sub" style="margin-top:4px;">Arabidopsis, Rice, Maize, Wheat, Soybean, Tomato, Yarrowia</p></div>
+            </div>
+            <div class="info-box tip"><span>💡</span><div>For organisms not in the list, select <strong>Custom</strong> and paste your own Ensembl FTP URLs. The manual explains exactly how to find these on ensembl.org and plants.ensembl.org.</div></div>
+          </div></div>
+        </div>
+
+        <div class="manual-step" onclick="toggleManualStep(this)">
+          <div class="manual-step-head"><span class="ms-num">2</span><span class="ms-title">Name your conditions and add SRA accessions</span><span class="ms-chev">▶</span></div>
+          <div class="manual-step-body"><div class="msb-inner">
+            <p class="sub" style="margin-bottom:10px;">Give meaningful names to your two conditions (e.g. <code>wildtype</code> and <code>mutant</code>, or <code>control</code> and <code>drought_treated</code>). Then add SRA accession numbers for each replicate.</p>
+            <div class="info-box note"><span>🔍</span><div><strong>Finding SRA accessions:</strong> Go to ncbi.nlm.nih.gov/sra → search your paper title or dataset ID → click the experiment → note the SRR/ERR/DRR number for each sample. These start with SRR, ERR, or DRR.</div></div>
+            <div class="result-explain result-info">
+              <div class="result-explain-title">📋 How many replicates do I need?</div>
+              <div class="result-explain-text">DESeq2 requires a minimum of <strong>2 biological replicates per condition</strong>, but 3 is strongly recommended and is standard for publication. Biological replicates are separate biological samples (different plants, animals, or cultures) — not the same sample sequenced twice.</div>
+            </div>
+          </div></div>
+        </div>
+
+        <div class="manual-step" onclick="toggleManualStep(this)">
+          <div class="manual-step-head"><span class="ms-num">3</span><span class="ms-title">Choose read type: single-end or paired-end</span><span class="ms-chev">▶</span></div>
+          <div class="manual-step-body"><div class="msb-inner">
+            <p class="sub" style="margin-bottom:10px;">This describes how the sequencing library was prepared. If unsure, check the SRA run page — it shows the "Layout" as SINGLE or PAIRED.</p>
+            <div class="card-grid card-grid-2" style="margin-top:0;">
+              <div class="result-explain result-info" style="margin:0;">
+                <div class="result-explain-title">Single-end (SE)</div>
+                <div class="result-explain-text">Each fragment is sequenced from one end only. Produces one FASTQ file per sample (e.g. SRR123.fastq). Older and cheaper but less information per read.</div>
+              </div>
+              <div class="result-explain result-info" style="margin:0;">
+                <div class="result-explain-title">Paired-end (PE)</div>
+                <div class="result-explain-text">Each fragment is sequenced from both ends. Produces two FASTQ files per sample (e.g. SRR123_1.fastq and SRR123_2.fastq). More expensive but more accurate alignment.</div>
+              </div>
+            </div>
+          </div></div>
+        </div>
+      </div>
+
+      <!-- STEP 2 -->
+      <div class="tool-section" id="ts-step2">
+        <div class="tool-section-title">Step 2 — Download raw data</div>
+        <p class="tool-section-sub">RNAflow downloads your raw sequencing files directly from NCBI SRA using fasterq-dump. The files are saved into your project folder automatically.</p>
+
+        <div class="manual-step open" onclick="toggleManualStep(this)">
+          <div class="manual-step-head"><span class="ms-num">1</span><span class="ms-title">What happens during download</span><span class="ms-chev">▶</span></div>
+          <div class="manual-step-body"><div class="msb-inner">
+            <p class="sub">The command <code>fasterq-dump</code> connects to NCBI's servers and downloads compressed sequencing data, then decompresses it into FASTQ format. Each sample is typically 1–10 GB depending on the sequencing depth.</p>
+            <div class="result-explain result-good">
+              <div class="result-explain-title">✅ Good result</div>
+              <div class="result-explain-text">Files appear in your <code>raw_data/</code> folder. Each sample has a .fastq file (single-end) or two .fastq files ending in _1 and _2 (paired-end). Use the check command to confirm file sizes are reasonable (&gt;100 MB per sample is normal).</div>
+            </div>
+            <div class="result-explain result-warn">
+              <div class="result-explain-title">⚠️ Slow download?</div>
+              <div class="result-explain-text">NCBI downloads can be slow. Typical speeds are 5–20 MB/s. A dataset of 6 samples at 2 GB each takes 10–60 minutes. Do not interrupt the download — if interrupted, run the command again and fasterq-dump will resume.</div>
+            </div>
+            <div class="result-explain result-bad">
+              <div class="result-explain-title">❌ Error: accession not found</div>
+              <div class="result-explain-text">The SRR/ERR number was entered incorrectly, or the dataset is not public yet. Check the accession on ncbi.nlm.nih.gov/sra — it should show "Public" status.</div>
+            </div>
+          </div></div>
+        </div>
+      </div>
+
+      <!-- STEP 3 -->
+      <div class="tool-section" id="ts-step3">
+        <div class="tool-section-title">Step 3 — Quality control with FastQC</div>
+        <p class="tool-section-sub">FastQC examines your raw reads and produces a visual HTML report for each sample. Always run this before any analysis — it reveals problems that would invalidate your results if not addressed.</p>
+
+        <div class="manual-step open" onclick="toggleManualStep(this)">
+          <div class="manual-step-head"><span class="ms-num">1</span><span class="ms-title">What FastQC checks</span><span class="ms-chev">▶</span></div>
+          <div class="manual-step-body"><div class="msb-inner">
+            <div class="card-grid card-grid-2">
+              <div class="result-explain result-good" style="margin:0;"><div class="result-explain-title">✅ Per-base quality (PASS)</div><div class="result-explain-text">The quality score at each position across all reads. Good data has Q30+ scores (green zone) across most of the read length. A slight drop at the 3' end is normal and expected.</div></div>
+              <div class="result-explain result-good" style="margin:0;"><div class="result-explain-title">✅ Per-sequence quality (PASS)</div><div class="result-explain-text">Distribution of average quality per read. Should peak above Q30. If most reads are below Q20, the sequencing run had quality issues — contact your sequencing provider.</div></div>
+              <div class="result-explain result-warn" style="margin:0;"><div class="result-explain-title">⚠️ Per-base sequence content (WARN/FAIL)</div><div class="result-explain-text">Shows nucleotide composition across positions. FAIL is normal for RNA-seq — the first 10–12 bases often show imbalance due to random hexamer priming bias during library preparation. This is expected and not a problem.</div></div>
+              <div class="result-explain result-warn" style="margin:0;"><div class="result-explain-title">⚠️ Sequence duplication (WARN)</div><div class="result-explain-text">RNA-seq data always shows high duplication because highly expressed genes have thousands of copies. A WARN or FAIL here is completely normal for RNA-seq and does not indicate a problem.</div></div>
+              <div class="result-explain result-bad" style="margin:0;"><div class="result-explain-title">❌ Adapter content (FAIL) — action needed</div><div class="result-explain-text">Adapter sequences are present in your reads. This happens when the cDNA fragment is shorter than the read length. Adapters must be removed in the trimming step (Step 4) before alignment.</div></div>
+              <div class="result-explain result-bad" style="margin:0;"><div class="result-explain-title">❌ Overrepresented sequences (FAIL)</div><div class="result-explain-text">A single sequence makes up &gt;0.1% of all reads. Usually this is rRNA contamination or adapters. If the sequence is identified as a ribosomal RNA, it will simply not align to protein-coding genes and won't affect your results significantly.</div></div>
+            </div>
+          </div></div>
+        </div>
+
+        <div class="manual-step" onclick="toggleManualStep(this)">
+          <div class="manual-step-head"><span class="ms-num">2</span><span class="ms-title">Reading the MultiQC summary report</span><span class="ms-chev">▶</span></div>
+          <div class="manual-step-body"><div class="msb-inner">
+            <p class="sub" style="margin-bottom:10px;">MultiQC combines all individual FastQC reports into one interactive HTML page. Open it in your browser after FastQC completes.</p>
+            <div class="result-explain result-info"><div class="result-explain-title">📊 What to look for in MultiQC</div><div class="result-explain-text">
+              The General Statistics table at the top shows: total reads (aim for 10–30 million per sample), % duplicates (60–90% is normal for RNA-seq), % GC content (should be consistent across samples). If one sample looks very different from the others, it may be a poor-quality sample.
+            </div></div>
+            <div class="result-explain result-good"><div class="result-explain-title">✅ Ready to proceed if:</div><div class="result-explain-text">All samples have similar read counts. Quality scores are mostly green. Any FAILs are only for Per-base sequence content or Sequence duplication (both normal for RNA-seq).</div></div>
+            <div class="result-explain result-bad"><div class="result-explain-title">❌ Investigate further if:</div><div class="result-explain-text">One sample has far fewer reads than the others (&lt;5 million). Adapter content shows FAIL. Per-base quality drops below Q20 before 50% of the read length.</div></div>
+          </div></div>
+        </div>
+      </div>
+
+      <!-- STEP 4 -->
+      <div class="tool-section" id="ts-step4">
+        <div class="tool-section-title">Step 4 — Adapter trimming with fastp</div>
+        <p class="tool-section-sub">fastp removes adapter sequences, low-quality bases, and very short reads. It is fast, accurate, and works for both single-end and paired-end data automatically.</p>
+
+        <div class="manual-step open" onclick="toggleManualStep(this)">
+          <div class="manual-step-head"><span class="ms-num">1</span><span class="ms-title">What fastp does and why it matters</span><span class="ms-chev">▶</span></div>
+          <div class="manual-step-body"><div class="msb-inner">
+            <p class="sub" style="margin-bottom:10px;">Adapter sequences are synthetic DNA added during library preparation — they are not part of your biological sample. If not removed, they interfere with alignment because the aligner cannot find a match for them in your genome. Low-quality bases at the ends of reads are also trimmed to improve alignment accuracy.</p>
+            <div class="result-explain result-good"><div class="result-explain-title">✅ Good fastp output</div><div class="result-explain-text">Reads passing filter: &gt;95%. Adapter-trimmed reads: depends on your data (0–40% is normal). Q30 rate: &gt;90%. Output files appear in your trimmed/ folder with the same names but _trimmed suffix.</div></div>
+          </div></div>
+        </div>
+
+        <div class="manual-step" onclick="toggleManualStep(this)">
+          <div class="manual-step-head"><span class="ms-num">2</span><span class="ms-title">fastp settings used by RNAflow</span><span class="ms-chev">▶</span></div>
+          <div class="manual-step-body"><div class="msb-inner">
+            <p class="sub" style="margin-bottom:8px;">RNAflow uses these fastp settings — all chosen to be conservative and appropriate for most RNA-seq experiments:</p>
+            <div class="code-block"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button>--trim_front1 5         <span class="code-comment"># Remove first 5 bases (hexamer bias)</span>
+--qualified_quality_phred 20  <span class="code-comment"># Keep bases with Q20+ quality</span>
+--length_required 36    <span class="code-comment"># Discard reads shorter than 36 bp after trimming</span>
+--detect_adapter_for_pe <span class="code-comment"># Auto-detect adapters (paired-end)</span></div>
+          </div></div>
+        </div>
+      </div>
+
+      <!-- STEP 5 -->
+      <div class="tool-section" id="ts-step5">
+        <div class="tool-section-title">Step 5 — Genome download and HISAT2 index</div>
+        <p class="tool-section-sub">The reference genome and gene annotation are downloaded from Ensembl, then HISAT2 builds an index — a compressed searchable version of the genome that makes alignment fast.</p>
+
+        <div class="manual-step open" onclick="toggleManualStep(this)">
+          <div class="manual-step-head"><span class="ms-num">1</span><span class="ms-title">What files are downloaded and why</span><span class="ms-chev">▶</span></div>
+          <div class="manual-step-body"><div class="msb-inner">
+            <div class="card-grid card-grid-2">
+              <div class="result-explain result-info" style="margin:0;"><div class="result-explain-title">Genome FASTA (.fa.gz)</div><div class="result-explain-text">The complete DNA sequence of your organism's genome, one chromosome at a time. This is what the aligner maps your reads to. File size: 30 MB (yeast) to 15 GB (wheat).</div></div>
+              <div class="result-explain result-info" style="margin:0;"><div class="result-explain-title">Gene annotation GTF (.gtf.gz)</div><div class="result-explain-text">A table of exactly where every gene and exon is located on the genome — chromosome, start position, end position, strand. Used by HISAT2 for splice-aware alignment and by featureCounts to assign reads to genes.</div></div>
+            </div>
+            <div class="info-box warn" style="margin-top:12px;"><span>⏱️</span><div>Building the HISAT2 index takes 5–30 minutes depending on genome size. Human takes ~20 minutes, yeast takes ~2 minutes. This only needs to be done once — the index can be reused for future experiments with the same organism.</div></div>
+          </div></div>
+        </div>
+      </div>
+
+      <!-- STEP 6 -->
+      <div class="tool-section" id="ts-step6">
+        <div class="tool-section-title">Step 6 — Alignment with HISAT2</div>
+        <p class="tool-section-sub">HISAT2 maps each sequencing read back to its location on the reference genome. It is splice-aware, meaning it correctly handles reads that span exon-exon junctions — essential for accurate RNA-seq alignment.</p>
+
+        <div class="manual-step open" onclick="toggleManualStep(this)">
+          <div class="manual-step-head"><span class="ms-num">1</span><span class="ms-title">Understanding alignment statistics</span><span class="ms-chev">▶</span></div>
+          <div class="manual-step-body"><div class="msb-inner">
+            <p class="sub" style="margin-bottom:10px;">HISAT2 reports alignment statistics for each sample. These appear in the terminal output and are saved in your aligned/ folder as .log files.</p>
+            <div class="stat-row">
+              <div class="stat-box"><div class="stat-box-val">&gt;90%</div><div class="stat-box-lbl">Overall alignment — excellent</div></div>
+              <div class="stat-box" style="--green:var(--orange)"><div class="stat-box-val">70–90%</div><div class="stat-box-lbl">Overall alignment — acceptable</div></div>
+              <div class="stat-box" style="--green:var(--red)"><div class="stat-box-val">&lt;70%</div><div class="stat-box-lbl">Overall alignment — investigate</div></div>
+            </div>
+            <div class="result-explain result-good"><div class="result-explain-title">✅ Excellent: &gt;90% overall alignment rate</div><div class="result-explain-text">Most reads found their location in the genome. Your data quality is high and the correct reference genome was used.</div></div>
+            <div class="result-explain result-warn"><div class="result-explain-title">⚠️ Acceptable: 70–90% overall alignment rate</div><div class="result-explain-text">Some reads don't map — common reasons: reads from rRNA (which isn't in the genome annotation), very short reads after trimming, or reads from contaminating organisms. Analysis can proceed but investigate the unmapped reads if below 75%.</div></div>
+            <div class="result-explain result-bad"><div class="result-explain-title">❌ Low: &lt;70% overall alignment rate</div><div class="result-explain-text">Possible causes: wrong organism selected (check your accession on SRA), contaminated sample, genome version mismatch, or data quality issue. Check that your FASTA and GTF files are from the same Ensembl release number.</div></div>
+          </div></div>
+        </div>
+
+        <div class="manual-step" onclick="toggleManualStep(this)">
+          <div class="manual-step-head"><span class="ms-num">2</span><span class="ms-title">BAM file sorting and indexing</span><span class="ms-chev">▶</span></div>
+          <div class="manual-step-body"><div class="msb-inner">
+            <p class="sub">After alignment, HISAT2 produces SAM files (text format). RNAflow then uses samtools to convert these to BAM (binary, 5× smaller), sort them by chromosome position, and index them. This is required by featureCounts and enables fast access to any region of the genome.</p>
+            <div class="result-explain result-good"><div class="result-explain-title">✅ BAM file check</div><div class="result-explain-text">Each sample should have a .bam file and a .bam.bai index file in your aligned/ folder. File sizes are typically 200 MB–3 GB depending on read depth.</div></div>
+          </div></div>
+        </div>
+      </div>
+
+      <!-- STEP 7 -->
+      <div class="tool-section" id="ts-step7">
+        <div class="tool-section-title">Step 7 — Gene counting with featureCounts</div>
+        <p class="tool-section-sub">featureCounts counts how many reads aligned to each gene in each sample. This produces a count matrix — the input to DESeq2 for statistical analysis.</p>
+
+        <div class="manual-step open" onclick="toggleManualStep(this)">
+          <div class="manual-step-head"><span class="ms-num">1</span><span class="ms-title">Understanding the count matrix</span><span class="ms-chev">▶</span></div>
+          <div class="manual-step-body"><div class="msb-inner">
+            <p class="sub" style="margin-bottom:10px;">The output is a table where rows are genes and columns are samples. Each number is the count of reads that mapped to that gene in that sample.</p>
+            <div class="code-block"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button><span class="code-comment"># Example count matrix (first few rows):</span>
+GeneID    WT_rep1  WT_rep2  WT_rep3  MT_rep1  MT_rep2  MT_rep3
+AT1G01010    245      231      258      512      498      487
+AT1G01020     45       52       41       89       95       88
+AT1G01030    102       98      115       44       39       51</div>
+            <div class="result-explain result-info"><div class="result-explain-title">📊 What do these numbers mean?</div><div class="result-explain-text">The raw counts are not directly comparable between samples because samples have different total sequencing depths. A gene with 500 counts in a sample with 10 million total reads is proportionally more expressed than 500 counts in a sample with 50 million total reads. DESeq2 handles this normalisation automatically.</div></div>
+          </div></div>
+        </div>
+
+        <div class="manual-step" onclick="toggleManualStep(this)">
+          <div class="manual-step-head"><span class="ms-num">2</span><span class="ms-title">featureCounts assignment statistics</span><span class="ms-chev">▶</span></div>
+          <div class="manual-step-body"><div class="msb-inner">
+            <div class="result-explain result-good"><div class="result-explain-title">✅ Good: 60–80% assigned reads</div><div class="result-explain-text">Most reads were successfully assigned to a gene. This is a normal and expected range for RNA-seq data.</div></div>
+            <div class="result-explain result-warn"><div class="result-explain-title">⚠️ Unassigned: no features</div><div class="result-explain-text">Reads mapped to the genome but not to an annotated gene region (e.g. intergenic regions, introns, non-coding regions). Some unassigned reads are normal (10–30%). High rates (&gt;50%) may mean the GTF annotation version doesn't match your genome FASTA.</div></div>
+            <div class="result-explain result-bad"><div class="result-explain-title">❌ Very low assignment (&lt;40%)</div><div class="result-explain-text">Check that your genome FASTA and GTF are from the same Ensembl release number and the same organism. A mismatch between these two files is the most common cause.</div></div>
+          </div></div>
+        </div>
+      </div>
+
+      <!-- STEP 8 -->
+      <div class="tool-section" id="ts-step8">
+        <div class="tool-section-title">Step 8 — Differential expression with DESeq2</div>
+        <p class="tool-section-sub">DESeq2 is the gold-standard R package for RNA-seq differential expression analysis. It uses a negative binomial statistical model to identify genes that genuinely change between your conditions, accounting for biological variation.</p>
+
+        <div class="manual-step open" onclick="toggleManualStep(this)">
+          <div class="manual-step-head"><span class="ms-num">1</span><span class="ms-title">What DESeq2 does step by step</span><span class="ms-chev">▶</span></div>
+          <div class="manual-step-body"><div class="msb-inner">
+            <div class="card-grid card-grid-2">
+              <div class="result-explain result-info" style="margin:0;"><div class="result-explain-title">1. Size factor normalisation</div><div class="result-explain-text">DESeq2 calculates a size factor for each sample to correct for differences in sequencing depth. After normalisation, samples are directly comparable.</div></div>
+              <div class="result-explain result-info" style="margin:0;"><div class="result-explain-title">2. Dispersion estimation</div><div class="result-explain-text">DESeq2 estimates how much each gene varies between replicates. Genes with high variability need stronger evidence to be called significant.</div></div>
+              <div class="result-explain result-info" style="margin:0;"><div class="result-explain-title">3. Statistical testing</div><div class="result-explain-text">A Wald test is applied to every gene, producing a p-value for the probability that the observed difference is due to chance.</div></div>
+              <div class="result-explain result-info" style="margin:0;"><div class="result-explain-title">4. Multiple testing correction</div><div class="result-explain-text">Because thousands of genes are tested simultaneously, raw p-values are adjusted using the Benjamini-Hochberg method to control the false discovery rate (FDR). This produces the padj column.</div></div>
+            </div>
+          </div></div>
+        </div>
+
+        <div class="manual-step" onclick="toggleManualStep(this)">
+          <div class="manual-step-head"><span class="ms-num">2</span><span class="ms-title">Understanding DESeq2 results columns</span><span class="ms-chev">▶</span></div>
+          <div class="manual-step-body"><div class="msb-inner">
+            <div class="code-block"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button><span class="code-comment"># DESeq2 results table — one row per gene:</span>
+gene      baseMean  log2FC   lfcSE   stat    pvalue    padj
+AT1G01010  302.4    2.14    0.18   11.89  1.3e-32  8.2e-30
+AT1G01020   47.1   -1.82    0.31   -5.87  4.4e-09  6.1e-08</div>
+            <div class="card-grid card-grid-2" style="margin-top:12px;">
+              <div class="result-explain result-info" style="margin:0;"><div class="result-explain-title">baseMean</div><div class="result-explain-text">Average normalised count across all samples. Higher = more expressed overall. Very low baseMean genes (&lt;10) are often unreliable due to stochastic variation.</div></div>
+              <div class="result-explain result-info" style="margin:0;"><div class="result-explain-title">log2FoldChange (log2FC)</div><div class="result-explain-text">How much the gene changes. <strong>+1 = 2× higher</strong> in treatment. <strong>-1 = 2× lower</strong>. <strong>+2 = 4× higher</strong>. <strong>0 = no change</strong>. Positive values = upregulated in your treatment condition.</div></div>
+              <div class="result-explain result-info" style="margin:0;"><div class="result-explain-title">lfcSE (standard error)</div><div class="result-explain-text">Uncertainty in the fold change estimate. Small SE = reliable fold change. Large SE (especially in low-count genes) = less reliable.</div></div>
+              <div class="result-explain result-info" style="margin:0;"><div class="result-explain-title">pvalue</div><div class="result-explain-text">Raw probability. <strong>Never use this directly</strong> for significance — use padj instead. The raw p-value does not account for testing thousands of genes simultaneously.</div></div>
+              <div class="result-explain result-good" style="margin:0;"><div class="result-explain-title">padj (adjusted p-value) ← use this</div><div class="result-explain-text">The corrected p-value. Standard significance threshold: <strong>padj &lt; 0.05</strong>. This means there is a &lt;5% chance the result is a false discovery. Genes with padj &lt; 0.05 AND |log2FC| &gt; 1 are considered confidently differentially expressed.</div></div>
+              <div class="result-explain result-warn" style="margin:0;"><div class="result-explain-title">NA values in padj</div><div class="result-explain-text">Some genes have NA in the padj column. This means DESeq2 filtered them out — either too low count (filtered by independent filtering) or an outlier in one replicate. NA genes are not significant.</div></div>
+            </div>
+          </div></div>
+        </div>
+
+        <div class="manual-step" onclick="toggleManualStep(this)">
+          <div class="manual-step-head"><span class="ms-num">3</span><span class="ms-title">Interpreting the DESeq2 summary</span><span class="ms-chev">▶</span></div>
+          <div class="manual-step-body"><div class="msb-inner">
+            <p class="sub" style="margin-bottom:10px;">After running DESeq2, the summary() function prints a table like this:</p>
+            <div class="code-block"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button>out of 5944 with nonzero total read count
+adjusted p-value &lt; 0.05
+LFC &gt; 0 (up)   : 791, 13%      ← upregulated genes
+LFC &lt; 0 (down) : 1227, 21%     ← downregulated genes
+outliers       : 0, 0%
+low counts     : 578, 10%       ← filtered out (normal)</div>
+            <div class="result-explain result-info"><div class="result-explain-title">📊 Is my result normal?</div><div class="result-explain-text">The number of significant genes varies enormously depending on your experiment. A stress response might affect 10–40% of genes. A mild treatment might affect 1–5%. A comparison between very different cell types might affect 50%+. There is no "right" number — the biology of your experiment determines this.</div></div>
+          </div></div>
+        </div>
+      </div>
+
+      <!-- STEP 9 -->
+      <div class="tool-section" id="ts-step9">
+        <div class="tool-section-title">Step 9 — Plots and visualisation</div>
+        <p class="tool-section-sub">RNAflow generates three standard visualisations used in RNA-seq publications: a volcano plot, a heatmap, and a PCA plot. All are saved as 300 DPI PNG files suitable for direct use in papers and theses.</p>
+
+        <div class="manual-step open" onclick="toggleManualStep(this)">
+          <div class="manual-step-head"><span class="ms-num">1</span><span class="ms-title">Volcano plot — what it shows</span><span class="ms-chev">▶</span></div>
+          <div class="manual-step-body"><div class="msb-inner">
+            <p class="sub" style="margin-bottom:10px;">A volcano plot visualises all genes simultaneously — fold change on the x-axis and statistical significance on the y-axis. It gets its name from its characteristic shape.</p>
+            <div class="result-explain result-info"><div class="result-explain-title">🌋 Reading the volcano plot</div><div class="result-explain-text">
+              <strong>X-axis:</strong> log2 fold change. Left = downregulated, Right = upregulated. Genes near 0 don't change much.<br>
+              <strong>Y-axis:</strong> -log10(padj). Higher = more significant. The dashed horizontal line marks padj=0.05.<br>
+              <strong>Vertical dashed lines:</strong> mark log2FC = ±1 (= 2-fold change threshold).<br>
+              <strong>Orange dots:</strong> significantly upregulated (right of vertical line, above horizontal line).<br>
+              <strong>Blue dots:</strong> significantly downregulated.<br>
+              <strong>Grey dots:</strong> not significant.<br>
+              <strong>Gene labels:</strong> top 15 most significant genes are labelled automatically.
+            </div></div>
+            <div class="result-explain result-good"><div class="result-explain-title">✅ Good volcano plot</div><div class="result-explain-text">A clear separation between conditions shows as a wide spread of dots. Most dots cluster near the centre (no change) with a "volcano" shape — a few highly significant genes at the top of each arm.</div></div>
+            <div class="result-explain result-warn"><div class="result-explain-title">⚠️ Very few significant genes</div><div class="result-explain-text">If almost all dots are grey, your conditions may be very similar biologically, you may not have enough replicates, or sequencing depth was too low. Check your experimental design.</div></div>
+          </div></div>
+        </div>
+
+        <div class="manual-step" onclick="toggleManualStep(this)">
+          <div class="manual-step-head"><span class="ms-num">2</span><span class="ms-title">Heatmap — what it shows</span><span class="ms-chev">▶</span></div>
+          <div class="manual-step-body"><div class="msb-inner">
+            <p class="sub" style="margin-bottom:10px;">The heatmap shows the top 40 most significant genes as a colour grid — each row is a gene, each column is a sample. Colour represents expression level (scaled across the row).</p>
+            <div class="result-explain result-info"><div class="result-explain-title">🌡️ Reading the heatmap</div><div class="result-explain-text">
+              <strong>Blue:</strong> lower expression than average (downregulated relative to mean).<br>
+              <strong>Red/orange:</strong> higher expression than average (upregulated relative to mean).<br>
+              <strong>White:</strong> average expression level.<br>
+              <strong>Rows (genes)</strong> are clustered by similar expression pattern — genes that behave similarly group together.<br>
+              <strong>Columns (samples)</strong> are not clustered — kept in your original order to preserve condition grouping.
+            </div></div>
+            <div class="result-explain result-good"><div class="result-explain-title">✅ Good heatmap</div><div class="result-explain-text">You should see two clear colour blocks — one set of columns (your control samples) and one set (treatment) with opposite colours. Replicates within the same condition should look nearly identical.</div></div>
+          </div></div>
+        </div>
+
+        <div class="manual-step" onclick="toggleManualStep(this)">
+          <div class="manual-step-head"><span class="ms-num">3</span><span class="ms-title">PCA plot — what it shows</span><span class="ms-chev">▶</span></div>
+          <div class="manual-step-body"><div class="msb-inner">
+            <p class="sub" style="margin-bottom:10px;">Principal Component Analysis (PCA) reduces the expression of thousands of genes to just 2 dimensions. It shows how similar or different your samples are to each other overall.</p>
+            <div class="result-explain result-info"><div class="result-explain-title">🎯 Reading the PCA plot</div><div class="result-explain-text">
+              <strong>Each dot = one sample.</strong> Samples close together are similar in overall gene expression. Samples far apart are very different.<br>
+              <strong>PC1 (x-axis):</strong> captures the largest source of variation in your data — usually this is your experimental condition.<br>
+              <strong>PC2 (y-axis):</strong> captures the second-largest source — often batch effects or biological variation between replicates.<br>
+              <strong>% variance explained:</strong> shown on each axis. High PC1 % (e.g. 70%+) means your condition is the dominant source of variation.
+            </div></div>
+            <div class="result-explain result-good"><div class="result-explain-title">✅ Excellent PCA</div><div class="result-explain-text">Replicates cluster tightly together. The two conditions are far apart on PC1, which explains a large proportion of variance (&gt;50%). This means your experiment worked — the conditions are genuinely different and replicates are consistent.</div></div>
+            <div class="result-explain result-warn"><div class="result-explain-title">⚠️ One outlier replicate</div><div class="result-explain-text">If one sample from a group is far from its replicates on the PCA, it may be a poor-quality or contaminated sample. Consider removing it from your analysis if the quality metrics (alignment rate, read count) are also poor for that sample.</div></div>
+            <div class="result-explain result-bad"><div class="result-explain-title">❌ Conditions overlap completely</div><div class="result-explain-text">If your two conditions cannot be separated on any PC axis, the transcriptomes are very similar. You will find few or no significant genes. This may mean the treatment had no transcriptional effect, or the time point was wrong, or there is a sample labelling error.</div></div>
+          </div></div>
+        </div>
+      </div>
+
+      <!-- GENE FAMILY -->
+      <div class="tool-section" id="ts-genefam">
+        <div class="tool-section-title">Gene Family Analysis</div>
+        <p class="tool-section-sub">For large genomes (wheat, maize, human, soybean), researchers often want to focus on one biological family rather than all 30,000+ genes. RNAflow includes 40+ gene families across 8 categories.</p>
+
+        <div class="manual-step open" onclick="toggleManualStep(this)">
+          <div class="manual-step-head"><span class="ms-num">1</span><span class="ms-title">When to use gene family analysis</span><span class="ms-chev">▶</span></div>
+          <div class="manual-step-body"><div class="msb-inner">
+            <div class="result-explain result-info"><div class="result-explain-title">📋 Use gene family analysis when:</div><div class="result-explain-text">
+              • Your experiment targets a specific pathway (e.g. hormone response, stress signalling)<br>
+              • You are working with a large genome and want focused results<br>
+              • You want to produce a publication figure for a specific gene family<br>
+              • Your full DESeq2 analysis found many significant genes and you want to understand the biology
+            </div></div>
+            <p class="sub" style="margin-top:10px;">The gene family analysis produces its own volcano plot and heatmap for just the selected family, saved separately from the full analysis results.</p>
+          </div></div>
+        </div>
+
+        <div class="manual-step" onclick="toggleManualStep(this)">
+          <div class="manual-step-head"><span class="ms-num">2</span><span class="ms-title">Available gene families</span><span class="ms-chev">▶</span></div>
+          <div class="manual-step-body"><div class="msb-inner">
+            <div class="card-grid card-grid-2">
+              <div class="card" style="padding:14px;"><strong>Transcription factors</strong><p class="sub" style="margin-top:4px;">MYB, WRKY, bHLH, NAC, MADS, ERF, GRAS, bZIP, HOX, GATA, STAT, p53, NF-κB, ETS, SOX, FOX — 21 families</p></div>
+              <div class="card" style="padding:14px;"><strong>Protein kinases</strong><p class="sub" style="margin-top:4px;">MAPK, CDK, RLK, SnRK, CDPK, TOR, tyrosine kinases — 8 families</p></div>
+              <div class="card" style="padding:14px;"><strong>Plant hormone pathways</strong><p class="sub" style="margin-top:4px;">Auxin, GA, cytokinin, ABA, ethylene, JA, SA, BR, strigolactone, peptide hormones — 10 pathways</p></div>
+              <div class="card" style="padding:14px;"><strong>Transporters</strong><p class="sub" style="margin-top:4px;">ABC, aquaporin, sugar (SUT/SWEET), nitrate (NRT), phosphate, K+, metal (ZIP, YSL, NRAMP), SLC, ion channels</p></div>
+              <div class="card" style="padding:14px;"><strong>Animal signalling</strong><p class="sub" style="margin-top:4px;">Wnt/β-catenin, Notch, Hedgehog, TGF-β, PI3K/AKT, RAS/ERK, JAK/STAT, NF-κB, Hippo — 9 pathways</p></div>
+              <div class="card" style="padding:14px;"><strong>Immune / Cancer / Epigenetic</strong><p class="sub" style="margin-top:4px;">TLR, NLR, cytokines, BCL-2, caspases, oncogenes, tumour suppressors, DNA methylation, histone modifiers</p></div>
+            </div>
+          </div></div>
+        </div>
+      </div>
+
+      <!-- RESULT INTERPRETATION -->
+      <div class="tool-section" id="ts-interpret">
+        <div class="tool-section-title">Interpreting your results</div>
+        <p class="tool-section-sub">A quick reference guide for the most common questions researchers have when looking at their RNAflow results for the first time.</p>
+
+        <div class="manual-step open" onclick="toggleManualStep(this)">
+          <div class="manual-step-head"><span class="ms-num">1</span><span class="ms-title">How do I decide which genes are significant?</span><span class="ms-chev">▶</span></div>
+          <div class="manual-step-body"><div class="msb-inner">
+            <div class="result-explain result-good"><div class="result-explain-title">✅ Standard significance criteria</div><div class="result-explain-text">
+              A gene is considered differentially expressed (DE) if it meets BOTH of these criteria:<br><br>
+              1. <strong>padj &lt; 0.05</strong> — statistically significant after multiple testing correction<br>
+              2. <strong>|log2FoldChange| &gt; 1</strong> — biologically meaningful change (at least 2-fold)<br><br>
+              Some researchers use padj &lt; 0.01 (stricter) or |log2FC| &gt; 0.58 (~1.5-fold, more lenient). State your thresholds in your methods section.
+            </div></div>
+          </div></div>
+        </div>
+
+        <div class="manual-step" onclick="toggleManualStep(this)">
+          <div class="manual-step-head"><span class="ms-num">2</span><span class="ms-title">What do I do with my list of significant genes?</span><span class="ms-chev">▶</span></div>
+          <div class="manual-step-body"><div class="msb-inner">
+            <p class="sub" style="margin-bottom:10px;">Once you have a list of significant DE genes, these are the typical next steps in a research project:</p>
+            <div class="card-grid card-grid-2">
+              <div class="result-explain result-info" style="margin:0;"><div class="result-explain-title">Gene Ontology (GO) enrichment</div><div class="result-explain-text">Upload your DE gene list to geneontology.org or STRING-db to find which biological processes are overrepresented. This answers: "what is this list of genes collectively doing?"</div></div>
+              <div class="result-explain result-info" style="margin:0;"><div class="result-explain-title">KEGG pathway analysis</div><div class="result-explain-text">Map DE genes to metabolic and signalling pathways at kegg.jp. Shows which pathways are activated or suppressed in your treatment condition.</div></div>
+              <div class="result-explain result-info" style="margin:0;"><div class="result-explain-title">Validation by RT-qPCR</div><div class="result-explain-text">Select 5–10 top DE genes and validate their expression changes using RT-qPCR. This is typically required before publication to confirm the RNA-seq findings.</div></div>
+              <div class="result-explain result-info" style="margin:0;"><div class="result-explain-title">Protein interaction networks</div><div class="result-explain-text">Upload your DE gene list to string-db.org to visualise which proteins interact with each other. Clusters of interacting proteins often represent co-regulated functional modules.</div></div>
+            </div>
+          </div></div>
+        </div>
+
+        <div class="manual-step" onclick="toggleManualStep(this)">
+          <div class="manual-step-head"><span class="ms-num">3</span><span class="ms-title">How to cite RNAflow and its tools in your paper</span><span class="ms-chev">▶</span></div>
+          <div class="manual-step-body"><div class="msb-inner">
+            <p class="sub" style="margin-bottom:10px;">In your Methods section, cite each tool used in the pipeline. Example methods text:</p>
+            <div class="code-block"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button>RNA-seq analysis was performed using RNAflow (bioinfocodex.com).
+Raw reads were quality-assessed with FastQC (Andrews, 2010) and
+trimmed with fastp (Chen et al., 2018). Trimmed reads were aligned
+to the [organism] reference genome (Ensembl release [number]) using
+HISAT2 (Kim et al., 2019). Gene-level read counts were obtained with
+featureCounts (Liao et al., 2014). Differential expression analysis
+was performed with DESeq2 (Love et al., 2014) using a significance
+threshold of padj &lt; 0.05 and |log2FC| &gt; 1. Visualisations were
+generated using ggplot2 (Wickham, 2016) and pheatmap (Kolde, 2019).</div>
+          </div></div>
+        </div>
+      </div>
+
+      <!-- ORGANISMS -->
+      <div class="tool-section" id="ts-organisms">
+        <div class="tool-section-title">Supported organisms</div>
+        <p class="tool-section-sub">15 organisms are pre-loaded with their Ensembl genome URLs. Select any from the dropdown in the Configure page — genome and GTF URLs fill automatically.</p>
+        <div class="card-grid card-grid-2" style="margin-top:16px;">
+          <div class="card" style="padding:20px;">
+            <strong style="color:var(--text2);font-size:0.75em;text-transform:uppercase;letter-spacing:1px;">🐾 Animals</strong>
+            <ul style="margin-top:10px;padding-left:16px;font-size:0.84em;color:var(--text2);line-height:2;">
+              <li>Human — <em>Homo sapiens</em> (GRCh38)</li>
+              <li>Mouse — <em>Mus musculus</em> (GRCm39)</li>
+              <li>Rat — <em>Rattus norvegicus</em> (mRatBN7.2)</li>
+              <li>Zebrafish — <em>Danio rerio</em> (GRCz11)</li>
+              <li>Drosophila — <em>Drosophila melanogaster</em> (BDGP6)</li>
+              <li>C. elegans — <em>Caenorhabditis elegans</em> (WBcel235)</li>
+              <li>Yeast — <em>Saccharomyces cerevisiae</em> (R64)</li>
+              <li>Yarrowia — <em>Yarrowia lipolytica</em> (ASM101387v1)</li>
+            </ul>
+          </div>
+          <div class="card" style="padding:20px;">
+            <strong style="color:var(--text2);font-size:0.75em;text-transform:uppercase;letter-spacing:1px;">🌱 Plants</strong>
+            <ul style="margin-top:10px;padding-left:16px;font-size:0.84em;color:var(--text2);line-height:2;">
+              <li>Arabidopsis — <em>Arabidopsis thaliana</em> (TAIR10)</li>
+              <li>Rice — <em>Oryza sativa</em> (IRGSP-1.0)</li>
+              <li>Maize — <em>Zea mays</em> (B73-NAM-5.0)</li>
+              <li>Wheat — <em>Triticum aestivum</em> (IWGSC)</li>
+              <li>Soybean — <em>Glycine max</em> (Glycine_max_v2.1)</li>
+              <li>Tomato — <em>Solanum lycopersicum</em> (SL3.0)</li>
+            </ul>
+            <div class="info-box tip" style="margin-top:12px;"><span>💡</span><div>For organisms not listed, select <strong>Custom</strong> and paste your own Ensembl FTP URLs.</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- FAQ / TROUBLESHOOTING -->
+      <div class="tool-section" id="ts-faq">
+        <div class="tool-section-title">Troubleshooting</div>
+        <p class="tool-section-sub">Solutions to the most common problems encountered during RNA-seq analysis with RNAflow.</p>
+        <div class="faq-list" style="margin-top:16px;">
+          <div class="faq-item" onclick="toggleFAQ(this)"><div class="faq-q">The Run button is greyed out — what do I do? <span class="faq-chev">▼</span></div><div class="faq-a"><div class="faq-a-inner">The local server is not running. Open Terminal, navigate to the folder containing rnaflow_server.py, and run: <code>python3 rnaflow_server.py</code>. Keep that Terminal window open. The green dot in the top bar will appear when connected. If you prefer not to use the server, use Mode B (Copy) to copy commands manually.</div></div></div>
+          <div class="faq-item" onclick="toggleFAQ(this)"><div class="faq-q">HISAT2 alignment rate is below 70% <span class="faq-chev">▼</span></div><div class="faq-a"><div class="faq-a-inner">Most common cause: the wrong organism was selected. Check your SRA accession on ncbi.nlm.nih.gov/sra to confirm the organism. Also confirm that the genome FASTA and GTF annotation are from the same Ensembl release number. A mismatch between these two files causes very low alignment rates.</div></div></div>
+          <div class="faq-item" onclick="toggleFAQ(this)"><div class="faq-q">DESeq2 gives an error about zero counts or missing samples <span class="faq-chev">▼</span></div><div class="faq-a"><div class="faq-a-inner">This usually means the column names in your count matrix don't match the sample names in your metadata. Check that the order of samples in the count table matches the order in the DESeq2 script exactly. Also ensure you have at least 2 samples per condition.</div></div></div>
+          <div class="faq-item" onclick="toggleFAQ(this)"><div class="faq-q">featureCounts assigned only 20–30% of reads <span class="faq-chev">▼</span></div><div class="faq-a"><div class="faq-a-inner">The GTF annotation version does not match the genome FASTA. Make sure both files are from the same Ensembl release number and the same species. For example, Ensembl release 109 genome FASTA must be used with the Ensembl release 109 GTF file.</div></div></div>
+          <div class="faq-item" onclick="toggleFAQ(this)"><div class="faq-q">I have no significant genes after DESeq2 <span class="faq-chev">▼</span></div><div class="faq-a"><div class="faq-a-inner">Common causes: (1) The biological conditions are too similar — try a larger fold-change or different time point. (2) Insufficient replicates — fewer than 3 replicates reduces statistical power. (3) Too few reads — aim for 10–20 million reads per sample. (4) The PCA shows samples don't separate — may indicate a sample labelling or metadata error.</div></div></div>
+          <div class="faq-item" onclick="toggleFAQ(this)"><div class="faq-q">How do I add more replicates or samples? <span class="faq-chev">▼</span></div><div class="faq-a"><div class="faq-a-inner">Go to the Configure page → click the + Add replicate button under each condition to add more SRA accession rows. You can add as many replicates as needed. All downstream commands update automatically.</div></div></div>
+          <div class="faq-item" onclick="toggleFAQ(this)"><div class="faq-q">The download is very slow or fails halfway <span class="faq-chev">▼</span></div><div class="faq-a"><div class="faq-a-inner">NCBI SRA downloads can be slow, especially for large files. If a download fails, simply run the fasterq-dump command again — it will resume from where it stopped. For very large datasets, consider downloading overnight or using the NCBI SRA toolkit's prefetch command first.</div></div></div>
+          <div class="faq-item" onclick="toggleFAQ(this)"><div class="faq-q">Can I analyse more than two conditions? <span class="faq-chev">▼</span></div><div class="faq-a"><div class="faq-a-inner">RNAflow currently supports two-condition comparisons (one control vs one treatment). For multi-condition experiments (e.g. timepoints, multiple treatments), run the pipeline separately for each pairwise comparison you are interested in. Future versions of RNAflow will support multi-factor designs.</div></div></div>
+        </div>
+      </div>
+
+    </div><!-- end main content -->
+  </div><!-- end layout -->
+
+</div><!-- /tool-rnaflow -->
+
+<!-- ══ STUB PAGES for future tools ══ -->
+<div class="page" id="page-tool-ngsuite">
+  <div class="tool-detail-hero">
+    <div class="breadcrumb"><span onclick="showPage('page-tools')">🧬 Bioinfo Tools</span><span class="breadcrumb-sep">›</span><span style="color:var(--text);">NGSuite</span></div>
+    <div class="label">Whole-genome sequencing pipeline</div>
+    <h1 class="h1" style="font-size:2.5em;">NGSuite <span style="color:var(--orange);font-size:0.5em;vertical-align:middle;">Coming Q3 2025</span></h1>
+    <p class="lead">Variant calling, SNP/INDEL annotation, structural variant detection, population genetics. Powered by GATK4, BWA-MEM2, and VEP.</p>
+    <div style="margin-top:28px;padding:20px 24px;background:rgba(240,136,62,0.07);border:1px solid rgba(240,136,62,0.2);border-radius:var(--r2);display:inline-block;">
+      <strong style="color:var(--orange);">🔔 Get notified when NGSuite launches</strong><br>
+      <span style="font-size:0.85em;color:var(--text2);">Email <a href="mailto:hello@bioinfocodex.com" style="color:var(--blue);">hello@bioinfocodex.com</a> with subject: "Notify me — NGSuite"</span>
+    </div>
+  </div>
+</div>
+<div class="page" id="page-tool-plasmidmap">
+  <div class="tool-detail-hero">
+    <div class="breadcrumb"><span onclick="showPage('page-tools')">🧬 Bioinfo Tools</span><span class="breadcrumb-sep">›</span><span style="color:var(--text);">PlasmidMap</span></div>
+    <div class="label">Plasmid design and annotation</div>
+    <h1 class="h1" style="font-size:2.5em;">PlasmidMap <span style="color:var(--orange);font-size:0.5em;vertical-align:middle;">Coming Q4 2025</span></h1>
+    <p class="lead">Design plasmids, find restriction sites, annotate features, and export publication-ready circular maps. Import from GenBank.</p>
+    <div style="margin-top:28px;padding:20px 24px;background:rgba(240,136,62,0.07);border:1px solid rgba(240,136,62,0.2);border-radius:var(--r2);display:inline-block;">
+      <strong style="color:var(--orange);">🔔 Get notified when PlasmidMap launches</strong><br>
+      <span style="font-size:0.85em;color:var(--text2);">Email <a href="mailto:hello@bioinfocodex.com" style="color:var(--blue);">hello@bioinfocodex.com</a> with subject: "Notify me — PlasmidMap"</span>
+    </div>
+  </div>
+</div>
+<div class="page" id="page-tool-chipflow">
+  <div class="tool-detail-hero">
+    <div class="breadcrumb"><span onclick="showPage('page-tools')">🧬 Bioinfo Tools</span><span class="breadcrumb-sep">›</span><span style="color:var(--text);">ChIPflow</span></div>
+    <div class="label">ChIP-seq and ATAC-seq pipeline</div>
+    <h1 class="h1" style="font-size:2.5em;">ChIPflow <span style="color:var(--orange);font-size:0.5em;vertical-align:middle;">Coming 2026</span></h1>
+    <p class="lead">Peak calling with MACS2, motif analysis with HOMER, differential chromatin accessibility, BigWig tracks for genome browsers.</p>
+    <div style="margin-top:28px;padding:20px 24px;background:rgba(240,136,62,0.07);border:1px solid rgba(240,136,62,0.2);border-radius:var(--r2);display:inline-block;">
+      <strong style="color:var(--orange);">🔔 Get notified when ChIPflow launches</strong><br>
+      <span style="font-size:0.85em;color:var(--text2);">Email <a href="mailto:hello@bioinfocodex.com" style="color:var(--blue);">hello@bioinfocodex.com</a> with subject: "Notify me — ChIPflow"</span>
+    </div>
+  </div>
+</div>
+<div class="page" id="page-tool-metaflow">
+  <div class="tool-detail-hero">
+    <div class="breadcrumb"><span onclick="showPage('page-tools')">🧬 Bioinfo Tools</span><span class="breadcrumb-sep">›</span><span style="color:var(--text);">MetaFlow</span></div>
+    <div class="label">Metagenomics and microbiome pipeline</div>
+    <h1 class="h1" style="font-size:2.5em;">MetaFlow <span style="color:var(--orange);font-size:0.5em;vertical-align:middle;">Coming 2026</span></h1>
+    <p class="lead">16S rRNA and whole-metagenome shotgun analysis. Taxonomic classification, alpha/beta diversity, differential abundance with QIIME2 and Kraken2.</p>
+    <div style="margin-top:28px;padding:20px 24px;background:rgba(240,136,62,0.07);border:1px solid rgba(240,136,62,0.2);border-radius:var(--r2);display:inline-block;">
+      <strong style="color:var(--orange);">🔔 Get notified when MetaFlow launches</strong><br>
+      <span style="font-size:0.85em;color:var(--text2);">Email <a href="mailto:hello@bioinfocodex.com" style="color:var(--blue);">hello@bioinfocodex.com</a> with subject: "Notify me — MetaFlow"</span>
+    </div>
+  </div>
+</div>
+<div class="page" id="page-tool-scrnaflow">
+  <div class="tool-detail-hero">
+    <div class="breadcrumb"><span onclick="showPage('page-tools')">🧬 Bioinfo Tools</span><span class="breadcrumb-sep">›</span><span style="color:var(--text);">scRNAflow</span></div>
+    <div class="label">Single-cell RNA-seq pipeline</div>
+    <h1 class="h1" style="font-size:2.5em;">scRNAflow <span style="color:var(--orange);font-size:0.5em;vertical-align:middle;">Coming 2026</span></h1>
+    <p class="lead">Single-cell RNA-seq analysis using Seurat. Cell clustering, UMAP visualisation, marker gene identification, trajectory analysis.</p>
+    <div style="margin-top:28px;padding:20px 24px;background:rgba(240,136,62,0.07);border:1px solid rgba(240,136,62,0.2);border-radius:var(--r2);display:inline-block;">
+      <strong style="color:var(--orange);">🔔 Get notified when scRNAflow launches</strong><br>
+      <span style="font-size:0.85em;color:var(--text2);">Email <a href="mailto:hello@bioinfocodex.com" style="color:var(--blue);">hello@bioinfocodex.com</a> with subject: "Notify me — scRNAflow"</span>
+    </div>
+  </div>
+</div>
+<div class="page" id="page-tool-proteomics">
+  <div class="tool-detail-hero">
+    <div class="breadcrumb"><span onclick="showPage('page-tools')">🧬 Bioinfo Tools</span><span class="breadcrumb-sep">›</span><span style="color:var(--text);">ProteomicsLab</span></div>
+    <div class="label">Mass spectrometry proteomics pipeline</div>
+    <h1 class="h1" style="font-size:2.5em;">ProteomicsLab <span style="color:var(--orange);font-size:0.5em;vertical-align:middle;">Coming 2026</span></h1>
+    <p class="lead">Label-free quantification, TMT/iTRAQ, post-translational modification analysis, pathway enrichment. Powered by MaxQuant.</p>
+    <div style="margin-top:28px;padding:20px 24px;background:rgba(240,136,62,0.07);border:1px solid rgba(240,136,62,0.2);border-radius:var(--r2);display:inline-block;">
+      <strong style="color:var(--orange);">🔔 Get notified when ProteomicsLab launches</strong><br>
+      <span style="font-size:0.85em;color:var(--text2);">Email <a href="mailto:hello@bioinfocodex.com" style="color:var(--blue);">hello@bioinfocodex.com</a> with subject: "Notify me — ProteomicsLab"</span>
+    </div>
+  </div>
+</div>
 
 <!-- ══════════════════════════════════════════
      EDUCATION PAGE
@@ -1308,14 +2689,38 @@ wc -l file       <span class="code-comment"># Count lines in a file</span></div>
 <script>
 // ── PAGE NAVIGATION ──────────────────────────────────────────────────────
 function showPage(name) {
+  // Accept both 'home' and 'page-home' and 'page-tool-rnaflow'
+  const pageId = name.startsWith('page-') ? name : 'page-' + name;
+  const tabId  = name.startsWith('page-') ? name.replace('page-', '') : name;
+
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
-  document.getElementById('page-' + name).classList.add('active');
-  const tab = document.getElementById('tab-' + name);
+
+  const page = document.getElementById(pageId);
+  if (page) page.classList.add('active');
+
+  // Highlight the correct nav tab
+  // Tool sub-pages highlight the "tools" tab
+  const navTabName = tabId.startsWith('tool-') ? 'tools' : tabId;
+  const tab = document.getElementById('tab-' + navTabName);
   if (tab) tab.classList.add('active');
-  window.scrollTo({top: 0, behavior: 'smooth'});
-  // Trigger reveals on new page
+
+  window.scrollTo({ top: 0, behavior: 'smooth' });
   setTimeout(initReveals, 100);
+}
+
+// ── TOOL SECTION NAVIGATION ──────────────────────────────────────────────
+function showToolSection(id, el) {
+  document.querySelectorAll('.tool-section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.tool-nav-item').forEach(i => i.classList.remove('active'));
+  const sec = document.getElementById(id);
+  if (sec) sec.classList.add('active');
+  if (el)  el.classList.add('active');
+}
+
+// ── MANUAL STEP TOGGLE ────────────────────────────────────────────────────
+function toggleManualStep(el) {
+  el.classList.toggle('open');
 }
 
 // ── MOBILE MENU ──────────────────────────────────────────────────────────
@@ -1398,6 +2803,51 @@ function initReveals() {
   document.querySelectorAll('.reveal:not(.vis)').forEach(el => io.observe(el));
 }
 initReveals();
+
+// ── ANIMATED STAT COUNTERS ─────────────────────────────────────────────
+function animateCounter(el) {
+  const target  = parseInt(el.dataset.count);
+  const suffix  = el.dataset.suffix || '';
+  const dur     = 1400;
+  const steps   = 50;
+  const step    = dur / steps;
+  let  current  = 0;
+  const inc = target / steps;
+  const timer = setInterval(() => {
+    current += inc;
+    if (current >= target) {
+      current = target;
+      clearInterval(timer);
+    }
+    el.textContent = Math.round(current) + suffix;
+  }, step);
+}
+
+function initCounters() {
+  document.querySelectorAll('[data-count]').forEach(el => {
+    if (el.dataset.animated) return;
+    const rect = el.getBoundingClientRect();
+    if (rect.top < window.innerHeight * 0.92) {
+      el.dataset.animated = '1';
+      animateCounter(el);
+    }
+  });
+}
+window.addEventListener('scroll', initCounters, { passive: true });
+setTimeout(initCounters, 600);
+
+// ── PIPELINE STEP CYCLING ───────────────────────────────────────────────
+(function() {
+  let activeIdx = 1;
+  const items = document.querySelectorAll('.ps-item');
+  if (!items.length) return;
+  setInterval(() => {
+    items.forEach(i => i.classList.remove('active'));
+    activeIdx = (activeIdx + 1) % items.length;
+    items[activeIdx].classList.add('active');
+  }, 1800);
+})();
+
 </script>
 </body>
 </html>
