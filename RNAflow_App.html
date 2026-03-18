@@ -1,0 +1,2587 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RNAflow — RNA-seq Analysis App</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:       #0d1117;
+  --bg2:      #161b22;
+  --bg3:      #21262d;
+  --border:   #30363d;
+  --border2:  #444c56;
+  --text:     #e6edf3;
+  --text2:    #8b949e;
+  --text3:    #6e7681;
+  --green:    #3fb950;
+  --green2:   #238636;
+  --blue:     #58a6ff;
+  --blue2:    #1f6feb;
+  --purple:   #bc8cff;
+  --orange:   #f0883e;
+  --red:      #f85149;
+  --yellow:   #e3b341;
+  --teal:     #39d353;
+  --ctrl:     #58a6ff;
+  --treat:    #f0883e;
+  --radius:   10px;
+  --font:     'Space Grotesk', sans-serif;
+  --mono:     'JetBrains Mono', monospace;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; overflow: hidden; }
+body { font-family: var(--font); background: var(--bg); color: var(--text); font-size: 14px; display: flex; flex-direction: column; }
+
+/* ── TOP BAR ── */
+.topbar {
+  height: 52px; min-height: 52px;
+  background: var(--bg2);
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center;
+  padding: 0 20px; gap: 14px; z-index: 100;
+}
+.topbar-logo { display: flex; align-items: center; gap: 8px; font-weight: 700; font-size: 1.1em; color: var(--text); letter-spacing: -0.3px; }
+.logo-icon { width: 28px; height: 28px; background: linear-gradient(135deg, var(--green2), var(--blue2)); border-radius: 7px; display: flex; align-items: center; justify-content: center; font-size: 0.9em; }
+.topbar-divider { width: 1px; height: 24px; background: var(--border); }
+.topbar-project { font-size: 0.82em; color: var(--text2); font-family: var(--mono); }
+.topbar-project span { color: var(--blue); }
+.topbar-spacer { flex: 1; }
+.topbar-pills { display: flex; gap: 8px; }
+.pill { padding: 3px 10px; border-radius: 20px; font-size: 0.75em; font-weight: 500; border: 1px solid var(--border); color: var(--text2); }
+.pill.green { border-color: var(--green2); color: var(--green); background: rgba(63,185,80,0.1); }
+.pill.red   { border-color: #b62324; color: var(--red); background: rgba(248,81,73,0.1); }
+
+/* ── CONNECTION STATUS ── */
+.conn-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--text3); flex-shrink: 0; transition: background 0.3s; }
+.conn-dot.connected    { background: var(--green); box-shadow: 0 0 6px rgba(63,185,80,0.5); }
+.conn-dot.disconnected { background: var(--red); }
+.conn-dot.connecting   { background: var(--yellow); animation: pulse 1s infinite; }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+.conn-label { font-size: 0.75em; color: var(--text2); }
+
+/* ── SERVER SETUP BANNER ── */
+.server-banner {
+  background: rgba(227,179,65,0.08); border: 1px solid rgba(227,179,65,0.25);
+  border-radius: var(--radius); padding: 14px 18px; margin-bottom: 16px;
+  display: none;
+}
+.server-banner.show { display: block; }
+.server-banner-title { font-weight: 600; color: var(--yellow); font-size: 0.9em; margin-bottom: 10px; }
+.server-banner pre { background: #0d1117; border-radius: 8px; padding: 10px 14px; font-family: var(--mono); font-size: 0.82em; color: var(--green); border: 1px solid var(--border); margin: 8px 0; }
+
+/* ── MODE ACCORDION PANELS ── */
+.mode-accordion-bar {
+  background: var(--bg2);
+  border-bottom: 2px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+}
+
+/* Each accordion panel */
+.acc-panel {
+  border-bottom: 1px solid var(--border);
+  overflow: hidden;
+}
+.acc-panel:last-child { border-bottom: none; }
+
+/* Clickable header row */
+.acc-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 11px 20px;
+  cursor: pointer;
+  user-select: none;
+  transition: background 0.12s;
+  background: var(--bg2);
+}
+.acc-header:hover { background: rgba(255,255,255,0.03); }
+.acc-header.open  { background: rgba(255,255,255,0.025); }
+
+.acc-header-icon { font-size: 1em; flex-shrink: 0; }
+.acc-header-title {
+  font-weight: 600; font-size: 0.88em; color: var(--text); flex: 1;
+}
+.acc-header-subtitle { font-size: 0.75em; color: var(--text3); }
+.acc-header-badge {
+  font-size: 0.68em; font-weight: 600; padding: 2px 9px;
+  border-radius: 10px; flex-shrink: 0;
+}
+.acc-header-badge.green  { background: rgba(63,185,80,0.15);  color: var(--green); border: 1px solid rgba(63,185,80,0.3); }
+.acc-header-badge.blue   { background: rgba(88,166,255,0.15); color: var(--blue);  border: 1px solid rgba(88,166,255,0.3); }
+.acc-header-badge.yellow { background: rgba(227,179,65,0.15); color: var(--yellow);border: 1px solid rgba(227,179,65,0.3); }
+.acc-header-badge.none   { display: none; }
+.acc-chevron { color: var(--text3); font-size: 0.72em; transition: transform 0.22s; flex-shrink: 0; }
+.acc-header.open .acc-chevron { transform: rotate(90deg); }
+
+/* Expandable body */
+.acc-body {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.35s cubic-bezier(0.4,0,0.2,1);
+  background: var(--bg);
+  border-top: 0px solid var(--border);
+}
+.acc-body.open {
+  max-height: 700px;
+  border-top: 1px solid var(--border);
+}
+.acc-body-inner { padding: 20px 24px; }
+
+/* Mode cards inside accordion */
+.mode-cards-row { display: flex; gap: 12px; margin-bottom: 16px; }
+.mode-card {
+  flex: 1; border-radius: 10px; padding: 16px 18px;
+  display: flex; align-items: flex-start; gap: 14px;
+  cursor: pointer; border: 1.5px solid var(--border);
+  transition: all 0.15s; background: var(--bg2); position: relative;
+}
+.mode-card:hover { border-color: var(--border2); background: rgba(255,255,255,0.03); }
+.mode-card.selected-run  { border-color: var(--green); background: rgba(63,185,80,0.07); }
+.mode-card.selected-copy { border-color: var(--blue);  background: rgba(88,166,255,0.07); }
+.mode-card-icon { font-size: 1.8em; flex-shrink: 0; }
+.mode-card-content { flex: 1; }
+.mode-card-title { font-weight: 700; font-size: 0.93em; margin-bottom: 5px; color: var(--text); }
+.mode-card.selected-run  .mode-card-title { color: var(--green); }
+.mode-card.selected-copy .mode-card-title { color: var(--blue); }
+.mode-card-desc { font-size: 0.8em; color: var(--text2); line-height: 1.6; }
+.mode-card-tag {
+  position: absolute; top: 10px; right: 12px;
+  font-size: 0.67em; font-weight: 600; padding: 2px 8px;
+  border-radius: 10px; text-transform: uppercase; letter-spacing: 0.4px; display: none;
+}
+.mode-card.selected-run  .mode-card-tag { display:inline-block; background:rgba(63,185,80,0.2); color:var(--green); border:1px solid rgba(63,185,80,0.4); }
+.mode-card.selected-copy .mode-card-tag { display:inline-block; background:rgba(88,166,255,0.2); color:var(--blue);  border:1px solid rgba(88,166,255,0.4); }
+
+/* Server setup inner panel */
+.server-setup-grid {
+  display: grid;
+  grid-template-columns: 1fr 2px 2fr;
+  gap: 20px;
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 18px 20px;
+  margin-top: 4px;
+}
+.server-setup-divider { background: var(--border); align-self: stretch; }
+
+/* OS tabs */
+.os-tab {
+  padding: 5px 13px; border-radius: 7px; font-size: 0.76em; font-weight: 500;
+  cursor: pointer; border: 1px solid var(--border); background: var(--bg3);
+  color: var(--text2); font-family: var(--font); transition: all 0.12s;
+}
+.os-tab:hover { border-color: var(--border2); color: var(--text); }
+.os-tab.active { background: var(--blue2); border-color: var(--blue); color: white; }
+.os-panel { }
+.os-step-row { display:flex; gap:10px; margin-bottom:9px; align-items:flex-start; font-size:0.82em; color:var(--text2); line-height:1.55; }
+.os-step-num { width:22px; height:22px; border-radius:50%; background:var(--blue2); color:white; display:flex; align-items:center; justify-content:center; font-size:0.72em; font-weight:700; flex-shrink:0; margin-top:1px; }
+.os-cmd { background:#060a0f; border:1px solid var(--border); border-radius:7px; padding:8px 12px; font-family:var(--mono); font-size:0.84em; color:var(--green); margin:5px 0; display:flex; align-items:center; justify-content:space-between; gap:8px; }
+.os-cmd-main { border-color: var(--green2); border-left-width: 3px; }
+.os-note { font-size:0.77em; color:var(--text3); background:rgba(255,255,255,0.025); border-radius:6px; padding:7px 11px; margin:5px 0; line-height:1.5; border-left:2px solid var(--border2); }
+.mode-copy-cmd-btn {
+  background: var(--bg3); border: 1px solid var(--border); color: var(--text3);
+  border-radius: 5px; padding: 3px 9px; font-size: 0.72em; cursor: pointer;
+  font-family: var(--font); flex-shrink: 0; transition: all 0.12s;
+}
+.mode-copy-cmd-btn:hover { background: var(--green2); color: white; border-color: var(--green2); }
+
+/* Mode indicator pill in topbar */
+.mode-indicator {
+  display: flex; align-items: center; gap: 6px;
+  font-size: 0.78em; color: var(--text2); cursor: pointer;
+  padding: 3px 10px; border-radius: 20px;
+  border: 1px solid var(--border); transition: all 0.12s;
+}
+.mode-indicator:hover { border-color: var(--border2); color: var(--text); }
+.mode-indicator.run-mode  { border-color: rgba(63,185,80,0.4);  color: var(--green); background: rgba(63,185,80,0.08); }
+.mode-indicator.copy-mode { border-color: rgba(88,166,255,0.4); color: var(--blue);  background: rgba(88,166,255,0.08); }
+
+
+.code-toolbar-run {
+  display: flex; align-items: center; padding: 8px 14px;
+  border-bottom: 1px solid var(--border); gap: 8px;
+}
+.run-btn {
+  background: var(--green2); border: 1px solid var(--green);
+  color: white; border-radius: 6px; padding: 4px 14px;
+  font-size: 0.78em; font-weight: 600; cursor: pointer;
+  font-family: var(--font); display: flex; align-items: center; gap: 5px;
+  transition: all 0.15s;
+}
+.run-btn:hover { background: #2ea043; }
+.run-btn:disabled { background: var(--bg3); border-color: var(--border); color: var(--text3); cursor: not-allowed; }
+.run-btn.running { background: rgba(63,185,80,0.15); border-color: var(--green2); color: var(--green); animation: pulse 1s infinite; }
+.run-btn.success { background: rgba(63,185,80,0.2); border-color: var(--green); color: var(--green); }
+.run-btn.failed  { background: rgba(248,81,73,0.15); border-color: var(--red); color: var(--red); }
+.stop-btn {
+  background: rgba(248,81,73,0.12); border: 1px solid var(--red);
+  color: var(--red); border-radius: 6px; padding: 4px 10px;
+  font-size: 0.75em; cursor: pointer; font-family: var(--font);
+  display: none;
+}
+.stop-btn.show { display: inline-flex; }
+.stop-btn:hover { background: rgba(248,81,73,0.25); }
+
+/* ── TERMINAL OUTPUT PANEL ── */
+.term-panel {
+  background: #060a0f; border-top: 1px solid var(--border);
+  max-height: 0; overflow: hidden;
+  transition: max-height 0.3s ease;
+  border-radius: 0 0 var(--radius) var(--radius);
+}
+.term-panel.open { max-height: 320px; }
+.term-header {
+  display: flex; align-items: center; gap: 8px;
+  padding: 6px 14px; background: #0d1117; border-bottom: 1px solid var(--border);
+  font-size: 0.72em; font-family: var(--mono); color: var(--text3);
+}
+.term-dots { display: flex; gap: 5px; }
+.term-dots span { width: 10px; height: 10px; border-radius: 50%; }
+.term-scroll { max-height: 260px; overflow-y: auto; padding: 10px 14px; font-family: var(--mono); font-size: 0.8em; line-height: 1.6; }
+.term-line { color: #cdd6f4; white-space: pre-wrap; word-break: break-all; }
+.term-line.err  { color: var(--red); }
+.term-line.done-ok  { color: var(--green); font-weight: 600; padding-top: 4px; border-top: 1px solid rgba(63,185,80,0.2); }
+.term-line.done-err { color: var(--red);   font-weight: 600; padding-top: 4px; border-top: 1px solid rgba(248,81,73,0.2); }
+.term-cursor { display: inline-block; width: 8px; height: 14px; background: var(--green); vertical-align: text-bottom; animation: blink 1s step-end infinite; }
+@keyframes blink { 50% { opacity: 0; } }
+
+/* ── AUTO-ADVANCE TOAST ── */
+.toast {
+  position: fixed; bottom: 24px; right: 24px; z-index: 9999;
+  background: var(--bg2); border: 1px solid var(--green2); border-radius: var(--radius);
+  padding: 12px 18px; display: flex; align-items: center; gap: 10px;
+  font-size: 0.88em; color: var(--text);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+  transform: translateY(80px); opacity: 0;
+  transition: all 0.3s ease;
+  pointer-events: none;
+}
+.toast.show { transform: translateY(0); opacity: 1; }
+.toast-icon { font-size: 1.2em; }
+.toast-next-btn {
+  background: var(--green2); border: none; color: white;
+  padding: 5px 14px; border-radius: 6px; font-size: 0.82em;
+  font-weight: 600; cursor: pointer; font-family: var(--font);
+  pointer-events: all;
+}
+
+.app-body { display: flex; flex: 1; overflow: hidden; }
+
+/* ── SIDEBAR ── */
+.sidebar {
+  width: 220px; min-width: 220px;
+  background: var(--bg2);
+  border-right: 1px solid var(--border);
+  display: flex; flex-direction: column;
+  overflow-y: auto;
+  padding: 12px 0;
+}
+.sidebar-section { padding: 6px 12px 2px; font-size: 0.68em; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: var(--text3); margin-top: 6px; }
+.nav-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 8px 14px; margin: 1px 8px;
+  border-radius: 7px; cursor: pointer;
+  font-size: 0.88em; color: var(--text2);
+  transition: all 0.12s; position: relative;
+}
+.nav-item:hover { background: var(--bg3); color: var(--text); }
+.nav-item.active { background: rgba(88,166,255,0.12); color: var(--blue); font-weight: 500; }
+.nav-item.done .nav-check { color: var(--green); }
+.nav-num { width: 20px; height: 20px; border-radius: 50%; background: var(--bg3); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: 0.72em; font-weight: 600; flex-shrink: 0; color: var(--text3); }
+.nav-item.active .nav-num { background: var(--blue2); border-color: var(--blue); color: white; }
+.nav-item.done .nav-num { background: var(--green2); border-color: var(--green); color: white; }
+.nav-check { margin-left: auto; font-size: 0.75em; color: var(--text3); }
+
+/* Progress bar at bottom of sidebar */
+.sidebar-progress { margin: auto 12px 12px; border-top: 1px solid var(--border); padding-top: 12px; }
+.progress-label { font-size: 0.75em; color: var(--text2); margin-bottom: 6px; display: flex; justify-content: space-between; }
+.prog-track { background: var(--bg3); border-radius: 4px; height: 6px; }
+.prog-fill { background: linear-gradient(90deg, var(--blue2), var(--green2)); height: 6px; border-radius: 4px; transition: width 0.4s; }
+
+/* ── MAIN CONTENT ── */
+.main { flex: 1; overflow-y: auto; padding: 28px 32px; }
+.page { display: none; }
+.page.active { display: block; }
+
+/* Page header */
+.page-header { margin-bottom: 24px; }
+.page-header h1 { font-size: 1.5em; font-weight: 700; letter-spacing: -0.4px; margin-bottom: 4px; }
+.page-header p { color: var(--text2); font-size: 0.88em; }
+
+/* CARDS */
+.card { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius); margin-bottom: 16px; overflow: hidden; }
+.card-head { padding: 12px 18px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 10px; font-weight: 600; font-size: 0.92em; }
+.card-body { padding: 18px; }
+.card-icon { font-size: 1em; }
+
+/* FORM ELEMENTS */
+.field-row { display: grid; gap: 14px; margin-bottom: 14px; }
+.field-row.cols-2 { grid-template-columns: 1fr 1fr; }
+.field-row.cols-3 { grid-template-columns: 1fr 1fr 1fr; }
+.field { display: flex; flex-direction: column; gap: 5px; }
+.field label { font-size: 0.73em; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text2); }
+.field input, .field select, .field textarea {
+  background: var(--bg3); border: 1px solid var(--border); border-radius: 8px;
+  color: var(--text); padding: 8px 12px; font-size: 0.87em; font-family: var(--font);
+  transition: border 0.15s;
+}
+.field input:focus, .field select:focus, .field textarea:focus { outline: none; border-color: var(--blue2); background: var(--bg); }
+.field select { cursor: pointer; }
+.field textarea { font-family: var(--mono); font-size: 0.82em; height: 80px; resize: vertical; line-height: 1.5; }
+.field-hint { font-size: 0.75em; color: var(--text3); margin-top: 3px; }
+
+/* ── ORGANISM SELECT ── */
+.org-select-wrapper select { width: 100%; }
+
+/* ── SAMPLE INPUTS ── */
+.samples-split { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.sample-box { border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
+.sample-box-head { padding: 10px 14px; display: flex; align-items: center; gap: 8px; font-weight: 600; font-size: 0.85em; }
+.ctrl-head { background: rgba(88,166,255,0.12); border-bottom: 1px solid rgba(88,166,255,0.2); color: var(--ctrl); }
+.treat-head { background: rgba(240,136,62,0.12); border-bottom: 1px solid rgba(240,136,62,0.2); color: var(--treat); }
+.sample-box-body { padding: 12px; background: var(--bg); }
+.sample-row { display: flex; gap: 6px; align-items: center; margin-bottom: 6px; }
+.sample-row input { flex: 1; background: var(--bg2); border: 1px solid var(--border); border-radius: 7px; color: var(--text); padding: 7px 10px; font-family: var(--mono); font-size: 0.82em; }
+.sample-row input:focus { outline: none; border-color: var(--blue2); }
+.del-btn { background: none; border: none; color: var(--text3); cursor: pointer; font-size: 1em; padding: 4px 6px; border-radius: 5px; line-height: 1; }
+.del-btn:hover { background: rgba(248,81,73,0.15); color: var(--red); }
+.add-row-btn { width: 100%; padding: 7px; background: none; border: 1px dashed var(--border2); border-radius: 7px; color: var(--text3); cursor: pointer; font-size: 0.8em; margin-top: 4px; transition: all 0.12s; font-family: var(--font); }
+.add-row-btn:hover { border-color: var(--blue2); color: var(--blue); background: rgba(88,166,255,0.05); }
+.sample-count { font-size: 0.72em; color: var(--text3); margin-left: auto; }
+
+/* ── CODE BLOCKS ── */
+.code-block { position: relative; background: #0d1117; border: 1px solid var(--border); border-radius: var(--radius); margin: 12px 0; }
+.code-toolbar { display: flex; align-items: center; padding: 8px 14px; border-bottom: 1px solid var(--border); gap: 8px; }
+.code-lang { font-size: 0.72em; color: var(--text3); font-family: var(--mono); text-transform: uppercase; letter-spacing: 0.5px; }
+.code-toolbar-spacer { flex: 1; }
+.copy-btn { background: var(--bg3); border: 1px solid var(--border); color: var(--text2); border-radius: 6px; padding: 4px 12px; font-size: 0.75em; cursor: pointer; font-family: var(--font); transition: all 0.12s; }
+.copy-btn:hover { background: var(--border); color: var(--text); }
+.copy-btn.copied { background: rgba(63,185,80,0.15); border-color: var(--green2); color: var(--green); }
+pre.code { padding: 14px 16px; font-family: var(--mono); font-size: 0.81em; line-height: 1.7; color: #c9d1d9; overflow-x: auto; margin: 0; white-space: pre; }
+.cc { color: #6e7681; font-style: italic; }
+.ck { color: #ff7b72; }
+.cs { color: #a5d6ff; }
+.cf { color: #d2a8ff; }
+.cn { color: #ffa657; }
+
+/* ── NOTES / ALERTS ── */
+.alert { padding: 10px 14px; border-radius: 8px; font-size: 0.84em; margin: 10px 0; display: flex; gap: 10px; align-items: flex-start; line-height: 1.5; }
+.alert-icon { flex-shrink: 0; margin-top: 1px; }
+.alert.info    { background: rgba(88,166,255,0.1);  border-left: 3px solid var(--blue2);  color: #9eceff; }
+.alert.success { background: rgba(63,185,80,0.1);   border-left: 3px solid var(--green2); color: #7ee787; }
+.alert.warning { background: rgba(227,179,65,0.1);  border-left: 3px solid var(--yellow); color: #e3b341; }
+.alert.danger  { background: rgba(248,81,73,0.1);   border-left: 3px solid var(--red);    color: #ff7b72; }
+
+/* ── URL GUIDE BOX ── */
+.url-guide { background: rgba(227,179,65,0.06); border: 1px solid rgba(227,179,65,0.2); border-radius: var(--radius); padding: 14px 16px; margin: 12px 0; }
+.url-guide-title { font-weight: 600; color: var(--yellow); font-size: 0.85em; margin-bottom: 10px; display: flex; align-items: center; gap: 6px; }
+.url-guide ol { padding-left: 18px; }
+.url-guide li { margin: 6px 0; font-size: 0.83em; color: var(--text2); line-height: 1.5; }
+.url-guide code { background: rgba(255,255,255,0.08); color: var(--yellow); padding: 1px 6px; border-radius: 4px; font-family: var(--mono); font-size: 0.9em; }
+
+/* ── TABLES ── */
+.ref-table { width: 100%; border-collapse: collapse; font-size: 0.82em; margin: 10px 0; }
+.ref-table th { background: var(--bg3); color: var(--text2); padding: 8px 12px; text-align: left; font-weight: 600; border-bottom: 1px solid var(--border); font-size: 0.85em; text-transform: uppercase; letter-spacing: 0.3px; }
+.ref-table td { padding: 8px 12px; border-bottom: 1px solid var(--border); color: var(--text); }
+.ref-table tr:last-child td { border-bottom: none; }
+.ref-table tr:hover td { background: rgba(255,255,255,0.02); }
+code { background: rgba(255,255,255,0.08); color: var(--purple); padding: 1px 6px; border-radius: 4px; font-family: var(--mono); font-size: 0.88em; }
+
+/* ── GENERATE BUTTON ── */
+.gen-btn { width: 100%; padding: 13px; background: linear-gradient(135deg, var(--blue2), var(--green2)); color: white; border: none; border-radius: var(--radius); font-size: 0.95em; font-weight: 600; cursor: pointer; font-family: var(--font); letter-spacing: 0.2px; transition: opacity 0.15s; margin-top: 14px; }
+.gen-btn:hover { opacity: 0.9; }
+
+/* ── SESSION BOX ── */
+.session-box { background: var(--bg3); border: 1px solid var(--border); border-left: 3px solid var(--blue2); border-radius: var(--radius); padding: 12px 14px; font-family: var(--mono); font-size: 0.82em; color: var(--blue); margin: 10px 0; }
+.session-label { font-size: 0.7em; color: var(--text3); font-family: var(--font); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; }
+
+/* ── FOLDER PREVIEW ── */
+.folder-preview { display: inline-flex; align-items: center; gap: 6px; background: var(--bg3); border: 1px solid var(--border); border-radius: 8px; padding: 6px 12px; font-family: var(--mono); font-size: 0.82em; color: var(--green); margin-bottom: 14px; }
+
+/* ── STEP NAV BUTTONS ── */
+.step-nav { display: flex; gap: 10px; margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--border); }
+.btn { padding: 9px 20px; border-radius: 8px; font-size: 0.87em; font-weight: 500; cursor: pointer; font-family: var(--font); transition: all 0.12s; border: 1px solid var(--border); }
+.btn-primary { background: var(--blue2); border-color: var(--blue2); color: white; }
+.btn-primary:hover { background: #388bfd; }
+.btn-ghost { background: transparent; color: var(--text2); }
+.btn-ghost:hover { background: var(--bg3); color: var(--text); }
+
+/* ── RESULTS SUMMARY ── */
+.results-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin: 14px 0; }
+.result-card { background: var(--bg3); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px; text-align: center; }
+.result-val { font-size: 1.6em; font-weight: 700; font-family: var(--mono); color: var(--blue); }
+.result-lbl { font-size: 0.72em; color: var(--text3); margin-top: 3px; }
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--text3); }
+
+/* ── INLINE UTILITIES ── */
+h3 { font-size: 0.9em; font-weight: 600; color: var(--text2); margin: 14px 0 8px; text-transform: uppercase; letter-spacing: 0.4px; font-size: 0.75em; }
+p { font-size: 0.86em; color: var(--text2); line-height: 1.6; margin: 6px 0; }
+.tag { display: inline-flex; align-items: center; gap: 4px; padding: 2px 8px; border-radius: 12px; font-size: 0.72em; font-weight: 500; }
+.tag-blue   { background: rgba(88,166,255,0.15); color: var(--blue); border: 1px solid rgba(88,166,255,0.3); }
+.tag-green  { background: rgba(63,185,80,0.15);  color: var(--green); border: 1px solid rgba(63,185,80,0.3); }
+.tag-orange { background: rgba(240,136,62,0.15); color: var(--orange); border: 1px solid rgba(240,136,62,0.3); }
+.tag-purple { background: rgba(188,140,255,0.15);color: var(--purple); border: 1px solid rgba(188,140,255,0.3); }
+.tag-yellow { background: rgba(227,179,65,0.15); color: var(--yellow); border: 1px solid rgba(227,179,65,0.3); }
+.tag-red    { background: rgba(248,81,73,0.15);  color: var(--red); border: 1px solid rgba(248,81,73,0.3); }
+.divider { border: none; border-top: 1px solid var(--border); margin: 16px 0; }
+</style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div class="topbar">
+  <div class="topbar-logo">
+    <div class="logo-icon">🧬</div>
+    RNAflow
+  </div>
+  <div class="topbar-divider"></div>
+  <div class="topbar-project">Project: <span id="tb-project">RNA-Seq_yeast</span></div>
+  <div class="topbar-spacer"></div>
+  <div class="conn-dot" id="conn-dot"></div>
+  <span class="conn-label" id="conn-label">Not connected</span>
+  <div class="topbar-divider"></div>
+  <div class="topbar-pills">
+    <span class="pill" id="tb-organism">Yeast</span>
+    <span class="pill" id="tb-readtype">Single-end</span>
+    <span class="pill green" id="tb-progress">0 / 10</span>
+  </div>
+  <div class="topbar-divider"></div>
+  <div class="mode-indicator" id="mode-indicator" onclick="toggleBanner()" title="Click to change mode">
+    <span id="mode-indicator-icon">⚙</span>
+    <span id="mode-indicator-label">Choose mode</span>
+  </div>
+</div>
+
+<!-- MODE ACCORDION BAR -->
+<div class="mode-accordion-bar" id="mode-accordion-bar">
+
+  <!-- PANEL 1: How would you like to run commands? -->
+  <div class="acc-panel" id="acc-panel-mode">
+    <div class="acc-header open" id="acc-header-mode" onclick="toggleAcc('mode')">
+      <span class="acc-header-icon">⚡</span>
+      <span class="acc-header-title">How would you like to run commands?</span>
+      <span class="acc-header-subtitle">Choose once — your preference is remembered</span>
+      <span class="acc-header-badge none" id="acc-mode-badge"></span>
+      <span class="acc-chevron" id="acc-chevron-mode" style="transform:rotate(90deg);">▶</span>
+    </div>
+    <div class="acc-body open" id="acc-body-mode">
+      <div class="acc-body-inner">
+        <div class="mode-cards-row">
+          <div class="mode-card" id="mode-card-run" onclick="selectMode('run')">
+            <div class="mode-card-tag">✅ Active</div>
+            <div class="mode-card-icon">⚡</div>
+            <div class="mode-card-content">
+              <div class="mode-card-title">Mode A — Run directly from this app</div>
+              <div class="mode-card-desc">
+                Every code block gets a <strong style="color:var(--green)">▶ Run</strong> button. Click it — the command executes in your terminal automatically, live output streams into the app, and steps tick off as they complete.<br><br>
+                <strong style="color:var(--text);">Requires:</strong> run <code style="color:var(--green); background:rgba(63,185,80,0.1); padding:1px 6px; border-radius:4px;">rnaflow_server.py</code> once in your Terminal before opening this app. Works on macOS, Linux, and Windows.
+              </div>
+            </div>
+          </div>
+          <div class="mode-card" id="mode-card-copy" onclick="selectMode('copy')">
+            <div class="mode-card-tag">✅ Active</div>
+            <div class="mode-card-icon">📋</div>
+            <div class="mode-card-content">
+              <div class="mode-card-title">Mode B — Copy &amp; paste manually</div>
+              <div class="mode-card-desc">
+                Every code block has a <strong style="color:var(--blue)">Copy</strong> button. Copy the command → paste into your Terminal → run it yourself. Tick each step checkbox in the sidebar when it is done.<br><br>
+                <strong style="color:var(--text);">No server needed</strong> — works entirely offline on any computer and any operating system.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PANEL 2: What is rnaflow_server.py? -->
+  <div class="acc-panel" id="acc-panel-server">
+    <div class="acc-header" id="acc-header-server" onclick="toggleAcc('server')">
+      <span class="acc-header-icon">ℹ️</span>
+      <span class="acc-header-title">What is rnaflow_server.py? — and how to start it on your OS</span>
+      <span class="acc-header-subtitle">Works on macOS · Linux · Windows · WSL2</span>
+      <span class="acc-header-badge yellow" id="acc-server-badge">Needed for Mode A only</span>
+      <span class="acc-chevron" id="acc-chevron-server">▶</span>
+    </div>
+    <div class="acc-body" id="acc-body-server">
+      <div class="acc-body-inner">
+        <div class="server-setup-grid">
+          <div>
+            <div style="font-size:0.72em; text-transform:uppercase; letter-spacing:0.6px; color:var(--text3); font-weight:600; margin-bottom:10px;">What is it?</div>
+            <div style="font-size:0.83em; color:var(--text2); line-height:1.65;">
+              A tiny Python script — <strong style="color:var(--text)">no extra packages needed</strong> — that runs only on your own computer. It creates a bridge between this HTML app and your terminal so the app can send commands and receive live output.<br><br>
+              It listens on <code>127.0.0.1:7788</code> — your local machine only. <strong style="color:var(--green);">No other computer on the internet or your network can see or reach it.</strong><br><br>
+              Each person who uses RNAflow runs their own private copy locally. It is architecturally impossible for one person's server to interfere with another's.
+            </div>
+            <div style="margin-top:12px; padding:10px 12px; background:rgba(63,185,80,0.07); border:1px solid rgba(63,185,80,0.25); border-radius:8px; font-size:0.78em; color:var(--green); line-height:1.5;">
+              🔒 <strong>100% local.</strong> Runs on your computer. Stops when you press Ctrl+C. Your data never leaves your machine.
+            </div>
+          </div>
+          <div class="server-setup-divider"></div>
+          <div>
+            <div style="font-size:0.72em; text-transform:uppercase; letter-spacing:0.6px; color:var(--text3); font-weight:600; margin-bottom:10px;">How to start it — select your operating system:</div>
+            <div style="display:flex; gap:6px; margin-bottom:12px;" id="os-tabs">
+              <button class="os-tab active" onclick="showOS('mac',   this)">🍎 macOS</button>
+              <button class="os-tab"        onclick="showOS('linux', this)">🐧 Linux</button>
+              <button class="os-tab"        onclick="showOS('win',   this)">🪟 Windows</button>
+              <button class="os-tab"        onclick="showOS('wsl',   this)">🪟+🐧 WSL2</button>
+            </div>
+            <div id="os-mac" class="os-panel">
+              <div class="os-step-row"><span class="os-step-num">1</span><div>Open <strong>Terminal</strong> &nbsp;(Cmd+Space → type Terminal → Enter)</div></div>
+              <div class="os-step-row"><span class="os-step-num">2</span><div>Go to the folder where you saved the file:<div class="os-cmd">cd ~/Desktop <span style="color:var(--text3);"># change if saved elsewhere</span></div></div></div>
+              <div class="os-step-row"><span class="os-step-num">3</span><div>Start the server:<div class="os-cmd os-cmd-main">python3 rnaflow_server.py <button class="mode-copy-cmd-btn" onclick="copyText('python3 rnaflow_server.py',this)">Copy</button></div></div></div>
+              <div class="os-step-row"><span class="os-step-num">4</span><div>Leave that Terminal window open. Reload this page — the <strong style="color:var(--green)">green dot</strong> in the top bar confirms connection ✅</div></div>
+            </div>
+            <div id="os-linux" class="os-panel" style="display:none;">
+              <div class="os-step-row"><span class="os-step-num">1</span><div>Open your terminal (GNOME Terminal, Konsole, xterm, etc.)</div></div>
+              <div class="os-step-row"><span class="os-step-num">2</span><div>Navigate to the file:<div class="os-cmd">cd ~/Desktop</div></div></div>
+              <div class="os-step-row"><span class="os-step-num">3</span><div>Start the server:<div class="os-cmd os-cmd-main">python3 rnaflow_server.py <button class="mode-copy-cmd-btn" onclick="copyText('python3 rnaflow_server.py',this)">Copy</button></div></div></div>
+              <div class="os-note">💡 Python not found? <code>sudo apt install python3</code> (Ubuntu) · <code>sudo dnf install python3</code> (Fedora)</div>
+            </div>
+            <div id="os-win" class="os-panel" style="display:none;">
+              <div class="os-step-row"><span class="os-step-num">1</span><div>Open <strong>Anaconda Prompt</strong> (search Start menu) or PowerShell</div></div>
+              <div class="os-step-row"><span class="os-step-num">2</span><div>Navigate:<div class="os-cmd">cd %USERPROFILE%\Desktop</div></div></div>
+              <div class="os-step-row"><span class="os-step-num">3</span><div>Start the server:<div class="os-cmd os-cmd-main">python rnaflow_server.py <button class="mode-copy-cmd-btn" onclick="copyText('python rnaflow_server.py',this)">Copy</button></div></div></div>
+              <div class="os-note">⚠️ Windows Defender may ask to allow network access — click <strong>Allow</strong>. Server only uses 127.0.0.1, never the internet.</div>
+              <div class="os-note">💡 Bioinformatics tools (HISAT2, samtools) do <strong>not</strong> run natively on Windows — use the <strong>WSL2</strong> tab for the full pipeline.</div>
+            </div>
+            <div id="os-wsl" class="os-panel" style="display:none;">
+              <div class="os-step-row"><span class="os-step-num">1</span><div>Open <strong>WSL terminal</strong> (search Start menu for "WSL" or "Ubuntu")</div></div>
+              <div class="os-step-row"><span class="os-step-num">2</span><div>Navigate to Windows Desktop from WSL:<div class="os-cmd">cd /mnt/c/Users/$USER/Desktop</div></div></div>
+              <div class="os-step-row"><span class="os-step-num">3</span><div>Start the server:<div class="os-cmd os-cmd-main">python3 rnaflow_server.py <button class="mode-copy-cmd-btn" onclick="copyText('python3 rnaflow_server.py',this)">Copy</button></div></div></div>
+              <div class="os-step-row"><span class="os-step-num">4</span><div>Open RNAflow_App.html in your <strong>Windows browser</strong> (Chrome/Edge) — WSL2 and Windows share localhost ✅</div></div>
+              <div class="os-note">💡 WSL2 is the best option for Windows users — all bioinformatics tools run perfectly in the Linux environment.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- end mode-accordion-bar -->
+
+<!-- APP BODY -->
+<div class="app-body">
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+  <div class="sidebar-section">First time setup</div>
+  <div class="nav-item active" onclick="goTo('page-syscheck', this)" id="nav-syscheck">
+    <div class="nav-num" style="font-size:0.8em;">🩺</div> System check
+    <span class="nav-check">○</span>
+  </div>
+
+  <div class="sidebar-section">Project</div>
+  <div class="nav-item" onclick="goTo('page-config', this)" id="nav-config">
+    <div class="nav-num">⚙</div> Configure project
+    <span class="nav-check">○</span>
+  </div>
+  <div class="nav-item" onclick="goTo('page-install', this)" id="nav-install">
+    <div class="nav-num">1</div> Install tools
+    <span class="nav-check">○</span>
+  </div>
+
+  <div class="sidebar-section">Pipeline</div>
+  <div class="nav-item" onclick="goTo('page-download', this)" id="nav-download">
+    <div class="nav-num">2</div> Download data
+    <span class="nav-check">○</span>
+  </div>
+  <div class="nav-item" onclick="goTo('page-qc', this)" id="nav-qc">
+    <div class="nav-num">3</div> Quality control
+    <span class="nav-check">○</span>
+  </div>
+  <div class="nav-item" onclick="goTo('page-trim', this)" id="nav-trim">
+    <div class="nav-num">4</div> Trimming
+    <span class="nav-check">○</span>
+  </div>
+  <div class="nav-item" onclick="goTo('page-genome', this)" id="nav-genome">
+    <div class="nav-num">5</div> Genome &amp; index
+    <span class="nav-check">○</span>
+  </div>
+  <div class="nav-item" onclick="goTo('page-align', this)" id="nav-align">
+    <div class="nav-num">6</div> Alignment
+    <span class="nav-check">○</span>
+  </div>
+  <div class="nav-item" onclick="goTo('page-counts', this)" id="nav-counts">
+    <div class="nav-num">7</div> Gene counting
+    <span class="nav-check">○</span>
+  </div>
+
+  <div class="nav-item" onclick="goTo('page-genefamily', this)" id="nav-genefamily">
+    <div class="nav-num" style="font-size:0.75em;">🧬</div> Gene family
+    <span class="nav-check">○</span>
+  </div>
+
+  <div class="sidebar-section">Analysis</div>
+  <div class="nav-item" onclick="goTo('page-deseq2', this)" id="nav-deseq2">
+    <div class="nav-num">8</div> DESeq2 in R
+    <span class="nav-check">○</span>
+  </div>
+  <div class="nav-item" onclick="goTo('page-plots', this)" id="nav-plots">
+    <div class="nav-num">9</div> Plots &amp; results
+    <span class="nav-check">○</span>
+  </div>
+
+  <div class="sidebar-progress">
+    <div class="progress-label">
+      <span>Progress</span>
+      <span id="sb-prog-label">0 / 10</span>
+    </div>
+    <div class="prog-track"><div class="prog-fill" id="sb-prog-fill" style="width:0%"></div></div>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- PAGE: SYSTEM CHECK                                       -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div class="page active" id="page-syscheck">
+  <div class="page-header">
+    <h1>🩺 System Check — Run This First!</h1>
+    <p>Check for old conflicting software before installing anything. This prevents the version conflicts that cause most beginner problems.</p>
+  </div>
+
+  <!-- SERVER CONNECTION BANNER MOVED TO TOP OF APP -->
+
+  <!-- HOW TO USE -->
+  <div class="card">
+    <div class="card-head"><span class="card-icon">📖</span> How to use this page</div>
+    <div class="card-body">
+      <div class="alert info">
+        <span class="alert-icon">💡</span>
+        <div>Open your Terminal (<strong>Cmd + Space → type Terminal → Enter</strong>), then run the check commands below one by one. Compare what you see to the result guide, and use the fix commands if needed.</div>
+      </div>
+      <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px; margin-top:14px;">
+        <div style="background:var(--bg3); border:1px solid var(--border); border-radius:var(--radius); padding:14px; text-align:center;">
+          <div style="font-size:1.6em; margin-bottom:6px;">1️⃣</div>
+          <div style="font-size:0.82em; color:var(--text2);">Run the <strong style="color:var(--text)">check command</strong> in Terminal</div>
+        </div>
+        <div style="background:var(--bg3); border:1px solid var(--border); border-radius:var(--radius); padding:14px; text-align:center;">
+          <div style="font-size:1.6em; margin-bottom:6px;">2️⃣</div>
+          <div style="font-size:0.82em; color:var(--text2);">Read the <strong style="color:var(--text)">result guide</strong> to understand what you found</div>
+        </div>
+        <div style="background:var(--bg3); border:1px solid var(--border); border-radius:var(--radius); padding:14px; text-align:center;">
+          <div style="font-size:1.6em; margin-bottom:6px;">3️⃣</div>
+          <div style="font-size:0.82em; color:var(--text2);">Run the <strong style="color:var(--text)">fix commands</strong> if old software is found</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CHECK 1: SHELL -->
+  <div class="card">
+    <div class="card-head" style="background:rgba(88,166,255,0.08);">
+      <span class="card-icon">🐚</span> Check 1 — Which shell are you using?
+      <span class="tag tag-blue" style="margin-left:auto;">Start here</span>
+    </div>
+    <div class="card-body">
+      <p>Modern macOS uses <strong>zsh</strong>. Old Macs use <strong>bash</strong>. This matters for Conda setup.</p>
+      <div class="code-block"><div class="code-toolbar"><span class="code-lang">bash — check shell</span><div class="code-toolbar-spacer"></div><button class="copy-btn" onclick="copyBlock(this)">Copy</button></div>
+<pre class="code">echo $SHELL</pre></div>
+      <table class="ref-table" style="margin-top:10px;">
+        <tr><th>You see</th><th>Meaning</th><th>Action</th></tr>
+        <tr><td><code>/bin/zsh</code></td><td>✅ Modern zsh — perfect</td><td>No action needed</td></tr>
+        <tr><td><code>/bin/bash</code></td><td>⚠️ Old bash shell</td><td>Run fix below to switch to zsh</td></tr>
+      </table>
+      <div class="code-block"><div class="code-toolbar"><span class="code-lang">bash — fix: switch to zsh (only if you saw /bin/bash)</span><div class="code-toolbar-spacer"></div><button class="copy-btn" onclick="copyBlock(this)">Copy</button></div>
+<pre class="code"><span class="cc"># Switch to zsh (modern macOS default)</span>
+chsh -s /bin/zsh
+<span class="cc"># Close Terminal completely (Cmd+Q) and reopen it</span></pre></div>
+    </div>
+  </div>
+
+  <!-- CHECK 2: CONDA -->
+  <div class="card">
+    <div class="card-head" style="background:rgba(240,136,62,0.08);">
+      <span class="card-icon">🐍</span> Check 2 — Conda / Anaconda / Miniconda installed?
+      <span class="tag tag-orange" style="margin-left:auto;">Most common problem</span>
+    </div>
+    <div class="card-body">
+      <p>Old Anaconda (version 4.x or earlier) causes installation failures. We need Conda 23+ for bioinformatics tools to install correctly.</p>
+
+      <div class="code-block"><div class="code-toolbar"><span class="code-lang">bash — check conda</span><div class="code-toolbar-spacer"></div><button class="copy-btn" onclick="copyBlock(this)">Copy</button></div>
+<pre class="code"><span class="cc"># Check if conda exists and what version</span>
+conda --version
+
+<span class="cc"># Check where it is installed</span>
+conda info | grep "base environment"
+
+<span class="cc"># Check which type (Anaconda / Miniconda / Miniforge)</span>
+conda info | grep "active env location"</pre></div>
+
+      <table class="ref-table">
+        <tr><th>You see</th><th>Meaning</th><th>Action</th></tr>
+        <tr><td><code>command not found: conda</code></td><td>✅ Clean — nothing installed</td><td>Go straight to Install Tools step</td></tr>
+        <tr><td><code>conda 23.x.x</code> or higher</td><td>✅ Modern version — good</td><td>No action needed</td></tr>
+        <tr><td><code>conda 4.x.x</code> or lower</td><td>❌ Very old — must remove</td><td>Run the removal commands below</td></tr>
+        <tr><td><code>/opt/anaconda3</code> in path</td><td>⚠️ Old Anaconda location</td><td>Run removal commands below</td></tr>
+        <tr><td><code>/opt/miniconda3</code> in path</td><td>⚠️ Check version number</td><td>If version < 23, remove and reinstall</td></tr>
+        <tr><td><code>(base)</code> at start of prompt</td><td>ℹ️ Conda is active</td><td>Check version — ok if 23+</td></tr>
+      </table>
+
+      <h3>🗑️ Remove old Anaconda/Conda (only run if version was old or causing problems):</h3>
+      <div class="alert danger"><span class="alert-icon">⚠️</span> <strong>Only run these if</strong> your conda version was 4.x or below, or if you had installation errors. Skip if conda is already version 23+.</div>
+
+      <div class="code-block"><div class="code-toolbar"><span class="code-lang">bash — step 1: try normal uninstall first</span><div class="code-toolbar-spacer"></div><button class="copy-btn" onclick="copyBlock(this)">Copy</button></div>
+<pre class="code"><span class="cc"># Try the Anaconda uninstaller (may fail on old versions — that's ok)</span>
+conda install anaconda-clean -y
+anaconda-clean --yes</pre></div>
+
+      <div class="code-block"><div class="code-toolbar"><span class="code-lang">bash — step 2: force remove the main folder</span><div class="code-toolbar-spacer"></div><button class="copy-btn" onclick="copyBlock(this)">Copy</button></div>
+<pre class="code"><span class="cc"># Remove Anaconda (try without sudo first)</span>
+rm -rf /opt/anaconda3
+
+<span class="cc"># If you get "Permission denied", use sudo:</span>
+sudo rm -rf /opt/anaconda3
+
+<span class="cc"># Also remove Miniconda if present</span>
+rm -rf ~/miniconda3
+rm -rf ~/opt/miniconda3
+sudo rm -rf /opt/miniconda3
+
+<span class="cc"># Remove hidden config files</span>
+rm -rf ~/.conda
+rm -rf ~/.condarc</pre></div>
+
+      <div class="code-block"><div class="code-toolbar"><span class="code-lang">bash — step 3: clean up shell config file</span><div class="code-toolbar-spacer"></div><button class="copy-btn" onclick="copyBlock(this)">Copy</button></div>
+<pre class="code"><span class="cc"># Open your shell config in a text editor</span>
+nano ~/.zshrc
+
+<span class="cc"># Look for and DELETE these lines (use arrow keys + Ctrl+K to delete a line):</span>
+<span class="cc"># >>> conda initialize >>></span>
+<span class="cc"># !! Contents within this block are managed by 'conda init' !!</span>
+<span class="cc"># __conda_setup= ... (several lines)</span>
+<span class="cc"># <<< conda initialize <<<</span>
+
+<span class="cc"># Save: press Ctrl+X → type Y → press Enter</span>
+<span class="cc"># Then close and reopen Terminal completely (Cmd+Q)</span></pre></div>
+
+      <div class="code-block"><div class="code-toolbar"><span class="code-lang">bash — step 4: verify conda is gone</span><div class="code-toolbar-spacer"></div><button class="copy-btn" onclick="copyBlock(this)">Copy</button></div>
+<pre class="code">conda --version
+<span class="cc"># Expected: "zsh: command not found: conda"</span>
+<span class="cc"># That means it's cleanly removed ✅</span></pre></div>
+    </div>
+  </div>
+
+  <!-- CHECK 3: HOMEBREW -->
+  <div class="card">
+    <div class="card-head" style="background:rgba(188,140,255,0.08);">
+      <span class="card-icon">🍺</span> Check 3 — Homebrew installed and working?
+    </div>
+    <div class="card-body">
+      <div class="code-block"><div class="code-toolbar"><span class="code-lang">bash — check homebrew</span><div class="code-toolbar-spacer"></div><button class="copy-btn" onclick="copyBlock(this)">Copy</button></div>
+<pre class="code">brew --version</pre></div>
+      <table class="ref-table">
+        <tr><th>You see</th><th>Meaning</th><th>Action</th></tr>
+        <tr><td><code>Homebrew 4.x.x</code></td><td>✅ Installed and working</td><td>No action needed</td></tr>
+        <tr><td><code>command not found: brew</code></td><td>⚠️ Not installed</td><td>Install it in Step 1</td></tr>
+        <tr><td>Permission errors</td><td>⚠️ Folder permissions issue</td><td>Run fix below</td></tr>
+      </table>
+      <div class="code-block"><div class="code-toolbar"><span class="code-lang">bash — fix homebrew permissions (if you saw permission errors)</span><div class="code-toolbar-spacer"></div><button class="copy-btn" onclick="copyBlock(this)">Copy</button></div>
+<pre class="code"><span class="cc"># Fix ownership of Homebrew folders (use your actual username)</span>
+sudo chown -R $(whoami) /usr/local/share/man/man7
+chmod u+w /usr/local/share/man/man7
+
+<span class="cc"># Fix all Homebrew directory permissions at once</span>
+sudo chown -R $(whoami) $(brew --prefix)/*</pre></div>
+    </div>
+  </div>
+
+  <!-- CHECK 4: BIOINFORMATICS TOOLS -->
+  <div class="card">
+    <div class="card-head" style="background:rgba(63,185,80,0.08);">
+      <span class="card-icon">🔧</span> Check 4 — Old bioinformatics tools already installed?
+    </div>
+    <div class="card-body">
+      <p>Run all of these. If any tool is already installed, check its version against the minimum requirements.</p>
+      <div class="code-block"><div class="code-toolbar"><span class="code-lang">bash — check all RNA tools</span><div class="code-toolbar-spacer"></div><button class="copy-btn" onclick="copyBlock(this)">Copy</button></div>
+<pre class="code"><span class="cc"># Check each tool — note the version number you see</span>
+fastqc --version
+fastp --version
+hisat2 --version
+samtools --version
+featureCounts -v
+fasterq-dump --version
+multiqc --version</pre></div>
+
+      <table class="ref-table">
+        <tr><th>Tool</th><th>Minimum version needed</th><th>If version is too old</th></tr>
+        <tr><td>FastQC</td><td>0.11.9+</td><td>Run fix command below</td></tr>
+        <tr><td>fastp</td><td>0.20.0+</td><td>Run fix command below</td></tr>
+        <tr><td>HISAT2</td><td>2.2.0+</td><td>Run fix command below</td></tr>
+        <tr><td>samtools</td><td>1.15+</td><td>Run fix command below</td></tr>
+        <tr><td>featureCounts (subread)</td><td>2.0.0+</td><td>Run fix command below</td></tr>
+        <tr><td>fasterq-dump (sra-tools)</td><td>3.0+</td><td>Run fix command below</td></tr>
+        <tr><td>MultiQC</td><td>1.12+</td><td>Run fix command below</td></tr>
+      </table>
+
+      <div class="code-block"><div class="code-toolbar"><span class="code-lang">bash — fix: remove and reinstall all RNA tools fresh</span><div class="code-toolbar-spacer"></div><button class="copy-btn" onclick="copyBlock(this)">Copy</button></div>
+<pre class="code"><span class="cc"># Remove old versions from conda environment</span>
+conda activate rnaseq
+conda remove fastqc fastp hisat2 samtools subread sra-tools multiqc -y
+
+<span class="cc"># Reinstall fresh latest versions</span>
+conda install -c bioconda -c conda-forge \
+  fastqc fastp hisat2 samtools subread sra-tools multiqc -y
+
+<span class="cc"># Verify new versions installed</span>
+fastqc --version && hisat2 --version && samtools --version && fasterq-dump --version</pre></div>
+    </div>
+  </div>
+
+  <!-- CHECK 5: R -->
+  <div class="card">
+    <div class="card-head" style="background:rgba(227,179,65,0.08);">
+      <span class="card-icon">📊</span> Check 5 — R version and DESeq2 installed?
+    </div>
+    <div class="card-body">
+      <p>Run these in your RStudio console (bottom-left panel where you see the <code>&gt;</code> prompt).</p>
+      <div class="code-block"><div class="code-toolbar"><span class="code-lang">R — check R and packages</span><div class="code-toolbar-spacer"></div><button class="copy-btn" onclick="copyBlock(this)">Copy</button></div>
+<pre class="code"><span class="cc"># Check R version (need 4.0 or higher)</span>
+R.version.string
+
+<span class="cc"># Check if DESeq2 is installed</span>
+packageVersion("DESeq2")
+
+<span class="cc"># Check all needed packages at once</span>
+pkgs &lt;- c("DESeq2","ggplot2","pheatmap","RColorBrewer","ggrepel","dplyr")
+installed &lt;- pkgs %in% rownames(installed.packages())
+data.frame(Package=pkgs, Installed=installed)</pre></div>
+
+      <table class="ref-table">
+        <tr><th>You see</th><th>Meaning</th><th>Action</th></tr>
+        <tr><td>R version 4.x.x</td><td>✅ Good</td><td>No action needed</td></tr>
+        <tr><td>R version 3.x.x</td><td>❌ Too old</td><td>Download R 4.x from cran.r-project.org</td></tr>
+        <tr><td>DESeq2 version 1.38+</td><td>✅ Good</td><td>No action needed</td></tr>
+        <tr><td>Error: no package called 'DESeq2'</td><td>❌ Not installed</td><td>Run install commands in Step 1</td></tr>
+        <tr><td>FALSE in the Installed column</td><td>❌ Missing packages</td><td>Run fix below</td></tr>
+      </table>
+
+      <div class="code-block"><div class="code-toolbar"><span class="code-lang">R — fix: install or update all missing packages</span><div class="code-toolbar-spacer"></div><button class="copy-btn" onclick="copyBlock(this)">Copy</button></div>
+<pre class="code"><span class="cc"># Update BiocManager first</span>
+install.packages(<span class="cs">"BiocManager"</span>)
+
+<span class="cc"># Force reinstall DESeq2 (fixes version conflicts)</span>
+BiocManager::install(<span class="cf">c</span>(<span class="cs">"DESeq2"</span>, <span class="cs">"apeglm"</span>), force = TRUE)
+
+<span class="cc"># Install all visualization packages</span>
+install.packages(<span class="cf">c</span>(<span class="cs">"ggplot2"</span>, <span class="cs">"pheatmap"</span>, <span class="cs">"RColorBrewer"</span>, <span class="cs">"ggrepel"</span>, <span class="cs">"dplyr"</span>),
+                 dependencies = TRUE)</pre></div>
+    </div>
+  </div>
+
+  <!-- CHECK 6: PYTHON -->
+  <div class="card">
+    <div class="card-head" style="background:rgba(248,81,73,0.08);">
+      <span class="card-icon">🐍</span> Check 6 — Python version in RNA-seq environment
+    </div>
+    <div class="card-body">
+      <div class="code-block"><div class="code-toolbar"><span class="code-lang">bash — check python</span><div class="code-toolbar-spacer"></div><button class="copy-btn" onclick="copyBlock(this)">Copy</button></div>
+<pre class="code"><span class="cc"># First activate the rnaseq environment</span>
+conda activate rnaseq
+
+<span class="cc"># Check Python version</span>
+python --version
+
+<span class="cc"># Check the environment is correct</span>
+conda info --envs</pre></div>
+
+      <table class="ref-table">
+        <tr><th>You see</th><th>Meaning</th><th>Action</th></tr>
+        <tr><td>Python 3.10.x or 3.11.x</td><td>✅ Perfect</td><td>No action needed</td></tr>
+        <tr><td>Python 3.7.x or 3.8.x</td><td>⚠️ Old — may cause issues</td><td>Recreate environment below</td></tr>
+        <tr><td>conda: command not found</td><td>❌ Conda not set up yet</td><td>Go to Step 1 to install</td></tr>
+        <tr><td>rnaseq not in env list</td><td>❌ Environment not created</td><td>Create it in Step 1</td></tr>
+      </table>
+
+      <div class="code-block"><div class="code-toolbar"><span class="code-lang">bash — fix: recreate rnaseq environment with correct Python</span><div class="code-toolbar-spacer"></div><button class="copy-btn" onclick="copyBlock(this)">Copy</button></div>
+<pre class="code"><span class="cc"># Remove the old environment completely</span>
+conda deactivate
+conda env remove -n rnaseq -y
+
+<span class="cc"># Create fresh with Python 3.10</span>
+conda create -n rnaseq python=3.10 -y
+conda activate rnaseq
+
+<span class="cc"># Reinstall all tools into the fresh environment</span>
+conda install -c bioconda -c conda-forge \
+  fastqc fastp hisat2 samtools subread sra-tools multiqc -y</pre></div>
+    </div>
+  </div>
+
+  <!-- CLEAN SYSTEM SUMMARY -->
+  <div class="card">
+    <div class="card-head" style="background:rgba(63,185,80,0.08);">
+      <span class="card-icon">✅</span> What a clean system looks like before starting
+    </div>
+    <div class="card-body">
+      <div class="code-block"><div class="code-toolbar"><span class="code-lang">bash — final verification — all 8 checks</span><div class="code-toolbar-spacer"></div><button class="copy-btn" onclick="copyBlock(this)">Copy</button></div>
+<pre class="code"><span class="cc"># Run all checks in one go — paste this entire block</span>
+echo "=== Shell ===" && echo $SHELL
+echo "=== Conda ===" && conda --version
+echo "=== Python ===" && python --version
+echo "=== FastQC ===" && fastqc --version
+echo "=== HISAT2 ===" && hisat2 --version | head -1
+echo "=== Samtools ===" && samtools --version | head -1
+echo "=== fasterq-dump ===" && fasterq-dump --version
+echo "=== Homebrew ===" && brew --version | head -1
+echo "=== All checks done ==="</pre></div>
+
+      <div class="alert success" style="margin-top:12px;">
+        <span class="alert-icon">✅</span>
+        <div>
+          <strong>When everything is clean, you should see something like:</strong><br>
+          <span style="font-family:var(--mono); font-size:0.85em; color:var(--green);">
+            Shell = /bin/zsh · Conda 23.x · Python 3.10.x · FastQC 0.12.x · HISAT2 2.2.x · Samtools 1.17 · fasterq-dump 3.x
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="step-nav">
+    <button class="btn btn-primary" onclick="markDone('nav-syscheck'); goTo('page-config', document.getElementById('nav-config'))">✅ System is clean — configure my project →</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- PAGE: CONFIGURE                                         -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div class="page" id="page-config">
+  <div class="page-header">
+    <h1>⚙️ Configure Your Project</h1>
+    <p>Fill in these details once — every command in the app will update automatically.</p>
+  </div>
+
+  <!-- PROJECT FOLDER -->
+  <div class="card">
+    <div class="card-head"><span class="card-icon">📁</span> Project folder</div>
+    <div class="card-body">
+      <div class="field-row cols-3">
+        <div class="field">
+          <label>Save location</label>
+          <select id="cfg-loc" onchange="updateAll()">
+            <option value="~/Desktop">Desktop (recommended)</option>
+            <option value="~/Documents">Documents</option>
+            <option value="~">Home folder</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Organism tag (used in folder name)</label>
+          <input type="text" id="cfg-org-tag" value="yeast" oninput="updateAll()" placeholder="e.g. yeast, rice, human">
+        </div>
+        <div class="field">
+          <label>Read type</label>
+          <select id="cfg-readtype" onchange="updateAll()">
+            <option value="single">Single-end</option>
+            <option value="paired">Paired-end</option>
+          </select>
+        </div>
+      </div>
+      <div class="folder-preview">📁 <span id="folder-preview-text">~/Desktop/RNA-Seq_yeast</span></div>
+      <div class="session-box">
+        <div class="session-label">Run at the start of every Terminal session</div>
+        <span id="session-cmd-preview">conda activate rnaseq &amp;&amp; cd ~/Desktop/RNA-Seq_yeast</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ORGANISM -->
+  <div class="card">
+    <div class="card-head"><span class="card-icon">🔬</span> Organism &amp; reference genome</div>
+    <div class="card-body">
+      <div class="field-row cols-2">
+        <div class="field">
+          <label>Select organism</label>
+          <select id="cfg-organism" onchange="applyOrganism()" class="org-select-wrapper">
+            <optgroup label="── Model Animals ──">
+              <option value="human">🧑 Homo sapiens (Human) — GRCh38</option>
+              <option value="mouse">🐭 Mus musculus (Mouse) — GRCm39</option>
+              <option value="rat">🐀 Rattus norvegicus (Rat) — mRatBN7.2</option>
+              <option value="zebrafish">🐟 Danio rerio (Zebrafish) — GRCz11</option>
+              <option value="fly">🪰 Drosophila melanogaster (Fruit fly) — BDGP6</option>
+              <option value="worm">🪱 Caenorhabditis elegans (Worm) — WBcel235</option>
+            </optgroup>
+            <optgroup label="── Fungi ──">
+              <option value="yeast" selected>🍞 Saccharomyces cerevisiae (Yeast) — R64-1-1</option>
+              <option value="yarrowia">🧫 Yarrowia lipolytica — ASM101387v1</option>
+            </optgroup>
+            <optgroup label="── Crop &amp; Model Plants ──">
+              <option value="arabidopsis">🌿 Arabidopsis thaliana (Thale cress) — TAIR10</option>
+              <option value="maize">🌽 Zea mays (Maize) — NAM-5.0</option>
+              <option value="rice">🌾 Oryza sativa (Rice) — IRGSP-1.0</option>
+              <option value="wheat">🌾 Triticum aestivum (Wheat) — IWGSC</option>
+              <option value="soybean">🫘 Glycine max (Soybean) — Glycine_max_v2.1</option>
+              <option value="tomato">🍅 Solanum lycopersicum (Tomato) — SL3.0</option>
+            </optgroup>
+            <optgroup label="── Custom ──">
+              <option value="custom">🔬 Custom — enter URLs manually</option>
+            </optgroup>
+          </select>
+        </div>
+        <div class="field">
+          <label>Strandedness</label>
+          <select id="cfg-strand" onchange="updateAll()">
+            <option value="0">0 — Unstranded (use if unsure)</option>
+            <option value="1">1 — Stranded forward</option>
+            <option value="2">2 — Stranded reverse (TruSeq / most modern kits)</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="url-guide">
+        <div class="url-guide-title">📖 How to find genome URLs for any organism</div>
+        <ol>
+          <li>For <strong>animals</strong>: go to <code>https://www.ensembl.org</code> &nbsp;|&nbsp; For <strong>plants</strong>: go to <code>https://plants.ensembl.org</code></li>
+          <li>Search your organism name → click its name in results → click <strong>"Download DNA sequence (FASTA)"</strong></li>
+          <li>Right-click the <code>.dna.toplevel.fa.gz</code> or <code>.dna.primary_assembly.fa.gz</code> file → copy link address</li>
+          <li>For the GTF: same page → click <strong>"Download genes (GTF)"</strong> → copy the <code>.gtf.gz</code> file link</li>
+          <li>Paste both links into the boxes below. The app handles the rest.</li>
+        </ol>
+      </div>
+
+      <div class="field-row cols-2">
+        <div class="field">
+          <label>Genome FASTA URL (.fa.gz)</label>
+          <textarea id="cfg-genome-url" oninput="updateAll()">ftp://ftp.ensembl.org/pub/release-109/fasta/saccharomyces_cerevisiae/dna/Saccharomyces_cerevisiae.R64-1-1.dna.toplevel.fa.gz</textarea>
+          <div class="field-hint">Paste Ensembl FTP URL ending in .fa.gz</div>
+        </div>
+        <div class="field">
+          <label>Gene annotation GTF URL (.gtf.gz)</label>
+          <textarea id="cfg-gtf-url" oninput="updateAll()">ftp://ftp.ensembl.org/pub/release-109/gtf/saccharomyces_cerevisiae/Saccharomyces_cerevisiae.R64-1-1.109.gtf.gz</textarea>
+          <div class="field-hint">Paste Ensembl FTP URL ending in .gtf.gz</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SAMPLES -->
+  <div class="card">
+    <div class="card-head"><span class="card-icon">🧪</span> Your RNA-seq samples</div>
+    <div class="card-body">
+      <div class="field-row cols-2" style="margin-bottom:16px;">
+        <div class="field">
+          <label>Control condition name</label>
+          <input type="text" id="cfg-ctrl" value="wildtype" oninput="updateAll()" placeholder="e.g. wildtype, control, mock">
+        </div>
+        <div class="field">
+          <label>Treatment condition name</label>
+          <input type="text" id="cfg-treat" value="snf2_mutant" oninput="updateAll()" placeholder="e.g. mutant, treated, drug_X">
+        </div>
+      </div>
+
+      <div class="alert info">
+        <span class="alert-icon">🔍</span>
+        <div>Find SRA accessions at <code>https://www.ncbi.nlm.nih.gov/sra</code> — search your paper title or GEO dataset ID. Accessions start with <strong>SRR</strong>, <strong>ERR</strong>, or <strong>DRR</strong>.</div>
+      </div>
+
+      <div class="samples-split">
+        <div class="sample-box">
+          <div class="sample-box-head ctrl-head">
+            🔵 Control — <span id="ctrl-name-label">wildtype</span>
+            <span class="sample-count" id="ctrl-count">3 replicates</span>
+          </div>
+          <div class="sample-box-body">
+            <div class="sample-rows" id="ctrl-rows">
+              <div class="sample-row"><input type="text" value="ERR458493" placeholder="SRR accession" oninput="updateAll()"><button class="del-btn" onclick="delRow(this)">✕</button></div>
+              <div class="sample-row"><input type="text" value="ERR458494" placeholder="SRR accession" oninput="updateAll()"><button class="del-btn" onclick="delRow(this)">✕</button></div>
+              <div class="sample-row"><input type="text" value="ERR458495" placeholder="SRR accession" oninput="updateAll()"><button class="del-btn" onclick="delRow(this)">✕</button></div>
+            </div>
+            <button class="add-row-btn" onclick="addRow('ctrl-rows')">+ Add control replicate</button>
+          </div>
+        </div>
+        <div class="sample-box">
+          <div class="sample-box-head treat-head">
+            🔴 Treatment — <span id="treat-name-label">snf2_mutant</span>
+            <span class="sample-count" id="treat-count">3 replicates</span>
+          </div>
+          <div class="sample-box-body">
+            <div class="sample-rows" id="treat-rows">
+              <div class="sample-row"><input type="text" value="ERR458500" placeholder="SRR accession" oninput="updateAll()"><button class="del-btn" onclick="delRow(this)">✕</button></div>
+              <div class="sample-row"><input type="text" value="ERR458501" placeholder="SRR accession" oninput="updateAll()"><button class="del-btn" onclick="delRow(this)">✕</button></div>
+              <div class="sample-row"><input type="text" value="ERR458502" placeholder="SRR accession" oninput="updateAll()"><button class="del-btn" onclick="delRow(this)">✕</button></div>
+            </div>
+            <button class="add-row-btn" onclick="addRow('treat-rows')">+ Add treatment replicate</button>
+          </div>
+        </div>
+      </div>
+      <div class="alert danger" id="rep-warning" style="display:none; margin-top:10px;">
+        <span class="alert-icon">⚠️</span> DESeq2 requires minimum 2 biological replicates per group. Please add more samples.
+      </div>
+
+      <button class="gen-btn" onclick="updateAll(); goTo('page-install', document.getElementById('nav-install'))">⚡ Save configuration &amp; start pipeline →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- PAGE 1: INSTALL                                         -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div class="page" id="page-install">
+  <div class="page-header">
+    <h1>1 — Install Tools <span class="tag tag-blue" style="font-size:0.5em; vertical-align:middle;">One-time only</span></h1>
+    <p>Run these commands once. Never needs repeating on this Mac.</p>
+  </div>
+  <div class="card">
+    <div class="card-head"><span class="card-icon">🍺</span> Homebrew + Miniforge (Conda)</div>
+    <div class="card-body">
+      <div class="code-block"><div class="code-toolbar"><span class="code-lang">bash</span><div class="code-toolbar-spacer"></div><button class="copy-btn" onclick="copyBlock(this)">Copy</button></div><pre class="code"><span class="cc"># 1. Install Homebrew (macOS package manager)</span>
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+
+<span class="cc"># 2. Install Miniforge (Conda for bioinformatics)</span>
+brew install miniforge
+conda init zsh
+<span class="cc"># ↑ Close and reopen Terminal after this!</span>
+
+<span class="cc"># 3. Create dedicated RNA-seq environment</span>
+conda create -n rnaseq python=3.10 -y
+conda activate rnaseq
+
+<span class="cc"># 4. Install all bioinformatics tools at once</span>
+conda install -c bioconda -c conda-forge \
+  fastqc fastp hisat2 samtools subread sra-tools multiqc -y
+
+<span class="cc"># 5. Verify — all should print version numbers</span>
+fastqc --version && hisat2 --version && samtools --version && fasterq-dump --version</pre></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-head"><span class="card-icon">📊</span> R + RStudio packages</div>
+    <div class="card-body">
+      <div class="alert warning"><span class="alert-icon">⚠️</span> Download <strong>R</strong> from <code>cran.r-project.org/bin/macosx</code> and <strong>RStudio</strong> from <code>posit.co/download/rstudio-desktop</code> first. Then paste this into the RStudio console:</div>
+      <div class="code-block"><div class="code-toolbar"><span class="code-lang">R</span><div class="code-toolbar-spacer"></div><button class="copy-btn" onclick="copyBlock(this)">Copy</button></div><pre class="code">install.packages(<span class="cs">"BiocManager"</span>)
+BiocManager::install(c(<span class="cs">"DESeq2"</span>, <span class="cs">"apeglm"</span>))
+install.packages(c(<span class="cs">"ggplot2"</span>, <span class="cs">"pheatmap"</span>, <span class="cs">"RColorBrewer"</span>, <span class="cs">"ggrepel"</span>, <span class="cs">"dplyr"</span>))</pre></div>
+    </div>
+  </div>
+  <div class="step-nav">
+    <button class="btn btn-ghost" onclick="markDone('nav-install'); goTo('page-download', document.getElementById('nav-download'))">Mark done &amp; next →</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- PAGE 2: DOWNLOAD                                        -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div class="page" id="page-download">
+  <div class="page-header">
+    <h1>2 — Download Raw Data <span class="tag tag-green" style="font-size:0.5em; vertical-align:middle;">Every new project</span></h1>
+    <p>Create project folder on your computer and download RNA-seq reads from NCBI SRA.</p>
+  </div>
+  <div class="card">
+    <div class="card-head"><span class="card-icon">📂</span> Session startup + create project folder</div>
+    <div class="card-body">
+      <div class="alert info"><span class="alert-icon">💡</span> Run these two commands every time you open a new Terminal session.</div>
+      <div class="code-block"><div class="code-toolbar"><span class="code-lang">bash</span><div class="code-toolbar-spacer"></div><button class="copy-btn" onclick="copyBlock(this)">Copy</button></div><pre class="code" id="cmd-session">...</pre></div>
+      <div class="code-block"><div class="code-toolbar"><span class="code-lang">bash — create folders (run once)</span><div class="code-toolbar-spacer"></div><button class="copy-btn" onclick="copyBlock(this)">Copy</button></div><pre class="code" id="cmd-mkdir">...</pre></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-head"><span class="card-icon">⬇️</span> Download samples from NCBI SRA</div>
+    <div class="card-body">
+      <div class="alert info"><span class="alert-icon">⏱️</span> Each sample takes 3–10 minutes. Run one at a time and wait for the progress bar to complete.</div>
+      <div class="code-block"><div class="code-toolbar"><span class="code-lang">bash</span><div class="code-toolbar-spacer"></div><button class="copy-btn" onclick="copyBlock(this)">Copy</button></div><pre class="code" id="cmd-download">...</pre></div>
+      <h3>Verify downloads:</h3>
+      <div class="code-block"><div class="code-toolbar"><span class="code-lang">bash</span><div class="code-toolbar-spacer"></div><button class="copy-btn" onclick="copyBlock(this)">Copy</button></div><pre class="code" id="cmd-check-dl">...</pre></div>
+    </div>
+  </div>
+  <div class="step-nav">
+    <button class="btn btn-ghost" onclick="markDone('nav-download'); goTo('page-qc', document.getElementById('nav-qc'))">Mark done &amp; next →</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- PAGE 3: QC                                              -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div class="page" id="page-qc">
+  <div class="page-header">
+    <h1>3 — Quality Control</h1>
+    <p>Check read quality before processing. FastQC generates per-sample reports; MultiQC combines them.</p>
+  </div>
+  <div class="card">
+    <div class="card-head"><span class="card-icon">🔬</span> Run FastQC + MultiQC</div>
+    <div class="card-body">
+      <div class="code-block"><div class="code-toolbar"><span class="code-lang">bash</span><div class="code-toolbar-spacer"></div><button class="copy-btn" onclick="copyBlock(this)">Copy</button></div><pre class="code" id="cmd-fastqc">...</pre></div>
+      <div class="code-block"><div class="code-toolbar"><span class="code-lang">bash — combine all reports</span><div class="code-toolbar-spacer"></div><button class="copy-btn" onclick="copyBlock(this)">Copy</button></div><pre class="code" id="cmd-multiqc">...</pre></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-head"><span class="card-icon">📋</span> FastQC result guide</div>
+    <div class="card-body">
+      <table class="ref-table">
+        <tr><th>Module</th><th>Expected result</th><th>If it fails</th></tr>
+        <tr><td>Per base sequence quality</td><td><span class="tag tag-green">✅ Green</span></td><td>Increase trimming quality threshold</td></tr>
+        <tr><td>Per base sequence content</td><td><span class="tag tag-red">❌ Fail — normal!</span></td><td>Already fixed by trimming first 5 bases</td></tr>
+        <tr><td>Adapter content</td><td><span class="tag tag-green">✅ Green</span></td><td>Add adapter sequence to fastp</td></tr>
+        <tr><td>Sequence duplication</td><td><span class="tag tag-yellow">⚠️ Warning — normal!</span></td><td>No action — highly expressed genes cause this</td></tr>
+        <tr><td>Per sequence GC content</td><td><span class="tag tag-green">✅ Green</span></td><td>Red = possible contamination — investigate</td></tr>
+        <tr><td>Per tile sequence quality</td><td><span class="tag tag-red">❌ Fail — normal!</span></td><td>Machine issue — safe to ignore</td></tr>
+      </table>
+    </div>
+  </div>
+  <div class="step-nav">
+    <button class="btn btn-ghost" onclick="markDone('nav-qc'); goTo('page-trim', document.getElementById('nav-trim'))">Mark done &amp; next →</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- PAGE 4: TRIM                                            -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div class="page" id="page-trim">
+  <div class="page-header">
+    <h1>4 — Trimming</h1>
+    <p>Remove low-quality bases, adapters, and the first 5 bases (biased composition from library prep).</p>
+  </div>
+  <div class="card">
+    <div class="card-head"><span class="card-icon">✂️</span> fastp trimming</div>
+    <div class="card-body">
+      <div class="code-block"><div class="code-toolbar"><span class="code-lang">bash</span><div class="code-toolbar-spacer"></div><button class="copy-btn" onclick="copyBlock(this)">Copy</button></div><pre class="code" id="cmd-trim">...</pre></div>
+      <div class="alert success"><span class="alert-icon">✅</span> <strong>Expected result:</strong> ~99.5% reads pass · Zero adapters · Q30 bases >90% after trimming · Each sample finishes in under 10 seconds.</div>
+      <h3>Verify trimmed files exist:</h3>
+      <div class="code-block"><div class="code-toolbar"><span class="code-lang">bash</span><div class="code-toolbar-spacer"></div><button class="copy-btn" onclick="copyBlock(this)">Copy</button></div><pre class="code" id="cmd-check-trim">...</pre></div>
+    </div>
+  </div>
+  <div class="step-nav">
+    <button class="btn btn-ghost" onclick="markDone('nav-trim'); goTo('page-genome', document.getElementById('nav-genome'))">Mark done &amp; next →</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- PAGE 5: GENOME                                          -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div class="page" id="page-genome">
+  <div class="page-header">
+    <h1>5 — Genome &amp; Index <span class="tag tag-purple" style="font-size:0.5em; vertical-align:middle;">Once per organism</span></h1>
+    <p>Download reference genome and annotation, then build the HISAT2 alignment index.</p>
+  </div>
+  <div class="card">
+    <div class="card-head"><span class="card-icon">🗂️</span> Download genome + annotation</div>
+    <div class="card-body">
+      <div class="alert warning"><span class="alert-icon">⚠️</span> Only needed once per organism. Once downloaded, reuse for all future projects with the same species.</div>
+      <div class="code-block"><div class="code-toolbar"><span class="code-lang">bash</span><div class="code-toolbar-spacer"></div><button class="copy-btn" onclick="copyBlock(this)">Copy</button></div><pre class="code" id="cmd-genome">...</pre></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-head"><span class="card-icon">🏗️</span> Build HISAT2 index</div>
+    <div class="card-body">
+      <div class="alert info"><span class="alert-icon">⏱️</span> Build time: Yeast ~2 min · Worm/Fly ~5 min · Mouse/Human ~30–60 min. Build once, reuse forever.</div>
+      <div class="code-block"><div class="code-toolbar"><span class="code-lang">bash</span><div class="code-toolbar-spacer"></div><button class="copy-btn" onclick="copyBlock(this)">Copy</button></div><pre class="code" id="cmd-index">...</pre></div>
+      <h3>Reference genome portals by organism type</h3>
+      <table class="ref-table">
+        <tr><th>Organism group</th><th>Best source</th></tr>
+        <tr><td>Human, Mouse, Rat, Zebrafish, Fly, Worm, Yeast</td><td><code>https://www.ensembl.org</code> → FTP Download</td></tr>
+        <tr><td>Arabidopsis, Rice, Maize, Wheat, Soybean, Tomato</td><td><code>https://plants.ensembl.org</code> → FTP Download</td></tr>
+        <tr><td>Yarrowia lipolytica</td><td><code>https://www.ncbi.nlm.nih.gov/datasets/genome/</code></td></tr>
+        <tr><td>Any organism</td><td><code>https://www.ncbi.nlm.nih.gov/genome/</code> → Download FASTA + GTF</td></tr>
+      </table>
+    </div>
+  </div>
+  <div class="step-nav">
+    <button class="btn btn-ghost" onclick="markDone('nav-genome'); goTo('page-align', document.getElementById('nav-align'))">Mark done &amp; next →</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- PAGE 6: ALIGN                                           -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div class="page" id="page-align">
+  <div class="page-header">
+    <h1>6 — Alignment</h1>
+    <p>Map trimmed reads to the reference genome with HISAT2, then convert to compressed BAM files.</p>
+  </div>
+  <div class="card">
+    <div class="card-head"><span class="card-icon">🎯</span> Align all samples — HISAT2</div>
+    <div class="card-body">
+      <div class="code-block"><div class="code-toolbar"><span class="code-lang">bash</span><div class="code-toolbar-spacer"></div><button class="copy-btn" onclick="copyBlock(this)">Copy</button></div><pre class="code" id="cmd-align">...</pre></div>
+      <div class="alert success"><span class="alert-icon">✅</span> <strong>Acceptable alignment rates:</strong> &gt;80% = OK &nbsp; &gt;90% = Good &nbsp; &gt;95% = Excellent. Low rate = check organism/genome match or strandedness setting.</div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-head"><span class="card-icon">📦</span> Convert SAM → BAM (compress &amp; delete large SAM files)</div>
+    <div class="card-body">
+      <div class="code-block"><div class="code-toolbar"><span class="code-lang">bash</span><div class="code-toolbar-spacer"></div><button class="copy-btn" onclick="copyBlock(this)">Copy</button></div><pre class="code" id="cmd-bam">...</pre></div>
+    </div>
+  </div>
+  <div class="step-nav">
+    <button class="btn btn-ghost" onclick="markDone('nav-align'); goTo('page-counts', document.getElementById('nav-counts'))">Mark done &amp; next →</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- PAGE 7: COUNTS                                          -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div class="page" id="page-counts">
+  <div class="page-header">
+    <h1>7 — Gene Counting</h1>
+    <p>Count how many reads map to each gene using featureCounts — this creates your expression matrix.</p>
+  </div>
+  <div class="card">
+    <div class="card-head"><span class="card-icon">🔢</span> featureCounts — all samples in one command</div>
+    <div class="card-body">
+      <div class="code-block"><div class="code-toolbar"><span class="code-lang">bash</span><div class="code-toolbar-spacer"></div><button class="copy-btn" onclick="copyBlock(this)">Copy</button></div><pre class="code" id="cmd-counts">...</pre></div>
+      <div class="alert info"><span class="alert-icon">💡</span> <strong>Expected % assigned:</strong> Yeast 60–70% · Human/Mouse 65–75% · Plants 50–65% — remaining reads fall in intergenic regions, which is normal.</div>
+      <h3>Preview the count table:</h3>
+      <div class="code-block"><div class="code-toolbar"><span class="code-lang">bash</span><div class="code-toolbar-spacer"></div><button class="copy-btn" onclick="copyBlock(this)">Copy</button></div><pre class="code" id="cmd-preview">...</pre></div>
+    </div>
+  </div>
+  <div class="step-nav">
+    <button class="btn btn-ghost" onclick="markDone('nav-counts'); goTo('page-deseq2', document.getElementById('nav-deseq2'))">Mark done &amp; next →</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- PAGE 8: DESEQ2                                          -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div class="page" id="page-deseq2">
+  <div class="page-header">
+    <h1>8 — DESeq2 Analysis <span class="tag tag-orange" style="font-size:0.5em; vertical-align:middle;">Run in RStudio</span></h1>
+    <p>Statistical differential expression testing. Finds which genes significantly change between your conditions.</p>
+  </div>
+  <div class="card">
+    <div class="card-head"><span class="card-icon">📊</span> Complete DESeq2 script</div>
+    <div class="card-body">
+      <div class="alert danger"><span class="alert-icon">⚠️</span> <strong>Requirement:</strong> Minimum 2 biological replicates per condition. 3+ replicates strongly recommended for reliable statistical results.</div>
+      <div class="code-block"><div class="code-toolbar"><span class="code-lang">R — paste entire block into RStudio console</span><div class="code-toolbar-spacer"></div><button class="copy-btn" onclick="copyBlock(this)">Copy</button></div><pre class="code" id="cmd-deseq2">...</pre></div>
+      <h3>Understanding the output columns</h3>
+      <table class="ref-table">
+        <tr><th>Column</th><th>What it means</th><th>How to use</th></tr>
+        <tr><td><code>log2FoldChange</code></td><td>Fold change in log2 scale. Positive = higher in treatment.</td><td>Direction of change</td></tr>
+        <tr><td><code>padj</code></td><td>Adjusted p-value after multiple testing correction</td><td>Always use this, never raw pvalue</td></tr>
+        <tr><td><code>baseMean</code></td><td>Average expression level across all samples</td><td>Filter very lowly expressed genes</td></tr>
+      </table>
+      <h3>Filter significant genes:</h3>
+      <div class="code-block"><div class="code-toolbar"><span class="code-lang">R</span><div class="code-toolbar-spacer"></div><button class="copy-btn" onclick="copyBlock(this)">Copy</button></div><pre class="code"><span class="cc"># Standard: significant genes (padj < 0.05)</span>
+sig &lt;- res_df[res_df$padj &lt; <span class="cn">0.05</span> &amp; !<span class="cf">is.na</span>(res_df$padj), ]
+
+<span class="cc"># Strict: significant AND at least 2-fold change</span>
+sig_strict &lt;- res_df[res_df$padj &lt; <span class="cn">0.05</span> &amp; <span class="cf">abs</span>(res_df$log2FoldChange) &gt; <span class="cn">1</span> &amp; !<span class="cf">is.na</span>(res_df$padj), ]
+
+<span class="cc"># Top 20 most significant</span>
+top20 &lt;- <span class="cf">head</span>(sig[<span class="cf">order</span>(sig$padj), ], <span class="cn">20</span>)
+<span class="cf">print</span>(top20[, <span class="cf">c</span>(<span class="cs">"gene"</span>, <span class="cs">"log2FoldChange"</span>, <span class="cs">"padj"</span>)])</pre></div>
+    </div>
+  </div>
+  <div class="step-nav">
+    <button class="btn btn-ghost" onclick="markDone('nav-deseq2'); goTo('page-plots', document.getElementById('nav-plots'))">Mark done &amp; next →</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- PAGE 9: PLOTS                                           -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div class="page" id="page-plots">
+  <div class="page-header">
+    <h1>9 — Plots &amp; Results <span class="tag tag-orange" style="font-size:0.5em; vertical-align:middle;">Run in RStudio</span></h1>
+    <p>Generate publication-quality visualizations of your differential expression results.</p>
+  </div>
+  <div class="card">
+    <div class="card-head"><span class="card-icon">🌋</span> Volcano plot</div>
+    <div class="card-body">
+      <div class="code-block"><div class="code-toolbar"><span class="code-lang">R</span><div class="code-toolbar-spacer"></div><button class="copy-btn" onclick="copyBlock(this)">Copy</button></div><pre class="code" id="cmd-volcano">...</pre></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-head"><span class="card-icon">🌡️</span> Heatmap — top 40 genes</div>
+    <div class="card-body">
+      <div class="code-block"><div class="code-toolbar"><span class="code-lang">R</span><div class="code-toolbar-spacer"></div><button class="copy-btn" onclick="copyBlock(this)">Copy</button></div><pre class="code" id="cmd-heatmap">...</pre></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-head"><span class="card-icon">🎯</span> PCA plot — sample quality check</div>
+    <div class="card-body">
+      <div class="code-block"><div class="code-toolbar"><span class="code-lang">R</span><div class="code-toolbar-spacer"></div><button class="copy-btn" onclick="copyBlock(this)">Copy</button></div><pre class="code" id="cmd-pca">...</pre></div>
+      <div class="alert success"><span class="alert-icon">✅</span> <strong>Good PCA result:</strong> Replicates from the same condition cluster tightly together. The two conditions are far apart on PC1. PC1 explains >50% of total variance.</div>
+    </div>
+  </div>
+  <div class="step-nav">
+    <button class="btn btn-ghost" onclick="markDone('nav-plots')">✅ Mark analysis complete</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- PAGE: GENE FAMILY ANALYSIS                              -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div class="page" id="page-genefamily">
+  <div class="page-header">
+    <h1>🧬 Gene Family Analysis</h1>
+    <p>For large genomes (wheat, maize, human, soybean), subset your DESeq2 results to a specific gene family. Useful when you want to focus on one biological pathway or functional group.</p>
+  </div>
+
+  <!-- SELECTOR -->
+  <div class="card">
+    <div class="card-head" style="background:rgba(188,140,255,0.08);">
+      <span class="card-icon">🎯</span> Select a gene family to analyse
+    </div>
+    <div class="card-body">
+      <div class="alert info">
+        <span class="alert-icon">💡</span>
+        <div>This works best after you have run the full DESeq2 analysis (Step 8). The code below will filter your results to only the genes belonging to the selected family, then produce a focused volcano plot and heatmap.</div>
+      </div>
+
+      <div class="field-row cols-2" style="margin-bottom:16px;">
+        <div class="field">
+          <label>Gene family category</label>
+          <select id="gf-category" onchange="updateGFsubcat()">
+            <optgroup label="── Universal (all organisms) ──">
+              <option value="tf">Transcription Factors</option>
+              <option value="kinase">Protein Kinases</option>
+              <option value="phosphatase">Protein Phosphatases</option>
+              <option value="transporter">Transporters &amp; Channels</option>
+              <option value="ubiquitin">Ubiquitin / Proteasome</option>
+              <option value="hsp">Heat Shock Proteins (HSP)</option>
+              <option value="rrp">RNA-binding Proteins</option>
+              <option value="ribosomal">Ribosomal Proteins</option>
+              <option value="cytoskeleton">Cytoskeleton &amp; Motor Proteins</option>
+            </optgroup>
+            <optgroup label="── Plant-specific ──">
+              <option value="hormone_plant">Plant Hormone Signalling</option>
+              <option value="defense_plant">Plant Defense &amp; Resistance</option>
+              <option value="cellwall">Cell Wall Biosynthesis &amp; Modification</option>
+              <option value="photosynthesis">Photosynthesis &amp; Chloroplast</option>
+              <option value="metabolism_plant">Plant Secondary Metabolism</option>
+              <option value="flowering">Flowering Time &amp; Circadian</option>
+              <option value="root">Root Development</option>
+              <option value="seed">Seed Development &amp; Storage</option>
+            </optgroup>
+            <optgroup label="── Animal-specific ──">
+              <option value="gpcr">G-Protein Coupled Receptors (GPCR)</option>
+              <option value="nuclear_receptor">Nuclear Receptors</option>
+              <option value="immune">Immune System Genes</option>
+              <option value="signaling_animal">Animal Signalling Pathways</option>
+              <option value="ion_channel">Ion Channels</option>
+              <option value="ecm">Extracellular Matrix (ECM)</option>
+              <option value="apoptosis">Apoptosis &amp; Cell Death</option>
+              <option value="cancer">Cancer-associated Genes</option>
+              <option value="epigenetic">Epigenetic Regulators</option>
+              <option value="noncoding">Non-coding RNA Biogenesis</option>
+            </optgroup>
+            <optgroup label="── Microbial / Yeast ──">
+              <option value="yeast_metabolism">Yeast Core Metabolism</option>
+              <option value="yeast_stress">Yeast Stress Response</option>
+            </optgroup>
+          </select>
+        </div>
+        <div class="field">
+          <label>Specific gene family</label>
+          <select id="gf-family" onchange="updateGFcode()">
+            <option>— Select category first —</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- FAMILY INFO BOX -->
+      <div id="gf-info-box" style="background:var(--bg3); border:1px solid var(--border); border-radius:var(--radius); padding:14px 16px; margin-bottom:14px; display:none;">
+        <div style="display:flex; gap:16px; align-items:flex-start; flex-wrap:wrap;">
+          <div style="flex:1; min-width:200px;">
+            <div style="font-size:0.7em; text-transform:uppercase; letter-spacing:0.5px; color:var(--text3); margin-bottom:4px;">Family</div>
+            <div id="gf-name" style="font-weight:700; font-size:1.05em; color:var(--purple);"></div>
+          </div>
+          <div style="flex:2; min-width:260px;">
+            <div style="font-size:0.7em; text-transform:uppercase; letter-spacing:0.5px; color:var(--text3); margin-bottom:4px;">Description</div>
+            <div id="gf-desc" style="font-size:0.85em; color:var(--text2); line-height:1.5;"></div>
+          </div>
+          <div style="flex:1; min-width:160px;">
+            <div style="font-size:0.7em; text-transform:uppercase; letter-spacing:0.5px; color:var(--text3); margin-bottom:4px;">Best database</div>
+            <div id="gf-db" style="font-size:0.82em; color:var(--blue);"></div>
+          </div>
+          <div>
+            <div style="font-size:0.7em; text-transform:uppercase; letter-spacing:0.5px; color:var(--text3); margin-bottom:4px;">Organisms</div>
+            <div id="gf-org" style="font-size:0.82em;"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- METHOD SELECTOR -->
+  <div class="card" id="gf-method-card" style="display:none;">
+    <div class="card-head" style="background:rgba(63,185,80,0.08);">
+      <span class="card-icon">🔬</span> How to get the gene list for this family
+    </div>
+    <div class="card-body">
+      <div class="alert warning">
+        <span class="alert-icon">⚠️</span>
+        <div><strong>For large genomes (wheat, maize, human):</strong> Gene family membership is stored in specialist databases. You must download the gene list first, then use it to filter your count matrix. The app generates both approaches below.</div>
+      </div>
+
+      <h3>Method A — Download from specialist database (recommended for large genomes):</h3>
+      <div class="code-block"><div class="code-toolbar"><span class="code-lang">bash — download gene family list</span><div class="code-toolbar-spacer"></div><button class="copy-btn" onclick="copyBlock(this)">Copy</button></div>
+      <pre class="code" id="gf-cmd-download">...</pre></div>
+
+      <h3>Method B — Pattern-based filtering (quick, works for all organisms):</h3>
+      <div class="alert info"><span class="alert-icon">💡</span> This uses gene name patterns from the count table. Works well for named gene families. Less complete than database method but requires no extra downloads.</div>
+      <div class="code-block"><div class="code-toolbar"><span class="code-lang">R — filter by gene name patterns</span><div class="code-toolbar-spacer"></div><button class="copy-btn" onclick="copyBlock(this)">Copy</button></div>
+      <pre class="code" id="gf-cmd-filter">...</pre></div>
+    </div>
+  </div>
+
+  <!-- ANALYSIS CODE -->
+  <div class="card" id="gf-analysis-card" style="display:none;">
+    <div class="card-head" style="background:rgba(240,136,62,0.08);">
+      <span class="card-icon">📊</span> Gene family DESeq2 analysis — run in RStudio
+    </div>
+    <div class="card-body">
+      <div class="code-block"><div class="code-toolbar"><span class="code-lang">R — complete gene family analysis pipeline</span><div class="code-toolbar-spacer"></div><button class="copy-btn" onclick="copyBlock(this)">Copy</button></div>
+      <pre class="code" id="gf-cmd-analysis">...</pre></div>
+    </div>
+  </div>
+
+  <!-- PLOTS CODE -->
+  <div class="card" id="gf-plots-card" style="display:none;">
+    <div class="card-head" style="background:rgba(88,166,255,0.08);">
+      <span class="card-icon">🌋</span> Gene family focused plots — run in RStudio
+    </div>
+    <div class="card-body">
+      <div class="code-block"><div class="code-toolbar"><span class="code-lang">R — volcano + heatmap for this gene family only</span><div class="code-toolbar-spacer"></div><button class="copy-btn" onclick="copyBlock(this)">Copy</button></div>
+      <pre class="code" id="gf-cmd-plots">...</pre></div>
+    </div>
+  </div>
+
+  <!-- DATABASE REFERENCE -->
+  <div class="card">
+    <div class="card-head"><span class="card-icon">🗂️</span> Gene family database reference — all organisms</div>
+    <div class="card-body">
+      <table class="ref-table">
+        <tr><th>Database</th><th>What it contains</th><th>URL</th><th>Best for</th></tr>
+        <tr><td>PlantTFDB</td><td>All plant transcription factor families</td><td><code>planttfdb.gao-lab.org</code></td><td>Arabidopsis, rice, maize, wheat, soybean, tomato</td></tr>
+        <tr><td>iTAK</td><td>Plant TF + protein kinase database</td><td><code>itak.bioinfotoolkits.net</code></td><td>All plant species</td></tr>
+        <tr><td>TF Checkpoint (AnimalTFDB)</td><td>Animal transcription factor families</td><td><code>animaltfdb.bioinfotoolkits.net</code></td><td>Human, mouse, rat, zebrafish</td></tr>
+        <tr><td>KEGG Pathway</td><td>Metabolic &amp; signalling pathway genes</td><td><code>kegg.jp</code></td><td>All organisms with KEGG annotation</td></tr>
+        <tr><td>Pfam</td><td>Protein domain families</td><td><code>pfam.xfam.org</code></td><td>Any organism with protein sequences</td></tr>
+        <tr><td>InterPro</td><td>Integrated protein family database</td><td><code>ebi.ac.uk/interpro</code></td><td>Any organism</td></tr>
+        <tr><td>PANTHER</td><td>Protein families + subfamilies</td><td><code>pantherdb.org</code></td><td>Human, mouse, Drosophila, worm</td></tr>
+        <tr><td>Ensembl BioMart</td><td>Gene family / Pfam domain filtering</td><td><code>ensembl.org/biomart</code></td><td>All Ensembl organisms</td></tr>
+        <tr><td>TAIR (plants)</td><td>Arabidopsis gene family annotations</td><td><code>arabidopsis.org</code></td><td>Arabidopsis thaliana</td></tr>
+        <tr><td>RAP-DB (rice)</td><td>Rice gene annotations and families</td><td><code>rapdb.dna.affrc.go.jp</code></td><td>Oryza sativa</td></tr>
+        <tr><td>MaizeGDB</td><td>Maize gene family annotations</td><td><code>maizegdb.org</code></td><td>Zea mays</td></tr>
+        <tr><td>SoyBase</td><td>Soybean gene family annotations</td><td><code>soybase.org</code></td><td>Glycine max</td></tr>
+        <tr><td>SGD (yeast)</td><td>Saccharomyces gene families</td><td><code>yeastgenome.org</code></td><td>S. cerevisiae</td></tr>
+        <tr><td>NCBI Gene</td><td>Gene families for any NCBI organism</td><td><code>ncbi.nlm.nih.gov/gene</code></td><td>Universal</td></tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+</div><!-- end main -->
+</div><!-- end app-body -->
+
+<!-- AUTO-ADVANCE TOAST -->
+<div class="toast" id="toast">
+  <span class="toast-icon">✅</span>
+  <span id="toast-msg">Step complete!</span>
+  <button class="toast-next-btn" id="toast-next-btn" onclick="toastNext()">Next step →</button>
+</div>
+
+<script>
+// ── ORGANISM DATA ──────────────────────────────────────────────────────────
+const ORG = {
+  human:       {tag:'human',       genome:'ftp://ftp.ensembl.org/pub/release-109/fasta/homo_sapiens/dna/Homo_sapiens.GRCh38.dna.primary_assembly.fa.gz',gtf:'ftp://ftp.ensembl.org/pub/release-109/gtf/homo_sapiens/Homo_sapiens.GRCh38.109.gtf.gz'},
+  mouse:       {tag:'mouse',       genome:'ftp://ftp.ensembl.org/pub/release-109/fasta/mus_musculus/dna/Mus_musculus.GRCm39.dna.primary_assembly.fa.gz',gtf:'ftp://ftp.ensembl.org/pub/release-109/gtf/mus_musculus/Mus_musculus.GRCm39.109.gtf.gz'},
+  rat:         {tag:'rat',         genome:'ftp://ftp.ensembl.org/pub/release-109/fasta/rattus_norvegicus/dna/Rattus_norvegicus.mRatBN7.2.dna.primary_assembly.fa.gz',gtf:'ftp://ftp.ensembl.org/pub/release-109/gtf/rattus_norvegicus/Rattus_norvegicus.mRatBN7.2.109.gtf.gz'},
+  zebrafish:   {tag:'zebrafish',   genome:'ftp://ftp.ensembl.org/pub/release-109/fasta/danio_rerio/dna/Danio_rerio.GRCz11.dna.primary_assembly.fa.gz',gtf:'ftp://ftp.ensembl.org/pub/release-109/gtf/danio_rerio/Danio_rerio.GRCz11.109.gtf.gz'},
+  fly:         {tag:'drosophila',  genome:'ftp://ftp.ensembl.org/pub/release-109/fasta/drosophila_melanogaster/dna/Drosophila_melanogaster.BDGP6.46.dna.toplevel.fa.gz',gtf:'ftp://ftp.ensembl.org/pub/release-109/gtf/drosophila_melanogaster/Drosophila_melanogaster.BDGP6.46.109.gtf.gz'},
+  worm:        {tag:'celegans',    genome:'ftp://ftp.ensembl.org/pub/release-109/fasta/caenorhabditis_elegans/dna/Caenorhabditis_elegans.WBcel235.dna.toplevel.fa.gz',gtf:'ftp://ftp.ensembl.org/pub/release-109/gtf/caenorhabditis_elegans/Caenorhabditis_elegans.WBcel235.109.gtf.gz'},
+  yeast:       {tag:'yeast',       genome:'ftp://ftp.ensembl.org/pub/release-109/fasta/saccharomyces_cerevisiae/dna/Saccharomyces_cerevisiae.R64-1-1.dna.toplevel.fa.gz',gtf:'ftp://ftp.ensembl.org/pub/release-109/gtf/saccharomyces_cerevisiae/Saccharomyces_cerevisiae.R64-1-1.109.gtf.gz'},
+  yarrowia:    {tag:'yarrowia',    genome:'https://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/001/013/875/GCF_001013875.1_ASM101387v1/GCF_001013875.1_ASM101387v1_genomic.fna.gz',gtf:'https://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/001/013/875/GCF_001013875.1_ASM101387v1/GCF_001013875.1_ASM101387v1_genomic.gtf.gz'},
+  arabidopsis: {tag:'arabidopsis', genome:'ftp://ftp.ensemblgenomes.ebi.ac.uk/pub/plants/release-56/fasta/arabidopsis_thaliana/dna/Arabidopsis_thaliana.TAIR10.dna.toplevel.fa.gz',gtf:'ftp://ftp.ensemblgenomes.ebi.ac.uk/pub/plants/release-56/gtf/arabidopsis_thaliana/Arabidopsis_thaliana.TAIR10.56.gtf.gz'},
+  maize:       {tag:'maize',       genome:'ftp://ftp.ensemblgenomes.ebi.ac.uk/pub/plants/release-56/fasta/zea_mays/dna/Zea_mays.Zm-B73-REFERENCE-NAM-5.0.dna.toplevel.fa.gz',gtf:'ftp://ftp.ensemblgenomes.ebi.ac.uk/pub/plants/release-56/gtf/zea_mays/Zea_mays.Zm-B73-REFERENCE-NAM-5.0.56.gtf.gz'},
+  rice:        {tag:'rice',        genome:'ftp://ftp.ensemblgenomes.ebi.ac.uk/pub/plants/release-56/fasta/oryza_sativa/dna/Oryza_sativa.IRGSP-1.0.dna.toplevel.fa.gz',gtf:'ftp://ftp.ensemblgenomes.ebi.ac.uk/pub/plants/release-56/gtf/oryza_sativa/Oryza_sativa.IRGSP-1.0.56.gtf.gz'},
+  wheat:       {tag:'wheat',       genome:'ftp://ftp.ensemblgenomes.ebi.ac.uk/pub/plants/release-56/fasta/triticum_aestivum/dna/Triticum_aestivum.IWGSC.dna.toplevel.fa.gz',gtf:'ftp://ftp.ensemblgenomes.ebi.ac.uk/pub/plants/release-56/gtf/triticum_aestivum/Triticum_aestivum.IWGSC.56.gtf.gz'},
+  soybean:     {tag:'soybean',     genome:'ftp://ftp.ensemblgenomes.ebi.ac.uk/pub/plants/release-56/fasta/glycine_max/dna/Glycine_max.Glycine_max_v2.1.dna.toplevel.fa.gz',gtf:'ftp://ftp.ensemblgenomes.ebi.ac.uk/pub/plants/release-56/gtf/glycine_max/Glycine_max.Glycine_max_v2.1.56.gtf.gz'},
+  tomato:      {tag:'tomato',      genome:'ftp://ftp.ensemblgenomes.ebi.ac.uk/pub/plants/release-56/fasta/solanum_lycopersicum/dna/Solanum_lycopersicum.SL3.0.dna.toplevel.fa.gz',gtf:'ftp://ftp.ensemblgenomes.ebi.ac.uk/pub/plants/release-56/gtf/solanum_lycopersicum/Solanum_lycopersicum.SL3.0.56.gtf.gz'},
+  custom:      {tag:'',genome:'',gtf:''}
+};
+
+function applyOrganism() {
+  const key = document.getElementById('cfg-organism').value;
+  const o = ORG[key];
+  if (o.tag) document.getElementById('cfg-org-tag').value = o.tag;
+  if (o.genome) document.getElementById('cfg-genome-url').value = o.genome;
+  if (o.gtf) document.getElementById('cfg-gtf-url').value = o.gtf;
+  updateAll();
+}
+
+// ── SAMPLE HELPERS ─────────────────────────────────────────────────────────
+function addRow(id) {
+  const c = document.getElementById(id);
+  const r = document.createElement('div');
+  r.className = 'sample-row';
+  r.innerHTML = `<input type="text" value="" placeholder="SRR/ERR accession" oninput="updateAll()"><button class="del-btn" onclick="delRow(this)">✕</button>`;
+  c.appendChild(r);
+  updateAll();
+}
+function delRow(btn) {
+  const rows = btn.closest('.sample-rows');
+  if (rows.querySelectorAll('.sample-row').length > 1) { btn.closest('.sample-row').remove(); updateAll(); }
+}
+function getSamples(id) {
+  return [...document.querySelectorAll(`#${id} input`)].map(i=>i.value.trim()).filter(v=>v);
+}
+
+// ── NAVIGATION ─────────────────────────────────────────────────────────────
+function goTo(pageId, navEl) {
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  document.getElementById(pageId).classList.add('active');
+  if (navEl) navEl.classList.add('active');
+}
+
+const doneSteps = new Set();
+function markDone(navId) {
+  doneSteps.add(navId);
+  const el = document.getElementById(navId);
+  if (el) { el.classList.add('done'); el.querySelector('.nav-check').textContent = '✓'; }
+  const n = doneSteps.size;
+  document.getElementById('sb-prog-fill').style.width = (n/10*100)+'%';
+  document.getElementById('sb-prog-label').textContent = `${n} / 10`;
+  document.getElementById('tb-progress').textContent = `${n} / 10`;
+}
+
+// ── MAIN COMMAND GENERATOR ─────────────────────────────────────────────────
+function updateAll() {
+  const loc    = document.getElementById('cfg-loc').value;
+  const org    = document.getElementById('cfg-org-tag').value.trim() || 'organism';
+  const base   = `${loc}/RNA-Seq_${org}`;
+  const ctrl   = document.getElementById('cfg-ctrl').value.trim()  || 'control';
+  const treat  = document.getElementById('cfg-treat').value.trim() || 'treatment';
+  const gUrl   = document.getElementById('cfg-genome-url').value.trim();
+  const gtfUrl = document.getElementById('cfg-gtf-url').value.trim();
+  const paired = document.getElementById('cfg-readtype').value === 'paired';
+  const strand = document.getElementById('cfg-strand').value;
+  const cSamp  = getSamples('ctrl-rows');
+  const tSamp  = getSamples('treat-rows');
+  const all    = [...cSamp, ...tSamp];
+
+  // Labels
+  document.getElementById('ctrl-name-label').textContent = ctrl;
+  document.getElementById('treat-name-label').textContent = treat;
+  document.getElementById('ctrl-count').textContent = cSamp.length + ' replicate' + (cSamp.length!==1?'s':'');
+  document.getElementById('treat-count').textContent = tSamp.length + ' replicate' + (tSamp.length!==1?'s':'');
+  document.getElementById('rep-warning').style.display = (cSamp.length<2||tSamp.length<2) ? 'block' : 'none';
+
+  // Topbar
+  document.getElementById('tb-project').textContent = `RNA-Seq_${org}`;
+  const orgKey = document.getElementById('cfg-organism').value;
+  document.getElementById('tb-organism').textContent = ORG[orgKey]?.tag || org;
+  document.getElementById('tb-readtype').textContent = paired ? 'Paired-end' : 'Single-end';
+
+  // Folder preview
+  document.getElementById('folder-preview-text').textContent = base;
+  document.getElementById('session-cmd-preview').textContent = `conda activate rnaseq && cd ${base}`;
+
+  // Session
+  set('cmd-session', `conda activate rnaseq\ncd ${base}`);
+
+  // Mkdir
+  set('cmd-mkdir', `mkdir -p ${base}/{raw_data,trimmed,aligned,counts,results,qc,genome,reference}\ncd ${base}\nls`);
+
+  // Download
+  let dl = `cd ${base}/raw_data\n\n# ─── Control samples: ${ctrl} ───\n`;
+  cSamp.forEach(s => dl += paired
+    ? `fasterq-dump ${s} --outdir ${base}/raw_data --progress --split-files\n`
+    : `fasterq-dump ${s} --outdir ${base}/raw_data --progress\n`);
+  dl += `\n# ─── Treatment samples: ${treat} ───\n`;
+  tSamp.forEach(s => dl += paired
+    ? `fasterq-dump ${s} --outdir ${base}/raw_data --progress --split-files\n`
+    : `fasterq-dump ${s} --outdir ${base}/raw_data --progress\n`);
+  set('cmd-download', dl.trim());
+  set('cmd-check-dl', `ls -lh ${base}/raw_data/`);
+
+  // FastQC
+  let fqc = '';
+  all.forEach(s => fqc += paired
+    ? `fastqc ${base}/raw_data/${s}_1.fastq ${base}/raw_data/${s}_2.fastq -o ${base}/qc/\n`
+    : `fastqc ${base}/raw_data/${s}.fastq -o ${base}/qc/\n`);
+  set('cmd-fastqc', fqc.trim());
+  set('cmd-multiqc', `multiqc ${base}/qc/ -o ${base}/qc/\nopen ${base}/qc/multiqc_report.html`);
+
+  // Trim
+  let trim = '';
+  all.forEach(s => {
+    if (paired) {
+      trim += `fastp -i ${base}/raw_data/${s}_1.fastq -I ${base}/raw_data/${s}_2.fastq \\\n`;
+      trim += `      -o ${base}/trimmed/${s}_1_trimmed.fastq -O ${base}/trimmed/${s}_2_trimmed.fastq \\\n`;
+    } else {
+      trim += `fastp -i ${base}/raw_data/${s}.fastq \\\n`;
+      trim += `      -o ${base}/trimmed/${s}_trimmed.fastq \\\n`;
+    }
+    trim += `      --trim_front1 5 --qualified_quality_phred 20 --length_required 36 \\\n`;
+    trim += `      --html ${base}/qc/${s}_fastp.html -j ${base}/qc/${s}_fastp.json\n\n`;
+  });
+  set('cmd-trim', trim.trim());
+  set('cmd-check-trim', `ls -lh ${base}/trimmed/`);
+
+  // Genome
+  let gCmd = `# ─── Download genome FASTA ───\ncd ${base}/genome\ncurl -L -o ${org}_genome.fa.gz "${gUrl}"\ngunzip ${base}/genome/${org}_genome.fa.gz\n\n`;
+  gCmd += `# ─── Download gene annotation GTF ───\ncd ${base}/reference\ncurl -L -o ${org}_annotation.gtf.gz "${gtfUrl}"\ngunzip ${base}/reference/${org}_annotation.gtf.gz\n\n`;
+  gCmd += `# ─── Verify (genome ~5–800 MB, annotation ~5–50 MB) ───\nls -lh ${base}/genome/ && ls -lh ${base}/reference/`;
+  set('cmd-genome', gCmd);
+
+  set('cmd-index',
+    `# Build once — reuse for all future samples with the same organism\nhisat2-build ${base}/genome/${org}_genome.fa \\\n             ${base}/genome/${org}_index\n\n# Verify: should see 8 files ending in .ht2\nls -lh ${base}/genome/`);
+
+  // Align
+  let align='', bam='';
+  all.forEach(s => {
+    align += `# ${s}\n`;
+    if (paired) {
+      align += `hisat2 -x ${base}/genome/${org}_index \\\n       -1 ${base}/trimmed/${s}_1_trimmed.fastq \\\n       -2 ${base}/trimmed/${s}_2_trimmed.fastq \\\n`;
+    } else {
+      align += `hisat2 -x ${base}/genome/${org}_index \\\n       -U ${base}/trimmed/${s}_trimmed.fastq \\\n`;
+    }
+    align += `       -S ${base}/aligned/${s}.sam \\\n       --summary-file ${base}/aligned/${s}_summary.txt -p 4\n\n`;
+    bam += `samtools sort ${base}/aligned/${s}.sam -o ${base}/aligned/${s}.bam && \\\nsamtools index ${base}/aligned/${s}.bam && \\\nrm ${base}/aligned/${s}.sam\n\n`;
+  });
+  set('cmd-align', align.trim());
+  set('cmd-bam', bam.trim());
+
+  // Counts
+  const pe  = paired ? '\n  -p \\' : '';
+  const bams = all.map(s=>`  ${base}/aligned/${s}.bam`).join(' \\\n');
+  set('cmd-counts',
+    `featureCounts \\\n  -a ${base}/reference/${org}_annotation.gtf \\\n  -o ${base}/counts/gene_counts_all.txt \\\n  -T 4 \\\n  -s ${strand} \\${pe}\n${bams}`);
+  set('cmd-preview',
+    `grep -v "^#" ${base}/counts/gene_counts_all.txt | awk '{print $1, $7, $8}' | head -20 | column -t`);
+
+  // DESeq2
+  const nc = all.length;
+  const condVec = [...cSamp.map(()=>`"${ctrl}"`), ...tSamp.map(()=>`"${treat}"`)].join(', ');
+  const colNames = [
+    ...cSamp.map((_,i)=>`"${ctrl.substring(0,3).toUpperCase()}_${i+1}"`),
+    ...tSamp.map((_,i)=>`"${treat.substring(0,3).toUpperCase()}_${i+1}"`)
+  ].join(', ');
+  let r = `library(DESeq2); library(ggplot2); library(pheatmap); library(ggrepel); library(dplyr)\n\n`;
+  r += `# Project path — matches your folder\nbase_path <- "${base}"\n\n`;
+  r += `# Load count table\ncounts_raw <- read.table(paste0(base_path, "/counts/gene_counts_all.txt"),\n`;
+  r += `                          header=TRUE, skip=1, row.names=1)\ncounts <- counts_raw[, (ncol(counts_raw)-${nc-1}):ncol(counts_raw)]\n`;
+  r += `colnames(counts) <- c(${colNames})\nhead(counts)  # check it looks right\n\n`;
+  r += `# Sample metadata\nsample_info <- data.frame(\n  condition = factor(c(${condVec})),\n  row.names = colnames(counts)\n)\nprint(sample_info)\n\n`;
+  r += `# Run DESeq2\ndds <- DESeqDataSetFromMatrix(countData=counts, colData=sample_info, design=~condition)\ndds <- dds[rowSums(counts(dds)) >= 10, ]\ncat("Genes after filtering:", nrow(dds), "\\n")\ndds <- DESeq(dds)\n\n`;
+  r += `# Results: ${treat} vs ${ctrl}\nres <- results(dds, contrast=c("condition", "${treat}", "${ctrl}"), alpha=0.05)\nsummary(res)\n\n`;
+  r += `# Save to CSV\nres_df <- as.data.frame(res)\nres_df$gene <- rownames(res_df)\nwrite.csv(res_df, paste0(base_path, "/results/deseq2_results.csv"), row.names=FALSE)\n\n`;
+  r += `cat("\\nResults:\\n")\ncat("  Total genes tested: ", nrow(res_df), "\\n")\ncat("  Significant (padj<0.05): ", sum(res_df$padj<0.05, na.rm=TRUE), "\\n")\ncat("  Upregulated: ", sum(res_df$padj<0.05 & res_df$log2FoldChange>0, na.rm=TRUE), "\\n")\ncat("  Downregulated: ", sum(res_df$padj<0.05 & res_df$log2FoldChange<0, na.rm=TRUE), "\\n")`;
+  set('cmd-deseq2', r);
+
+  // Volcano
+  let v = `res_df <- res_df[!is.na(res_df$padj), ]\nres_df$sig <- "Not significant"\n`;
+  v += `res_df$sig[res_df$padj<0.05 & res_df$log2FoldChange > 1]  <- "Up in ${treat}"\n`;
+  v += `res_df$sig[res_df$padj<0.05 & res_df$log2FoldChange < -1] <- "Down in ${treat}"\n`;
+  v += `top_genes <- res_df %>% filter(padj<0.05) %>% arrange(padj) %>% head(15)\n\n`;
+  v += `p <- ggplot(res_df, aes(log2FoldChange, -log10(padj), color=sig)) +\n`;
+  v += `  geom_point(alpha=0.6, size=1.5) +\n`;
+  v += `  scale_color_manual(values=c("Up in ${treat}"="#f0883e", "Down in ${treat}"="#58a6ff", "Not significant"="#6e7681")) +\n`;
+  v += `  geom_text_repel(data=top_genes, aes(label=gene), size=3, max.overlaps=15) +\n`;
+  v += `  geom_vline(xintercept=c(-1,1), linetype="dashed", color="#444") +\n`;
+  v += `  geom_hline(yintercept=-log10(0.05), linetype="dashed", color="#444") +\n`;
+  v += `  labs(title=paste0("Volcano: ${treat} vs ${ctrl}"), x="Log2 fold change", y="-Log10 adjusted p-value") +\n`;
+  v += `  theme_minimal(base_size=13)\nprint(p)\n`;
+  v += `ggsave(paste0(base_path, "/results/volcano_plot.png"), plot=p, width=10, height=7, dpi=300)\ncat("Volcano plot saved!\\n")`;
+  set('cmd-volcano', v);
+
+  // Heatmap
+  let h = `top40 <- res_df %>% filter(padj<0.05) %>% arrange(padj) %>% head(40) %>% pull(gene)\n`;
+  h += `vst_data <- vst(dds, blind=FALSE)\nmat <- assay(vst_data)[top40, ]\nmat_scaled <- t(scale(t(mat)))\n`;
+  h += `pheatmap(mat_scaled,\n  cluster_rows=TRUE, cluster_cols=FALSE,\n  color=colorRampPalette(c("#58a6ff","white","#f0883e"))(100),\n`;
+  h += `  main="Top 40 most significant genes", fontsize_row=8,\n  filename=paste0(base_path, "/results/heatmap_top40.png"), width=8, height=10)\ncat("Heatmap saved!\\n")`;
+  set('cmd-heatmap', h);
+
+  // PCA
+  let pc = `vst_b <- vst(dds, blind=TRUE)\n`;
+  pc += `pca <- plotPCA(vst_b, intgroup="condition") +\n  geom_text_repel(aes(label=name), size=4) +\n  theme_minimal(base_size=13) +\n`;
+  pc += `  labs(title="PCA — sample quality check", subtitle="Replicates should cluster together")\nprint(pca)\n`;
+  pc += `ggsave(paste0(base_path, "/results/pca_plot.png"), plot=pca, width=8, height=6, dpi=300)\ncat("PCA saved!\\n")`;
+  set('cmd-pca', pc);
+}
+
+// ── COPY ──────────────────────────────────────────────────────────────────
+function copyBlock(btn) {
+  const pre = btn.closest('.code-block').querySelector('pre.code');
+  navigator.clipboard.writeText(pre.textContent.trim()).then(() => {
+    btn.textContent = '✓ Copied';
+    btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 2000);
+  });
+}
+
+function set(id, text) {
+  const el = document.getElementById(id);
+  if (el) el.textContent = text;
+}
+
+
+// ── GENE FAMILY DATA ──────────────────────────────────────────────────────
+const GF = {
+  tf: [
+    {id:'myb',     name:'MYB Family',          desc:'R2R3-MYB transcription factors regulating development, stress, and secondary metabolism.',  db:'PlantTFDB / AnimalTFDB', org:'🌱🐾', patterns:['MYB','myb','At1G','OsMYB','ZmMYB','TaMYB','GmMYB'],  keyw:'MYB'},
+    {id:'bhlh',    name:'bHLH Family',          desc:'Basic helix-loop-helix TFs controlling light response, flowering, anthocyanin, iron acquisition.', db:'PlantTFDB / AnimalTFDB', org:'🌱🐾', patterns:['bHLH','BHLH','MYC','HLH','PHYTOCHROME'],  keyw:'bHLH|MYC[0-9]'},
+    {id:'wrky',    name:'WRKY Family',           desc:'Plant-specific TFs with WRKYGQK motif, major regulators of stress and defense responses.', db:'PlantTFDB', org:'🌱', patterns:['WRKY','wrky'],  keyw:'WRKY'},
+    {id:'bzip',    name:'bZIP Family',           desc:'Basic leucine zipper TFs: ABA signalling (ABF/ABRE), light responses, pathogen defense.', db:'PlantTFDB / AnimalTFDB', org:'🌱🐾', patterns:['bZIP','BZIP','ABF','HY5','GBF','ATB2','ZIP'],  keyw:'bZIP|ABF[0-9]|HY5'},
+    {id:'mads',    name:'MADS-box Family',       desc:'MADS transcription factors controlling floral organ identity, fruit development, root growth.', db:'PlantTFDB / AnimalTFDB', org:'🌱🐾', patterns:['MADS','MAD','SEP','AP1','AP3','AG','FUL','SOC'],  keyw:'MADS|SOC1|SEP[0-9]'},
+    {id:'nac',     name:'NAC Family',            desc:'Plant-specific NAC TFs: senescence, secondary wall thickening, abiotic stress tolerance.', db:'PlantTFDB', org:'🌱', patterns:['NAC','ANAC','OsNAC','ZmNAC','TaNAC','GmNAC','VND','NST'],  keyw:'NAC'},
+    {id:'erf',     name:'ERF/AP2 Family',        desc:'Ethylene Response Factors and AP2 domain proteins: ethylene signalling, drought, cold stress.', db:'PlantTFDB', org:'🌱', patterns:['ERF','AP2','DREB','CBF','RAP2','EIN3','EIL'],  keyw:'ERF|AP2|DREB|CBF'},
+    {id:'gras',    name:'GRAS Family',           desc:'DELLA proteins (GA signalling), SCR, SHR (root development), HAM (meristem maintenance).', db:'PlantTFDB', org:'🌱', patterns:['GRAS','DELLA','GAI','RGA','SCR','SHR','HAM'],  keyw:'GRAS|DELLA|SCR|SHR'},
+    {id:'hsf',     name:'Heat Shock Factors (HSF)', desc:'Master regulators of heat stress response, transcriptional activators of HSP genes.', db:'PlantTFDB / AnimalTFDB', org:'🌱🐾', patterns:['HSF','HSFA','HSFB','HSFC','HSTF'],  keyw:'HSF'},
+    {id:'c2h2',    name:'C2H2 Zinc Finger',      desc:'Largest TF family in plants and animals; roles in development, stress, transcriptional repression.', db:'PlantTFDB / AnimalTFDB', org:'🌱🐾', patterns:['C2H2','ZFP','KZM','ZAT','STZ','AZF'],  keyw:'ZFP|ZAT|KZM'},
+    {id:'c3h',     name:'C3H Zinc Finger',        desc:'CCCH zinc finger RNA-binding and TF proteins; stress response and RNA processing.', db:'PlantTFDB', org:'🌱', patterns:['C3H','CCCH','TZF','AtC3H'],  keyw:'C3H|TZF'},
+    {id:'dof',     name:'DOF Family',             desc:'Plant-specific DOF domain TFs: seed maturation, germination, photoperiod, starch biosynthesis.', db:'PlantTFDB', org:'🌱', patterns:['DOF','OBP','DAG','COG','ZIM'],  keyw:'DOF|OBP'},
+    {id:'lbd',     name:'LBD/LOB Family',         desc:'Lateral organ boundary domain TFs: lateral root initiation, organ boundary specification.', db:'PlantTFDB', org:'🌱', patterns:['LBD','LOB','OsLBD','ZmLBD','ASL'],  keyw:'LBD|LOB|ASL'},
+    {id:'tcp',     name:'TCP Family',             desc:'Plant-specific TFs controlling leaf shape, branching, circadian clock (CCA1, LHY).', db:'PlantTFDB', org:'🌱', patterns:['TCP','CCA1','LHY','PCF','OsTCP'],  keyw:'TCP|PCF'},
+    {id:'arf',     name:'ARF Family (Auxin)',      desc:'Auxin Response Factors: direct transcriptional effectors of auxin signalling.', db:'PlantTFDB', org:'🌱', patterns:['ARF','OsARF','ZmARF','TaARF','GmARF'],  keyw:'ARF[0-9]'},
+    {id:'hox',     name:'HOX / Homeobox',         desc:'Homeodomain TFs critical for body plan development in animals; HD-ZIP in plants.', db:'AnimalTFDB / PlantTFDB', org:'🌱🐾', patterns:['HOX','HOXA','HOXB','HOXC','HOXD','HDG','PHB','REV'],  keyw:'HOX|HDG|PHB'},
+    {id:'sox',     name:'SOX Family (HMG)',        desc:'SRY-box TFs controlling sex determination, neural development, stem cell maintenance.', db:'AnimalTFDB', org:'🐾', patterns:['SOX','SRY','HMG'],  keyw:'SOX[0-9]|SRY'},
+    {id:'forkhead',name:'Forkhead (FOX) Family',  desc:'FOX transcription factors: metabolism, longevity, immune response, development.', db:'AnimalTFDB', org:'🐾', patterns:['FOX','FOXA','FOXO','FOXP','FOXQ'],  keyw:'FOX[A-Z]'},
+    {id:'ets',     name:'ETS Family',             desc:'ETS domain TFs: haematopoiesis, angiogenesis, invasion, oncogenesis.', db:'AnimalTFDB', org:'🐾', patterns:['ETS','ETV','ERG','FLI','ELK','ELF','PEA','GABP','SPI'],  keyw:'ETS|ETV|ERG|ELK'},
+    {id:'nfkb',    name:'NF-κB Family',           desc:'Master regulators of inflammatory and immune responses; also apoptosis and cell survival.', db:'AnimalTFDB', org:'🐾', patterns:['NFKB','RELA','RELB','NFKB1','NFKB2','REL','IKK'],  keyw:'NFKB|REL[A-B]'},
+    {id:'p53',     name:'p53 / p63 / p73 Family', desc:'Tumor suppressor TFs regulating apoptosis, DNA repair, cell cycle arrest.', db:'AnimalTFDB', org:'🐾', patterns:['TP53','TP63','TP73','P53','P63','P73'],  keyw:'TP53|TP63|TP73'},
+    {id:'gata',    name:'GATA Family',            desc:'GATA zinc finger TFs: hematopoiesis, endoderm development, gonadal differentiation.', db:'AnimalTFDB', org:'🐾', patterns:['GATA1','GATA2','GATA3','GATA4','GATA5','GATA6'],  keyw:'GATA[1-6]'},
+    {id:'stat',    name:'STAT Family',            desc:'Signal transducers and activators of transcription; cytokine and growth factor signalling.', db:'AnimalTFDB', org:'🐾', patterns:['STAT1','STAT2','STAT3','STAT4','STAT5','STAT6'],  keyw:'STAT[1-6]'},
+  ],
+  kinase: [
+    {id:'mapk',    name:'MAPK Cascade',           desc:'Mitogen-activated protein kinases: stress signal transduction, immune activation, cell division.', db:'KEGG / Pfam', org:'🌱🐾', patterns:['MAPK','MAP2K','MAP3K','MKK','MEK','ERK','JNK','MPK'],  keyw:'MAPK|MPK[0-9]|MKK'},
+    {id:'cdk',     name:'Cyclin-Dependent Kinases (CDK)', desc:'Cell cycle progression, transcription regulation; CDK-cyclin complexes.', db:'KEGG / Pfam', org:'🌱🐾', patterns:['CDK','CDKA','CDKB','CYCA','CYCB','CYCD','CYC'],  keyw:'CDK[A-Z]|CYC[A-Z]'},
+    {id:'rlk',     name:'Receptor-Like Kinases (RLK)', desc:'Largest plant kinase family; pattern recognition, hormone perception, development signalling.', db:'iTAK / Pfam', org:'🌱', patterns:['RLK','LRR-RLK','LRK','HAK','BAK','BRI','FLS','EFR','PEPR'],  keyw:'LRK[0-9]|RLK'},
+    {id:'snrk',    name:'SnRK / AMPK Family',     desc:'Sucrose non-fermenting related kinases: energy sensing, ABA signalling, autophagy.', db:'iTAK', org:'🌱🐾', patterns:['SnRK','SNRK','KIN','AMPK','OST','GRIK','AKIN'],  keyw:'SnRK|AMPK|KIN[0-9]'},
+    {id:'camk',    name:'CaM Kinases (CDPK/CAMK)', desc:'Calcium-dependent protein kinases: calcium signal transduction, stress responses.', db:'iTAK / Pfam', org:'🌱🐾', patterns:['CDPK','CPK','CAMK','CaM','CML','CBL','CIPK'],  keyw:'CPK[0-9]|CDPK|CAMK'},
+    {id:'psk',     name:'Phytosulfokine Receptor Kinases', desc:'Peptide hormone perception, cell proliferation and differentiation signals.', db:'iTAK', org:'🌱', patterns:['PSKR','PSY','CLV','WUS','CLE'],  keyw:'PSKR|CLV[0-9]'},
+    {id:'pi3k',    name:'PI3-Kinase / TOR Pathway', desc:'Phosphoinositide 3-kinases and TOR signalling: nutrient sensing, autophagy, growth.', db:'KEGG', org:'🌱🐾', patterns:['PI3K','PIK3','TOR','TORC','RAPTOR','S6K','4EBP'],  keyw:'PIK3|TOR|RAPTOR'},
+    {id:'tyrosine_k',name:'Tyrosine Kinases (RTK)', desc:'Receptor tyrosine kinases: growth factor signalling, oncogenesis, differentiation.', db:'KEGG / Pfam', org:'🐾', patterns:['EGFR','ERBB','FGFR','PDGFR','VEGFR','MET','KIT','ALK','RET'],  keyw:'EGFR|FGFR|ERBB|PDGFR'},
+  ],
+  phosphatase: [
+    {id:'pp2c',    name:'PP2C Phosphatases',      desc:'Type 2C protein phosphatases; ABA co-receptors, stress signal attenuation.', db:'Pfam', org:'🌱🐾', patterns:['PP2C','ABI1','ABI2','HAB','AHG','HopAI'],  keyw:'PP2C|ABI[12]'},
+    {id:'dsp',     name:'Dual-Specificity Phosphatases (DSP/MKP)', desc:'Inactivate MAPKs; cell cycle regulation, immune suppression.', db:'Pfam', org:'🌱🐾', patterns:['DSP','MKP','DUSP','PTP','IBR'],  keyw:'DUSP|MKP[0-9]'},
+    {id:'ptp',     name:'Protein Tyrosine Phosphatases (PTP)', desc:'Counterbalance tyrosine kinases; tumour suppressors (PTEN), immune checkpoints.', db:'Pfam', org:'🐾', patterns:['PTP','PTEN','PTPN','PTPRC','CD45'],  keyw:'PTEN|PTPN|PTPR'},
+  ],
+  transporter: [
+    {id:'abc',     name:'ABC Transporters',       desc:'ATP-binding cassette transporters: drug efflux, lipid transport, auxin, glucosinolates.', db:'Pfam / KEGG', org:'🌱🐾', patterns:['ABC','ABCA','ABCB','ABCC','ABCG','MDR','PDR','MRP','TAP'],  keyw:'ABC[A-G]|MDR|PDR'},
+    {id:'aquaporin',name:'Aquaporins (MIP)',       desc:'Water and small solute channels: PIP (plasma membrane), TIP (tonoplast), NIP, SIP, XIP.', db:'Pfam', org:'🌱🐾', patterns:['PIP','TIP','NIP','SIP','XIP','AQP','Aquaporin','MIP'],  keyw:'PIP[12]|TIP[0-9]|AQP'},
+    {id:'sugar_t', name:'Sugar Transporters (SUT/SWEET)', desc:'SUT: sucrose/H+ symporters for phloem loading. SWEET: bidirectional sugar facilitators.', db:'Pfam', org:'🌱', patterns:['SUT','SUC','SWEET','STP','PLT','AtSUC'],  keyw:'SUT|SWEET|STP[0-9]'},
+    {id:'nrt',     name:'Nitrate Transporters (NRT/NPF)', desc:'Nitrate uptake and long-distance transport; NRT1/NPF and NRT2/NRT families.', db:'Pfam', org:'🌱', patterns:['NRT','NPF','NRT1','NRT2','CHL1','NIN'],  keyw:'NRT[12]|NPF'},
+    {id:'pht',     name:'Phosphate Transporters (PHT)', desc:'High- and low-affinity phosphate uptake; mycorrhizal-induced (PT) transporters.', db:'Pfam', org:'🌱', patterns:['PHT','PHO','PT','AtPT','OsPHT'],  keyw:'PHT[0-9]|PHO[0-9]'},
+    {id:'hak',     name:'K+ Transporters (HAK/KT/KUP)', desc:'High-affinity potassium transporters; K+ uptake under deficiency.', db:'Pfam', org:'🌱', patterns:['HAK','KT','KUP','CHX','AtHAK','OsHAK'],  keyw:'HAK|KUP|KT[0-9]'},
+    {id:'zip',     name:'ZIP Metal Transporters',  desc:'Zinc-Iron Permease: Zn²⁺, Fe²⁺, Mn²⁺ uptake into cytoplasm.', db:'Pfam', org:'🌱🐾', patterns:['ZIP','IRT','ZRT','SLC39','ZNT'],  keyw:'ZIP[0-9]|IRT[12]|SLC39'},
+    {id:'ysl',     name:'YSL / OPT Transporters',  desc:'Yellow Stripe Like transporters: nicotianamine-metal chelate transport, Fe homeostasis.', db:'Pfam', org:'🌱', patterns:['YSL','OPT','AtYSL','OsYSL'],  keyw:'YSL[0-9]'},
+    {id:'nramp',   name:'NRAMP Metal Transporters', desc:'Natural resistance-associated macrophage proteins: Fe²⁺, Mn²⁺, Cd²⁺ transport.', db:'Pfam', org:'🌱🐾', patterns:['NRAMP','MntH','DMT','SLC11','AtNRAMP'],  keyw:'NRAMP|SLC11'},
+    {id:'slc',     name:'SLC Solute Carrier Family', desc:'Largest animal transporter superfamily (>400 members): amino acids, sugars, ions, drugs.', db:'KEGG / Pfam', org:'🐾', patterns:['SLC','GLUT','LAT','CAT','OCT','MCT'],  keyw:'SLC[0-9]|GLUT[0-9]'},
+    {id:'ion_ch',  name:'Ion Channels — Voltage-gated', desc:'Voltage-gated Na⁺, K⁺, Ca²⁺ channels: action potential, nerve/muscle excitability.', db:'KEGG / Pfam', org:'🐾', patterns:['KCNA','KCNB','SCN','CACNA','HCN','KCNQ'],  keyw:'KCNA|KCNB|SCN[0-9]|CACNA'},
+  ],
+  ubiquitin: [
+    {id:'e3_ub',   name:'E3 Ubiquitin Ligases',   desc:'RING, U-box, CULLIN, HECT E3 ligases: target specificity of protein degradation.', db:'Pfam / KEGG', org:'🌱🐾', patterns:['CUL','RBX','SKP','F-box','RING','HECT','HECTD','NEDD4','SMURF','PUB'],  keyw:'CUL[0-9]|SKP|HECT|RING'},
+    {id:'skp_fbox',name:'F-box / SCF Complex',    desc:'F-box proteins provide substrate specificity to SCF ubiquitin E3 ligase complexes.', db:'Pfam', org:'🌱🐾', patterns:['FBX','F-box','SKP','TIR1','COI1','EBF','UFO','ORE'],  keyw:'FBX|TIR1|COI1'},
+    {id:'ubox',    name:'U-box / PUB Family',      desc:'Plant U-box E3 ligases; immune response, ABA signalling, stress tolerance.', db:'Pfam', org:'🌱', patterns:['PUB','U-box','ARM','CMPG'],  keyw:'PUB[0-9]'},
+    {id:'ubp',     name:'Ubiquitin Proteases (UBP/DUB)', desc:'Deubiquitinating enzymes: reverse ubiquitination, regulate protein stability and signalling.', db:'Pfam', org:'🌱🐾', patterns:['UBP','USP','UCH','DUB','OTU','JAMM'],  keyw:'UBP[0-9]|USP[0-9]'},
+  ],
+  hsp: [
+    {id:'hsp70',   name:'HSP70 Family',            desc:'Major molecular chaperones; protein folding, translocation, stress recovery, ERAD.', db:'Pfam', org:'🌱🐾', patterns:['HSP70','BiP','GRP78','DnaK','HSC70','HSPA'],  keyw:'HSP70|HSPA[0-9]|BiP|GRP78'},
+    {id:'hsp90',   name:'HSP90 Family',            desc:'HSP90 chaperones: client protein maturation, steroid receptor signalling, kinase stability.', db:'Pfam', org:'🌱🐾', patterns:['HSP90','HSPC','GRP94','HtpG'],  keyw:'HSP90|HSPC'},
+    {id:'hsp20',   name:'Small HSP (sHSP / HSP20)', desc:'Small heat shock proteins with alpha-crystallin domain; thermotolerance, prevent aggregation.', db:'Pfam', org:'🌱🐾', patterns:['HSP20','sHSP','HSP17','HSP18','HSP26','CRYAB','HSPB'],  keyw:'HSP1[5-9]|HSP2[0-6]|HSPB'},
+    {id:'hsp60',   name:'HSP60 / Chaperonin',      desc:'Chaperonins (GroEL/GroES): mitochondrial and plastid protein folding.', db:'Pfam', org:'🌱🐾', patterns:['HSP60','CPNA','CPNB','CPN60','CCT','TriC','GroEL'],  keyw:'HSP60|CPN60|CCT[0-9]'},
+    {id:'hsp40',   name:'HSP40 / J-domain (DNAJ)', desc:'Co-chaperones that stimulate ATPase activity of HSP70 and target substrates.', db:'Pfam', org:'🌱🐾', patterns:['HSP40','DNAJ','DjA','DjB','DjC','J-domain','ATJ'],  keyw:'DNAJ|HSP40'},
+  ],
+  rrp: [
+    {id:'rbp',     name:'RNA-Binding Proteins (RBP/RRM)', desc:'RRM domain proteins: mRNA splicing, stability, translation regulation, stress granules.', db:'Pfam', org:'🌱🐾', patterns:['RBP','RRM','RNP','HuD','HuR','ELAVL','HNRNP'],  keyw:'RBP[0-9]|RRM|HNRNP'},
+    {id:'dead',    name:'DEAD-box RNA Helicases',  desc:'ATP-dependent RNA secondary structure unwinding; ribosome biogenesis, splicing, RNA decay.', db:'Pfam', org:'🌱🐾', patterns:['DEAD','DDX','DHX','eIF4A','RCF1','LOS4'],  keyw:'DDX[0-9]|DHX[0-9]|DEAD'},
+    {id:'pentatricopeptide',name:'PPR Proteins',   desc:'Plant-specific pentatricopeptide repeat proteins; RNA editing, splicing, and processing in organelles.', db:'Pfam / PlantTFDB', org:'🌱', patterns:['PPR','pentatricopeptide','EMB','OTP'],  keyw:'PPR'},
+    {id:'mir_proc',name:'miRNA Processing Proteins', desc:'DICER, DROSHA, AGO proteins involved in miRNA and siRNA biogenesis.', db:'Pfam / KEGG', org:'🌱🐾', patterns:['DCL','AGO','HEN1','HYL1','DICER','DROSHA','DGCR8'],  keyw:'DCL[0-9]|AGO[0-9]|DICER'},
+  ],
+  ribosomal: [
+    {id:'rps',     name:'40S Ribosomal Proteins (RPS)', desc:'Small subunit ribosomal proteins; translation initiation and elongation.', db:'Pfam', org:'🌱🐾', patterns:['RPS','rps','At1GRPS','MRPS','rpS'],  keyw:'RPS[0-9]'},
+    {id:'rpl',     name:'60S Ribosomal Proteins (RPL)', desc:'Large subunit ribosomal proteins; peptide bond formation and elongation.', db:'Pfam', org:'🌱🐾', patterns:['RPL','rpl','RPL','MRPL','rpL'],  keyw:'RPL[0-9]'},
+    {id:'eif',     name:'Translation Initiation Factors (eIF)', desc:'Eukaryotic initiation factors; cap-binding, ribosome recruitment, start codon selection.', db:'Pfam', org:'🌱🐾', patterns:['eIF','EIF','IF1','IF2','IF3','IF4','IF5','IF6'],  keyw:'EIF[0-9]'},
+  ],
+  cytoskeleton: [
+    {id:'actin',   name:'Actin / Profilin Family', desc:'Actin cytoskeleton dynamics: cell shape, division, motility, organelle positioning.', db:'Pfam', org:'🌱🐾', patterns:['ACT','actin','PRF','profilin','ADF','cofilin','ARP'],  keyw:'ACT[0-9]|PRF[0-9]'},
+    {id:'tubulin', name:'Tubulin / Kinesin Family', desc:'Microtubule cytoskeleton: cell division, intracellular transport, flagella.', db:'Pfam', org:'🌱🐾', patterns:['TUB','tubulin','KIN','kinesin','dynein','KRP','ATK'],  keyw:'TUA|TUB|KRP[0-9]'},
+    {id:'myosin',  name:'Myosin Family',            desc:'Actin-based motor proteins: vesicle trafficking, cytoplasmic streaming, cell division.', db:'Pfam', org:'🌱🐾', patterns:['MYO','myosin','AT-MYO','XIK'],  keyw:'MYO[0-9]|XI[A-K]'},
+  ],
+  hormone_plant: [
+    {id:'auxin',   name:'Auxin Pathway (ARF/AUX/IAA)', desc:'Core auxin signalling: TIR1/AFB receptors, Aux/IAA repressors, ARF TFs, GH3, SAUR.', db:'PlantTFDB / KEGG', org:'🌱', patterns:['ARF','AUX','IAA','GH3','SAUR','TIR1','AFB','PIN','AUX1','LAX'],  keyw:'ARF[0-9]|IAA[0-9]|GH3|SAUR'},
+    {id:'ga',      name:'Gibberellin Pathway',      desc:'GA biosynthesis (GA20ox, GA3ox), catabolism (GA2ox), receptors (GID1), DELLA repressors.', db:'PlantTFDB / KEGG', org:'🌱', patterns:['GA20','GA3ox','GA2ox','GID1','DELLA','GAI','RGA','GRS','CPS','KAO'],  keyw:'GA[0-9]ox|GID1|DELLA|GAI'},
+    {id:'ck',      name:'Cytokinin Pathway',        desc:'CK receptors (AHK), phosphotransmitters (AHP), response regulators (ARR), biosynthesis (IPT).', db:'KEGG', org:'🌱', patterns:['ARR','AHK','AHP','IPT','CRE1','WOL','LOG','CKX'],  keyw:'ARR[0-9]|AHK[0-9]|AHP[0-9]|IPT'},
+    {id:'aba',     name:'ABA Pathway',              desc:'ABA receptors (PYR/PYL), PP2C phosphatases, SnRK2 kinases, ABF TFs, NCED biosynthesis.', db:'KEGG', org:'🌱', patterns:['PYR','PYL','RCAR','PP2C','SnRK2','ABF','ABRE','NCED','ABI','LOS'],  keyw:'PYR|PYL|SnRK2|NCED|ABI[0-9]'},
+    {id:'ethylene',name:'Ethylene Pathway',         desc:'ETR receptors, CTR1 kinase, EIN2/EIN3 signalling, ERF transcription factors.', db:'KEGG / PlantTFDB', org:'🌱', patterns:['ETR','CTR1','EIN','EIL','ERF','EBF','ACO','ACS','RAN'],  keyw:'ETR[0-9]|EIN[0-9]|ACO[0-9]|ACS[0-9]'},
+    {id:'ja',      name:'Jasmonate Pathway (JA/JA-Ile)', desc:'JAZ repressors, COI1 receptor, MYC2 TF, LOX/AOC/OPR biosynthesis genes.', db:'KEGG / PlantTFDB', org:'🌱', patterns:['JAZ','JAI','COI1','MYC2','JMT','LOX','AOS','AOC','OPR','JAR'],  keyw:'JAZ[0-9]|COI1|MYC2|LOX[0-9]|OPR'},
+    {id:'sa',      name:'Salicylic Acid Pathway',   desc:'NPR1 receptor, TGA TFs, PR proteins, ICS biosynthesis; systemic acquired resistance.', db:'KEGG / PlantTFDB', org:'🌱', patterns:['NPR1','TGA','PR','ICS','PAL','EDS','SID','SNI','SAR','WRKY'],  keyw:'NPR[12]|TGA[0-9]|PR[0-9]|ICS[12]'},
+    {id:'br',      name:'Brassinosteroid Pathway',  desc:'BRI1/BAK1 receptors, BSK, BSU1, BIN2, BES1/BZR1 TFs; growth and stress signalling.', db:'KEGG / PlantTFDB', org:'🌱', patterns:['BRI1','BAK1','BSK','BSU','BIN','BES1','BZR','DWF','CPD','ROT'],  keyw:'BRI[12]|BAK1|BES1|BZR[12]|DWF'},
+    {id:'sl',      name:'Strigolactone Pathway',    desc:'D14/KAI2 receptors, MAX2/D3 F-box, MAX1 biosynthesis, SMXLs, BRC1 branching control.', db:'KEGG', org:'🌱', patterns:['D14','KAI2','MAX','SMXL','BRC','D3','D17','D27','D53'],  keyw:'D14|MAX[0-9]|SMXL|BRC[12]'},
+    {id:'ppe',     name:'Peptide Hormones (CLE/CLV/PSK)', desc:'Peptide hormone signalling: CLV3/WUS stem cell circuit, PSK cell proliferation, CLE root.', db:'PlantTFDB', org:'🌱', patterns:['CLE','CLV','WUS','PSK','PSKR','CEP','IDA','HAE','HSL'],  keyw:'CLE|CLV[123]|WUS|PSK'},
+  ],
+  defense_plant: [
+    {id:'nbs_lrr', name:'NBS-LRR / NLR Resistance Genes', desc:'Intracellular immune receptors; TNL (TIR-NBS-LRR) and CNL (CC-NBS-LRR) classes.', db:'Pfam / PRGDB', org:'🌱', patterns:['NBS','LRR','NLR','TIR','CC-NBS','RPM1','RPS2','N','L6','Mi-1'],  keyw:'NBS|NLR|TIR-NBS|CC-NBS'},
+    {id:'prp',     name:'PR Proteins (Pathogenesis-related)', desc:'PR-1 through PR-17 classes: chitinases, glucanases, thaumatin, defensins, lipid transfer.', db:'KEGG', org:'🌱', patterns:['PR1','PR2','PR3','PR4','PR5','PR6','PR7','PR8','PR10','PR12','PR17','BGL','CHI'],  keyw:'PR[0-9]|CHI[0-9]|BGL'},
+    {id:'bak_rlk', name:'Pattern Recognition Receptors (PRR/LRR-RLK)', desc:'FLS2, EFR, BAK1 and co-receptors recognising PAMPs; surface immune receptors.', db:'Pfam', org:'🌱', patterns:['FLS2','EFR','BAK1','SOBIR','LYK','CERK','LecRK','PEPR','BIK1','PBS1'],  keyw:'FLS2|EFR|CERK[0-9]|LYK[0-9]'},
+    {id:'wrky_def',name:'WRKY Defense Regulators',  desc:'Subset of WRKY TFs specifically regulating defense responses: WRKY33, WRKY38, WRKY70.', db:'PlantTFDB', org:'🌱', patterns:['WRKY11','WRKY18','WRKY22','WRKY29','WRKY33','WRKY38','WRKY40','WRKY60','WRKY70'],  keyw:'WRKY(11|18|22|29|33|38|40|60|70)'},
+    {id:'pen',     name:'Penetration Resistance (PEN/PDR)', desc:'PEN1 SNARE, PEN2/PEN3 for callose and secondary metabolite accumulation at penetration sites.', db:'Pfam', org:'🌱', patterns:['PEN1','PEN2','PEN3','PDR','GTG','SNAP33','VAMP'],  keyw:'PEN[123]|PDR'},
+    {id:'camta',   name:'ROS Scavenging Enzymes',   desc:'Reactive oxygen species detoxification: SOD, CAT, APX, GR, PRX, RBOH NADPH oxidases.', db:'Pfam', org:'🌱🐾', patterns:['SOD','CAT','APX','GR','GPX','PRX','RBOH','NADPH','FSD','MSD','CSD'],  keyw:'SOD|CAT[0-9]|APX|RBOH'},
+  ],
+  cellwall: [
+    {id:'cesa',    name:'Cellulose Synthase (CESA/CSL)', desc:'CESA: primary and secondary cell wall cellulose synthesis. CSL: hemicellulose backbone.', db:'Pfam', org:'🌱', patterns:['CESA','CESAB','CSL','IRX','KOR','COBRA','CTL'],  keyw:'CESA[0-9]|CSL[A-Z]|IRX[0-9]'},
+    {id:'exp',     name:'Expansins (EXPA/EXPB)',    desc:'Non-enzymatic cell wall loosening proteins enabling acid growth, organ formation, softening.', db:'Pfam', org:'🌱', patterns:['EXPA','EXPB','EXPLA','EXPLB','EXP','expansin'],  keyw:'EXPA|EXPB|EXPL'},
+    {id:'xth',     name:'XTH / Xyloglucan Endotransglucosylase', desc:'Cut and ligate xyloglucan chains; cell wall assembly and modification.', db:'Pfam', org:'🌱', patterns:['XTH','XET','XEH','TCH4','MERI5'],  keyw:'XTH[0-9]'},
+    {id:'pme',     name:'Pectin Methylesterase (PME/PMEI)', desc:'De-methylesterify pectin; cell adhesion, fruit softening, pathogen entry.', db:'Pfam', org:'🌱', patterns:['PME','PMEI','AtPME','OsPME'],  keyw:'PME[0-9]|PMEI'},
+    {id:'pg',      name:'Polygalacturonases (PG)',  desc:'Pectin depolymerisation; fruit ripening, abscission, seed dispersal, pathogen infection.', db:'Pfam', org:'🌱', patterns:['PG','PGase','ADPG','AtPG','OsPG'],  keyw:'PG[0-9]|ADPG'},
+    {id:'laq',     name:'Laccases / Lignin Biosynthesis', desc:'Oxidative polymerisation of monolignols; secondary cell wall lignification. Also PAL, CCR, CCoAOMT.', db:'Pfam', org:'🌱', patterns:['LAC','laccase','PAL','C4H','4CL','CCR','CAD','CCoAOMT','F5H','COMT','LAC'],  keyw:'LAC[0-9]|PAL|C4H|4CL|CCR'},
+    {id:'csl',     name:'Hemicellulose Synthases (CSL/IRX)', desc:'Xylan, mannan, mixed-linkage glucan synthesis in Golgi; secondary cell wall formation.', db:'Pfam', org:'🌱', patterns:['IRX','GUX','GXM','TBL','CSLA','CSLC','CSLD','CSLE','IRX9','IRX14'],  keyw:'IRX[0-9]|GUX|CSL[A-E]'},
+  ],
+  photosynthesis: [
+    {id:'psI',     name:'Photosystem I (PSI)',      desc:'PSI reaction centre and antenna proteins: psaA-psaL, LHCA1-4 light-harvesting complex I.', db:'Pfam / KEGG', org:'🌱', patterns:['PSA','psa','LHCA','psaA','psaB','psaC','psaD','psaE'],  keyw:'PSA[A-L]|LHCA[1-4]'},
+    {id:'psII',    name:'Photosystem II (PSII)',    desc:'PSII reaction centre and antenna: psbA-psbZ, LHCB1-6 (Cab genes), OEC (PsbO/P/Q).', db:'Pfam / KEGG', org:'🌱', patterns:['PSB','psb','LHCB','psbA','psbB','psbD','CAB','OEC','PsbO','PsbP'],  keyw:'PSB[A-Z]|LHCB[1-6]|CAB[0-9]'},
+    {id:'rubisco', name:'Rubisco / Calvin Cycle',  desc:'RbcS (small subunit), RbcL (large subunit), and CBC enzymes: FBA, FBP, SBP, PRK, TPI.', db:'Pfam / KEGG', org:'🌱', patterns:['RBCS','rbcS','RBCL','rbcL','SBP','FBA','FBP','TPI','PRK','PGK'],  keyw:'RBCS|RBCL|SBP|FBA[0-9]|FBP'},
+    {id:'chlorodev',name:'Chloroplast Development', desc:'TOC/TIC translocon, GNC/GLK transcription, CHL biosynthesis, chloroplast division (FtsZ, ARC).', db:'Pfam', org:'🌱', patterns:['TOC','TIC','GNC','GLK','FtsZ','ARC','MinD','MinE','CHL','CHLD','CHLH'],  keyw:'TOC[0-9]|TIC[0-9]|GLK[12]|FtsZ'},
+    {id:'photo_prot',name:'Photoprotection (NPQ/PsbS)', desc:'Non-photochemical quenching: PsbS, VDE, ZEP, ELIP proteins dissipate excess light energy.', db:'Pfam', org:'🌱', patterns:['PSBS','VDE','ZEP','ELIP','NPQ','LUT','VDX'],  keyw:'PSBS|VDE|ZEP|ELIP'},
+    {id:'phy_cry',  name:'Photoreceptors (PHY/CRY/PHOT)', desc:'Phytochromes (PHYA-E), cryptochromes (CRY1/2), phototropins (PHOT1/2) light sensing.', db:'Pfam', org:'🌱', patterns:['PHY','CRY','PHOT','HY4','NPH','NPL','UVR8','FKF1'],  keyw:'PHY[A-E]|CRY[12]|PHOT[12]'},
+  ],
+  metabolism_plant: [
+    {id:'cyp450',  name:'Cytochrome P450 (CYP)',   desc:'Largest enzyme superfamily; oxidation of diverse substrates: hormones, alkaloids, terpenes, fatty acids.', db:'KEGG / Pfam', org:'🌱🐾', patterns:['CYP','P450','CYP71','CYP76','CYP79','CYP80','CYP84','CYP85','CYP450'],  keyw:'CYP[0-9]'},
+    {id:'ugt',     name:'UDP-Glucosyltransferases (UGT)', desc:'Glycosylation of secondary metabolites; anthocyanin, flavonol, hormone, and xenobiotic conjugation.', db:'Pfam', org:'🌱🐾', patterns:['UGT','UGD','UDPgluc','AtUGT','OsUGT'],  keyw:'UGT[0-9]'},
+    {id:'tps',     name:'Terpene Synthases (TPS)',  desc:'Monoterpene, sesquiterpene, diterpene synthases; fragrance, defence, hormones, waxes.', db:'Pfam', org:'🌱', patterns:['TPS','terpene','kaurene','copalyl','TPSD','CPS','KSL','LIS','BIS'],  keyw:'TPS[0-9]|CPS[0-9]|KSL'},
+    {id:'flavonoid',name:'Flavonoid / Anthocyanin Pathway', desc:'Chalcone synthase, flavonol synthase, ANS, DFR, F3H, F3\'H, F3\'5\'H, UFGT.', db:'Pfam / KEGG', org:'🌱', patterns:['CHS','CHI','FLS','F3H','DFR','ANS','ANR','UFGT','TT','TDS'],  keyw:'CHS|CHI|FLS|DFR|ANS|F3H'},
+    {id:'glucosino',name:'Glucosinolate Biosynthesis', desc:'Plant defence compounds: CYP79A/B, CYP83A/B, GSTF, SOT, SUR, BCAT, MAM enzymes.', db:'KEGG', org:'🌱', patterns:['CYP79','CYP83','GSTF','SOT','SUR','BCAT','MAM','GS-OH','ESP'],  keyw:'CYP79|CYP83|MAM|SOT'},
+    {id:'fatty_acid',name:'Fatty Acid Metabolism',  desc:'ACCase, KAS, FAD, FAE, SAD, FAB desaturases; seed oil biosynthesis and membrane lipids.', db:'KEGG', org:'🌱🐾', patterns:['FAD','FAE','KAS','ACC','FAS','SAD','FAB','DGAT','PDAT','LPAT'],  keyw:'FAD[0-9]|FAE[0-9]|DGAT|KAS[123]'},
+    {id:'starch',  name:'Starch Biosynthesis',      desc:'AGPase (APL/APS), starch synthases (GBSS/SS), branching (SBE), debranching (ISA/PUL).', db:'KEGG', org:'🌱', patterns:['GBSS','APL','APS','SSI','SSII','SSIII','SBE','ISA','PUL','AGPase'],  keyw:'GBSS|APL|APS|SBE[0-9]|ISA[0-9]'},
+  ],
+  flowering: [
+    {id:'flower_int',name:'Flowering Integrators (FT/SOC1)', desc:'FT florigen, SOC1, LFY, AP1: integrate photoperiod, vernalisation, autonomous pathway signals.', db:'PlantTFDB', org:'🌱', patterns:['FT','SOC1','LFY','AP1','FUL','CAL','SEP','FCA','FY','FLC','SVP'],  keyw:'FT|SOC1|LFY|FLC|SVP'},
+    {id:'circ',    name:'Circadian Clock Genes',    desc:'CCA1, LHY, TOC1, PRR3/5/7/9, ELF3/4, GI, ZTL: oscillator components and clock outputs.', db:'PlantTFDB', org:'🌱', patterns:['CCA1','LHY','TOC1','PRR','ELF','GI','ZTL','BOA','PCL','LKP'],  keyw:'CCA1|LHY|TOC1|PRR[0-9]|GI|ZTL|ELF[34]'},
+    {id:'vernaliz',name:'Vernalisation / FLC Pathway', desc:'FLC (floral repressor), FRI, VRN2 Polycomb, FLD, SDG27: cold-mediated flowering control.', db:'PlantTFDB', org:'🌱', patterns:['FLC','FRI','VRN','SDG','FLD','VIN3','PHD','ELF','MAF'],  keyw:'FLC|FRI|VRN[0-9]|MAF[0-9]'},
+  ],
+  root: [
+    {id:'root_hair',name:'Root Hair Development (RSL/RHD)', desc:'RSL class I/II bHLH, RHD2/RBOHC, LRL, EXP7: root hair initiation and elongation.', db:'PlantTFDB', org:'🌱', patterns:['RSL','RHD','RBOHC','LRL','EXP7','RHS','TTG'],  keyw:'RSL[0-9]|RHD[0-9]'},
+    {id:'root_arch',name:'Root Architecture (PLT/SCR/SHR)', desc:'PLT AP2 TFs, SCR/SHR GRAS: stem cell niche, quiescent centre, radial patterning.', db:'PlantTFDB', org:'🌱', patterns:['PLT','SCR','SHR','WOX','MGP','JKD','ACR','ARF','SLR'],  keyw:'PLT[0-9]|SCR|SHR'},
+    {id:'lateral_root',name:'Lateral Root Initiation (ARF/IAA/LBD)', desc:'ARF7/ARF19, IAA14/IAA28, LBD16/18/29/33: lateral root founder cell specification.', db:'PlantTFDB', org:'🌱', patterns:['ARF7','ARF19','IAA14','IAA28','LBD16','LBD18','LBD29','LBD33','SLR1'],  keyw:'ARF7|ARF19|LBD(16|18|29|33)'},
+    {id:'nod_myc',  name:'Nodulation / Mycorrhiza (NSP/RAM1)', desc:'NSP1/NSP2, NIN, ERN, RAM1, IPD3: symbiosis signalling for N-fixation and mycorrhiza.', db:'PlantTFDB', org:'🌱', patterns:['NSP','NIN','ERN','RAM1','IPD3','CSSP','SYM','SYMRK','NFR'],  keyw:'NSP[12]|NIN|ERN[0-9]|RAM1'},
+  ],
+  seed: [
+    {id:'seed_stor',name:'Seed Storage Proteins',   desc:'11S globulins (legumin/cruciferin), 7S vicilin/phaseolin, 2S albumins, prolamins.', db:'Pfam', org:'🌱', patterns:['SEED','LEG','ARC','GLU','GLUAB','CRC','At2S','PHASEOLIN','VICILIN','ZEIN','GLUTEN'],  keyw:'LEG|ARC|GLU|ZEIN|GLUTEN'},
+    {id:'seed_mat',  name:'Seed Maturation (LEC/ABI3/FUS3)', desc:'LEC1/LEC2, ABI3, FUS3 master regulators; DOG1 dormancy; seed desiccation tolerance.', db:'PlantTFDB', org:'🌱', patterns:['LEC1','LEC2','ABI3','FUS3','DOG1','AtEM','RAB','RLIP'],  keyw:'LEC[12]|ABI3|FUS3|DOG1'},
+    {id:'lea',      name:'LEA / Dehydrin Proteins', desc:'Late embryogenesis abundant and dehydrin proteins; desiccation tolerance, cryoprotection.', db:'Pfam', org:'🌱', patterns:['LEA','DHN','dehydrin','RAB','AtEM','Cor','KS-type','ASR'],  keyw:'LEA|DHN[0-9]|dehydrin|RAB[0-9]'},
+  ],
+  gpcr: [
+    {id:'gpcr_a',  name:'Class A GPCR (Rhodopsin)', desc:'Largest GPCR class: odorant, adrenergic, dopamine, serotonin, opioid, purinergic receptors.', db:'GPCRDB / Pfam', org:'🐾', patterns:['ADRB','ADRA','DRD','HTR','OPRM','OPRD','OPRK','ADORA','CXCR','CCR','P2RY'],  keyw:'ADRB[0-9]|DRD[0-9]|HTR[0-9]|CXCR'},
+    {id:'gpcr_b',  name:'Class B GPCR (Secretin)',  desc:'Peptide hormone receptors: glucagon (GCGR), GLP-1R, PTH1R, CRHR, VIP/PACAP receptors.', db:'GPCRDB / Pfam', org:'🐾', patterns:['GCGR','GLP1R','GLP2R','PTH1R','PTH2R','CRHR','VIPR','CALCR'],  keyw:'GCGR|GLP[12]R|PTH[12]R|VIPR'},
+    {id:'gpcr_c',  name:'Class C GPCR (Glutamate)', desc:'Metabotropic glutamate, GABA-B, calcium-sensing, sweet/umami taste receptors.', db:'GPCRDB', org:'🐾', patterns:['GRM','GABBR','CASR','T1R','TAS1R','GPRC6'],  keyw:'GRM[0-9]|GABBR[12]|CASR'},
+    {id:'frizzled',name:'Frizzled / Wnt Receptors', desc:'Frizzled and Smoothened: Wnt and Hedgehog signalling co-receptors.', db:'GPCRDB', org:'🐾', patterns:['FZD','SMO','LRP5','LRP6','ROR2','RYK'],  keyw:'FZD[0-9]|SMO'},
+    {id:'olfactory',name:'Olfactory Receptors (OR)', desc:'Largest mammalian gene family; ~400 functional OR genes in human, ~1000 in mouse.', db:'HORDE / Pfam', org:'🐾', patterns:['OR1','OR2','OR3','OR4','OR5','OR6','OR7','OR8','OR9','OR10','OR11','OR12','OR13'],  keyw:'OR[0-9][A-Z]'},
+  ],
+  nuclear_receptor: [
+    {id:'steroid_r',name:'Steroid Hormone Receptors', desc:'ER, AR, PR, GR, MR: sex hormones, glucocorticoids, mineralocorticoids binding/signalling.', db:'NucleaRDB', org:'🐾', patterns:['ESR1','ESR2','AR','PGR','NR3C1','NR3C2','NR3C4'],  keyw:'ESR[12]|AR|PGR|NR3C[124]'},
+    {id:'thyroid_r',name:'Thyroid / Retinoic Acid Receptors', desc:'THRA/THRB: thyroid hormone. RARA/B/G, RXRA/B/G: retinoid signalling.', db:'NucleaRDB', org:'🐾', patterns:['THRA','THRB','RARA','RARB','RARG','RXRA','RXRB','RXRG'],  keyw:'THR[AB]|RAR[ABG]|RXR[ABG]'},
+    {id:'ppar',    name:'PPAR Family',               desc:'PPARα/γ/δ: lipid metabolism, adipogenesis, inflammation; therapeutic targets for diabetes.', db:'NucleaRDB', org:'🐾', patterns:['PPARA','PPARG','PPARD','PPARGC'],  keyw:'PPAR[AGD]'},
+    {id:'nr_orphan',name:'Orphan Nuclear Receptors', desc:'LXR, FXR, CAR, PXR, SHP, ERR: bile acid, cholesterol, xenobiotic, mitochondrial metabolism.', db:'NucleaRDB', org:'🐾', patterns:['NR1H','NR1I','NR4A','NR5A','NURR','SF-1','LRH','LXR','FXR','PXR','CAR'],  keyw:'NR[0-9][A-Z][0-9]|LXR|FXR|PXR'},
+  ],
+  immune: [
+    {id:'tlr',     name:'Toll-Like Receptors (TLR)', desc:'Pattern recognition receptors for PAMPs: LPS, flagellin, CpG DNA, dsRNA.', db:'KEGG / Pfam', org:'🐾', patterns:['TLR1','TLR2','TLR3','TLR4','TLR5','TLR6','TLR7','TLR8','TLR9'],  keyw:'TLR[0-9]'},
+    {id:'nlr_a',   name:'NOD-like Receptors (NLR/NLRP)', desc:'Intracellular innate immune sensors; NLRP3 inflammasome, NOD1/NOD2 bacterial sensing.', db:'KEGG / Pfam', org:'🐾', patterns:['NLRP','NOD1','NOD2','NLRC','NALP','NAIP','CIITA','IPAF'],  keyw:'NLRP[0-9]|NOD[12]|NLRC[0-9]'},
+    {id:'mhc',     name:'MHC / HLA Complex',         desc:'Major histocompatibility complex: antigen presentation to T cells; HLA-A/B/C/DR/DQ/DP.', db:'IMGT/HLA', org:'🐾', patterns:['HLA','MHC','H2','B2M','TAP1','TAP2','TAPBP'],  keyw:'HLA-[A-Z]|H2-[A-Z]'},
+    {id:'ig',      name:'Immunoglobulins (BCR/antibodies)', desc:'B cell receptor and secreted antibody constant regions: IgH, IgK, IgL chains.', db:'IMGT', org:'🐾', patterns:['IGHG','IGHA','IGHM','IGHD','IGHE','IGKC','IGLC','IGKV','IGLV','IGHV'],  keyw:'IGH[GADME]|IGK[CV]|IGL[CV]'},
+    {id:'tcr',     name:'T Cell Receptor (TCR)',      desc:'αβ and γδ TCR chains; VDJ recombination, thymic selection.', db:'IMGT', org:'🐾', patterns:['TRAC','TRBC','TRDC','TRGC','TRAV','TRBV','TRDC','TRGV'],  keyw:'TR[ABGD][CV]'},
+    {id:'cytokine',name:'Cytokines & Interleukins',   desc:'IL-1 through IL-38, TNF family, IFN-α/β/γ, CSF: intercellular immune communication.', db:'KEGG / Pfam', org:'🐾', patterns:['IL1','IL2','IL4','IL6','IL8','IL10','IL12','IL17','IL18','IL33','TNF','TNFSF','IFN','IFNA','IFNB','IFNG'],  keyw:'IL[0-9]+[AB]?|TNF|TNFSF[0-9]|IFN[ABG]'},
+    {id:'chemokine',name:'Chemokines (CCL/CXCL)',    desc:'Small chemoattractant cytokines; leukocyte migration, angiogenesis, tumour microenvironment.', db:'KEGG', org:'🐾', patterns:['CCL','CXCL','XCL','CX3CL','CCR','CXCR'],  keyw:'CCL[0-9]+|CXCL[0-9]+'},
+    {id:'complement',name:'Complement System',       desc:'C1-C9, factor B/D/H/I, properdin: innate immune lysis, opsonisation, inflammation.', db:'KEGG', org:'🐾', patterns:['C1Q','C1R','C1S','C2','C3','C4','C5','C6','C7','C8','C9','CFB','CFD','CFH','CFI','C3AR','C5AR'],  keyw:'C[0-9][QRS]?A?|CF[BDHI]'},
+  ],
+  signaling_animal: [
+    {id:'wnt',     name:'Wnt / β-catenin Pathway',   desc:'WNT ligands, Frizzled receptors, LRP5/6, DVL, APC, GSK3β, β-catenin (CTNNB1), TCF/LEF.', db:'KEGG', org:'🐾', patterns:['WNT','FZD','LRP5','LRP6','DVL','APC','GSK3','CTNNB','AXIN','TCF','LEF'],  keyw:'WNT[0-9]|FZD[0-9]|DVL[0-9]|CTNNB'},
+    {id:'notch',   name:'Notch Signalling Pathway',  desc:'NOTCH1-4, DLL, JAG ligands, ADAM10, NICD, RBPJ, HES/HEY targets; cell fate decisions.', db:'KEGG', org:'🐾', patterns:['NOTCH','DLL','JAG','MAML','RBPJ','HES','HEY','NRARP','ADAM10'],  keyw:'NOTCH[1-4]|DLL[0-9]|JAG[12]|HES[0-9]'},
+    {id:'hedgehog',name:'Hedgehog Pathway',          desc:'SHH/IHH/DHH ligands, PTCH1/2, SMO, GLI1/2/3 TFs; embryonic patterning and cancer.', db:'KEGG', org:'🐾', patterns:['SHH','IHH','DHH','PTCH1','PTCH2','SMO','GLI1','GLI2','GLI3','SUFU'],  keyw:'SHH|IHH|PTCH[12]|SMO|GLI[123]'},
+    {id:'tgfb',    name:'TGF-β / BMP Pathway',      desc:'TGF-β, BMP, ACTIVIN ligands; SMAD signalling; growth inhibition, EMT, bone morphogenesis.', db:'KEGG', org:'🐾', patterns:['TGFB','BMP','ACTIVIN','INHBA','SMAD','ALK','ACVR','BMPR','TGFBR'],  keyw:'TGFB[0-9]|BMP[0-9]|SMAD[0-9]|BMPR|TGFBR'},
+    {id:'pi3k_akt',name:'PI3K / AKT / mTOR Pathway', desc:'Growth factor → PI3K → PIP3 → AKT → mTORC1; cell survival, metabolism, tumourigenesis.', db:'KEGG', org:'🐾', patterns:['PIK3','PTEN','AKT','MTOR','RPTOR','S6K','4EBP','PDK1','TSC1','TSC2'],  keyw:'PIK3[A-Z][A-Z]|AKT[123]|MTOR|TSC[12]'},
+    {id:'ras_erk',  name:'RAS / ERK / MAPK Pathway', desc:'RAS-RAF-MEK-ERK cascade: proliferation, differentiation; frequently mutated in cancer.', db:'KEGG', org:'🐾', patterns:['KRAS','HRAS','NRAS','BRAF','RAF1','MAP2K1','MAP2K2','MAPK1','MAPK3','ERK','RSK','MNK'],  keyw:'KRAS|HRAS|NRAS|BRAF|MAP2K|MAPK[13]'},
+    {id:'jak_stat',name:'JAK / STAT Pathway',       desc:'JAK1/2/3/TYK2 kinases → STAT1-6 TFs; cytokine receptor signalling, haematopoiesis.', db:'KEGG', org:'🐾', patterns:['JAK1','JAK2','JAK3','TYK2','STAT1','STAT2','STAT3','STAT4','STAT5','STAT6','SOCS'],  keyw:'JAK[123]|TYK2|STAT[0-9]|SOCS[0-9]'},
+    {id:'nfkb_anim',name:'NF-κB / Inflammation',   desc:'IKK complex, IκB, NF-κB1/2, RELA/RELB; inflammatory cytokine production.', db:'KEGG', org:'🐾', patterns:['NFKB1','NFKB2','RELA','RELB','CHUK','IKBKB','IKBKG','NFKBIA','TNFAIP3','RIPK'],  keyw:'NFKB[12]|RELA|RELB|IKBK[BG]'},
+    {id:'hippo',    name:'Hippo / YAP/TAZ Pathway', desc:'MST1/2, LATS1/2, MOB1, YAP1, TEAD; organ size control, stem cells, cancer.', db:'KEGG', org:'🐾', patterns:['STK3','STK4','LATS1','LATS2','MOB1','YAP1','WWTR1','TEAD','SAV1','NF2'],  keyw:'LATS[12]|YAP1|WWTR1|TEAD[0-9]'},
+    {id:'dna_rep',  name:'DNA Damage Response',     desc:'ATM/ATR, CHK1/CHK2, BRCA1/2, RAD51, PARP1; genome integrity surveillance.', db:'KEGG', org:'🌱🐾', patterns:['ATM','ATR','BRCA1','BRCA2','RAD51','CHK1','CHEK1','CHEK2','PARP','TP53BP1','H2AX'],  keyw:'ATM|ATR|BRCA[12]|RAD51|PARP[0-9]'},
+  ],
+  ion_channel: [
+    {id:'voltage_k',name:'Voltage-gated K⁺ Channels (KCN)', desc:'KCNA-KCNQ families; action potential repolarisation, neuronal excitability.', db:'Pfam', org:'🐾', patterns:['KCNA','KCNB','KCNC','KCND','KCNE','KCNF','KCNG','KCNH','KCNJ','KCNK','KCNQ'],  keyw:'KCN[A-Q][0-9]'},
+    {id:'voltage_na',name:'Voltage-gated Na⁺ Channels (SCN)', desc:'SCN1A-SCN11A; fast depolarisation in neurons and muscle; pain, epilepsy targets.', db:'Pfam', org:'🐾', patterns:['SCN1A','SCN2A','SCN3A','SCN4A','SCN5A','SCN8A','SCN9A','SCN10A'],  keyw:'SCN[0-9]+A'},
+    {id:'voltage_ca',name:'Voltage-gated Ca²⁺ Channels (CACN)', desc:'CACNA1A-CACNA1S; calcium entry for neurotransmission, muscle contraction, secretion.', db:'Pfam', org:'🐾', patterns:['CACNA1','CACNA2D','CACNB','CACNG','RYR','IP3R'],  keyw:'CACNA1[A-S]|CACNB[0-9]|RYR[123]'},
+    {id:'lgic',    name:'Ligand-gated Ion Channels', desc:'GABA-A, nicotinic ACh, glutamate (NMDA/AMPA/kainate), serotonin 5-HT3, purinergic P2X.', db:'Pfam', org:'🐾', patterns:['GABRA','GABRB','GRIN','GRIA','GRIK','CHRNA','CHRNB','HTR3','P2RX'],  keyw:'GABR[AB]|GRIN[0-9]|GRIA[0-9]|P2RX'},
+  ],
+  ecm: [
+    {id:'collagen',name:'Collagen Family',           desc:'28 types of collagen; structural ECM scaffold in connective tissues, cartilage, bone.', db:'Pfam', org:'🐾', patterns:['COL1','COL2','COL3','COL4','COL5','COL6','COL7','COL9','COL10','COL11','COL17','COL18'],  keyw:'COL[0-9]+[AB][012]?'},
+    {id:'integrin',name:'Integrins',                 desc:'αβ heterodimers binding ECM ligands (fibronectin, laminin, collagen); adhesion, signalling.', db:'Pfam', org:'🐾', patterns:['ITGA','ITGB','integrin','ITGA1','ITGA2','ITGB1','ITGB3'],  keyw:'ITGA[0-9]+[A-Z]?|ITGB[0-9]'},
+    {id:'mmp',     name:'Matrix Metalloproteinases (MMP)', desc:'ECM remodelling proteases: collagenases, gelatinases, stromelysins; invasion, angiogenesis.', db:'Pfam', org:'🐾', patterns:['MMP1','MMP2','MMP3','MMP7','MMP9','MMP13','MMP14','TIMP1','TIMP2','ADAM'],  keyw:'MMP[0-9]+|TIMP[0-9]|ADAM[0-9]'},
+    {id:'laminin',  name:'Laminins / Fibronectin',   desc:'Laminin chains (LAMA/LAMB/LAMC) and fibronectin (FN1): basement membrane scaffolds.', db:'Pfam', org:'🐾', patterns:['LAMA','LAMB','LAMC','FN1','fibronectin','HAPLN','VCAN','AGC1'],  keyw:'LAMA[0-9]|LAMB[0-9]|LAMC[0-9]|FN1'},
+  ],
+  apoptosis: [
+    {id:'bcl2',    name:'BCL-2 Family',              desc:'Anti-apoptotic (BCL2, BCL-XL, MCL1) and pro-apoptotic (BAX, BAK, BIM, PUMA) regulators.', db:'KEGG / Pfam', org:'🐾', patterns:['BCL2','BCLXL','BCL2L1','MCL1','BAX','BAK','BIM','BCL2L11','PUMA','BBC3','BID','NOXA','PMAIP1'],  keyw:'BCL2|BCL2L[0-9]+|MCL1|BAX|BAK[0-9]|PUMA|BBC3'},
+    {id:'caspase', name:'Caspases',                  desc:'CASP1-12; initiator (CASP8/9) and executioner (CASP3/6/7) caspases; pyroptosis (CASP1/4/5/11).', db:'KEGG / Pfam', org:'🐾', patterns:['CASP1','CASP2','CASP3','CASP4','CASP5','CASP6','CASP7','CASP8','CASP9','CASP10'],  keyw:'CASP[0-9]+'},
+    {id:'iap',     name:'IAP Family (Inhibitors of Apoptosis)', desc:'BIRC1-8; caspase inhibitors, NF-κB activators; survivin (BIRC5) is a major cancer target.', db:'Pfam', org:'🐾', patterns:['BIRC1','BIRC2','BIRC3','BIRC5','BIRC6','BIRC7','BIRC8','XIAP','survivin'],  keyw:'BIRC[0-9]|XIAP'},
+    {id:'death_r', name:'Death Receptors (TNFR/FAS)', desc:'TNFR1, FAS/CD95, DR3/DR4/DR5/DR6, TRAIL receptors; extrinsic apoptosis pathway.', db:'KEGG', org:'🐾', patterns:['TNFRSF','FASL','TRAIL','TNFSF10','TNFRSF10','FAS','FADD','TRADD','RIPK1'],  keyw:'TNFRSF[0-9]+|FAS[LG]?|TNFSF10'},
+  ],
+  cancer: [
+    {id:'oncogene',name:'Proto-oncogenes',           desc:'RAS, MYC, ERBB2, FOS, JUN, ABL, SRC, CCND1; mutated or overexpressed in tumours.', db:'KEGG / OncoKB', org:'🐾', patterns:['MYC','MYCN','ERBB2','KRAS','HRAS','SRC','ABL','FOS','JUN','CCND','CCNE','MDM2'],  keyw:'MYC[N]?|ERBB[0-9]|KRAS|HRAS|NRAS|ABL[12]|CCND[0-9]'},
+    {id:'tumour_sup',name:'Tumour Suppressors',     desc:'TP53, RB1, PTEN, APC, VHL, CDKN2A, BRCA1/2, NF1/2; loss of function in cancer.', db:'KEGG / OncoKB', org:'🐾', patterns:['TP53','RB1','PTEN','APC','VHL','CDKN2A','CDKN1A','CDKN1B','NF1','NF2','WT1','MLH1'],  keyw:'TP53|RB1|PTEN|APC|CDKN[12][AB]|BRCA[12]|NF[12]'},
+    {id:'cell_cycle_g',name:'Cell Cycle Regulation', desc:'Cyclins, CDKs, CDKi, CIP/KIP and INK4 inhibitors, RB, E2F: G1/S/G2/M checkpoints.', db:'KEGG', org:'🌱🐾', patterns:['CCNA','CCNB','CCND','CCNE','CDK1','CDK2','CDK4','CDK6','CDKN1A','CDKN1B','CDKN2A','E2F','RB1'],  keyw:'CCN[ABDE][0-9]|CDK[0-9]|CDKN[12][AB]|E2F[0-9]'},
+    {id:'epi_cancer',name:'Epigenetic Cancer Genes', desc:'DNMT1/3, HDAC1-11, EZH2, KDM5C, KMT2A/2D; frequently mutated in haematological malignancies.', db:'KEGG', org:'🐾', patterns:['DNMT','HDAC','EZH','KDM','KMT','SETD','SMARCA','ARID','CREBBP','EP300'],  keyw:'DNMT[0-9]|HDAC[0-9]|EZH[12]|KDM[0-9]|SMARCA[0-9]'},
+  ],
+  epigenetic: [
+    {id:'dna_meth',name:'DNA Methylation (DNMT/TET)', desc:'DNMT1/3A/3B methyltransferases, TET1/2/3 dioxygenases, MBD readers; epigenome programming.', db:'Pfam', org:'🌱🐾', patterns:['DNMT','TET1','TET2','TET3','MBD','MECP2','MBD1','CMT','DRM','MET','ROS'],  keyw:'DNMT[0-9]|TET[123]|MBD[0-9]|CMT[0-9]'},
+    {id:'histone_mod',name:'Histone Modifiers (KMT/KDM/HAT/HDAC)', desc:'Writers (KMT), erasers (KDM, HDAC, SIRT), readers (bromodomain, chromodomain) of histone marks.', db:'Pfam', org:'🌱🐾', patterns:['KMT','KDM','HDAC','SIRT','HAT','KAT','EZH','SETD','NSD','DOT1','PRMT'],  keyw:'KMT[0-9]|KDM[0-9]|HDAC[0-9]|SIRT[0-9]|EZH[12]'},
+    {id:'polycomb', name:'Polycomb / Trithorax Complex', desc:'PRC1/PRC2 repression (EZH2, EED, SUZ12, RING1) and Trithorax activation (KMT2A-D, SETD1).', db:'Pfam', org:'🌱🐾', patterns:['EZH','EED','SUZ12','RING1','BMI1','CBX','VRN2','CLF','SWN','ATML'],  keyw:'EZH[12]|EED|SUZ12|RING[12]|BMI1'},
+    {id:'swi_snf', name:'SWI/SNF Chromatin Remodelling', desc:'BAF/PBAF complexes (SMARCA2/4, SMARCC1/2, ARID1A/B): gene activation and tumour suppression.', db:'Pfam', org:'🌱🐾', patterns:['SMARCA','SMARCC','SMARCD','SMARCE','ARID','BRG1','BRM','BAF','SNF','SWI'],  keyw:'SMARCA[0-9]|SMARCC[0-9]|ARID[0-9]|SNF[0-9]'},
+  ],
+  noncoding: [
+    {id:'mirna',   name:'miRNA Biogenesis / AGO',   desc:'DROSHA, DGCR8, DICER, TARBP2, AGO1-4: small RNA processing and RISC assembly.', db:'miRBase / Pfam', org:'🌱🐾', patterns:['DROSHA','DGCR8','DICER','TARBP2','AGO','EIF2C','DCL','HEN1','HYL1','SGS3'],  keyw:'DROSHA|DICER|AGO[0-9]|DCL[0-9]'},
+    {id:'lincrna', name:'lncRNA Biogenesis Factors', desc:'HNRNP, METTL3/14 (m6A), FTO, YTHDF, ADAR: lncRNA production, m6A modification, editing.', db:'Pfam', org:'🌱🐾', patterns:['METTL3','METTL14','WTAP','FTO','YTHDF','YTHDC','ALKBH','ADAR','HNRNP','ELAVL'],  keyw:'METTL[0-9]+|FTO|YTHDF[0-9]|ADAR[0-9]'},
+  ],
+  yeast_metabolism: [
+    {id:'glycolysis',name:'Glycolysis / Gluconeogenesis', desc:'HXK, PGI, PFK, FBA, TDH, PGK, GPM, ENO, PYK, PDC, ADH: core carbon metabolism.', db:'SGD / KEGG', org:'🍞', patterns:['HXK','PGI','PFK','FBA','TDH','PGK','GPM','ENO','PYK','PDC','ADH','PCK','FBP'],  keyw:'HXK[12]|PFK[12]|TDH[123]|ADH[0-9]|ENO[12]'},
+    {id:'tca',     name:'TCA / Krebs Cycle',          desc:'CIT1/2, ACO1/2, IDH1/2, KGD1/2, LSC1/2, SDH1-4, FUM1, MDH1/2/3: mitochondrial respiration.', db:'SGD / KEGG', org:'🍞', patterns:['CIT','ACO','IDH','KGD','LSC','SDH','FUM','MDH','PYC','MAE'],  keyw:'CIT[12]|IDH[12]|KGD[12]|SDH[1-4]'},
+    {id:'yeast_aa', name:'Amino Acid Biosynthesis',    desc:'ARO, HIS, LEU, ILV, MET, CYS, TRP, LYS, ARG pathway genes; biosynthesis from precursors.', db:'SGD / KEGG', org:'🍞', patterns:['ARO','HIS','LEU','ILV','MET','CYS','TRP','LYS','ARG','SER','THR','CAN'],  keyw:'ARO[0-9]|HIS[0-9]|LEU[0-9]|ILV[0-9]'},
+    {id:'yeast_lipid',name:'Lipid Metabolism (Yeast)',  desc:'FAS1/FAS2 fatty acid synthase, OLE1 desaturase, ACC1, PLC, INO, OPI, ARE, ERG sterols.', db:'SGD / KEGG', org:'🍞', patterns:['FAS1','FAS2','OLE1','ACC1','PLC','INO','OPI','ARE','ERG','PLB','CST'],  keyw:'FAS[12]|OLE1|ACC1|ERG[0-9]|OPI[0-9]'},
+  ],
+  yeast_stress: [
+    {id:'yeast_hsp',name:'Yeast Heat Shock Response',  desc:'SSA (HSP70), SSB, HSP104, HSP82/HSC82 (HSP90), SSE, KAR2 (BiP): protein quality control.', db:'SGD', org:'🍞', patterns:['SSA','SSB','SSC','SSD','HSP104','HSP82','HSC82','SSE','KAR2','SSQ'],  keyw:'SSA[1-4]|SSB[12]|HSP104|HSP82|HSC82'},
+    {id:'yeast_osm',name:'Yeast Osmotic Stress (HOG)',  desc:'HOG1 MAPK pathway: SHO1, SLN1, PBS2, HOG1, GPD1/2, GPP1/2 glycerol accumulation.', db:'SGD / KEGG', org:'🍞', patterns:['HOG1','PBS2','SHO1','SLN1','YPD1','SSK','GPD','GPP','STL1','AQY'],  keyw:'HOG1|PBS2|SHO1|SLN1|GPD[12]'},
+    {id:'yeast_ox',  name:'Yeast Oxidative Stress',    desc:'Yap1 regulon: TRX1/2, TRR1/2, GRX1/2, SOD1/2, CTA1, CTT1, TSA1/2 peroxidases.', db:'SGD', org:'🍞', patterns:['YAP1','TRX','TRR','GRX','SOD1','SOD2','CTA1','CTT1','TSA','AHP1'],  keyw:'YAP1|TRX[12]|TRR[12]|GRX[12]|SOD[12]'},
+    {id:'yeast_tor', name:'TOR / TORC1 Nutrient Sensing', desc:'TOR1/2, KOG1, LST8, TCO89, SCH9, NPR1, GCN2: nitrogen/carbon sensing, autophagy.', db:'SGD / KEGG', org:'🍞', patterns:['TOR1','TOR2','KOG1','LST8','TCO89','SCH9','NPR1','GCN2','ATG','VPS'],  keyw:'TOR[12]|KOG1|SCH9|ATG[0-9]'},
+  ],
+};
+
+// ── SUBCATEGORY POPULATION ─────────────────────────────────────────────────
+function updateGFsubcat() {
+  const cat = document.getElementById('gf-category').value;
+  const sel = document.getElementById('gf-family');
+  sel.innerHTML = '<option value="">— Select gene family —</option>';
+  (GF[cat] || []).forEach(f => {
+    const o = document.createElement('option');
+    o.value = f.id; o.textContent = f.name;
+    sel.appendChild(o);
+  });
+  document.getElementById('gf-info-box').style.display = 'none';
+  document.getElementById('gf-method-card').style.display = 'none';
+  document.getElementById('gf-analysis-card').style.display = 'none';
+  document.getElementById('gf-plots-card').style.display = 'none';
+}
+
+function updateGFcode() {
+  const cat = document.getElementById('gf-category').value;
+  const fid = document.getElementById('gf-family').value;
+  if (!fid) return;
+  const fam = (GF[cat] || []).find(f => f.id === fid);
+  if (!fam) return;
+
+  const base   = document.getElementById('folder-preview-text')?.textContent || '~/Desktop/RNA-Seq_organism';
+  const ctrl   = document.getElementById('cfg-ctrl')?.value  || 'control';
+  const treat  = document.getElementById('cfg-treat')?.value || 'treatment';
+
+  // Show info box
+  document.getElementById('gf-name').textContent = fam.name;
+  document.getElementById('gf-desc').textContent = fam.desc;
+  document.getElementById('gf-db').textContent   = fam.db;
+  document.getElementById('gf-org').innerHTML    = fam.org;
+  document.getElementById('gf-info-box').style.display = 'block';
+
+  // Show cards
+  ['gf-method-card','gf-analysis-card','gf-plots-card'].forEach(id => {
+    document.getElementById(id).style.display = 'block';
+  });
+
+  // ─ Method A: database download command ─
+  const dbNote = `# ─── ${fam.name} ───────────────────────────────────────────
+# Best database: ${fam.db}
+#
+# OPTION 1 — PlantTFDB (plants):
+#   Go to: http://planttfdb.gao-lab.org/
+#   Select species → Select family → Download → Save as ${fam.id}_genes.txt
+#
+# OPTION 2 — AnimalTFDB (animals):
+#   Go to: http://animaltfdb.bioinfotoolkits.net/
+#   Select species → Select family → Download gene list
+#
+# OPTION 3 — Ensembl BioMart (any organism):
+curl -s "https://www.ensembl.org/biomart/martservice" \\
+  -d "query=<?xml version='1.0' encoding='UTF-8'?><!DOCTYPE Query><Query formatter='CSV' header='0'><Dataset name='hsapiens_gene_ensembl'><Filter name='go_parent_term' value='${fam.keyw}'/><Attribute name='ensembl_gene_id'/><Attribute name='external_gene_name'/></Dataset></Query>" \\
+  > ${base}/results/${fam.id}_genelist.txt
+
+# OPTION 4 — KEGG API (for pathway-based families):
+# Go to: https://www.genome.jp/kegg/pathway.html
+# Search '${fam.name}' → click pathway → Download gene list
+#
+# After downloading, place the file at:
+# ${base}/results/${fam.id}_genelist.txt`;
+  set('gf-cmd-download', dbNote);
+
+  // ─ Method B: pattern filter in R ─
+  const patterns = fam.patterns.map(p => `"${p}"`).join(', ');
+  const filterCode = `# ─── Filter count matrix to ${fam.name} ─────────────────────────
+library(DESeq2); library(dplyr)
+base_path <- "${base}"
+
+# Load full count results (must have run Step 8 first)
+res_df <- read.csv(paste0(base_path, "/results/deseq2_results.csv"))
+
+# Method B — pattern matching on gene names
+# Patterns used: ${fam.patterns.join(', ')}
+family_patterns <- c(${patterns})
+pattern_regex <- paste(family_patterns, collapse="|")
+
+gf_genes <- res_df[grepl(pattern_regex, res_df$gene, ignore.case=TRUE), ]
+cat("Genes matching '${fam.name}' pattern: ", nrow(gf_genes), "\\n")
+cat("Significant (padj<0.05): ", sum(gf_genes$padj<0.05, na.rm=TRUE), "\\n")
+head(gf_genes[order(gf_genes$padj, na.last=TRUE), c("gene","log2FoldChange","padj")], 20)`;
+  set('gf-cmd-filter', filterCode);
+
+  // ─ Full DESeq2 analysis for gene family ─
+  const nc = document.querySelectorAll('#ctrl-rows input').length + document.querySelectorAll('#treat-rows input').length;
+  const analysisCode = `# ─── ${fam.name} — DESeq2 subset analysis ─────────────────────
+library(DESeq2); library(ggplot2); library(pheatmap); library(ggrepel); library(dplyr)
+base_path <- "${base}"
+
+# ── Step 1: Load your FULL count table ───────────────────────
+counts_raw <- read.table(paste0(base_path, "/counts/gene_counts_all.txt"),
+                          header=TRUE, skip=1, row.names=1)
+counts_full <- counts_raw[, (ncol(counts_raw)-${nc-1}):ncol(counts_raw)]
+
+# ── Step 2: Filter to ${fam.name} genes ──────────────────────
+# Method A — from database file (recommended for large genomes):
+# gf_list <- read.table(paste0(base_path, "/results/${fam.id}_genelist.txt"),
+#                        header=FALSE, stringsAsFactors=FALSE)$V1
+# counts_gf <- counts_full[rownames(counts_full) %in% gf_list, ]
+
+# Method B — pattern matching (use if no database file yet):
+patterns_gf <- c(${patterns})
+pattern_regex_gf <- paste(patterns_gf, collapse="|")
+keep_genes <- grepl(pattern_regex_gf, rownames(counts_full), ignore.case=TRUE)
+counts_gf <- counts_full[keep_genes, ]
+cat("Genes in ${fam.name} subset: ", nrow(counts_gf), "\\n")
+
+if (nrow(counts_gf) < 3) stop("Too few genes matched — check patterns or use database file")
+
+# ── Step 3: Run DESeq2 on gene family subset ─────────────────
+sample_info_gf <- data.frame(
+  condition = factor(c(${[...Array(document.querySelectorAll('#ctrl-rows input').length)].map(()=>`"${ctrl}"`).join(', ')}, ${[...Array(document.querySelectorAll('#treat-rows input').length)].map(()=>`"${treat}"`).join(', ')})),
+  row.names = colnames(counts_gf)
+)
+
+dds_gf <- DESeqDataSetFromMatrix(countData=counts_gf, colData=sample_info_gf, design=~condition)
+dds_gf <- dds_gf[rowSums(counts(dds_gf)) >= 5, ]  # lower threshold for small families
+dds_gf <- DESeq(dds_gf)
+
+# ── Step 4: Results ───────────────────────────────────────────
+res_gf <- results(dds_gf, contrast=c("condition","${treat}","${ctrl}"), alpha=0.05)
+summary(res_gf)
+
+# Save gene family results
+res_gf_df <- as.data.frame(res_gf)
+res_gf_df$gene <- rownames(res_gf_df)
+write.csv(res_gf_df,
+          paste0(base_path, "/results/${fam.id}_deseq2_results.csv"),
+          row.names=FALSE)
+cat("\\n${fam.name} analysis complete!\\n")
+cat("Significant genes (padj<0.05): ", sum(res_gf_df$padj<0.05, na.rm=TRUE), "\\n")
+cat("Upregulated in ${treat}: ", sum(res_gf_df$padj<0.05 & res_gf_df$log2FoldChange>0, na.rm=TRUE), "\\n")
+cat("Downregulated in ${treat}: ", sum(res_gf_df$padj<0.05 & res_gf_df$log2FoldChange<0, na.rm=TRUE), "\\n")`;
+  set('gf-cmd-analysis', analysisCode);
+
+  // ─ Plots for gene family ─
+  const plotsCode = `# ─── ${fam.name} — Volcano + Heatmap ─────────────────────────
+# (run after the DESeq2 subset analysis above)
+
+# ── Volcano plot ──────────────────────────────────────────────
+res_gf_df_plot <- res_gf_df[!is.na(res_gf_df$padj), ]
+res_gf_df_plot$sig <- "Not significant"
+res_gf_df_plot$sig[res_gf_df_plot$padj<0.05 & res_gf_df_plot$log2FoldChange>1]  <- "Up"
+res_gf_df_plot$sig[res_gf_df_plot$padj<0.05 & res_gf_df_plot$log2FoldChange< -1] <- "Down"
+top_gf <- res_gf_df_plot %>% filter(padj<0.05) %>% arrange(padj) %>% head(20)
+
+p_gf <- ggplot(res_gf_df_plot, aes(log2FoldChange, -log10(padj), color=sig)) +
+  geom_point(alpha=0.7, size=2) +
+  scale_color_manual(values=c("Up"="#f0883e","Down"="#58a6ff","Not significant"="#6e7681")) +
+  geom_text_repel(data=top_gf, aes(label=gene), size=3, max.overlaps=20) +
+  geom_vline(xintercept=c(-1,1), linetype="dashed", color="#444") +
+  geom_hline(yintercept=-log10(0.05), linetype="dashed", color="#444") +
+  labs(title=paste0("${fam.name}: ${treat} vs ${ctrl}"),
+       subtitle=paste0(sum(res_gf_df_plot$sig=="Up"), " up | ",
+                       sum(res_gf_df_plot$sig=="Down"), " down"),
+       x="Log2 fold change", y="-Log10 adjusted p-value") +
+  theme_minimal(base_size=13)
+print(p_gf)
+ggsave(paste0(base_path, "/results/${fam.id}_volcano.png"),
+       plot=p_gf, width=10, height=7, dpi=300)
+
+# ── Heatmap of top 30 significant family genes ────────────────
+sig_gf_genes <- res_gf_df %>%
+  filter(padj<0.05) %>% arrange(padj) %>% head(30) %>% pull(gene)
+
+if (length(sig_gf_genes) >= 3) {
+  vst_gf <- vst(dds_gf, blind=FALSE)
+  mat_gf <- assay(vst_gf)[sig_gf_genes, ]
+  mat_gf_sc <- t(scale(t(mat_gf)))
+  pheatmap(mat_gf_sc,
+    cluster_rows=TRUE, cluster_cols=FALSE,
+    color=colorRampPalette(c("#58a6ff","white","#f0883e"))(100),
+    main=paste0("${fam.name} — top significant genes"),
+    fontsize_row=8,
+    filename=paste0(base_path, "/results/${fam.id}_heatmap.png"),
+    width=9, height=11)
+  cat("Heatmap saved!\\n")
+} else { cat("Not enough significant genes for heatmap (need ≥3)\\n") }
+
+cat("All ${fam.name} plots saved to: ", base_path, "/results/\\n")`;
+  set('gf-cmd-plots', plotsCode);
+}
+
+// Initialise subcategory on load
+updateGFsubcat();
+
+// ── SERVER CONNECTION ─────────────────────────────────────────────────────
+const SERVER = "http://127.0.0.1:7788";
+let connected = false;
+
+function setConnected(ok) {
+  connected = ok;
+  const dot   = document.getElementById('conn-dot');
+  const label = document.getElementById('conn-label');
+  if (ok) {
+    dot.className     = 'conn-dot connected';
+    label.textContent = 'Terminal connected';
+    label.style.color = 'var(--green)';
+    // Only enable run buttons if we are in run mode
+    if (currentMode === 'run') {
+      document.querySelectorAll('.run-btn').forEach(b => b.disabled = false);
+    }
+  } else {
+    dot.className     = 'conn-dot disconnected';
+    label.textContent = 'Server not running';
+    label.style.color = 'var(--red)';
+    document.querySelectorAll('.run-btn').forEach(b => b.disabled = true);
+  }
+}
+
+async function checkServer() {
+  try {
+    const r = await fetch(`${SERVER}/status`, { signal: AbortSignal.timeout(1500) });
+    setConnected(r.ok);
+  } catch { setConnected(false); }
+}
+checkServer();
+setInterval(checkServer, 3000);
+
+// ── CODE BLOCK RUN BUTTON BUILDER ─────────────────────────────────────────
+// Called after every updateAll() to wrap <pre> elements with Run buttons
+const STEP_MAP = {
+  'cmd-session':    { step: null,          next: null },
+  'cmd-mkdir':      { step: null,          next: null },
+  'cmd-download':   { step: 'nav-download',next: null },
+  'cmd-check-dl':   { step: null,          next: null },
+  'cmd-fastqc':     { step: null,          next: null },
+  'cmd-multiqc':    { step: 'nav-qc',      next: ['page-trim','nav-trim'] },
+  'cmd-trim':       { step: null,          next: null },
+  'cmd-check-trim': { step: 'nav-trim',    next: ['page-genome','nav-genome'] },
+  'cmd-genome':     { step: null,          next: null },
+  'cmd-index':      { step: 'nav-genome',  next: ['page-align','nav-align'] },
+  'cmd-align':      { step: null,          next: null },
+  'cmd-bam':        { step: 'nav-align',   next: ['page-counts','nav-counts'] },
+  'cmd-counts':     { step: 'nav-counts',  next: ['page-deseq2','nav-deseq2'] },
+  'cmd-preview':    { step: null,          next: null },
+  'cmd-deseq2':     { step: 'nav-deseq2',  next: ['page-plots','nav-plots'] },
+  'cmd-volcano':    { step: null,          next: null },
+  'cmd-heatmap':    { step: null,          next: null },
+  'cmd-pca':        { step: 'nav-plots',   next: null },
+  'gf-cmd-download':{ step: null,          next: null },
+  'gf-cmd-filter':  { step: null,          next: null },
+  'gf-cmd-analysis':{ step: null,          next: null },
+  'gf-cmd-plots':   { step: null,          next: null },
+};
+
+function buildRunButton(preId) {
+  const pre = document.getElementById(preId);
+  if (!pre || pre.dataset.runBuilt) return;
+  pre.dataset.runBuilt = '1';
+
+  const info = STEP_MAP[preId] || {};
+  const block = pre.closest('.code-block');
+  if (!block) return;
+
+  // Get or create toolbar
+  let toolbar = block.querySelector('.code-toolbar') || block.querySelector('.code-toolbar-run');
+  if (!toolbar) return;
+
+  // Stop button
+  const stopBtn = document.createElement('button');
+  stopBtn.className = 'stop-btn';
+  stopBtn.textContent = '■ Stop';
+  stopBtn.dataset.jobId = '';
+  stopBtn.onclick = () => {
+    if (stopBtn.dataset.jobId) fetch(`${SERVER}/kill/${stopBtn.dataset.jobId}`).catch(()=>{});
+  };
+
+  // Run button
+  const runBtn = document.createElement('button');
+  runBtn.className = 'run-btn';
+  runBtn.innerHTML = '▶ Run';
+  runBtn.disabled = !connected;
+  runBtn.title = 'Execute in terminal';
+  runBtn.onclick = () => {
+    if (!connected) {
+      alert('Start the server first:\n\npython3 rnaflow_server.py\n\nThen the Run button activates automatically.');
+      return;
+    }
+    const cmd = pre.textContent.trim();
+    runCommand(cmd, runBtn, stopBtn, termPanel, info.step, info.next);
+  };
+
+  toolbar.appendChild(stopBtn);
+  toolbar.appendChild(runBtn);
+
+  // Terminal output panel
+  const termPanel = document.createElement('div');
+  termPanel.className = 'term-panel';
+  termPanel.innerHTML = `
+    <div class="term-header">
+      <div class="term-dots">
+        <span style="background:#f85149"></span>
+        <span style="background:#e3b341"></span>
+        <span style="background:#3fb950"></span>
+      </div>
+      <span style="margin-left:4px; font-size:0.85em;">Terminal output — ${preId}</span>
+    </div>
+    <div class="term-scroll" id="ts-${preId}"></div>`;
+  block.appendChild(termPanel);
+}
+
+function buildAllRunButtons() {
+  Object.keys(STEP_MAP).forEach(id => buildRunButton(id));
+}
+
+// ── COMMAND RUNNER ────────────────────────────────────────────────────────
+let toastNextFn = null;
+
+async function runCommand(cmd, runBtn, stopBtn, termPanel, stepId, nextInfo) {
+  runBtn.className = 'run-btn running';
+  runBtn.innerHTML = '<span style="display:inline-block;width:8px;height:8px;background:var(--green);border-radius:50%;animation:pulse 1s infinite;"></span>&nbsp;Running…';
+  runBtn.disabled  = true;
+  stopBtn.classList.add('show');
+  termPanel.classList.add('open');
+
+  const scroll = termPanel.querySelector('.term-scroll');
+  scroll.innerHTML = '';
+
+  const addLine = (text, cls) => {
+    const d = document.createElement('div');
+    d.className = 'term-line' + (cls ? ' ' + cls : '');
+    d.textContent = text;
+    scroll.appendChild(d);
+    scroll.scrollTop = scroll.scrollHeight;
+  };
+
+  // Show abbreviated command
+  const firstLine = cmd.split('\n')[0].substring(0, 80) + (cmd.length > 80 ? '…' : '');
+  addLine('$ ' + firstLine);
+
+  // POST to server
+  let jobId;
+  try {
+    const res = await fetch(`${SERVER}/run`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ cmd, conda: true })
+    });
+    jobId = (await res.json()).job_id;
+    stopBtn.dataset.jobId = jobId;
+  } catch(e) {
+    addLine('❌ Cannot reach server. Run: python3 rnaflow_server.py', 'err');
+    runBtn.className = 'run-btn failed'; runBtn.innerHTML = '✕ Server offline'; runBtn.disabled = false;
+    stopBtn.classList.remove('show');
+    return;
+  }
+
+  // Stream via SSE
+  return new Promise(resolve => {
+    const es = new EventSource(`${SERVER}/output/${jobId}`);
+    es.onmessage = e => {
+      const msg = JSON.parse(e.data);
+      if (msg.type === 'output') {
+        msg.data.split('\n').forEach(l => { if (l) addLine(l); });
+      }
+      if (msg.type === 'done') {
+        es.close();
+        stopBtn.classList.remove('show');
+        if (msg.exit_code === 0) {
+          addLine('✅ Completed successfully', 'done-ok');
+          runBtn.className = 'run-btn success';
+          runBtn.innerHTML = '✅ Done';
+          runBtn.disabled  = false;
+          if (stepId) markDone(stepId);
+          if (nextInfo) showToast('Step complete!', nextInfo[0], nextInfo[1]);
+        } else if (msg.exit_code === -1) {
+          addLine('⏹ Stopped', 'err');
+          runBtn.className = 'run-btn'; runBtn.innerHTML = '▶ Run'; runBtn.disabled = false;
+        } else {
+          addLine(`❌ Failed (exit ${msg.exit_code}) — check output above`, 'done-err');
+          runBtn.className = 'run-btn failed';
+          runBtn.innerHTML = '✕ Failed';
+          runBtn.disabled  = false;
+        }
+        resolve();
+      }
+    };
+    es.onerror = () => {
+      es.close();
+      addLine('❌ Lost connection to server', 'err');
+      runBtn.className = 'run-btn failed'; runBtn.innerHTML = '✕ Error'; runBtn.disabled = false;
+      stopBtn.classList.remove('show');
+      resolve();
+    };
+  });
+}
+
+// ── TOAST ─────────────────────────────────────────────────────────────────
+function showToast(msg, nextPageId, nextNavId) {
+  const toast = document.getElementById('toast');
+  document.getElementById('toast-msg').textContent = msg;
+  toast.classList.add('show');
+  toastNextFn = () => goTo(nextPageId, document.getElementById(nextNavId));
+  setTimeout(() => toast.classList.remove('show'), 7000);
+}
+function toastNext() {
+  document.getElementById('toast').classList.remove('show');
+  if (toastNextFn) { toastNextFn(); toastNextFn = null; }
+}
+
+// ── REBUILD RUN BUTTONS WHENEVER updateAll IS CALLED ─────────────────────
+const _origUpdate = updateAll;
+window.updateAll = function() {
+  _origUpdate();
+  setTimeout(buildAllRunButtons, 80);
+};
+
+// ── ACCORDION TOGGLE ─────────────────────────────────────────────────────
+function toggleAcc(which) {
+  const body    = document.getElementById('acc-body-'    + which);
+  const header  = document.getElementById('acc-header-'  + which);
+  const chevron = document.getElementById('acc-chevron-' + which);
+  if (!body) return;
+  const isOpen = body.classList.contains('open');
+  body.classList.toggle('open', !isOpen);
+  if (header) header.classList.toggle('open', !isOpen);
+  if (chevron) chevron.style.transform = isOpen ? '' : 'rotate(90deg)';
+}
+function toggleBanner() { toggleAcc('mode'); }
+
+// ── OS TAB SWITCHING ──────────────────────────────────────────────────────
+function showOS(os, btn) {
+  document.querySelectorAll('.os-panel').forEach(p => p.style.display = 'none');
+  document.querySelectorAll('.os-tab').forEach(b => b.classList.remove('active'));
+  const panel = document.getElementById('os-' + os);
+  if (panel) panel.style.display = '';
+  if (btn) btn.classList.add('active');
+}
+function autoDetectOS() {
+  const ua = navigator.userAgent.toLowerCase();
+  if (ua.includes('win')) return 'win';
+  if (ua.includes('linux')) return 'linux';
+  return 'mac';
+}
+
+// ── MODE SELECTION ────────────────────────────────────────────────────────
+let currentMode = 'none';
+
+function selectMode(mode) {
+  currentMode = mode;
+  const runCard  = document.getElementById('mode-card-run');
+  const copyCard = document.getElementById('mode-card-copy');
+  runCard.classList.remove('selected-run', 'selected-copy');
+  copyCard.classList.remove('selected-run', 'selected-copy');
+
+  const ind      = document.getElementById('mode-indicator');
+  const icon     = document.getElementById('mode-indicator-icon');
+  const label    = document.getElementById('mode-indicator-label');
+  const badge    = document.getElementById('acc-mode-badge');
+  const srvBadge = document.getElementById('acc-server-badge');
+
+  if (mode === 'run') {
+    runCard.classList.add('selected-run');
+    if (ind)   ind.className     = 'mode-indicator run-mode';
+    if (icon)  icon.textContent  = '⚡';
+    if (label) label.textContent = 'Mode A — Run';
+    if (badge) { badge.textContent = '⚡ Run mode active'; badge.className = 'acc-header-badge green'; }
+    if (srvBadge) { srvBadge.textContent = 'Needed for Mode A'; srvBadge.className = 'acc-header-badge yellow'; }
+    document.querySelectorAll('.run-btn').forEach(b => { b.style.display = ''; if (connected) b.disabled = false; });
+    // Auto-open server panel so user sees instructions
+    const srvBody = document.getElementById('acc-body-server');
+    const srvHead = document.getElementById('acc-header-server');
+    const srvChev = document.getElementById('acc-chevron-server');
+    if (srvBody && !srvBody.classList.contains('open')) {
+      srvBody.classList.add('open');
+      if (srvHead) srvHead.classList.add('open');
+      if (srvChev) srvChev.style.transform = 'rotate(90deg)';
+    }
+  } else {
+    copyCard.classList.add('selected-copy');
+    if (ind)   ind.className     = 'mode-indicator copy-mode';
+    if (icon)  icon.textContent  = '📋';
+    if (label) label.textContent = 'Mode B — Copy';
+    if (badge) { badge.textContent = '📋 Copy mode active'; badge.className = 'acc-header-badge blue'; }
+    if (srvBadge) { srvBadge.textContent = 'Not needed for Mode B'; srvBadge.className = 'acc-header-badge none'; }
+    document.querySelectorAll('.run-btn').forEach(b => b.style.display = 'none');
+    document.querySelectorAll('.stop-btn').forEach(b => b.classList.remove('show'));
+  }
+
+  // Collapse mode-selection panel after 0.8s
+  setTimeout(() => {
+    const mb = document.getElementById('acc-body-mode');
+    const mh = document.getElementById('acc-header-mode');
+    const mc = document.getElementById('acc-chevron-mode');
+    if (mb) mb.classList.remove('open');
+    if (mh) mh.classList.remove('open');
+    if (mc) mc.style.transform = '';
+  }, 800);
+
+  try { localStorage.setItem('rnaflow-mode', mode); } catch(e) {}
+}
+
+function copyText(text, btn) {
+  navigator.clipboard.writeText(text).then(() => {
+    const orig = btn.textContent;
+    btn.textContent = 'Copied!';
+    btn.style.background = 'var(--green2)';
+    btn.style.color = 'white';
+    setTimeout(() => { btn.textContent = orig; btn.style.background = ''; btn.style.color = ''; }, 2000);
+  });
+}
+function copyServerCmd(btn) { copyText('python3 rnaflow_server.py', btn); }
+
+function restoreMode() {
+  let saved;
+  try { saved = localStorage.getItem('rnaflow-mode'); } catch(e) {}
+  if (saved === 'run' || saved === 'copy') {
+    setTimeout(() => selectMode(saved), 150);
+  }
+}
+
+// ── INIT ─────────────────────────────────────────────────────────────────
+updateAll();
+setTimeout(buildAllRunButtons, 300);
+restoreMode();
+const detectedOS  = autoDetectOS();
+const allOSTabs   = document.querySelectorAll('.os-tab');
+allOSTabs.forEach(b => {
+  const oc = b.getAttribute('onclick') || '';
+  if (oc.includes("showOS('" + detectedOS + "'")) {
+    showOS(detectedOS, b);
+  }
+});
+
+</script>
+
+<!-- AUTO-ADVANCE TOAST -->
+<div class="toast" id="toast">
+  <span class="toast-icon">✅</span>
+  <span id="toast-msg">Step complete!</span>
+  <button class="toast-next-btn" onclick="toastNext()">Next step →</button>
+</div>
+</body>
+</html>

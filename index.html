@@ -1,0 +1,1403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BioInfoCodex — The Open Bioinformatics Codex</title>
+<meta name="description" content="BioInfoCodex: free bioinformatics tools, step-by-step tutorials, and education for researchers worldwide. RNA-seq, NGS, plasmid analysis and more.">
+<meta name="keywords" content="bioinformatics, RNA-seq, DESeq2, HISAT2, bioinformatics tools, free bioinformatics, genomics, NGS, open source bioinformatics">
+<meta property="og:title" content="BioInfoCodex — The Open Bioinformatics Codex">
+<meta property="og:description" content="Free guided bioinformatics tools and education. RNA-seq, NGS, plasmid analysis and more.">
+<meta property="og:url" content="https://bioinfocodex.com">
+<meta property="og:type" content="website">
+<link rel="canonical" href="https://bioinfocodex.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ══════════════════════════════════════════
+   RESET & TOKENS
+══════════════════════════════════════════ */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --bg:#03080f; --bg2:#070e1a; --bg3:#0c1624; --surf:#111d2e;
+  --border:rgba(255,255,255,0.07); --border2:rgba(255,255,255,0.13);
+  --text:#e8f0fe; --text2:#8ba3c7; --text3:#4a6080;
+  --green:#00d4a0; --blue:#0096ff; --purple:#7c5ff5;
+  --orange:#f0883e; --red:#f85149;
+  --fh:'Syne',sans-serif; --fb:'DM Sans',sans-serif; --fm:'DM Mono',monospace;
+  --r:12px; --r2:18px;
+}
+html{scroll-behavior:smooth;}
+body{font-family:var(--fb);background:var(--bg);color:var(--text);line-height:1.65;overflow-x:hidden;}
+img{max-width:100%;}
+a{color:inherit;text-decoration:none;}
+
+/* ══════════════════════════════════════════
+   AMBIENT BG
+══════════════════════════════════════════ */
+#bg-canvas{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:0.55;}
+.bg-grid{
+  position:fixed;inset:0;z-index:0;pointer-events:none;
+  background-image:linear-gradient(rgba(0,212,160,0.025) 1px,transparent 1px),
+                   linear-gradient(90deg,rgba(0,212,160,0.025) 1px,transparent 1px);
+  background-size:60px 60px;
+  mask-image:radial-gradient(ellipse 90% 70% at 50% 0%,black 30%,transparent 100%);
+}
+
+/* ══════════════════════════════════════════
+   NAV
+══════════════════════════════════════════ */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:200;
+  height:64px;display:flex;align-items:center;padding:0 5vw;gap:0;
+  background:rgba(3,8,15,0.82);backdrop-filter:blur(24px);
+  border-bottom:1px solid var(--border);
+}
+.nav-logo{display:flex;align-items:center;gap:10px;margin-right:40px;flex-shrink:0;}
+.nav-logo svg{width:34px;height:34px;}
+.nav-logo-text{font-family:var(--fh);font-weight:800;font-size:1.3em;letter-spacing:-0.5px;}
+.nav-logo-text span{color:var(--green);}
+.nav-tabs{display:flex;gap:2px;flex:1;}
+.nav-tab{
+  padding:8px 20px;border-radius:8px;font-size:0.88em;font-weight:500;
+  color:var(--text2);cursor:pointer;transition:all 0.15s;white-space:nowrap;
+  border:1px solid transparent;
+}
+.nav-tab:hover{color:var(--text);background:rgba(255,255,255,0.04);}
+.nav-tab.active{color:var(--green);background:rgba(0,212,160,0.08);border-color:rgba(0,212,160,0.2);}
+.nav-spacer{flex:1;}
+.nav-dl{
+  padding:8px 20px;border-radius:8px;background:var(--green);
+  color:#03080f;font-weight:700;font-size:0.84em;cursor:pointer;
+  transition:all 0.15s;white-space:nowrap;border:none;font-family:var(--fb);
+}
+.nav-dl:hover{background:#00f0b8;transform:translateY(-1px);}
+/* Mobile hamburger */
+.nav-burger{display:none;background:none;border:none;color:var(--text);font-size:1.4em;cursor:pointer;margin-left:auto;}
+.mobile-menu{
+  display:none;position:fixed;top:64px;left:0;right:0;
+  background:rgba(3,8,15,0.97);backdrop-filter:blur(24px);
+  border-bottom:1px solid var(--border);z-index:199;padding:12px 16px;
+}
+.mobile-menu.open{display:block;}
+.mobile-menu .nav-tab{display:block;padding:12px 16px;border-radius:10px;margin-bottom:4px;}
+
+/* ══════════════════════════════════════════
+   PAGE SECTIONS
+══════════════════════════════════════════ */
+.page{display:none;min-height:100vh;padding-top:64px;position:relative;z-index:1;}
+.page.active{display:block;animation:pageIn 0.35s ease both;}
+@keyframes pageIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+
+/* ══════════════════════════════════════════
+   SHARED COMPONENTS
+══════════════════════════════════════════ */
+.section{padding:72px 6vw;}
+.section-sm{padding:48px 6vw;}
+.label{font-size:0.7em;font-weight:600;letter-spacing:2.5px;text-transform:uppercase;color:var(--green);margin-bottom:10px;}
+.h1{font-family:var(--fh);font-weight:800;font-size:clamp(2.2em,5vw,4em);letter-spacing:-1.5px;line-height:1.08;margin-bottom:18px;}
+.h2{font-family:var(--fh);font-weight:700;font-size:clamp(1.6em,3vw,2.4em);letter-spacing:-0.8px;line-height:1.15;margin-bottom:14px;}
+.h3{font-family:var(--fh);font-weight:700;font-size:1.2em;margin-bottom:8px;}
+.lead{font-size:1.1em;color:var(--text2);max-width:580px;line-height:1.75;font-weight:300;}
+.sub{font-size:0.9em;color:var(--text2);line-height:1.65;font-weight:300;}
+.center{text-align:center;}
+.center .lead{margin:0 auto;}
+em.g{font-style:normal;color:var(--green);}
+em.b{font-style:normal;color:var(--blue);}
+em.p{font-style:normal;color:var(--purple);}
+
+/* Cards */
+.card{background:var(--surf);border:1px solid var(--border);border-radius:var(--r2);padding:26px;transition:all 0.2s;}
+.card:hover{border-color:var(--border2);transform:translateY(-3px);box-shadow:0 16px 48px rgba(0,0,0,0.35);}
+.card-grid{display:grid;gap:16px;}
+.card-grid-2{grid-template-columns:repeat(auto-fit,minmax(300px,1fr));}
+.card-grid-3{grid-template-columns:repeat(auto-fit,minmax(260px,1fr));}
+.card-grid-4{grid-template-columns:repeat(auto-fit,minmax(220px,1fr));}
+
+/* Tags */
+.tag{display:inline-flex;align-items:center;gap:5px;padding:3px 10px;border-radius:20px;font-size:0.7em;font-weight:600;letter-spacing:0.4px;text-transform:uppercase;}
+.tag-green{background:rgba(0,212,160,0.12);color:var(--green);border:1px solid rgba(0,212,160,0.25);}
+.tag-blue {background:rgba(0,150,255,0.12);color:var(--blue); border:1px solid rgba(0,150,255,0.25);}
+.tag-purple{background:rgba(124,95,245,0.12);color:var(--purple);border:1px solid rgba(124,95,245,0.25);}
+.tag-orange{background:rgba(240,136,62,0.12);color:var(--orange);border:1px solid rgba(240,136,62,0.25);}
+.tag-dim{background:rgba(255,255,255,0.05);color:var(--text3);border:1px solid var(--border);}
+
+/* Buttons */
+.btn{display:inline-flex;align-items:center;gap:7px;padding:11px 24px;border-radius:10px;font-size:0.88em;font-weight:600;cursor:pointer;transition:all 0.15s;border:none;font-family:var(--fb);}
+.btn-green{background:var(--green);color:#03080f;}
+.btn-green:hover{background:#00f0b8;transform:translateY(-1px);box-shadow:0 8px 28px rgba(0,212,160,0.3);}
+.btn-outline{background:transparent;border:1px solid var(--border2);color:var(--text2);}
+.btn-outline:hover{border-color:var(--green);color:var(--green);}
+.btn-ghost{background:rgba(255,255,255,0.04);color:var(--text2);}
+.btn-ghost:hover{background:rgba(255,255,255,0.08);color:var(--text);}
+
+/* Chips */
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px;}
+.chip{padding:3px 9px;border-radius:6px;font-size:0.72em;font-family:var(--fm);background:var(--bg3);border:1px solid var(--border);color:var(--text3);}
+
+/* Divider */
+.divider{height:1px;background:var(--border);margin:0;}
+
+/* Reveal */
+.reveal{opacity:0;transform:translateY(24px);transition:all 0.65s ease;}
+.reveal.vis{opacity:1;transform:none;}
+
+/* ══════════════════════════════════════════
+   HOME PAGE
+══════════════════════════════════════════ */
+.hero{
+  min-height:calc(100vh - 64px);display:flex;align-items:center;
+  padding:80px 6vw 60px;
+}
+.hero-inner{max-width:780px;}
+.hero-badge{
+  display:inline-flex;align-items:center;gap:8px;padding:4px 14px 4px 6px;
+  border-radius:20px;border:1px solid rgba(0,212,160,0.3);background:rgba(0,212,160,0.07);
+  font-size:0.76em;font-weight:500;color:var(--green);margin-bottom:28px;
+}
+.hero-dot{width:8px;height:8px;border-radius:50%;background:var(--green);animation:pulse 2s infinite;}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.4;transform:scale(0.7)}}
+.hero-ctas{display:flex;gap:12px;flex-wrap:wrap;margin-top:36px;}
+.hero-scroll{
+  display:flex;gap:32px;margin-top:64px;padding-top:48px;
+  border-top:1px solid var(--border);flex-wrap:wrap;
+}
+.hero-stat .val{font-family:var(--fh);font-size:2em;font-weight:800;color:var(--text);}
+.hero-stat .lbl{font-size:0.76em;color:var(--text3);text-transform:uppercase;letter-spacing:0.6px;}
+
+/* Team / About */
+.team-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;margin-top:40px;}
+.team-card{
+  background:var(--surf);border:1px solid var(--border);border-radius:var(--r2);
+  padding:28px;text-align:center;
+}
+.team-avatar{
+  width:72px;height:72px;border-radius:50%;background:var(--bg3);
+  border:2px solid var(--border2);margin:0 auto 16px;
+  display:flex;align-items:center;justify-content:center;font-size:2em;
+}
+.team-name{font-family:var(--fh);font-weight:700;font-size:1em;margin-bottom:4px;}
+.team-role{font-size:0.8em;color:var(--green);margin-bottom:8px;}
+.team-bio{font-size:0.82em;color:var(--text2);line-height:1.6;}
+
+/* Mission pillars */
+.pillars{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;margin-top:40px;}
+.pillar{
+  background:var(--surf);border:1px solid var(--border);border-radius:var(--r);
+  padding:22px;border-top:3px solid;
+}
+.pillar:nth-child(1){border-top-color:var(--green);}
+.pillar:nth-child(2){border-top-color:var(--blue);}
+.pillar:nth-child(3){border-top-color:var(--purple);}
+.pillar:nth-child(4){border-top-color:var(--orange);}
+.pillar-icon{font-size:1.5em;margin-bottom:12px;}
+.pillar-title{font-family:var(--fh);font-weight:700;font-size:0.95em;margin-bottom:6px;}
+.pillar-desc{font-size:0.82em;color:var(--text2);line-height:1.6;}
+
+/* ══════════════════════════════════════════
+   TOOLS PAGE
+══════════════════════════════════════════ */
+.tools-hero{
+  padding:80px 6vw 52px;
+  background:linear-gradient(180deg,rgba(0,212,160,0.04) 0%,transparent 100%);
+  border-bottom:1px solid var(--border);
+}
+.tool-category{margin-bottom:56px;}
+.tool-category-title{
+  font-family:var(--fh);font-weight:700;font-size:1em;color:var(--text3);
+  text-transform:uppercase;letter-spacing:1.5px;margin-bottom:20px;
+  display:flex;align-items:center;gap:12px;
+}
+.tool-category-title::after{content:'';flex:1;height:1px;background:var(--border);}
+.tool-card{
+  background:var(--surf);border:1px solid var(--border);border-radius:var(--r2);
+  padding:28px;position:relative;overflow:hidden;
+  transition:all 0.2s;
+}
+.tool-card.live{border-color:rgba(0,212,160,0.2);}
+.tool-card.live::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,transparent,var(--green),transparent);
+}
+.tool-card.coming{opacity:0.55;}
+.tool-card.coming:hover{transform:none;box-shadow:none;}
+.tool-card:not(.coming):hover{border-color:var(--border2);transform:translateY(-4px);box-shadow:0 20px 60px rgba(0,0,0,0.4);}
+.tool-top{display:flex;align-items:flex-start;gap:16px;margin-bottom:14px;}
+.tool-icon-wrap{
+  width:52px;height:52px;border-radius:14px;background:var(--bg3);
+  border:1px solid var(--border);display:flex;align-items:center;
+  justify-content:center;font-size:1.6em;flex-shrink:0;
+}
+.tool-meta{flex:1;}
+.tool-name{font-family:var(--fh);font-weight:800;font-size:1.15em;margin-bottom:4px;}
+.tool-version{font-size:0.72em;color:var(--text3);font-family:var(--fm);}
+.tool-desc{font-size:0.86em;color:var(--text2);line-height:1.65;margin-bottom:16px;font-weight:300;}
+.tool-actions{display:flex;gap:9px;flex-wrap:wrap;}
+.tool-btn{
+  padding:7px 16px;border-radius:8px;font-size:0.8em;font-weight:600;
+  cursor:pointer;transition:all 0.15s;border:none;font-family:var(--fb);
+  display:inline-flex;align-items:center;gap:5px;
+}
+.tool-btn.dl{background:var(--green);color:#03080f;}
+.tool-btn.dl:hover{background:#00f0b8;}
+.tool-btn.doc{background:rgba(255,255,255,0.06);color:var(--text2);border:1px solid var(--border);}
+.tool-btn.doc:hover{border-color:var(--green);color:var(--green);}
+.tool-btn.notify{background:rgba(255,255,255,0.05);color:var(--text3);border:1px solid var(--border);}
+
+/* Filter bar */
+.filter-bar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:40px;}
+.filter-btn{
+  padding:6px 16px;border-radius:20px;font-size:0.8em;font-weight:500;
+  border:1px solid var(--border);background:transparent;color:var(--text2);
+  cursor:pointer;transition:all 0.15s;font-family:var(--fb);
+}
+.filter-btn:hover{border-color:var(--border2);color:var(--text);}
+.filter-btn.active{background:rgba(0,212,160,0.1);border-color:rgba(0,212,160,0.3);color:var(--green);}
+
+/* ══════════════════════════════════════════
+   EDUCATION PAGE
+══════════════════════════════════════════ */
+.edu-hero{
+  padding:80px 6vw 52px;
+  background:linear-gradient(180deg,rgba(124,95,245,0.04) 0%,transparent 100%);
+  border-bottom:1px solid var(--border);
+}
+.edu-sidebar-layout{display:grid;grid-template-columns:240px 1fr;gap:40px;padding:52px 6vw;align-items:start;}
+.edu-sidebar{
+  background:var(--surf);border:1px solid var(--border);
+  border-radius:var(--r2);padding:20px;position:sticky;top:80px;
+}
+.edu-sidebar-title{font-size:0.7em;font-weight:600;text-transform:uppercase;letter-spacing:1.5px;color:var(--text3);margin-bottom:14px;}
+.edu-nav-item{
+  padding:9px 14px;border-radius:9px;font-size:0.85em;color:var(--text2);
+  cursor:pointer;transition:all 0.12s;margin-bottom:2px;
+  display:flex;align-items:center;gap:8px;
+}
+.edu-nav-item:hover{background:rgba(255,255,255,0.04);color:var(--text);}
+.edu-nav-item.active{background:rgba(124,95,245,0.1);color:var(--purple);}
+.edu-nav-group{margin-top:16px;}
+.edu-nav-group-title{font-size:0.68em;text-transform:uppercase;letter-spacing:1px;color:var(--text3);padding:0 14px;margin-bottom:6px;}
+
+/* Tutorial card */
+.tutorial-panel{display:none;}
+.tutorial-panel.active{display:block;animation:pageIn 0.3s ease both;}
+.tutorial-header{
+  background:var(--surf);border:1px solid var(--border);border-radius:var(--r2);
+  padding:28px;margin-bottom:20px;
+}
+.tutorial-step{
+  background:var(--surf);border:1px solid var(--border);border-radius:var(--r);
+  margin-bottom:12px;overflow:hidden;
+}
+.tutorial-step-head{
+  padding:14px 18px;display:flex;align-items:center;gap:12px;
+  cursor:pointer;
+}
+.tutorial-step-head:hover{background:rgba(255,255,255,0.03);}
+.tsh-num{
+  width:26px;height:26px;border-radius:50%;background:var(--purple);
+  color:white;font-weight:700;font-size:0.78em;display:flex;
+  align-items:center;justify-content:center;flex-shrink:0;
+}
+.tsh-title{font-weight:600;font-size:0.9em;flex:1;}
+.tsh-chev{color:var(--text3);font-size:0.8em;transition:transform 0.2s;}
+.tutorial-step.open .tsh-chev{transform:rotate(90deg);}
+.tutorial-step-body{
+  max-height:0;overflow:hidden;transition:max-height 0.3s ease;
+  padding:0 18px;
+}
+.tutorial-step.open .tutorial-step-body{max-height:600px;padding:0 18px 16px;}
+.code-block{
+  background:#060d14;border:1px solid var(--border);border-left:3px solid var(--purple);
+  border-radius:10px;padding:14px 16px;margin:10px 0;
+  font-family:var(--fm);font-size:0.82em;color:#a5d6ff;
+  position:relative;overflow:auto;
+}
+.code-comment{color:#4a6080;font-style:italic;}
+.copy-code-btn{
+  position:absolute;top:8px;right:8px;padding:3px 10px;
+  background:rgba(255,255,255,0.07);border:1px solid var(--border);
+  border-radius:5px;font-size:0.72em;color:var(--text3);cursor:pointer;
+  font-family:var(--fb);transition:all 0.12s;
+}
+.copy-code-btn:hover{background:rgba(124,95,245,0.15);color:var(--purple);border-color:var(--purple);}
+.copy-code-btn.ok{background:rgba(0,212,160,0.15);color:var(--green);border-color:var(--green);}
+.info-box{
+  border-radius:10px;padding:12px 16px;margin:12px 0;
+  font-size:0.85em;line-height:1.6;display:flex;gap:10px;align-items:flex-start;
+}
+.info-box.tip{background:rgba(0,212,160,0.07);border-left:3px solid var(--green);color:#7ee8c8;}
+.info-box.note{background:rgba(0,150,255,0.07);border-left:3px solid var(--blue);color:#9eceff;}
+.info-box.warn{background:rgba(240,136,62,0.07);border-left:3px solid var(--orange);color:#f0a865;}
+
+/* Resource cards */
+.resource-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px;margin-top:28px;}
+.res-card{
+  background:var(--surf);border:1px solid var(--border);border-radius:var(--r);
+  padding:20px;display:flex;gap:14px;align-items:flex-start;
+  transition:all 0.15s;cursor:pointer;
+}
+.res-card:hover{border-color:var(--border2);background:var(--bg3);}
+.res-icon{font-size:1.4em;flex-shrink:0;}
+.res-title{font-weight:600;font-size:0.9em;margin-bottom:4px;}
+.res-desc{font-size:0.8em;color:var(--text2);line-height:1.55;}
+.res-url{font-size:0.75em;color:var(--purple);font-family:var(--fm);margin-top:5px;}
+
+/* ══════════════════════════════════════════
+   CONTACT PAGE
+══════════════════════════════════════════ */
+.contact-hero{
+  padding:80px 6vw 52px;
+  background:linear-gradient(180deg,rgba(0,150,255,0.04) 0%,transparent 100%);
+  border-bottom:1px solid var(--border);
+}
+.contact-layout{display:grid;grid-template-columns:1fr 1fr;gap:40px;padding:52px 6vw;}
+.contact-card{
+  background:var(--surf);border:1px solid var(--border);
+  border-radius:var(--r2);padding:32px;
+}
+.contact-item{
+  display:flex;gap:14px;align-items:flex-start;padding:16px 0;
+  border-bottom:1px solid var(--border);
+}
+.contact-item:last-child{border-bottom:none;}
+.contact-item-icon{
+  width:40px;height:40px;border-radius:10px;background:var(--bg3);
+  border:1px solid var(--border);display:flex;align-items:center;
+  justify-content:center;font-size:1.1em;flex-shrink:0;
+}
+.contact-item-label{font-size:0.72em;color:var(--text3);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:3px;}
+.contact-item-val{font-size:0.9em;color:var(--text);}
+.contact-item-val a{color:var(--blue);transition:color 0.15s;}
+.contact-item-val a:hover{color:var(--green);}
+
+/* Form */
+.form-field{margin-bottom:18px;}
+.form-label{font-size:0.78em;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;color:var(--text2);margin-bottom:7px;display:block;}
+.form-input,.form-textarea,.form-select{
+  width:100%;padding:11px 14px;border-radius:9px;
+  background:var(--bg3);border:1px solid var(--border);
+  color:var(--text);font-family:var(--fb);font-size:0.88em;
+  transition:border 0.15s;
+}
+.form-input:focus,.form-textarea:focus,.form-select:focus{outline:none;border-color:rgba(0,150,255,0.5);}
+.form-textarea{height:120px;resize:vertical;}
+.form-select option{background:var(--bg2);}
+.form-submit{
+  width:100%;padding:13px;border-radius:10px;background:var(--blue);
+  color:white;font-weight:700;font-size:0.9em;cursor:pointer;
+  border:none;font-family:var(--fb);transition:all 0.15s;
+}
+.form-submit:hover{background:#2ba3ff;transform:translateY(-1px);}
+.form-success{
+  display:none;text-align:center;padding:20px;background:rgba(0,212,160,0.07);
+  border:1px solid rgba(0,212,160,0.2);border-radius:10px;color:var(--green);font-size:0.9em;
+}
+
+/* Social links */
+.social-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-top:24px;}
+.social-link{
+  background:var(--bg3);border:1px solid var(--border);border-radius:10px;
+  padding:14px 16px;display:flex;align-items:center;gap:10px;
+  font-size:0.85em;font-weight:500;color:var(--text2);
+  transition:all 0.15s;cursor:pointer;
+}
+.social-link:hover{border-color:var(--border2);color:var(--text);background:var(--surf);}
+.social-link .icon{font-size:1.2em;}
+
+/* FAQ */
+.faq-list{margin-top:28px;}
+.faq-item{border-bottom:1px solid var(--border);overflow:hidden;}
+.faq-q{
+  padding:16px 0;display:flex;justify-content:space-between;align-items:center;
+  cursor:pointer;font-weight:500;font-size:0.92em;
+}
+.faq-q:hover{color:var(--green);}
+.faq-chev{color:var(--text3);transition:transform 0.2s;flex-shrink:0;margin-left:16px;}
+.faq-item.open .faq-chev{transform:rotate(180deg);}
+.faq-a{max-height:0;overflow:hidden;transition:max-height 0.3s ease;}
+.faq-item.open .faq-a{max-height:400px;}
+.faq-a-inner{padding:0 0 16px;font-size:0.86em;color:var(--text2);line-height:1.7;font-weight:300;}
+
+/* ══════════════════════════════════════════
+   FOOTER
+══════════════════════════════════════════ */
+footer{
+  background:var(--bg2);border-top:1px solid var(--border);
+  padding:48px 6vw 28px;position:relative;z-index:1;
+}
+.footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:40px;margin-bottom:40px;}
+.footer-brand-name{font-family:var(--fh);font-weight:800;font-size:1.3em;margin-bottom:10px;}
+.footer-brand-name span{color:var(--green);}
+.footer-brand-desc{font-size:0.83em;color:var(--text3);line-height:1.6;max-width:280px;font-weight:300;}
+.footer-col h4{font-size:0.75em;text-transform:uppercase;letter-spacing:1px;color:var(--text3);margin-bottom:14px;}
+.footer-col ul{list-style:none;display:flex;flex-direction:column;gap:9px;}
+.footer-col ul li{font-size:0.84em;color:var(--text2);cursor:pointer;transition:color 0.12s;}
+.footer-col ul li:hover{color:var(--green);}
+.footer-bottom{
+  border-top:1px solid var(--border);padding-top:20px;
+  display:flex;justify-content:space-between;align-items:center;
+  font-size:0.76em;color:var(--text3);flex-wrap:wrap;gap:10px;
+}
+
+/* ══════════════════════════════════════════
+   RESPONSIVE
+══════════════════════════════════════════ */
+@media(max-width:900px){
+  .edu-sidebar-layout{grid-template-columns:1fr;}
+  .edu-sidebar{position:static;margin-bottom:24px;}
+  .contact-layout{grid-template-columns:1fr;}
+  .footer-grid{grid-template-columns:1fr 1fr;}
+}
+@media(max-width:640px){
+  .nav-tabs{display:none;}
+  .nav-burger{display:block;}
+  .nav-dl{display:none;}
+  .hero{padding:60px 5vw 40px;}
+  .footer-grid{grid-template-columns:1fr;}
+  .section{padding:52px 5vw;}
+}
+</style>
+</head>
+<body>
+
+<div class="bg-grid"></div>
+
+<!-- ══════════════════════════════════════════
+     NAVIGATION
+══════════════════════════════════════════ -->
+<nav>
+  <div class="nav-logo" onclick="showPage('home')" style="cursor:pointer;">
+    <svg viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="17" cy="17" r="16" stroke="#00d4a0" stroke-width="1" opacity="0.35"/>
+      <path d="M9 7 Q13 11.5 9 17 Q5 22.5 9 27" stroke="#00d4a0" stroke-width="2" stroke-linecap="round" fill="none"/>
+      <path d="M25 7 Q21 11.5 25 17 Q29 22.5 25 27" stroke="#0096ff" stroke-width="2" stroke-linecap="round" fill="none"/>
+      <line x1="9" y1="10.5" x2="25" y2="10.5" stroke="#00d4a0" stroke-width="1.4" stroke-linecap="round" opacity="0.55"/>
+      <line x1="9" y1="17" x2="25" y2="17" stroke="#7c5ff5" stroke-width="1.4" stroke-linecap="round" opacity="0.8"/>
+      <line x1="9" y1="23.5" x2="25" y2="23.5" stroke="#00d4a0" stroke-width="1.4" stroke-linecap="round" opacity="0.55"/>
+      <circle cx="17" cy="10.5" r="2.2" fill="#00d4a0"/>
+      <circle cx="17" cy="17"   r="2.2" fill="#7c5ff5"/>
+      <circle cx="17" cy="23.5" r="2.2" fill="#0096ff"/>
+    </svg>
+    <span class="nav-logo-text">BioInfo<span>Codex</span></span>
+  </div>
+
+  <div class="nav-tabs">
+    <div class="nav-tab active" id="tab-home"     onclick="showPage('home')">🏠 Home</div>
+    <div class="nav-tab"        id="tab-tools"    onclick="showPage('tools')">🧬 Bioinfo Tools</div>
+    <div class="nav-tab"        id="tab-edu"      onclick="showPage('edu')">📚 Education</div>
+    <div class="nav-tab"        id="tab-contact"  onclick="showPage('contact')">✉️ Contact</div>
+  </div>
+
+  <div class="nav-spacer"></div>
+  <button class="nav-dl" onclick="showPage('tools')">⬇ Free Tools</button>
+  <button class="nav-burger" onclick="toggleMobile()">☰</button>
+</nav>
+
+<!-- Mobile menu -->
+<div class="mobile-menu" id="mobile-menu">
+  <div class="nav-tab" onclick="showPage('home');toggleMobile()">🏠 Home</div>
+  <div class="nav-tab" onclick="showPage('tools');toggleMobile()">🧬 Bioinfo Tools</div>
+  <div class="nav-tab" onclick="showPage('edu');toggleMobile()">📚 Education</div>
+  <div class="nav-tab" onclick="showPage('contact');toggleMobile()">✉️ Contact</div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     HOME PAGE
+══════════════════════════════════════════ -->
+<div class="page active" id="page-home">
+
+  <!-- Hero -->
+  <div class="hero">
+    <div class="hero-inner">
+      <div class="hero-badge">
+        <span class="hero-dot"></span>
+        Open-source · Free forever · bioinfocodex.com
+      </div>
+      <h1 class="h1">Decode biology.<br><em class="g">One analysis at a time.</em></h1>
+      <p class="lead">BioInfoCodex is your free, open-source bioinformatics codex — guided tools, step-by-step tutorials, and education resources that make powerful genomics analysis accessible to every researcher, regardless of coding experience.</p>
+      <div class="hero-ctas">
+        <button class="btn btn-green" onclick="showPage('tools')">🧬 Explore Tools</button>
+        <button class="btn btn-outline" onclick="showPage('edu')">📚 Start Learning →</button>
+      </div>
+      <div class="hero-scroll">
+        <div class="hero-stat"><div class="val">100%</div><div class="lbl">Free & open-source</div></div>
+        <div class="hero-stat"><div class="val">15+</div><div class="lbl">Organisms supported</div></div>
+        <div class="hero-stat"><div class="val">3</div><div class="lbl">Operating systems</div></div>
+        <div class="hero-stat"><div class="val">40+</div><div class="lbl">Gene families</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- Who we are -->
+  <div class="section reveal">
+    <div class="label">Who we are</div>
+    <h2 class="h2">About BioInfoCodex</h2>
+    <p class="lead">We are researchers who spent too much time fighting with software and too little time doing biology. BioInfoCodex exists to fix that — one guided tool, one tutorial, one pipeline at a time.</p>
+
+    <div class="pillars" style="margin-top:40px;">
+      <div class="pillar">
+        <div class="pillar-icon">🎯</div>
+        <div class="pillar-title">Our mission</div>
+        <p class="pillar-desc">Remove technical barriers between researchers and their data. Every tool includes step-by-step guidance, so your biological question comes first.</p>
+      </div>
+      <div class="pillar">
+        <div class="pillar-icon">🔓</div>
+        <div class="pillar-title">Always free</div>
+        <p class="pillar-desc">Every tool, tutorial, and resource on BioInfoCodex is and will remain free and open-source. No subscriptions, no paywalls, no hidden limits.</p>
+      </div>
+      <div class="pillar">
+        <div class="pillar-icon">🌍</div>
+        <div class="pillar-title">For everyone</div>
+        <p class="pillar-desc">Designed for beginners with no coding background, and flexible enough for experienced bioinformaticians who want to move faster.</p>
+      </div>
+      <div class="pillar">
+        <div class="pillar-icon">🔬</div>
+        <div class="pillar-title">Research-grade</div>
+        <p class="pillar-desc">Built on the same tools used in published research — HISAT2, DESeq2, GATK, samtools — properly configured and ready to use.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- Team -->
+  <div class="section reveal">
+    <div class="label">The team</div>
+    <h2 class="h2">People behind BioInfoCodex</h2>
+    <p class="lead">Researchers and developers who believe great science software should be accessible to everyone.</p>
+
+    <div class="team-grid">
+      <div class="team-card">
+        <div class="team-avatar">👨‍🔬</div>
+        <div class="team-name">Matrika Bhattarai</div>
+        <div class="team-role">Founder & Lead Developer</div>
+        <p class="team-bio">Researcher specialising in RNA-seq and functional genomics. Researcher specialising in RNA-seq and functional genomics. Built RNAflow and founded BioInfoCodex to make bioinformatics accessible to every researcher worldwide.</p>
+      </div>
+      <div class="team-card" style="opacity:0.5; border-style:dashed;">
+        <div class="team-avatar">➕</div>
+        <div class="team-name">Your name here</div>
+        <div class="team-role">Contributor</div>
+        <p class="team-bio">BioInfoCodex is open-source. If you want to contribute a tool, tutorial, or bug fix, we'd love to have you on the team.</p>
+      </div>
+      <div class="team-card" style="opacity:0.5; border-style:dashed;">
+        <div class="team-avatar">➕</div>
+        <div class="team-name">Collaborators welcome</div>
+        <div class="team-role">Any expertise</div>
+        <p class="team-bio">Bioinformaticians, biologists, statisticians, web developers — all contributions welcome. Get in touch via the Contact page.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- What's coming -->
+  <div class="section reveal">
+    <div class="label">Roadmap</div>
+    <h2 class="h2">What's coming</h2>
+    <p class="lead">BioInfoCodex is a growing platform. Here's what's in development — new tools and tutorials added regularly.</p>
+    <div class="card-grid card-grid-3" style="margin-top:36px;">
+      <div class="card"><div style="font-size:1.4em;margin-bottom:10px;">🧬</div><div class="h3">RNAflow v1.0</div><span class="tag tag-green">Live now</span><p class="sub" style="margin-top:8px;">Complete RNA-seq pipeline with gene family analysis, 15 organisms, Run mode.</p></div>
+      <div class="card"><div style="font-size:1.4em;margin-bottom:10px;">🔬</div><div class="h3">NGSuite</div><span class="tag tag-dim">Q3 2025</span><p class="sub" style="margin-top:8px;">Whole-genome sequencing, variant calling, SNP/INDEL annotation.</p></div>
+      <div class="card"><div style="font-size:1.4em;margin-bottom:10px;">⭕</div><div class="h3">PlasmidMap</div><span class="tag tag-dim">Q4 2025</span><p class="sub" style="margin-top:8px;">Plasmid design, restriction site analysis, GenBank import/export.</p></div>
+      <div class="card"><div style="font-size:1.4em;margin-bottom:10px;">🏔️</div><div class="h3">ChIPflow</div><span class="tag tag-dim">2026</span><p class="sub" style="margin-top:8px;">ChIP-seq and ATAC-seq — peak calling, motif analysis, chromatin accessibility.</p></div>
+      <div class="card"><div style="font-size:1.4em;margin-bottom:10px;">🌿</div><div class="h3">MetaFlow</div><span class="tag tag-dim">2026</span><p class="sub" style="margin-top:8px;">Metagenomics, 16S rRNA, microbiome diversity and differential abundance.</p></div>
+      <div class="card"><div style="font-size:1.4em;margin-bottom:10px;">📚</div><div class="h3">Education portal</div><span class="tag tag-orange">In progress</span><p class="sub" style="margin-top:8px;">Step-by-step tutorials for every major bioinformatics method.</p></div>
+    </div>
+  </div>
+
+</div><!-- /home -->
+
+<!-- ══════════════════════════════════════════
+     TOOLS PAGE
+══════════════════════════════════════════ -->
+<div class="page" id="page-tools">
+
+  <div class="tools-hero">
+    <div class="label">Software</div>
+    <h1 class="h1">Bioinfo Tools</h1>
+    <p class="lead">Free, guided pipelines for every major bioinformatics workflow. Each tool runs on your own computer — your data never leaves your machine.</p>
+  </div>
+
+  <div class="section">
+    <!-- Filter -->
+    <div class="filter-bar">
+      <button class="filter-btn active" onclick="filterTools('all',this)">All tools</button>
+      <button class="filter-btn" onclick="filterTools('live',this)">✦ Available now</button>
+      <button class="filter-btn" onclick="filterTools('rna',this)">RNA-seq</button>
+      <button class="filter-btn" onclick="filterTools('dna',this)">DNA / Genomics</button>
+      <button class="filter-btn" onclick="filterTools('epi',this)">Epigenomics</button>
+      <button class="filter-btn" onclick="filterTools('plant',this)">Plants</button>
+      <button class="filter-btn" onclick="filterTools('micro',this)">Microbiome</button>
+    </div>
+
+    <!-- Available now -->
+    <div class="tool-category">
+      <div class="tool-category-title">✦ Available now</div>
+      <div class="card-grid card-grid-2">
+
+        <!-- RNAflow -->
+        <div class="tool-card live" data-tags="rna live plant">
+          <div class="tool-top">
+            <div class="tool-icon-wrap">🧬</div>
+            <div class="tool-meta">
+              <div class="tool-name">RNAflow</div>
+              <div class="tool-version">v1.0 · Released 2025</div>
+            </div>
+            <span class="tag tag-green">Live</span>
+          </div>
+          <p class="tool-desc">Complete RNA-seq analysis pipeline — download raw data from NCBI, quality control, adapter trimming, genome alignment, gene counting, DESeq2 differential expression, volcano plots, heatmaps, PCA, and gene family analysis. Works on 15+ organisms including all major crop plants.</p>
+          <div class="chips">
+            <span class="chip">RNA-seq</span><span class="chip">DESeq2</span><span class="chip">HISAT2</span>
+            <span class="chip">FastQC</span><span class="chip">fastp</span><span class="chip">featureCounts</span>
+            <span class="chip">ggplot2</span><span class="chip">15 organisms</span>
+          </div>
+          <div class="tool-actions" style="margin-top:18px;">
+            <button class="tool-btn dl" onclick="downloadTool('app')">⬇ Download App (.html)</button>
+            <button class="tool-btn dl" onclick="downloadTool('server')" style="background:#0096ff;">⬇ Download Server (.py)</button>
+            <button class="tool-btn doc" onclick="showPage('edu')">📖 Tutorial</button>
+          </div>
+          <div style="margin-top:14px;padding:10px 14px;background:rgba(0,212,160,0.05);border:1px solid rgba(0,212,160,0.1);border-radius:8px;font-size:0.78em;color:var(--text2);">
+            🍎 macOS &nbsp;·&nbsp; 🐧 Linux &nbsp;·&nbsp; 🪟 Windows (WSL2) &nbsp;·&nbsp; 🐍 Python 3.6+ &nbsp;·&nbsp; 📊 R 4.0+
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- In development -->
+    <div class="tool-category">
+      <div class="tool-category-title" style="color:var(--text3);">In development</div>
+      <div class="card-grid card-grid-2">
+
+        <div class="tool-card coming" data-tags="dna live">
+          <div class="tool-top">
+            <div class="tool-icon-wrap" style="opacity:0.6;">🔬</div>
+            <div class="tool-meta">
+              <div class="tool-name">NGSuite</div>
+              <div class="tool-version">Expected Q3 2025</div>
+            </div>
+            <span class="tag tag-dim">Soon</span>
+          </div>
+          <p class="tool-desc">Whole-genome and exome sequencing pipeline. Variant calling with GATK, SNP/INDEL annotation, structural variant detection, population genetics.</p>
+          <div class="chips"><span class="chip">WGS / WES</span><span class="chip">GATK4</span><span class="chip">BWA-MEM2</span><span class="chip">VEP</span></div>
+          <div class="tool-actions" style="margin-top:18px;">
+            <button class="tool-btn notify">🔔 Notify me when ready</button>
+          </div>
+        </div>
+
+        <div class="tool-card coming" data-tags="dna">
+          <div class="tool-top">
+            <div class="tool-icon-wrap" style="opacity:0.6;">⭕</div>
+            <div class="tool-meta">
+              <div class="tool-name">PlasmidMap</div>
+              <div class="tool-version">Expected Q4 2025</div>
+            </div>
+            <span class="tag tag-dim">Soon</span>
+          </div>
+          <p class="tool-desc">Plasmid design and annotation. Import GenBank files, identify restriction sites, annotate features, export circular maps for publication.</p>
+          <div class="chips"><span class="chip">Plasmid design</span><span class="chip">GenBank</span><span class="chip">Restriction sites</span><span class="chip">Circular maps</span></div>
+          <div class="tool-actions" style="margin-top:18px;">
+            <button class="tool-btn notify">🔔 Notify me when ready</button>
+          </div>
+        </div>
+
+        <div class="tool-card coming" data-tags="epi">
+          <div class="tool-top">
+            <div class="tool-icon-wrap" style="opacity:0.6;">🏔️</div>
+            <div class="tool-meta">
+              <div class="tool-name">ChIPflow</div>
+              <div class="tool-version">Expected 2026</div>
+            </div>
+            <span class="tag tag-dim">Soon</span>
+          </div>
+          <p class="tool-desc">ChIP-seq and ATAC-seq pipeline. Peak calling with MACS2, motif analysis with HOMER, differential chromatin accessibility, BigWig tracks.</p>
+          <div class="chips"><span class="chip">ChIP-seq</span><span class="chip">ATAC-seq</span><span class="chip">MACS2</span><span class="chip">HOMER</span></div>
+          <div class="tool-actions" style="margin-top:18px;">
+            <button class="tool-btn notify">🔔 Notify me when ready</button>
+          </div>
+        </div>
+
+        <div class="tool-card coming" data-tags="micro">
+          <div class="tool-top">
+            <div class="tool-icon-wrap" style="opacity:0.6;">🌿</div>
+            <div class="tool-meta">
+              <div class="tool-name">MetaFlow</div>
+              <div class="tool-version">Expected 2026</div>
+            </div>
+            <span class="tag tag-dim">Soon</span>
+          </div>
+          <p class="tool-desc">Metagenomics and 16S rRNA microbiome pipeline. Taxonomic classification, alpha/beta diversity, differential abundance with DESeq2.</p>
+          <div class="chips"><span class="chip">Metagenomics</span><span class="chip">16S rRNA</span><span class="chip">QIIME2</span><span class="chip">Kraken2</span></div>
+          <div class="tool-actions" style="margin-top:18px;">
+            <button class="tool-btn notify">🔔 Notify me when ready</button>
+          </div>
+        </div>
+
+        <div class="tool-card coming" data-tags="rna">
+          <div class="tool-top">
+            <div class="tool-icon-wrap" style="opacity:0.6;">🔭</div>
+            <div class="tool-meta">
+              <div class="tool-name">scRNAflow</div>
+              <div class="tool-version">Expected 2026</div>
+            </div>
+            <span class="tag tag-dim">Soon</span>
+          </div>
+          <p class="tool-desc">Single-cell RNA-seq pipeline using Seurat. Cell clustering, UMAP visualisation, marker gene identification, trajectory analysis.</p>
+          <div class="chips"><span class="chip">scRNA-seq</span><span class="chip">Seurat</span><span class="chip">UMAP</span><span class="chip">Cell typing</span></div>
+          <div class="tool-actions" style="margin-top:18px;">
+            <button class="tool-btn notify">🔔 Notify me when ready</button>
+          </div>
+        </div>
+
+        <div class="tool-card coming" data-tags="plant rna">
+          <div class="tool-top">
+            <div class="tool-icon-wrap" style="opacity:0.6;">⚗️</div>
+            <div class="tool-meta">
+              <div class="tool-name">ProteomicsLab</div>
+              <div class="tool-version">Expected 2026</div>
+            </div>
+            <span class="tag tag-dim">Soon</span>
+          </div>
+          <p class="tool-desc">Mass spectrometry proteomics. Label-free quantification, TMT/iTRAQ, PTM analysis, pathway enrichment, volcano plots for protein data.</p>
+          <div class="chips"><span class="chip">Proteomics</span><span class="chip">MaxQuant</span><span class="chip">LFQ</span><span class="chip">TMT</span></div>
+          <div class="tool-actions" style="margin-top:18px;">
+            <button class="tool-btn notify">🔔 Notify me when ready</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+</div><!-- /tools -->
+
+<!-- ══════════════════════════════════════════
+     EDUCATION PAGE
+══════════════════════════════════════════ -->
+<div class="page" id="page-edu">
+
+  <div class="edu-hero">
+    <div class="label">Education</div>
+    <h1 class="h1">Learn Bioinformatics</h1>
+    <p class="lead">Step-by-step tutorials, database guides, and concept explanations — from downloading your first sequence to running a complete analysis pipeline.</p>
+  </div>
+
+  <div class="edu-sidebar-layout">
+
+    <!-- Sidebar -->
+    <div class="edu-sidebar">
+      <div class="edu-sidebar-title">Topics</div>
+
+      <div class="edu-nav-group">
+        <div class="edu-nav-group-title">Getting started</div>
+        <div class="edu-nav-item active" onclick="showTutorial('intro',this)">🚀 Introduction to bioinformatics</div>
+        <div class="edu-nav-item" onclick="showTutorial('setup',this)">⚙️ Setting up your environment</div>
+        <div class="edu-nav-item" onclick="showTutorial('terminal',this)">🖥️ Using the terminal</div>
+      </div>
+
+      <div class="edu-nav-group">
+        <div class="edu-nav-group-title">Data & databases</div>
+        <div class="edu-nav-item" onclick="showTutorial('ncbi',this)">🗄️ NCBI — what is it?</div>
+        <div class="edu-nav-item" onclick="showTutorial('download-seq',this)">⬇️ How to download sequences</div>
+        <div class="edu-nav-item" onclick="showTutorial('sra',this)">📦 Download SRA / RNA-seq data</div>
+        <div class="edu-nav-item" onclick="showTutorial('ensembl',this)">🌐 Ensembl — genome downloads</div>
+        <div class="edu-nav-item" onclick="showTutorial('formats',this)">📄 File formats explained</div>
+      </div>
+
+      <div class="edu-nav-group">
+        <div class="edu-nav-group-title">RNA-seq analysis</div>
+        <div class="edu-nav-item" onclick="showTutorial('rnaseq-intro',this)">🧬 What is RNA-seq?</div>
+        <div class="edu-nav-item" onclick="showTutorial('qc',this)">🔬 Quality control (FastQC)</div>
+        <div class="edu-nav-item" onclick="showTutorial('alignment',this)">🎯 Alignment concepts</div>
+        <div class="edu-nav-item" onclick="showTutorial('deseq2-intro',this)">📊 DESeq2 — the statistics</div>
+      </div>
+
+      <div class="edu-nav-group">
+        <div class="edu-nav-group-title">Resources</div>
+        <div class="edu-nav-item" onclick="showTutorial('databases',this)">🗂️ Key bioinformatics databases</div>
+        <div class="edu-nav-item" onclick="showTutorial('glossary',this)">📖 Glossary</div>
+      </div>
+    </div>
+
+    <!-- Content panels -->
+    <div>
+
+      <!-- Intro panel -->
+      <div class="tutorial-panel active" id="tut-intro">
+        <div class="tutorial-header">
+          <div class="label">Getting started</div>
+          <h2 class="h2">Introduction to Bioinformatics</h2>
+          <p class="sub">Bioinformatics is the science of using computers to make sense of biological data — DNA sequences, gene expression levels, protein structures, and more. This guide gives you the foundation you need before diving into any analysis.</p>
+        </div>
+        <div class="tutorial-step open" onclick="toggleTutStep(this)">
+          <div class="tutorial-step-head"><span class="tsh-num">1</span><span class="tsh-title">What is bioinformatics?</span><span class="tsh-chev">▶</span></div>
+          <div class="tutorial-step-body">
+            <p class="sub">Bioinformatics combines biology, computer science, and statistics. Modern sequencing machines generate gigabytes of data per experiment. Bioinformatics tools process that data to answer biological questions — which genes are active? What mutations are present? Which proteins interact?</p>
+            <div class="info-box tip"><span>💡</span><div>Think of it like this: the sequencing machine is a camera, the raw data is the photograph, and bioinformatics is the darkroom where the image becomes meaningful.</div></div>
+          </div>
+        </div>
+        <div class="tutorial-step" onclick="toggleTutStep(this)">
+          <div class="tutorial-step-head"><span class="tsh-num">2</span><span class="tsh-title">The central dogma — why it matters</span><span class="tsh-chev">▶</span></div>
+          <div class="tutorial-step-body">
+            <p class="sub">DNA is transcribed into RNA, which is translated into protein. Most bioinformatics workflows target one of these molecules. RNA-seq measures gene expression (DNA → RNA). WGS measures DNA variation. Proteomics measures proteins. Knowing which level you're working at guides your choice of tools.</p>
+          </div>
+        </div>
+        <div class="tutorial-step" onclick="toggleTutStep(this)">
+          <div class="tutorial-step-head"><span class="tsh-num">3</span><span class="tsh-title">Key concepts you'll encounter</span><span class="tsh-chev">▶</span></div>
+          <div class="tutorial-step-body">
+            <p class="sub" style="margin-bottom:12px;">Before starting any analysis, it helps to understand these fundamental concepts:</p>
+            <div class="card-grid card-grid-2" style="margin-top:0;">
+              <div class="card" style="padding:16px;"><strong>Reference genome</strong><p class="sub" style="margin-top:4px;">A standard DNA sequence representing a species. Your experimental reads are mapped back to this to find where they came from.</p></div>
+              <div class="card" style="padding:16px;"><strong>Read</strong><p class="sub" style="margin-top:4px;">A short DNA/RNA sequence (50–300 bp) produced by a sequencer. One experiment generates millions of reads.</p></div>
+              <div class="card" style="padding:16px;"><strong>Alignment</strong><p class="sub" style="margin-top:4px;">Finding where each read belongs on the reference genome. Like placing puzzle pieces back onto the picture on the box.</p></div>
+              <div class="card" style="padding:16px;"><strong>Gene expression</strong><p class="sub" style="margin-top:4px;">How active a gene is. Measured as number of RNA reads that map to that gene's location. More reads = more expression.</p></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Download sequences panel -->
+      <div class="tutorial-panel" id="tut-download-seq">
+        <div class="tutorial-header">
+          <div class="label">Databases</div>
+          <h2 class="h2">How to download sequences</h2>
+          <p class="sub">Biological sequence data is stored in public databases. This guide covers the most important ones and exactly how to download sequences for your organism of interest.</p>
+        </div>
+        <div class="tutorial-step open" onclick="toggleTutStep(this)">
+          <div class="tutorial-step-head"><span class="tsh-num">1</span><span class="tsh-title">NCBI — find any sequence</span><span class="tsh-chev">▶</span></div>
+          <div class="tutorial-step-body">
+            <p class="sub" style="margin-bottom:10px;">The National Center for Biotechnology Information (NCBI) hosts the world's largest biological database. Start at <strong>ncbi.nlm.nih.gov</strong></p>
+            <div class="info-box note"><span>🔗</span><div><strong>ncbi.nlm.nih.gov</strong> — NCBI homepage. Use the search bar to find sequences, genomes, papers, and raw sequencing data.</div></div>
+            <p class="sub" style="margin:10px 0;">Key NCBI databases:</p>
+            <div class="card-grid card-grid-2" style="margin:0;">
+              <div class="card" style="padding:14px;"><strong>GenBank</strong><p class="sub" style="margin-top:4px;">Annotated nucleotide sequences. Search by gene name, accession number, or organism. Download as FASTA or GenBank format.</p></div>
+              <div class="card" style="padding:14px;"><strong>SRA (Sequence Read Archive)</strong><p class="sub" style="margin-top:4px;">Raw sequencing data from published experiments. Search by GEO dataset ID, paper title, or organism + technique.</p></div>
+              <div class="card" style="padding:14px;"><strong>RefSeq</strong><p class="sub" style="margin-top:4px;">Curated, non-redundant reference sequences. Better than raw GenBank for known genes. Accessions start with NM_, NR_, XM_.</p></div>
+              <div class="card" style="padding:14px;"><strong>Genome</strong><p class="sub" style="margin-top:4px;">Whole genome assemblies. Find reference genomes for any organism, download chromosome FASTA files.</p></div>
+            </div>
+          </div>
+        </div>
+        <div class="tutorial-step" onclick="toggleTutStep(this)">
+          <div class="tutorial-step-head"><span class="tsh-num">2</span><span class="tsh-title">Download a gene sequence from NCBI</span><span class="tsh-chev">▶</span></div>
+          <div class="tutorial-step-body">
+            <p class="sub" style="margin-bottom:8px;">Step by step — finding and downloading a specific gene:</p>
+            <div class="info-box tip"><span>💡</span><div>Example: downloading the <em>TP53</em> gene sequence from human</div></div>
+            <p class="sub">1. Go to <strong>ncbi.nlm.nih.gov/gene</strong></p>
+            <p class="sub">2. Search: <code style="background:var(--bg3);padding:2px 6px;border-radius:4px;font-family:var(--fm);">TP53[gene] AND "Homo sapiens"[orgn]</code></p>
+            <p class="sub">3. Click the top result → scroll to "RefSeq Status" section → click the NM_ accession</p>
+            <p class="sub">4. On the sequence page: click <strong>Send to → File → FASTA → Create file</strong></p>
+            <p class="sub" style="margin-top:8px;">For command-line download:</p>
+            <div class="code-block"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button><span class="code-comment"># Install Entrez Direct tools (once)</span>
+sh -c "$(curl -fsSL https://ftp.ncbi.nlm.nih.gov/entrez/entrezdirect/install-edirect.sh)"
+
+<span class="code-comment"># Download a gene by accession number</span>
+efetch -db nuccore -id NM_000546 -format fasta > TP53_mRNA.fa
+
+<span class="code-comment"># Download protein sequence</span>
+efetch -db protein -id NP_000537 -format fasta > TP53_protein.fa</div>
+          </div>
+        </div>
+        <div class="tutorial-step" onclick="toggleTutStep(this)">
+          <div class="tutorial-step-head"><span class="tsh-num">3</span><span class="tsh-title">Download genome FASTA from Ensembl</span><span class="tsh-chev">▶</span></div>
+          <div class="tutorial-step-body">
+            <div class="info-box note"><span>🌐</span><div>Ensembl is the best source for complete annotated genomes — especially for model organisms.</div></div>
+            <div class="code-block"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button><span class="code-comment"># Human genome (GRCh38)</span>
+curl -L -O ftp://ftp.ensembl.org/pub/release-109/fasta/homo_sapiens/dna/Homo_sapiens.GRCh38.dna.primary_assembly.fa.gz
+
+<span class="code-comment"># Mouse genome (GRCm39)</span>
+curl -L -O ftp://ftp.ensembl.org/pub/release-109/fasta/mus_musculus/dna/Mus_musculus.GRCm39.dna.primary_assembly.fa.gz
+
+<span class="code-comment"># Arabidopsis (TAIR10) — from Ensembl Plants</span>
+curl -L -O ftp://ftp.ensemblgenomes.ebi.ac.uk/pub/plants/release-56/fasta/arabidopsis_thaliana/dna/Arabidopsis_thaliana.TAIR10.dna.toplevel.fa.gz
+
+<span class="code-comment"># Decompress</span>
+gunzip *.fa.gz</div>
+          </div>
+        </div>
+        <div class="tutorial-step" onclick="toggleTutStep(this)">
+          <div class="tutorial-step-head"><span class="tsh-num">4</span><span class="tsh-title">Download RNA-seq data (SRA)</span><span class="tsh-chev">▶</span></div>
+          <div class="tutorial-step-body">
+            <div class="info-box warn"><span>⚠️</span><div>SRA data requires the SRA toolkit (fasterq-dump). Install it via conda: <code>conda install -c bioconda sra-tools</code></div></div>
+            <div class="code-block"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button><span class="code-comment"># Find accession on ncbi.nlm.nih.gov/sra</span>
+<span class="code-comment"># Search: your paper/experiment → click Run → copy SRR number</span>
+
+<span class="code-comment"># Download a single sample (single-end)</span>
+fasterq-dump SRR1234567 --outdir ./raw_data --progress
+
+<span class="code-comment"># Download paired-end data</span>
+fasterq-dump SRR1234567 --outdir ./raw_data --progress --split-files
+
+<span class="code-comment"># Check what you downloaded</span>
+ls -lh ./raw_data/</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SRA panel -->
+      <div class="tutorial-panel" id="tut-sra">
+        <div class="tutorial-header">
+          <div class="label">Databases</div>
+          <h2 class="h2">NCBI SRA — Download RNA-seq Data</h2>
+          <p class="sub">The Sequence Read Archive contains raw sequencing data from hundreds of thousands of published experiments. This tutorial shows you exactly how to find and download data for your analysis.</p>
+        </div>
+        <div class="tutorial-step open" onclick="toggleTutStep(this)">
+          <div class="tutorial-step-head"><span class="tsh-num">1</span><span class="tsh-title">Find your experiment on SRA</span><span class="tsh-chev">▶</span></div>
+          <div class="tutorial-step-body">
+            <p class="sub" style="margin-bottom:10px;">Three ways to find SRA data for your project:</p>
+            <div class="info-box note"><span>🔍</span><div><strong>From a paper:</strong> Look in the "Data availability" or "Methods" section. Authors must state accession numbers (GEO: GSE123456 or SRA: SRP123456)</div></div>
+            <div class="info-box note"><span>🔍</span><div><strong>Search by organism + technique:</strong> Go to ncbi.nlm.nih.gov/sra and search e.g. <em>"Arabidopsis thaliana RNA-seq drought stress"</em></div></div>
+            <div class="info-box note"><span>🔍</span><div><strong>From GEO:</strong> ncbi.nlm.nih.gov/geo → find dataset → click "SRA Run Selector" to get individual run accessions</div></div>
+          </div>
+        </div>
+        <div class="tutorial-step" onclick="toggleTutStep(this)">
+          <div class="tutorial-step-head"><span class="tsh-num">2</span><span class="tsh-title">Get the SRR accession numbers</span><span class="tsh-chev">▶</span></div>
+          <div class="tutorial-step-body">
+            <p class="sub" style="margin-bottom:8px;">Each sequencing run has a unique accession number. Formats: <strong>SRR</strong> (NCBI), <strong>ERR</strong> (European ENA), <strong>DRR</strong> (Japanese DDBJ)</p>
+            <p class="sub">From the SRA Run Selector page: tick the samples you need → click "Accession List" to download a file with all accession numbers at once.</p>
+            <div class="code-block"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button><span class="code-comment"># If you have a file of accession numbers (SRR_Acc_List.txt):</span>
+while read acc; do
+  fasterq-dump $acc --outdir ./raw_data --progress
+done < SRR_Acc_List.txt</div>
+          </div>
+        </div>
+        <div class="tutorial-step" onclick="toggleTutStep(this)">
+          <div class="tutorial-step-head"><span class="tsh-num">3</span><span class="tsh-title">Check if data is single-end or paired-end</span><span class="tsh-chev">▶</span></div>
+          <div class="tutorial-step-body">
+            <p class="sub" style="margin-bottom:8px;">This matters for your analysis — wrong setting = garbage results.</p>
+            <div class="code-block"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button><span class="code-comment"># Check layout: look at the SRA run page under "Layout"</span>
+<span class="code-comment"># Or use fastq-dump with --info flag:</span>
+fastq-dump -I --skip-technical --readids --read-filter pass \
+  --dumpbase --split-3 --clip -N 0 -X 1 SRR1234567
+
+<span class="code-comment"># After fasterq-dump:</span>
+<span class="code-comment"># Single-end: creates SRR1234567.fastq (one file)</span>
+<span class="code-comment"># Paired-end: creates SRR1234567_1.fastq and SRR1234567_2.fastq (two files)</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- NCBI panel -->
+      <div class="tutorial-panel" id="tut-ncbi">
+        <div class="tutorial-header">
+          <div class="label">Databases</div>
+          <h2 class="h2">NCBI — What is it?</h2>
+          <p class="sub">The National Center for Biotechnology Information is the world's largest biological database. Everything lives here — genes, genomes, proteins, papers, and raw sequencing data.</p>
+        </div>
+        <div class="resource-grid">
+          <div class="res-card"><div class="res-icon">🗄️</div><div><div class="res-title">GenBank</div><p class="res-desc">Annotated nucleotide sequences — individual genes, mRNA, genomes. The original biological sequence database.</p><div class="res-url">ncbi.nlm.nih.gov/genbank</div></div></div>
+          <div class="res-card"><div class="res-icon">📦</div><div><div class="res-title">SRA (Sequence Read Archive)</div><p class="res-desc">Raw sequencing reads from published studies. Millions of RNA-seq, WGS, ChIP-seq datasets available free.</p><div class="res-url">ncbi.nlm.nih.gov/sra</div></div></div>
+          <div class="res-card"><div class="res-icon">🧬</div><div><div class="res-title">Gene</div><p class="res-desc">Information about known genes — function, location, synonyms, reference sequences, pathways.</p><div class="res-url">ncbi.nlm.nih.gov/gene</div></div></div>
+          <div class="res-card"><div class="res-icon">🌐</div><div><div class="res-title">GEO (Gene Expression Omnibus)</div><p class="res-desc">Processed gene expression datasets from microarray and RNA-seq experiments. Great for finding existing datasets.</p><div class="res-url">ncbi.nlm.nih.gov/geo</div></div></div>
+          <div class="res-card"><div class="res-icon">🔬</div><div><div class="res-title">Protein</div><p class="res-desc">Protein sequences — linked to GenBank, RefSeq, UniProt. Search by name, accession, or BLAST similarity.</p><div class="res-url">ncbi.nlm.nih.gov/protein</div></div></div>
+          <div class="res-card"><div class="res-icon">🏗️</div><div><div class="res-title">Genome</div><p class="res-desc">Complete genome assemblies for thousands of species. Download FASTA, GFF, GTF annotation files.</p><div class="res-url">ncbi.nlm.nih.gov/genome</div></div></div>
+        </div>
+      </div>
+
+      <!-- Formats panel -->
+      <div class="tutorial-panel" id="tut-formats">
+        <div class="tutorial-header">
+          <div class="label">Reference</div>
+          <h2 class="h2">Bioinformatics File Formats</h2>
+          <p class="sub">Each step of an analysis produces a different file format. Understanding them prevents confusion about what tools expect as input and what they produce as output.</p>
+        </div>
+        <div class="card-grid card-grid-2" style="margin-top:24px;">
+          <div class="card"><div style="font-family:var(--fm);color:var(--green);font-weight:500;margin-bottom:8px;">.fastq / .fq</div><strong>Raw sequencing reads</strong><p class="sub" style="margin-top:4px;">4 lines per read: ID, sequence, separator, quality scores. Direct output from sequencing machines. Input for alignment.</p></div>
+          <div class="card"><div style="font-family:var(--fm);color:var(--blue);font-weight:500;margin-bottom:8px;">.fasta / .fa</div><strong>Reference sequences</strong><p class="sub" style="margin-top:4px;">2 lines per sequence: header line starting with >, then the nucleotide or amino acid sequence. Used for genomes and gene sequences.</p></div>
+          <div class="card"><div style="font-family:var(--fm);color:var(--purple);font-weight:500;margin-bottom:8px;">.sam / .bam / .cram</div><strong>Alignment files</strong><p class="sub" style="margin-top:4px;">SAM = text alignment. BAM = compressed binary SAM (5× smaller). CRAM = even more compressed. Output from HISAT2, BWA, STAR.</p></div>
+          <div class="card"><div style="font-family:var(--fm);color:var(--orange);font-weight:500;margin-bottom:8px;">.gtf / .gff / .gff3</div><strong>Gene annotation</strong><p class="sub" style="margin-top:4px;">Defines where genes are on the genome — start, end, exon positions. Required for featureCounts, StringTie, and DESeq2 input.</p></div>
+          <div class="card"><div style="font-family:var(--fm);color:var(--green);font-weight:500;margin-bottom:8px;">.vcf / .bcf</div><strong>Variant calls</strong><p class="sub" style="margin-top:4px;">Lists SNPs, INDELs, and structural variants. Output from GATK, FreeBayes. BCF is the binary (compressed) version.</p></div>
+          <div class="card"><div style="font-family:var(--fm);color:var(--blue);font-weight:500;margin-bottom:8px;">.bed</div><strong>Genomic intervals</strong><p class="sub" style="margin-top:4px;">Tab-separated: chromosome, start, end. Used for peaks (ChIP-seq), regulatory regions, any genomic coordinate list.</p></div>
+        </div>
+      </div>
+
+      <!-- Databases panel -->
+      <div class="tutorial-panel" id="tut-databases">
+        <div class="tutorial-header">
+          <div class="label">Reference</div>
+          <h2 class="h2">Key Bioinformatics Databases</h2>
+          <p class="sub">A curated list of the most important databases every bioinformatician should know — with links and brief descriptions of what each one is used for.</p>
+        </div>
+        <div style="margin-top:8px;">
+          <div style="font-size:0.75em;text-transform:uppercase;letter-spacing:1px;color:var(--text3);margin:20px 0 10px;">Sequence & Genome</div>
+          <div class="resource-grid">
+            <div class="res-card"><div class="res-icon">🇺🇸</div><div><div class="res-title">NCBI</div><p class="res-desc">GenBank, SRA, Gene, GEO, RefSeq, BLAST. The most comprehensive source for biological sequences.</p><div class="res-url">ncbi.nlm.nih.gov</div></div></div>
+            <div class="res-card"><div class="res-icon">🇪🇺</div><div><div class="res-title">Ensembl</div><p class="res-desc">Annotated genomes for vertebrates and other organisms. Best for reference genome + GTF downloads.</p><div class="res-url">ensembl.org</div></div></div>
+            <div class="res-card"><div class="res-icon">🌱</div><div><div class="res-title">Ensembl Plants</div><p class="res-desc">Ensembl for plant genomes — Arabidopsis, rice, maize, wheat, soybean, tomato and dozens more.</p><div class="res-url">plants.ensembl.org</div></div></div>
+            <div class="res-card"><div class="res-icon">🧬</div><div><div class="res-title">UniProt</div><p class="res-desc">Protein sequences and functional annotation. Swiss-Prot (curated) and TrEMBL (automated) sections.</p><div class="res-url">uniprot.org</div></div></div>
+          </div>
+          <div style="font-size:0.75em;text-transform:uppercase;letter-spacing:1px;color:var(--text3);margin:20px 0 10px;">Pathways & Function</div>
+          <div class="resource-grid">
+            <div class="res-card"><div class="res-icon">🗺️</div><div><div class="res-title">KEGG</div><p class="res-desc">Metabolic and signalling pathways for all organisms. Use for pathway enrichment after DESeq2.</p><div class="res-url">kegg.jp</div></div></div>
+            <div class="res-card"><div class="res-icon">🔵</div><div><div class="res-title">Gene Ontology (GO)</div><p class="res-desc">Standardised vocabulary for gene function. GO enrichment analysis reveals biological processes in DE gene lists.</p><div class="res-url">geneontology.org</div></div></div>
+            <div class="res-card"><div class="res-icon">🔗</div><div><div class="res-title">STRING</div><p class="res-desc">Protein interaction networks. Upload your DE gene list to see which proteins work together.</p><div class="res-url">string-db.org</div></div></div>
+            <div class="res-card"><div class="res-icon">🌿</div><div><div class="res-title">PlantTFDB</div><p class="res-desc">Plant transcription factor database. All TF families for all sequenced plant genomes.</p><div class="res-url">planttfdb.gao-lab.org</div></div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Generic panels for other items -->
+      <div class="tutorial-panel" id="tut-setup">
+        <div class="tutorial-header">
+          <div class="label">Getting started</div>
+          <h2 class="h2">Setting Up Your Environment</h2>
+          <p class="sub">Before running any bioinformatics analysis you need a few core tools installed. This guide covers macOS, Linux, and Windows (WSL2) setup from scratch.</p>
+        </div>
+        <div class="info-box tip"><span>🚀</span><div>The easiest way to get started is to use <strong>RNAflow</strong> — it has a built-in system checker that detects old software and provides fix commands automatically. <button onclick="showPage('tools')" style="background:none;border:none;color:var(--green);cursor:pointer;font-weight:600;text-decoration:underline;">Go to Tools →</button></div></div>
+        <div class="tutorial-step open" onclick="toggleTutStep(this)">
+          <div class="tutorial-step-head"><span class="tsh-num">1</span><span class="tsh-title">Install Conda (Miniforge)</span><span class="tsh-chev">▶</span></div>
+          <div class="tutorial-step-body">
+            <div class="code-block"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button><span class="code-comment"># macOS / Linux — install Miniforge</span>
+brew install miniforge   <span class="code-comment"># macOS with Homebrew</span>
+conda init zsh           <span class="code-comment"># initialise for zsh shell</span>
+<span class="code-comment"># Close and reopen terminal, then:</span>
+conda create -n bioinfo python=3.10 -y
+conda activate bioinfo</div>
+          </div>
+        </div>
+        <div class="tutorial-step" onclick="toggleTutStep(this)">
+          <div class="tutorial-step-head"><span class="tsh-num">2</span><span class="tsh-title">Install core bioinformatics tools</span><span class="tsh-chev">▶</span></div>
+          <div class="tutorial-step-body">
+            <div class="code-block"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button>conda install -c bioconda -c conda-forge \
+  fastqc fastp hisat2 samtools subread sra-tools -y</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tutorial-panel" id="tut-terminal">
+        <div class="tutorial-header"><div class="label">Getting started</div><h2 class="h2">Using the Terminal</h2><p class="sub">The terminal is a text-based interface to your computer. Most bioinformatics tools run in the terminal. This guide covers the essential commands you'll use every day.</p></div>
+        <div class="tutorial-step open" onclick="toggleTutStep(this)">
+          <div class="tutorial-step-head"><span class="tsh-num">1</span><span class="tsh-title">Essential commands</span><span class="tsh-chev">▶</span></div>
+          <div class="tutorial-step-body">
+            <div class="code-block"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button>pwd              <span class="code-comment"># Print working directory — where am I?</span>
+ls               <span class="code-comment"># List files in current folder</span>
+ls -lh           <span class="code-comment"># List with file sizes</span>
+cd foldername    <span class="code-comment"># Change directory (go into a folder)</span>
+cd ..            <span class="code-comment"># Go up one folder</span>
+mkdir myfolder   <span class="code-comment"># Create a new folder</span>
+cp file1 file2   <span class="code-comment"># Copy a file</span>
+mv file1 file2   <span class="code-comment"># Move or rename a file</span>
+rm filename      <span class="code-comment"># Delete a file (careful! no recycle bin)</span>
+head -10 file    <span class="code-comment"># Show first 10 lines of a file</span>
+wc -l file       <span class="code-comment"># Count lines in a file</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tutorial-panel" id="tut-ensembl">
+        <div class="tutorial-header"><div class="label">Databases</div><h2 class="h2">Ensembl — Genome Downloads</h2><p class="sub">Ensembl provides complete, well-annotated genome assemblies for hundreds of species. It is the recommended source for reference genomes and GTF annotation files used in RNA-seq alignment.</p></div>
+        <div class="tutorial-step open" onclick="toggleTutStep(this)">
+          <div class="tutorial-step-head"><span class="tsh-num">1</span><span class="tsh-title">Finding the right FTP URL</span><span class="tsh-chev">▶</span></div>
+          <div class="tutorial-step-body">
+            <p class="sub" style="margin-bottom:8px;">Navigate to <strong>ensembl.org</strong> → your organism → scroll to "Download" → click "Download DNA sequence (FASTA)" → right-click the file ending in <code>.dna.toplevel.fa.gz</code> or <code>.dna.primary_assembly.fa.gz</code> → copy link address.</p>
+            <div class="info-box tip"><span>💡</span><div>Use <code>primary_assembly</code> for human and mouse (excludes patches). Use <code>toplevel</code> for smaller genomes (includes everything).</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tutorial-panel" id="tut-rnaseq-intro">
+        <div class="tutorial-header"><div class="label">RNA-seq</div><h2 class="h2">What is RNA-seq?</h2><p class="sub">RNA sequencing measures gene expression — which genes are active in a cell at a given moment and by how much. This guide explains the concept, the biology, and the data before you start any analysis.</p></div>
+        <div class="tutorial-step open" onclick="toggleTutStep(this)">
+          <div class="tutorial-step-head"><span class="tsh-num">1</span><span class="tsh-title">The biological question RNA-seq answers</span><span class="tsh-chev">▶</span></div>
+          <div class="tutorial-step-body"><p class="sub">Every cell contains the same DNA but different cells express different genes — a liver cell and a neuron are so different because they use different subsets of their genes. RNA-seq captures a snapshot of which genes are being read (transcribed to mRNA) at a specific moment. Compare two conditions (treated vs untreated, mutant vs wildtype) and you discover which genes changed — the molecular basis of the difference.</p></div>
+        </div>
+        <div class="tutorial-step" onclick="toggleTutStep(this)">
+          <div class="tutorial-step-head"><span class="tsh-num">2</span><span class="tsh-title">The full pipeline in one diagram</span><span class="tsh-chev">▶</span></div>
+          <div class="tutorial-step-body">
+            <div class="info-box note"><span>🧬</span><div>Cells → extract RNA → make cDNA library → sequence millions of fragments → map back to genome → count per gene → statistical test → biological insight</div></div>
+            <p class="sub" style="margin-top:8px;">The BioInfoCodex RNAflow app guides you through every step of this pipeline with copy-ready commands and live execution. <button onclick="showPage('tools')" style="background:none;border:none;color:var(--green);cursor:pointer;font-weight:600;text-decoration:underline;">Get RNAflow →</button></p>
+          </div>
+        </div>
+      </div>
+
+      <div class="tutorial-panel" id="tut-qc"><div class="tutorial-header"><div class="label">RNA-seq</div><h2 class="h2">Quality Control with FastQC</h2><p class="sub">Before any analysis, always check the quality of your raw sequencing data. FastQC produces a visual HTML report for each sample in about 2 minutes. This tutorial explains what each module means and what to do when something fails.</p></div><div class="info-box tip"><span>🚀</span><div>RNAflow runs FastQC automatically and explains every result in context. <button onclick="showPage('tools')" style="background:none;border:none;color:var(--green);cursor:pointer;font-weight:600;text-decoration:underline;">Open RNAflow →</button></div></div></div>
+
+      <div class="tutorial-panel" id="tut-alignment"><div class="tutorial-header"><div class="label">RNA-seq</div><h2 class="h2">Alignment Concepts</h2><p class="sub">Alignment (or mapping) is the process of finding where each sequencing read originated on the reference genome. Understanding the basics helps you interpret alignment statistics and troubleshoot low mapping rates.</p></div><div class="info-box note"><span>📖</span><div>HISAT2 is the aligner used in RNAflow. It is splice-aware, meaning it correctly handles reads that span exon-exon junctions — critical for RNA-seq data.</div></div></div>
+
+      <div class="tutorial-panel" id="tut-deseq2-intro"><div class="tutorial-header"><div class="label">RNA-seq</div><h2 class="h2">DESeq2 — The Statistics</h2><p class="sub">DESeq2 uses a negative binomial statistical model to identify genes that are differentially expressed between conditions, accounting for biological variation between replicates.</p></div><div class="info-box warn"><span>⚠️</span><div>DESeq2 requires minimum 2 biological replicates per condition. 3+ is strongly recommended. Never compare single samples.</div></div></div>
+
+      <div class="tutorial-panel" id="tut-glossary">
+        <div class="tutorial-header"><div class="label">Reference</div><h2 class="h2">Bioinformatics Glossary</h2><p class="sub">Quick definitions for the most common terms you'll encounter.</p></div>
+        <div class="card-grid card-grid-2" style="margin-top:16px;">
+          <div class="card" style="padding:14px;"><strong>FASTQ</strong><p class="sub" style="margin-top:3px;">File format storing raw sequencing reads with quality scores. Each read = 4 lines.</p></div>
+          <div class="card" style="padding:14px;"><strong>Phred score</strong><p class="sub" style="margin-top:3px;">Quality score per base. Q30 = 99.9% accuracy. Q20 = 99% accuracy.</p></div>
+          <div class="card" style="padding:14px;"><strong>Adapter</strong><p class="sub" style="margin-top:3px;">Synthetic DNA sequence added during library prep. Must be removed before alignment.</p></div>
+          <div class="card" style="padding:14px;"><strong>BAM file</strong><p class="sub" style="margin-top:3px;">Binary Alignment Map. Compressed version of SAM. Contains where each read mapped on the genome.</p></div>
+          <div class="card" style="padding:14px;"><strong>GTF / GFF</strong><p class="sub" style="margin-top:3px;">Gene annotation file. Tells featureCounts where genes start and end on each chromosome.</p></div>
+          <div class="card" style="padding:14px;"><strong>Normalisation</strong><p class="sub" style="margin-top:3px;">Adjusting counts to account for sequencing depth differences between samples. TPM, RPKM, DESeq2 VST.</p></div>
+          <div class="card" style="padding:14px;"><strong>Log2 fold change</strong><p class="sub" style="margin-top:3px;">How much a gene changes. LFC=1 means 2× higher. LFC=-1 means 2× lower. LFC=0 = no change.</p></div>
+          <div class="card" style="padding:14px;"><strong>Adjusted p-value (padj)</strong><p class="sub" style="margin-top:3px;">P-value corrected for multiple testing (Benjamini-Hochberg). Always use padj, never raw p-value.</p></div>
+        </div>
+      </div>
+
+    </div><!-- /tutorial content -->
+  </div><!-- /sidebar layout -->
+
+</div><!-- /edu -->
+
+<!-- ══════════════════════════════════════════
+     CONTACT PAGE
+══════════════════════════════════════════ -->
+<div class="page" id="page-contact">
+
+  <div class="contact-hero">
+    <div class="label">Contact</div>
+    <h1 class="h1">Get in touch</h1>
+    <p class="lead">Questions about a tool, a tutorial idea, a bug report, or want to collaborate? We'd love to hear from you.</p>
+  </div>
+
+  <div class="contact-layout">
+
+    <!-- Left: contact info + social -->
+    <div>
+      <div class="contact-card" style="margin-bottom:20px;">
+        <h3 class="h3" style="margin-bottom:18px;">Contact information</h3>
+        <div class="contact-item">
+          <div class="contact-item-icon">✉️</div>
+          <div><div class="contact-item-label">Email</div><div class="contact-item-val"><a href="mailto:hello@bioinfocodex.io">hello@bioinfocodex.io</a></div></div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-item-icon">🐙</div>
+          <div><div class="contact-item-label">GitHub</div><div class="contact-item-val"><a href="https://github.com/bioinfocodex" target="_blank">github.com/bioinfocodex</a></div></div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-item-icon">🐦</div>
+          <div><div class="contact-item-label">Twitter / X</div><div class="contact-item-val"><a href="https://twitter.com/bioinfocodexio" target="_blank">@bioinfocodexio</a></div></div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-item-icon">💼</div>
+          <div><div class="contact-item-label">LinkedIn</div><div class="contact-item-val"><a href="#" target="_blank">BioInfoCodex on LinkedIn</a></div></div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-item-icon">📍</div>
+          <div><div class="contact-item-label">Location</div><div class="contact-item-val">Open-source project — contributors worldwide</div></div>
+        </div>
+      </div>
+
+      <!-- Social -->
+      <div class="contact-card" style="margin-bottom:20px;">
+        <h3 class="h3" style="margin-bottom:16px;">Follow BioInfoCodex</h3>
+        <div class="social-grid">
+          <div class="social-link"><span class="icon">🐙</span> GitHub</div>
+          <div class="social-link"><span class="icon">🐦</span> Twitter / X</div>
+          <div class="social-link"><span class="icon">💬</span> Discord</div>
+          <div class="social-link"><span class="icon">📺</span> YouTube</div>
+          <div class="social-link"><span class="icon">📝</span> bioRxiv</div>
+          <div class="social-link"><span class="icon">💼</span> LinkedIn</div>
+        </div>
+      </div>
+
+      <!-- FAQ -->
+      <div class="contact-card">
+        <h3 class="h3" style="margin-bottom:4px;">Frequently asked questions</h3>
+        <p class="sub" style="margin-bottom:16px;">Quick answers before you send a message.</p>
+        <div class="faq-list">
+          <div class="faq-item" onclick="toggleFAQ(this)">
+            <div class="faq-q">Is BioInfoCodex really free forever? <span class="faq-chev">▼</span></div>
+            <div class="faq-a"><div class="faq-a-inner">Yes. BioInfoCodex is open-source software released under the MIT licence. All tools and tutorials are and will remain free. There is no premium tier, no subscription, and no paywalled features.</div></div>
+          </div>
+          <div class="faq-item" onclick="toggleFAQ(this)">
+            <div class="faq-q">Does my data get uploaded anywhere? <span class="faq-chev">▼</span></div>
+            <div class="faq-a"><div class="faq-a-inner">No. All computation happens on your own computer. The HTML app and Python server communicate only via localhost (127.0.0.1) — your data never leaves your machine. There is no server, no cloud, no analytics on your files.</div></div>
+          </div>
+          <div class="faq-item" onclick="toggleFAQ(this)">
+            <div class="faq-q">Can I contribute a tool or tutorial? <span class="faq-chev">▼</span></div>
+            <div class="faq-a"><div class="faq-a-inner">Absolutely. We welcome contributions from researchers and developers. Open a pull request on GitHub, or send us an email describing what you'd like to add. All contributors are credited.</div></div>
+          </div>
+          <div class="faq-item" onclick="toggleFAQ(this)">
+            <div class="faq-q">I found a bug — how do I report it? <span class="faq-chev">▼</span></div>
+            <div class="faq-a"><div class="faq-a-inner">The best way is to open a GitHub issue with a description of what you did, what you expected, and what happened (include any error messages). You can also use the contact form and we'll log it.</div></div>
+          </div>
+          <div class="faq-item" onclick="toggleFAQ(this)">
+            <div class="faq-q">Can I cite BioInfoCodex in my paper? <span class="faq-chev">▼</span></div>
+            <div class="faq-a"><div class="faq-a-inner">We are preparing a manuscript for submission. In the meantime, you can cite the GitHub repository URL and version number. We'll post the citation format as soon as the preprint is on bioRxiv.</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right: contact form -->
+    <div>
+      <div class="contact-card">
+        <h3 class="h3" style="margin-bottom:6px;">Send a message</h3>
+        <p class="sub" style="margin-bottom:24px;">Bug reports, feature requests, collaboration proposals, or just to say hello — all welcome.</p>
+
+        <div id="contact-form">
+          <div class="form-field">
+            <label class="form-label">Your name</label>
+            <input class="form-input" type="text" placeholder="Dr Jane Smith">
+          </div>
+          <div class="form-field">
+            <label class="form-label">Email address</label>
+            <input class="form-input" type="email" placeholder="jane@university.edu">
+          </div>
+          <div class="form-field">
+            <label class="form-label">Subject</label>
+            <select class="form-select">
+              <option>Bug report</option>
+              <option>Feature request</option>
+              <option>Tutorial suggestion</option>
+              <option>Collaboration proposal</option>
+              <option>Question about a tool</option>
+              <option>Other</option>
+            </select>
+          </div>
+          <div class="form-field">
+            <label class="form-label">Message</label>
+            <textarea class="form-textarea" placeholder="Describe your question, bug, or idea in detail..."></textarea>
+          </div>
+          <button class="form-submit" onclick="submitForm()">Send message →</button>
+        </div>
+
+        <div class="form-success" id="form-success">
+          <div style="font-size:1.5em;margin-bottom:8px;">✅</div>
+          <strong>Message sent!</strong><br>
+          <span style="color:var(--text2);font-size:0.9em;">We'll get back to you within 48 hours.</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</div><!-- /contact -->
+
+<!-- ══════════════════════════════════════════
+     FOOTER
+══════════════════════════════════════════ -->
+<footer>
+  <div class="footer-grid">
+    <div>
+      <div class="footer-brand-name">BioInfo<span>Codex</span></div>
+      <p class="footer-brand-desc">Free, open-source bioinformatics tools and education for researchers at every level. Built by scientists, for scientists.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Tools</h4>
+      <ul>
+        <li onclick="showPage('tools')">RNAflow — RNA-seq</li>
+        <li onclick="showPage('tools')">NGSuite — Genomics</li>
+        <li onclick="showPage('tools')">PlasmidMap</li>
+        <li onclick="showPage('tools')">ChIPflow</li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Education</h4>
+      <ul>
+        <li onclick="showPage('edu')">Download sequences</li>
+        <li onclick="showPage('edu')">RNA-seq basics</li>
+        <li onclick="showPage('edu')">File formats</li>
+        <li onclick="showPage('edu')">Database guide</li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Platform</h4>
+      <ul>
+        <li onclick="showPage('home')">About BioInfoCodex</li>
+        <li onclick="showPage('home')">Team</li>
+        <li onclick="showPage('contact')">Contact</li>
+        <li>GitHub (coming soon)</li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div>© 2025 BioInfoCodex · bioinfocodex.com · Open-source · MIT Licence</div>
+    <div>Free forever · No tracking · No paywalls</div>
+  </div>
+</footer>
+
+<script>
+// ── PAGE NAVIGATION ──────────────────────────────────────────────────────
+function showPage(name) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('page-' + name).classList.add('active');
+  const tab = document.getElementById('tab-' + name);
+  if (tab) tab.classList.add('active');
+  window.scrollTo({top: 0, behavior: 'smooth'});
+  // Trigger reveals on new page
+  setTimeout(initReveals, 100);
+}
+
+// ── MOBILE MENU ──────────────────────────────────────────────────────────
+function toggleMobile() {
+  document.getElementById('mobile-menu').classList.toggle('open');
+}
+
+// ── TUTORIAL NAVIGATION ──────────────────────────────────────────────────
+function showTutorial(id, el) {
+  document.querySelectorAll('.tutorial-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.edu-nav-item').forEach(i => i.classList.remove('active'));
+  const panel = document.getElementById('tut-' + id);
+  if (panel) panel.classList.add('active');
+  if (el) el.classList.add('active');
+}
+
+// ── TUTORIAL STEPS ───────────────────────────────────────────────────────
+function toggleTutStep(el) {
+  el.classList.toggle('open');
+}
+
+// ── FAQ ──────────────────────────────────────────────────────────────────
+function toggleFAQ(el) {
+  el.classList.toggle('open');
+}
+
+// ── TOOL FILTER ──────────────────────────────────────────────────────────
+function filterTools(tag, btn) {
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.tool-card').forEach(c => {
+    if (tag === 'all') {
+      c.style.display = '';
+    } else if (tag === 'live') {
+      c.style.display = c.classList.contains('live') ? '' : 'none';
+    } else {
+      const tags = (c.dataset.tags || '').split(' ');
+      c.style.display = tags.includes(tag) ? '' : 'none';
+    }
+  });
+}
+
+// ── FORM SUBMIT ──────────────────────────────────────────────────────────
+function submitForm() {
+  document.getElementById('contact-form').style.display = 'none';
+  document.getElementById('form-success').style.display = 'block';
+}
+
+// ── DOWNLOAD TOOL ────────────────────────────────────────────────────────
+function downloadTool(type) {
+  const files = {
+    app:    'RNAflow_App.html',
+    server: 'rnaflow_server.py'
+  };
+  // Create anchor to trigger download
+  const a = document.createElement('a');
+  a.href = files[type];
+  a.download = files[type];
+  a.click();
+}
+
+// ── COPY CODE ────────────────────────────────────────────────────────────
+function copyCode(btn) {
+  const block = btn.parentElement;
+  const text = Array.from(block.childNodes)
+    .filter(n => n.nodeType === 3)
+    .map(n => n.textContent).join('');
+  navigator.clipboard.writeText(text.trim()).then(() => {
+    btn.textContent = '✓ Copied';
+    btn.classList.add('ok');
+    setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('ok'); }, 2000);
+  });
+}
+
+// ── SCROLL REVEAL ────────────────────────────────────────────────────────
+function initReveals() {
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('vis'); io.unobserve(e.target); } });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.reveal:not(.vis)').forEach(el => io.observe(el));
+}
+initReveals();
+</script>
+</body>
+</html>
