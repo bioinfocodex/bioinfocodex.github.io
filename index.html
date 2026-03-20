@@ -843,6 +843,151 @@ footer{
 }
 
 </style>
+
+<!-- ══════════════════════════════════════════
+     ANIMATION & FONT ENHANCEMENTS ONLY
+══════════════════════════════════════════ -->
+<style>
+/* ── FONT RENDERING ─────────────────────────────────────────────────────── */
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+/* ── CUSTOM SCROLLBAR ───────────────────────────────────────────────────── */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(0,212,160,0.35); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(0,212,160,0.6); }
+
+/* ── ANIMATED GRADIENT ON HERO "bioinformatics" ─────────────────────────── */
+.hero-h1 .grad {
+  background: linear-gradient(135deg, #00d4a0 0%, #00c8f8 35%, #a855f7 65%, #00d4a0 100%);
+  background-size: 250% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: gradCycle 6s linear infinite;
+}
+@keyframes gradCycle {
+  0%   { background-position: 0%   center; }
+  100% { background-position: 250% center; }
+}
+
+/* ── HERO EYEBROW PILL GLOW PULSE ───────────────────────────────────────── */
+@keyframes eyebrowGlow {
+  0%,100% { box-shadow: 0 0 0 0 rgba(0,212,160,0); border-color: rgba(0,212,160,0.22); }
+  50%      { box-shadow: 0 0 14px 3px rgba(0,212,160,0.18); border-color: rgba(0,212,160,0.55); }
+}
+.hero-eyebrow { animation: eyebrowGlow 3.5s ease-in-out infinite; }
+
+/* ── HERO VISUAL CARD — GENTLE FLOAT ────────────────────────────────────── */
+.hero-visual-card {
+  animation: floatCard 7s ease-in-out infinite;
+  box-shadow: 0 40px 120px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.03), 0 0 60px rgba(0,212,160,0.1);
+}
+@keyframes floatCard {
+  0%,100% { transform: translateY(0); }
+  50%      { transform: translateY(-10px); }
+}
+
+/* ── SHIMMER ON PRIMARY BUTTONS ON HOVER ────────────────────────────────── */
+.hero-cta-primary, .btn-green, .nav-dl { position: relative; overflow: hidden; }
+.hero-cta-primary::after, .btn-green::after, .nav-dl::after {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+  transform: skewX(-20deg) translateX(-120%);
+}
+.hero-cta-primary:hover::after, .btn-green:hover::after, .nav-dl:hover::after {
+  animation: shimmerBtn 0.55s ease forwards;
+}
+@keyframes shimmerBtn {
+  to { transform: skewX(-20deg) translateX(320%); }
+}
+
+/* ── HERO STATS PILL — GLASSMORPHISM ────────────────────────────────────── */
+.hero-stats {
+  background: rgba(255,255,255,0.7);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(0,0,0,0.07);
+  border-radius: 16px;
+  padding: 16px 24px;
+  display: inline-flex;
+  gap: 32px;
+  flex-wrap: wrap;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+}
+
+/* ── PROGRESS BAR — COLOUR-CYCLE SHIMMER ────────────────────────────────── */
+.hvc-prog-fill {
+  background: linear-gradient(90deg, #00d4a0, #00c8f8, #7c5ff5, #00d4a0);
+  background-size: 250% 100%;
+  animation: fillAnim 3s ease-in-out infinite alternate, pgShimmer 2.5s linear infinite;
+}
+@keyframes pgShimmer {
+  0%   { background-position: 0%   50%; }
+  100% { background-position: 250% 50%; }
+}
+
+/* ── STAT NUMBER — MICRO BOUNCE ON HOVER ────────────────────────────────── */
+.stat-num { transition: transform 0.25s cubic-bezier(0.34,1.56,0.64,1); display: inline-block; }
+.stat-card:hover .stat-num { transform: scale(1.07) translateY(-2px); }
+
+/* ── PIPELINE STEP — GLOW ON HOVER ─────────────────────────────────────── */
+.pipe-step:hover .pipe-icon-wrap          { box-shadow: 0 6px 26px rgba(0,212,160,0.28); }
+.pipe-step.highlight:hover .pipe-icon-wrap { box-shadow: 0 6px 26px rgba(0,150,255,0.28); }
+
+/* ── CTA BANNER — LIGHT SCAN LINE ───────────────────────────────────────── */
+.cta-banner::after {
+  content: '';
+  position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(105deg, transparent 30%, rgba(255,255,255,0.06) 50%, transparent 70%);
+  animation: scanBanner 5s ease-in-out infinite;
+}
+@keyframes scanBanner {
+  0%         { transform: translateX(-100%); }
+  60%,100%   { transform: translateX(200%); }
+}
+
+/* ── FOOTER — GRADIENT TOP BORDER ───────────────────────────────────────── */
+footer { position: relative; }
+footer::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(0,212,160,0.4), rgba(0,150,255,0.35), rgba(124,95,245,0.3), transparent);
+}
+
+/* ── GRAD DIVIDER — RICHER ──────────────────────────────────────────────── */
+.grad-divider {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(0,212,160,0.45) 30%, rgba(0,150,255,0.4) 60%, rgba(124,95,245,0.35) 80%, transparent);
+}
+
+/* ── NAV — SCROLL-AWARE SHADOW ──────────────────────────────────────────── */
+nav { transition: box-shadow 0.3s; }
+nav.nav-scrolled { box-shadow: 0 4px 28px rgba(0,0,0,0.1); border-bottom-color: rgba(0,0,0,0.12); }
+
+/* ── ENHANCED REVEAL ────────────────────────────────────────────────────── */
+.reveal { opacity: 0; transform: translateY(22px); transition: opacity 0.65s ease, transform 0.65s ease; }
+.reveal.vis, .reveal.visible { opacity: 1; transform: translateY(0); }
+
+/* ── FILTER BUTTON ACTIVE GLOW ──────────────────────────────────────────── */
+.filter-btn.active { box-shadow: 0 0 0 3px rgba(0,212,160,0.12); }
+
+/* ── SOCIAL LINK HOVER LIFT ─────────────────────────────────────────────── */
+.social-link:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,0.08); }
+
+/* ── PAGE TRANSITION ────────────────────────────────────────────────────── */
+@keyframes pageIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.page.active { animation: pageIn 0.4s cubic-bezier(0.25,0.46,0.45,0.94) both; }
+</style>
+
 </head>
 <body>
 
@@ -901,7 +1046,6 @@ footer{
   </div>
 
   <div class="nav-spacer"></div>
-  <button class="nav-dl" onclick="showPage('tools')">⬇ Free Tools</button>
   <button class="nav-burger" onclick="toggleMobile()">☰</button>
 </nav>
 
@@ -929,11 +1073,6 @@ footer{
 
       <!-- Left: copy -->
       <div class="hero-left reveal">
-        <div class="hero-eyebrow">
-          <span class="hero-pulse"></span>
-          Open-source &nbsp;·&nbsp; bioinfocodex.com
-        </div>
-
         <h1 class="hero-h1">
           <em style="font-style:italic;font-weight:700;color:#4a5568;font-size:0.72em;letter-spacing:0px;font-family:'Space Grotesk',sans-serif;display:block;margin-bottom:4px;">The open</em>
           <span class="grad" style="font-style:italic;">bioinformatics</span><br>
@@ -2846,6 +2985,40 @@ setTimeout(initCounters, 600);
     activeIdx = (activeIdx + 1) % items.length;
     items[activeIdx].classList.add('active');
   }, 1800);
+})();
+
+// ── SCROLL-AWARE NAV SHADOW ──────────────────────────────────────────────
+(function() {
+  const nav = document.querySelector('nav');
+  function onScroll() {
+    nav.classList.toggle('nav-scrolled', window.scrollY > 12);
+  }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+})();
+
+// ── SMOOTH COUNTER ANIMATION (easeOutExpo) ───────────────────────────────
+(function() {
+  function easeOutExpo(t) { return t === 1 ? 1 : 1 - Math.pow(2, -10 * t); }
+  function animateCounterSmooth(el) {
+    if (el.dataset.animated) return;
+    el.dataset.animated = '1';
+    const target = parseInt(el.dataset.count);
+    const suffix = el.dataset.suffix || '';
+    const dur = 1600, start = performance.now();
+    (function frame(now) {
+      const p = Math.min((now - start) / dur, 1);
+      el.textContent = Math.round(easeOutExpo(p) * target) + suffix;
+      if (p < 1) requestAnimationFrame(frame);
+    })(start);
+  }
+  function checkCounters() {
+    document.querySelectorAll('[data-count]:not([data-animated])').forEach(el => {
+      if (el.getBoundingClientRect().top < window.innerHeight * 0.9) animateCounterSmooth(el);
+    });
+  }
+  window.addEventListener('scroll', checkCounters, { passive: true });
+  setTimeout(checkCounters, 400);
 })();
 
 </script>
