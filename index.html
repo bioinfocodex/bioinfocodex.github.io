@@ -11,19 +11,19 @@
 <meta property="og:url" content="https://bioinfocodex.com">
 <meta property="og:type" content="website">
 <link rel="canonical" href="https://bioinfocodex.com">
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=DM+Mono:wght@400;500&family=Playfair+Display:ital,wght@0,700;0,800;0,900;1,700;1,800&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=DM+Mono:wght@400;500&family=Playfair+Display:ital,wght@0,700;0,800;0,900;1,700;1,800&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
 /* ══════════════════════════════════════════
    RESET & TOKENS
 ══════════════════════════════════════════ */
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 :root{
-  --bg:#ffffff; --bg2:#f4f7fb; --bg3:#eaeff6; --surf:#ffffff;
+  --bg:#ffffff; --bg2:#f6f8fa; --bg3:#eef1f6; --surf:#ffffff;
   --border:rgba(0,0,0,0.08); --border2:rgba(0,0,0,0.14);
   --text:#0d1117; --text2:#4a5568; --text3:#8a96a8;
-  --green:#00d4a0; --blue:#0096ff; --purple:#7c5ff5;
+  --green:#00c896; --blue:#0969da; --purple:#7c3aed;
   --orange:#f0883e; --red:#f85149;
-  --fh:'Syne',sans-serif; --fb:'DM Sans',sans-serif; --fm:'DM Mono',monospace;
+  --fh:'Inter',sans-serif; --fb:'Inter',sans-serif; --fm:'DM Mono',monospace;
   --r:12px; --r2:18px;
 }
 html{scroll-behavior:smooth;}
@@ -67,12 +67,13 @@ nav{
 .nav-tab.active{color:var(--green);background:rgba(0,212,160,0.08);border-color:rgba(0,212,160,0.2);}
 .nav-spacer{flex:1;}
 .nav-dl{
-  padding:8px 20px;border-radius:8px;background:var(--green);
-  color:#03080f;font-weight:700;font-size:0.84em;cursor:pointer;
+  padding:8px 20px;border-radius:8px;
+  background:linear-gradient(135deg,#00c896 0%,#0969da 55%,#7c3aed 100%);
+  color:white;font-weight:700;font-size:0.84em;cursor:pointer;
   transition:all 0.15s;white-space:nowrap;border:none;font-family:var(--fb);
-  box-shadow:0 2px 8px rgba(0,212,160,0.25);
+  box-shadow:0 2px 8px rgba(9,105,218,0.25);
 }
-.nav-dl:hover{background:#00f0b8;transform:translateY(-1px);}
+.nav-dl:hover{opacity:0.9;transform:translateY(-1px);}
 /* Mobile hamburger */
 .nav-burger{display:none;background:none;border:none;color:var(--text);font-size:1.4em;cursor:pointer;margin-left:auto;}
 .mobile-menu{
@@ -109,7 +110,7 @@ em.p{font-style:normal;color:var(--purple);}
 
 /* Cards */
 .card{background:var(--surf);border:1px solid var(--border);border-radius:var(--r2);padding:26px;transition:all 0.2s;}
-.card:hover{border-color:var(--border2);transform:translateY(-3px);box-shadow:0 16px 48px rgba(0,0,0,0.35);}
+.card:hover{border-color:var(--border2);transform:translateY(-3px);box-shadow:0 16px 40px rgba(0,0,0,0.12);}
 .card-grid{display:grid;gap:16px;}
 .card-grid-2{grid-template-columns:repeat(auto-fit,minmax(300px,1fr));}
 .card-grid-3{grid-template-columns:repeat(auto-fit,minmax(260px,1fr));}
@@ -117,16 +118,16 @@ em.p{font-style:normal;color:var(--purple);}
 
 /* Tags */
 .tag{display:inline-flex;align-items:center;gap:5px;padding:3px 10px;border-radius:20px;font-size:0.7em;font-weight:600;letter-spacing:0.4px;text-transform:uppercase;}
-.tag-green{background:rgba(0,212,160,0.12);color:var(--green);border:1px solid rgba(0,212,160,0.25);}
-.tag-blue {background:rgba(0,150,255,0.12);color:var(--blue); border:1px solid rgba(0,150,255,0.25);}
-.tag-purple{background:rgba(124,95,245,0.12);color:var(--purple);border:1px solid rgba(124,95,245,0.25);}
+.tag-green{background:rgba(9,105,218,0.10);color:var(--blue);border:1px solid rgba(9,105,218,0.22);}
+.tag-blue {background:rgba(9,105,218,0.10);color:var(--blue); border:1px solid rgba(9,105,218,0.22);}
+.tag-purple{background:rgba(124,58,237,0.10);color:var(--purple);border:1px solid rgba(124,58,237,0.22);}
 .tag-orange{background:rgba(240,136,62,0.12);color:var(--orange);border:1px solid rgba(240,136,62,0.25);}
 .tag-dim{background:rgba(255,255,255,0.05);color:var(--text3);border:1px solid var(--border);}
 
 /* Buttons */
 .btn{display:inline-flex;align-items:center;gap:7px;padding:11px 24px;border-radius:10px;font-size:0.88em;font-weight:600;cursor:pointer;transition:all 0.15s;border:none;font-family:var(--fb);}
-.btn-green{background:var(--green);color:#03080f;}
-.btn-green:hover{background:#00f0b8;transform:translateY(-1px);box-shadow:0 8px 28px rgba(0,212,160,0.3);}
+.btn-green{background:linear-gradient(135deg,#00c896 0%,#0969da 55%,#7c3aed 100%);color:white;}
+.btn-green:hover{opacity:0.9;transform:translateY(-1px);box-shadow:0 8px 28px rgba(9,105,218,0.3);}
 .btn-outline{background:transparent;border:1px solid var(--border2);color:var(--text2);}
 .btn-outline:hover{border-color:var(--green);color:var(--green);}
 .btn-ghost{background:rgba(255,255,255,0.04);color:var(--text2);}
@@ -190,12 +191,13 @@ em.p{font-style:normal;color:var(--purple);}
 }
 .hero-ctas{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:48px;}
 .hero-cta-primary{
-  padding:14px 28px;border-radius:10px;background:var(--green);
-  color:#03080f;font-weight:700;font-size:0.95em;cursor:pointer;
+  padding:14px 28px;border-radius:10px;
+  background:linear-gradient(135deg,#00c896 0%,#0969da 55%,#7c3aed 100%);
+  color:white;font-weight:700;font-size:0.95em;cursor:pointer;
   border:none;font-family:var(--fb);transition:all 0.2s;
   display:inline-flex;align-items:center;gap:8px;
 }
-.hero-cta-primary:hover{background:#00f0b8;transform:translateY(-2px);box-shadow:0 8px 30px rgba(0,212,160,0.35);}
+.hero-cta-primary:hover{opacity:0.9;transform:translateY(-2px);box-shadow:0 8px 30px rgba(9,105,218,0.35);}
 .hero-cta-secondary{
   padding:14px 28px;border-radius:10px;background:transparent;
   color:var(--text);font-weight:600;font-size:0.95em;cursor:pointer;
@@ -223,7 +225,7 @@ em.p{font-style:normal;color:var(--purple);}
 }
 .hvc-dot{width:11px;height:11px;border-radius:50%;}
 .hvc-title{font-size:0.76em;color:var(--text3);font-family:var(--fm);margin-left:6px;}
-.hvc-badge{margin-left:auto;padding:2px 10px;background:rgba(0,212,160,0.12);border:1px solid rgba(0,212,160,0.25);border-radius:20px;font-size:0.68em;color:var(--green);font-weight:600;}
+.hvc-badge{margin-left:auto;padding:2px 10px;background:rgba(9,105,218,0.12);border:1px solid rgba(9,105,218,0.25);border-radius:20px;font-size:0.68em;color:var(--blue);font-weight:600;}
 .hvc-steps{padding:16px 18px;display:flex;flex-direction:column;gap:6px;}
 .hvc-step{
   display:flex;align-items:center;gap:12px;padding:9px 12px;
@@ -261,7 +263,7 @@ em.p{font-style:normal;color:var(--purple);}
 /* ─── Trust strip ─── */
 .trust-strip{
   padding:28px 6vw;border-top:1px solid var(--border);border-bottom:1px solid var(--border);
-  background:#f4f7fb;
+  background:#f6f8fa;
   display:flex;align-items:center;gap:40px;flex-wrap:wrap;justify-content:center;
 }
 .trust-label{font-size:0.72em;color:var(--text3);text-transform:uppercase;letter-spacing:1.5px;font-weight:600;white-space:nowrap;}
@@ -276,7 +278,7 @@ em.p{font-style:normal;color:var(--purple);}
 /* ─── Stats bar ─── */
 .stats-bar{
   padding:72px 6vw;
-  background:linear-gradient(180deg,rgba(0,212,160,0.04) 0%,#f4f7fb 100%);
+  background:linear-gradient(180deg,rgba(0,200,150,0.04) 0%,#f6f8fa 100%);
   position:relative;overflow:hidden;
 }
 .stats-bar::before{
@@ -366,7 +368,7 @@ em.p{font-style:normal;color:var(--purple);}
 
 /* ─── Pipeline visual ─── */
 .pipeline-section{
-  padding:100px 6vw;background:#f4f7fb;
+  padding:100px 6vw;background:#f6f8fa;
   border-top:1px solid var(--border);border-bottom:1px solid var(--border);
 }
 .pipeline-section-inner{max-width:1200px;margin:0 auto;}
@@ -417,7 +419,7 @@ em.p{font-style:normal;color:var(--purple);}
   background:linear-gradient(90deg,transparent,var(--c,var(--green)),transparent);
   transform:scaleX(0);transition:transform 0.3s;
 }
-.why-card:hover{border-color:rgba(255,255,255,0.1);transform:translateY(-4px);box-shadow:0 20px 60px rgba(0,0,0,0.3);}
+.why-card:hover{border-color:rgba(255,255,255,0.1);transform:translateY(-4px);box-shadow:0 16px 40px rgba(0,0,0,0.12);}
 .why-card:hover::after{transform:scaleX(1);}
 .why-icon{font-size:2.2em;margin-bottom:18px;display:block;}
 .why-title{font-family:var(--fh);font-weight:700;font-size:1.05em;margin-bottom:10px;}
@@ -509,8 +511,8 @@ em.p{font-style:normal;color:var(--purple);}
   cursor:pointer;transition:all 0.15s;border:none;font-family:var(--fb);
   display:inline-flex;align-items:center;gap:5px;
 }
-.tool-btn.dl{background:var(--green);color:#03080f;}
-.tool-btn.dl:hover{background:#00f0b8;}
+.tool-btn.dl{background:linear-gradient(135deg,#00c896 0%,#0969da 55%,#7c3aed 100%);color:white;}
+.tool-btn.dl:hover{opacity:0.9;}
 .tool-btn.doc{background:rgba(255,255,255,0.06);color:var(--text2);border:1px solid var(--border);}
 .tool-btn.doc:hover{border-color:var(--green);color:var(--green);}
 .tool-btn.notify{background:rgba(255,255,255,0.05);color:var(--text3);border:1px solid var(--border);}
@@ -614,6 +616,57 @@ em.p{font-style:normal;color:var(--purple);}
 .res-desc{font-size:0.8em;color:var(--text2);line-height:1.55;}
 .res-url{font-size:0.75em;color:var(--purple);font-family:var(--fm);margin-top:5px;}
 
+/* ─── Education module tabs ─── */
+.edu-mod-tab{
+  padding:16px 20px;cursor:pointer;font-size:0.85em;font-weight:600;
+  color:var(--text2);border-bottom:3px solid transparent;transition:all 0.15s;
+  display:flex;flex-direction:column;gap:2px;white-space:nowrap;
+  font-family:var(--fb);
+}
+.edu-mod-tab:hover{color:var(--text);background:rgba(0,200,150,0.04);}
+.edu-mod-tab.active{color:var(--green);border-bottom-color:var(--green);}
+.edu-mod-sub{font-size:0.72em;font-weight:400;color:var(--text3);margin-top:1px;}
+.edu-mod-tab.active .edu-mod-sub{color:var(--green);opacity:0.7;}
+
+/* ─── Education module panels ─── */
+.edu-module{display:none;}
+.edu-module.active{display:block;animation:pageIn 0.3s ease both;}
+.edu-mod-header{margin-bottom:32px;}
+.edu-mod-header .h2{margin-bottom:12px;}
+
+/* ─── Education topic cards ─── */
+.edu-topic-grid{display:flex;flex-direction:column;gap:12px;}
+.edu-topic-card{
+  background:#fff;border:1px solid var(--border);border-radius:var(--r2);
+  overflow:hidden;transition:box-shadow 0.2s;
+}
+.edu-topic-card:hover{box-shadow:0 4px 20px rgba(0,0,0,0.08);}
+.edu-topic-head{
+  padding:16px 20px;display:flex;align-items:center;gap:14px;
+  cursor:pointer;user-select:none;
+}
+.edu-topic-head:hover{background:rgba(0,200,150,0.03);}
+.edu-topic-num{
+  width:32px;height:32px;border-radius:50%;background:var(--bg2);
+  border:1px solid var(--border);font-size:0.75em;font-weight:700;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+  font-family:var(--fm);color:var(--green);
+}
+.edu-topic-title{flex:1;font-weight:600;font-size:0.93em;}
+.edu-topic-chev{color:var(--text3);font-size:0.8em;transition:transform 0.2s;}
+.edu-topic-card.open .edu-topic-chev{transform:rotate(90deg);}
+.edu-topic-body{
+  max-height:0;overflow:hidden;transition:max-height 0.4s ease;
+  padding:0 20px;
+}
+.edu-topic-card.open .edu-topic-body{max-height:3000px;padding:0 20px 20px;}
+.edu-topic-card.open .edu-topic-head{border-bottom:1px solid var(--border);}
+
+/* info-box colours for light theme */
+.info-box.tip{background:rgba(0,200,150,0.06);border:1px solid rgba(0,200,150,0.2);border-radius:10px;}
+.info-box.note{background:rgba(9,105,218,0.06);border:1px solid rgba(9,105,218,0.2);border-radius:10px;}
+.info-box.warn{background:rgba(240,136,62,0.08);border:1px solid rgba(240,136,62,0.2);border-radius:10px;}
+
 /* ══════════════════════════════════════════
    CONTACT PAGE
 ══════════════════════════════════════════ */
@@ -694,7 +747,7 @@ em.p{font-style:normal;color:var(--purple);}
    FOOTER
 ══════════════════════════════════════════ */
 footer{
-  background:#f4f7fb;border-top:1px solid var(--border);
+  background:#f6f8fa;border-top:1px solid var(--border);
   padding:48px 6vw 28px;position:relative;z-index:1;
 }
 .footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:40px;margin-bottom:40px;}
@@ -2297,362 +2350,909 @@ generated using ggplot2 (Wickham, 2016) and pheatmap (Kolde, 2019).</div>
 <div class="page" id="page-edu">
 
   <div class="edu-hero">
-    <div class="label">Education</div>
+    <div class="label">🎓 Bioinformatics Academy</div>
     <h1 class="h1">Learn Bioinformatics</h1>
-    <p class="lead">Step-by-step tutorials, database guides, and concept explanations — from downloading your first sequence to running a complete analysis pipeline.</p>
+    <p class="lead">A comprehensive university-level curriculum — from molecular biology fundamentals to advanced genomic data analysis. Written by researchers, for researchers.</p>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:24px;">
+      <span class="tag tag-green">8 Modules</span>
+      <span class="tag tag-blue">50+ Topics</span>
+      <span class="tag tag-purple">Real Code Examples</span>
+      <span class="tag tag-orange">Beginner → Advanced</span>
+    </div>
   </div>
 
-  <div class="edu-sidebar-layout">
+  <!-- Module tab bar -->
+  <div style="background:#fff;border-bottom:1px solid var(--border);padding:0 6vw;position:sticky;top:64px;z-index:100;overflow-x:auto;">
+    <div style="display:flex;gap:0;min-width:max-content;">
+      <div class="edu-mod-tab active" onclick="showEduModule('mod1',this)" data-mod="mod1">📘 Module 1<span class="edu-mod-sub">Foundations</span></div>
+      <div class="edu-mod-tab" onclick="showEduModule('mod2',this)" data-mod="mod2">💻 Module 2<span class="edu-mod-sub">Computing</span></div>
+      <div class="edu-mod-tab" onclick="showEduModule('mod3',this)" data-mod="mod3">🗄️ Module 3<span class="edu-mod-sub">Databases</span></div>
+      <div class="edu-mod-tab" onclick="showEduModule('mod4',this)" data-mod="mod4">🔍 Module 4<span class="edu-mod-sub">Sequence Analysis</span></div>
+      <div class="edu-mod-tab" onclick="showEduModule('mod5',this)" data-mod="mod5">🧬 Module 5<span class="edu-mod-sub">RNA-seq</span></div>
+      <div class="edu-mod-tab" onclick="showEduModule('mod6',this)" data-mod="mod6">🔬 Module 6<span class="edu-mod-sub">Genomics</span></div>
+      <div class="edu-mod-tab" onclick="showEduModule('mod7',this)" data-mod="mod7">📊 Module 7<span class="edu-mod-sub">Statistics</span></div>
+      <div class="edu-mod-tab" onclick="showEduModule('mod8',this)" data-mod="mod8">🚀 Module 8<span class="edu-mod-sub">Advanced</span></div>
+    </div>
+  </div>
 
-    <!-- Sidebar -->
-    <div class="edu-sidebar">
-      <div class="edu-sidebar-title">Topics</div>
+  <!-- Module content area -->
+  <div style="padding:48px 6vw;max-width:1200px;margin:0 auto;">
 
-      <div class="edu-nav-group">
-        <div class="edu-nav-group-title">Getting started</div>
-        <div class="edu-nav-item active" onclick="showTutorial('intro',this)">🚀 Introduction to bioinformatics</div>
-        <div class="edu-nav-item" onclick="showTutorial('setup',this)">⚙️ Setting up your environment</div>
-        <div class="edu-nav-item" onclick="showTutorial('terminal',this)">🖥️ Using the terminal</div>
-      </div>
-
-      <div class="edu-nav-group">
-        <div class="edu-nav-group-title">Data & databases</div>
-        <div class="edu-nav-item" onclick="showTutorial('ncbi',this)">🗄️ NCBI — what is it?</div>
-        <div class="edu-nav-item" onclick="showTutorial('download-seq',this)">⬇️ How to download sequences</div>
-        <div class="edu-nav-item" onclick="showTutorial('sra',this)">📦 Download SRA / RNA-seq data</div>
-        <div class="edu-nav-item" onclick="showTutorial('ensembl',this)">🌐 Ensembl — genome downloads</div>
-        <div class="edu-nav-item" onclick="showTutorial('formats',this)">📄 File formats explained</div>
-      </div>
-
-      <div class="edu-nav-group">
-        <div class="edu-nav-group-title">RNA-seq analysis</div>
-        <div class="edu-nav-item" onclick="showTutorial('rnaseq-intro',this)">🧬 What is RNA-seq?</div>
-        <div class="edu-nav-item" onclick="showTutorial('qc',this)">🔬 Quality control (FastQC)</div>
-        <div class="edu-nav-item" onclick="showTutorial('alignment',this)">🎯 Alignment concepts</div>
-        <div class="edu-nav-item" onclick="showTutorial('deseq2-intro',this)">📊 DESeq2 — the statistics</div>
-      </div>
-
-      <div class="edu-nav-group">
-        <div class="edu-nav-group-title">Resources</div>
-        <div class="edu-nav-item" onclick="showTutorial('databases',this)">🗂️ Key bioinformatics databases</div>
-        <div class="edu-nav-item" onclick="showTutorial('glossary',this)">📖 Glossary</div>
-      </div>
+  <!-- ═══════════ MODULE 1: FOUNDATIONS ═══════════ -->
+  <div class="edu-module active" id="edu-mod1">
+    <div class="edu-mod-header">
+      <div class="label">Module 1 · Foundations</div>
+      <h2 class="h2">Molecular Biology &amp; Bioinformatics Fundamentals</h2>
+      <p class="lead">Before writing a single command, you must understand what you are analysing. This module covers the biological foundations every bioinformatician needs — DNA structure, gene expression, the central dogma, and why bioinformatics exists.</p>
     </div>
 
-    <!-- Content panels -->
-    <div>
+    <div class="edu-topic-grid">
 
-      <!-- Intro panel -->
-      <div class="tutorial-panel active" id="tut-intro">
-        <div class="tutorial-header">
-          <div class="label">Getting started</div>
-          <h2 class="h2">Introduction to Bioinformatics</h2>
-          <p class="sub">Bioinformatics is the science of using computers to make sense of biological data — DNA sequences, gene expression levels, protein structures, and more. This guide gives you the foundation you need before diving into any analysis.</p>
+      <!-- Topic 1.1 -->
+      <div class="edu-topic-card">
+        <div class="edu-topic-head" onclick="toggleEduTopic(this)">
+          <span class="edu-topic-num">1.1</span>
+          <span class="edu-topic-title">What is Bioinformatics?</span>
+          <span class="edu-topic-chev">▶</span>
         </div>
-        <div class="tutorial-step open" onclick="toggleTutStep(this)">
-          <div class="tutorial-step-head"><span class="tsh-num">1</span><span class="tsh-title">What is bioinformatics?</span><span class="tsh-chev">▶</span></div>
-          <div class="tutorial-step-body">
-            <p class="sub">Bioinformatics combines biology, computer science, and statistics. Modern sequencing machines generate gigabytes of data per experiment. Bioinformatics tools process that data to answer biological questions — which genes are active? What mutations are present? Which proteins interact?</p>
-            <div class="info-box tip"><span>💡</span><div>Think of it like this: the sequencing machine is a camera, the raw data is the photograph, and bioinformatics is the darkroom where the image becomes meaningful.</div></div>
+        <div class="edu-topic-body">
+          <p class="sub">Bioinformatics is an interdisciplinary science that develops and applies computational methods to analyse biological data. It sits at the intersection of <strong>biology</strong>, <strong>computer science</strong>, <strong>mathematics</strong>, and <strong>statistics</strong>.</p>
+          <div class="info-box tip"><span>💡</span><div>Think of a sequencing machine as a very sophisticated camera. It produces a "photograph" of millions of DNA/RNA fragments. Bioinformatics is the darkroom — the place where raw data becomes biological insight.</div></div>
+          <h4 style="margin:16px 0 8px;font-size:0.92em;">Why does it matter?</h4>
+          <div class="card-grid card-grid-3" style="margin-top:0;gap:12px;">
+            <div class="card" style="padding:16px;"><strong>🔬 Drug discovery</strong><p class="sub" style="margin-top:6px;">Identify drug targets by finding genes upregulated in disease. AlphaFold predicted 200M+ protein structures.</p></div>
+            <div class="card" style="padding:16px;"><strong>🌾 Agriculture</strong><p class="sub" style="margin-top:6px;">Improve crop resistance by identifying beneficial genetic variants in plant genomes.</p></div>
+            <div class="card" style="padding:16px;"><strong>🦠 Epidemiology</strong><p class="sub" style="margin-top:6px;">Track viral evolution in real time. SARS-CoV-2 variant tracking relied entirely on bioinformatics.</p></div>
           </div>
-        </div>
-        <div class="tutorial-step" onclick="toggleTutStep(this)">
-          <div class="tutorial-step-head"><span class="tsh-num">2</span><span class="tsh-title">The central dogma — why it matters</span><span class="tsh-chev">▶</span></div>
-          <div class="tutorial-step-body">
-            <p class="sub">DNA is transcribed into RNA, which is translated into protein. Most bioinformatics workflows target one of these molecules. RNA-seq measures gene expression (DNA → RNA). WGS measures DNA variation. Proteomics measures proteins. Knowing which level you're working at guides your choice of tools.</p>
-          </div>
-        </div>
-        <div class="tutorial-step" onclick="toggleTutStep(this)">
-          <div class="tutorial-step-head"><span class="tsh-num">3</span><span class="tsh-title">Key concepts you'll encounter</span><span class="tsh-chev">▶</span></div>
-          <div class="tutorial-step-body">
-            <p class="sub" style="margin-bottom:12px;">Before starting any analysis, it helps to understand these fundamental concepts:</p>
-            <div class="card-grid card-grid-2" style="margin-top:0;">
-              <div class="card" style="padding:16px;"><strong>Reference genome</strong><p class="sub" style="margin-top:4px;">A standard DNA sequence representing a species. Your experimental reads are mapped back to this to find where they came from.</p></div>
-              <div class="card" style="padding:16px;"><strong>Read</strong><p class="sub" style="margin-top:4px;">A short DNA/RNA sequence (50–300 bp) produced by a sequencer. One experiment generates millions of reads.</p></div>
-              <div class="card" style="padding:16px;"><strong>Alignment</strong><p class="sub" style="margin-top:4px;">Finding where each read belongs on the reference genome. Like placing puzzle pieces back onto the picture on the box.</p></div>
-              <div class="card" style="padding:16px;"><strong>Gene expression</strong><p class="sub" style="margin-top:4px;">How active a gene is. Measured as number of RNA reads that map to that gene's location. More reads = more expression.</p></div>
-            </div>
+          <h4 style="margin:16px 0 8px;font-size:0.92em;">Major sub-fields</h4>
+          <div class="card-grid card-grid-2" style="margin-top:0;gap:10px;">
+            <div class="card" style="padding:14px;"><strong>Genomics</strong> — studying entire genomes, variant calling, assembly</div>
+            <div class="card" style="padding:14px;"><strong>Transcriptomics</strong> — measuring which genes are active (RNA-seq)</div>
+            <div class="card" style="padding:14px;"><strong>Proteomics</strong> — identifying and quantifying proteins (mass spec)</div>
+            <div class="card" style="padding:14px;"><strong>Metabolomics</strong> — measuring small molecules (metabolites)</div>
+            <div class="card" style="padding:14px;"><strong>Structural biology</strong> — 3D shapes of macromolecules</div>
+            <div class="card" style="padding:14px;"><strong>Metagenomics</strong> — sequencing entire microbial communities</div>
           </div>
         </div>
       </div>
 
-      <!-- Download sequences panel -->
-      <div class="tutorial-panel" id="tut-download-seq">
-        <div class="tutorial-header">
-          <div class="label">Databases</div>
-          <h2 class="h2">How to download sequences</h2>
-          <p class="sub">Biological sequence data is stored in public databases. This guide covers the most important ones and exactly how to download sequences for your organism of interest.</p>
+      <!-- Topic 1.2 -->
+      <div class="edu-topic-card">
+        <div class="edu-topic-head" onclick="toggleEduTopic(this)">
+          <span class="edu-topic-num">1.2</span>
+          <span class="edu-topic-title">DNA, RNA and Proteins — The Central Dogma</span>
+          <span class="edu-topic-chev">▶</span>
         </div>
-        <div class="tutorial-step open" onclick="toggleTutStep(this)">
-          <div class="tutorial-step-head"><span class="tsh-num">1</span><span class="tsh-title">NCBI — find any sequence</span><span class="tsh-chev">▶</span></div>
-          <div class="tutorial-step-body">
-            <p class="sub" style="margin-bottom:10px;">The National Center for Biotechnology Information (NCBI) hosts the world's largest biological database. Start at <strong>ncbi.nlm.nih.gov</strong></p>
-            <div class="info-box note"><span>🔗</span><div><strong>ncbi.nlm.nih.gov</strong> — NCBI homepage. Use the search bar to find sequences, genomes, papers, and raw sequencing data.</div></div>
-            <p class="sub" style="margin:10px 0;">Key NCBI databases:</p>
-            <div class="card-grid card-grid-2" style="margin:0;">
-              <div class="card" style="padding:14px;"><strong>GenBank</strong><p class="sub" style="margin-top:4px;">Annotated nucleotide sequences. Search by gene name, accession number, or organism. Download as FASTA or GenBank format.</p></div>
-              <div class="card" style="padding:14px;"><strong>SRA (Sequence Read Archive)</strong><p class="sub" style="margin-top:4px;">Raw sequencing data from published experiments. Search by GEO dataset ID, paper title, or organism + technique.</p></div>
-              <div class="card" style="padding:14px;"><strong>RefSeq</strong><p class="sub" style="margin-top:4px;">Curated, non-redundant reference sequences. Better than raw GenBank for known genes. Accessions start with NM_, NR_, XM_.</p></div>
-              <div class="card" style="padding:14px;"><strong>Genome</strong><p class="sub" style="margin-top:4px;">Whole genome assemblies. Find reference genomes for any organism, download chromosome FASTA files.</p></div>
+        <div class="edu-topic-body">
+          <p class="sub">Francis Crick's central dogma (1958) describes the flow of genetic information: <strong>DNA → RNA → Protein</strong>. Every bioinformatics workflow targets one of these molecules.</p>
+          <div style="background:linear-gradient(135deg,rgba(0,200,150,0.06),rgba(9,105,218,0.06));border:1px solid rgba(0,200,150,0.2);border-radius:12px;padding:20px;margin:14px 0;text-align:center;">
+            <div style="display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap;font-size:0.9em;font-weight:600;">
+              <span style="background:rgba(0,200,150,0.15);border:1px solid rgba(0,200,150,0.3);padding:8px 16px;border-radius:8px;">🧬 DNA<br><small style="font-weight:400;color:var(--text3);">Stored in nucleus<br>A·T·G·C bases</small></span>
+              <span style="font-size:1.4em;color:var(--green);">→</span>
+              <span style="background:rgba(9,105,218,0.1);border:1px solid rgba(9,105,218,0.2);padding:8px 16px;border-radius:8px;">📜 mRNA<br><small style="font-weight:400;color:var(--text3);">Transcription<br>A·U·G·C bases</small></span>
+              <span style="font-size:1.4em;color:var(--blue);">→</span>
+              <span style="background:rgba(124,58,237,0.1);border:1px solid rgba(124,58,237,0.2);padding:8px 16px;border-radius:8px;">🔗 Protein<br><small style="font-weight:400;color:var(--text3);">Translation<br>20 amino acids</small></span>
             </div>
           </div>
-        </div>
-        <div class="tutorial-step" onclick="toggleTutStep(this)">
-          <div class="tutorial-step-head"><span class="tsh-num">2</span><span class="tsh-title">Download a gene sequence from NCBI</span><span class="tsh-chev">▶</span></div>
-          <div class="tutorial-step-body">
-            <p class="sub" style="margin-bottom:8px;">Step by step — finding and downloading a specific gene:</p>
-            <div class="info-box tip"><span>💡</span><div>Example: downloading the <em>TP53</em> gene sequence from human</div></div>
-            <p class="sub">1. Go to <strong>ncbi.nlm.nih.gov/gene</strong></p>
-            <p class="sub">2. Search: <code style="background:var(--bg3);padding:2px 6px;border-radius:4px;font-family:var(--fm);">TP53[gene] AND "Homo sapiens"[orgn]</code></p>
-            <p class="sub">3. Click the top result → scroll to "RefSeq Status" section → click the NM_ accession</p>
-            <p class="sub">4. On the sequence page: click <strong>Send to → File → FASTA → Create file</strong></p>
-            <p class="sub" style="margin-top:8px;">For command-line download:</p>
-            <div class="code-block"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button><span class="code-comment"># Install Entrez Direct tools (once)</span>
-sh -c "$(curl -fsSL https://ftp.ncbi.nlm.nih.gov/entrez/entrezdirect/install-edirect.sh)"
-
-<span class="code-comment"># Download a gene by accession number</span>
-efetch -db nuccore -id NM_000546 -format fasta > TP53_mRNA.fa
-
-<span class="code-comment"># Download protein sequence</span>
-efetch -db protein -id NP_000537 -format fasta > TP53_protein.fa</div>
+          <div class="info-box note"><span>📌</span><div><strong>Key difference — DNA vs RNA:</strong> DNA uses Thymine (T); RNA uses Uracil (U). RNA is single-stranded; DNA is double-stranded. RNA-seq reads come from mRNA — they have U not T (but tools use T in FASTQ by convention).</div></div>
+          <div class="card-grid card-grid-2" style="margin-top:12px;gap:10px;">
+            <div class="card" style="padding:14px;"><strong>Transcription</strong><p class="sub" style="margin-top:4px;">DNA is copied to mRNA by RNA polymerase. Controlled by promoters and transcription factors. Only expressed genes are transcribed.</p></div>
+            <div class="card" style="padding:14px;"><strong>Translation</strong><p class="sub" style="margin-top:4px;">mRNA codons (3-base groups) are read by ribosomes. Each codon codes for one amino acid. Start codon: AUG. Stop: UAA/UAG/UGA.</p></div>
+            <div class="card" style="padding:14px;"><strong>RNA splicing</strong><p class="sub" style="margin-top:4px;">Pre-mRNA contains introns (non-coding) removed during splicing. Exons are joined. One gene can produce many isoforms by alternative splicing.</p></div>
+            <div class="card" style="padding:14px;"><strong>Non-coding RNA</strong><p class="sub" style="margin-top:4px;">Not all RNA becomes protein. miRNA, lncRNA, rRNA, tRNA have structural or regulatory roles and are also studied by bioinformatics.</p></div>
           </div>
         </div>
-        <div class="tutorial-step" onclick="toggleTutStep(this)">
-          <div class="tutorial-step-head"><span class="tsh-num">3</span><span class="tsh-title">Download genome FASTA from Ensembl</span><span class="tsh-chev">▶</span></div>
-          <div class="tutorial-step-body">
-            <div class="info-box note"><span>🌐</span><div>Ensembl is the best source for complete annotated genomes — especially for model organisms.</div></div>
-            <div class="code-block"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button><span class="code-comment"># Human genome (GRCh38)</span>
-curl -L -O ftp://ftp.ensembl.org/pub/release-109/fasta/homo_sapiens/dna/Homo_sapiens.GRCh38.dna.primary_assembly.fa.gz
+      </div>
 
-<span class="code-comment"># Mouse genome (GRCm39)</span>
-curl -L -O ftp://ftp.ensembl.org/pub/release-109/fasta/mus_musculus/dna/Mus_musculus.GRCm39.dna.primary_assembly.fa.gz
+      <!-- Topic 1.3 -->
+      <div class="edu-topic-card">
+        <div class="edu-topic-head" onclick="toggleEduTopic(this)">
+          <span class="edu-topic-num">1.3</span>
+          <span class="edu-topic-title">Genome Organisation &amp; Gene Structure</span>
+          <span class="edu-topic-chev">▶</span>
+        </div>
+        <div class="edu-topic-body">
+          <p class="sub">Understanding how genes are organised in the genome is essential for interpreting any bioinformatics result.</p>
+          <div class="card-grid card-grid-2" style="gap:10px;margin-top:12px;">
+            <div class="card" style="padding:16px;"><strong>Genome size examples</strong><br><span class="chip" style="margin-top:6px;display:inline-block;">E. coli: 4.6 Mb</span> <span class="chip">Yeast: 12 Mb</span> <span class="chip">Fly: 180 Mb</span> <span class="chip">Human: 3.2 Gb</span> <span class="chip">Wheat: 17 Gb</span><p class="sub" style="margin-top:8px;">Larger genome ≠ more genes. Humans have ~20,000 protein-coding genes. Wheat has ~107,000.</p></div>
+            <div class="card" style="padding:16px;"><strong>A typical gene structure</strong><p class="sub" style="margin-top:6px;font-family:var(--fm);font-size:0.8em;background:var(--bg2);padding:8px;border-radius:6px;">5' UTR | Exon 1 | Intron | Exon 2 | Intron | Exon 3 | 3' UTR</p><p class="sub" style="margin-top:8px;">UTR = Untranslated Region. Introns are spliced out. Exons carry the coding sequence (CDS).</p></div>
+          </div>
+          <div class="info-box warn"><span>⚠️</span><div>When aligning RNA-seq reads to a genome, use a <strong>splice-aware aligner</strong> (STAR, HISAT2) — not a simple aligner like BWA. Otherwise reads spanning exon-exon junctions will fail to align.</div></div>
+        </div>
+      </div>
 
-<span class="code-comment"># Arabidopsis (TAIR10) — from Ensembl Plants</span>
-curl -L -O ftp://ftp.ensemblgenomes.ebi.ac.uk/pub/plants/release-56/fasta/arabidopsis_thaliana/dna/Arabidopsis_thaliana.TAIR10.dna.toplevel.fa.gz
+      <!-- Topic 1.4 -->
+      <div class="edu-topic-card">
+        <div class="edu-topic-head" onclick="toggleEduTopic(this)">
+          <span class="edu-topic-num">1.4</span>
+          <span class="edu-topic-title">Sequencing Technologies</span>
+          <span class="edu-topic-chev">▶</span>
+        </div>
+        <div class="edu-topic-body">
+          <p class="sub">Most bioinformatics data comes from Next-Generation Sequencing (NGS). Understanding what the machine actually does explains why your data looks the way it does.</p>
+          <div class="card-grid card-grid-3" style="gap:12px;margin-top:12px;">
+            <div class="card" style="padding:16px;border-top:3px solid var(--green);"><strong>Illumina (Short-read)</strong><p class="sub" style="margin-top:6px;">Read length: 75–300 bp. Very accurate (&gt;99.9%). High throughput. Gold standard for RNA-seq, WGS, ChIP-seq. Output: FASTQ files.</p><span class="tag tag-green" style="margin-top:8px;">Most common</span></div>
+            <div class="card" style="padding:16px;border-top:3px solid var(--blue);"><strong>PacBio (Long-read)</strong><p class="sub" style="margin-top:6px;">Read length: 10–25 kb. Higher error rate (~1%). Best for genome assembly, structural variants, full-length isoforms (IsoSeq).</p></div>
+            <div class="card" style="padding:16px;border-top:3px solid var(--purple);"><strong>Oxford Nanopore</strong><p class="sub" style="margin-top:6px;">Read length: up to 4 Mb. Real-time sequencing. Portable (MinION). Good for field use, rapid assembly, direct RNA sequencing.</p></div>
+          </div>
+          <div class="info-box tip"><span>💡</span><div><strong>Which technology for RNA-seq?</strong> Use <strong>Illumina</strong> for differential expression (accuracy critical). Use <strong>PacBio IsoSeq</strong> when you need full-length isoform information. Use <strong>Nanopore direct RNA</strong> for base modifications (m6A).</div></div>
+        </div>
+      </div>
 
-<span class="code-comment"># Decompress</span>
-gunzip *.fa.gz</div>
+    </div><!-- end edu-topic-grid -->
+  </div><!-- end mod1 -->
+
+  <!-- ═══════════ MODULE 2: COMPUTING ═══════════ -->
+  <div class="edu-module" id="edu-mod2">
+    <div class="edu-mod-header">
+      <div class="label">Module 2 · Computing Skills</div>
+      <h2 class="h2">Linux, Terminal &amp; Programming for Bioinformatics</h2>
+      <p class="lead">Almost all bioinformatics tools run on Linux/macOS in the terminal. This module teaches you the computing skills you need before running any analysis — from basic commands to writing scripts.</p>
+    </div>
+    <div class="edu-topic-grid">
+
+      <div class="edu-topic-card">
+        <div class="edu-topic-head" onclick="toggleEduTopic(this)">
+          <span class="edu-topic-num">2.1</span>
+          <span class="edu-topic-title">Essential Linux / Terminal Commands</span>
+          <span class="edu-topic-chev">▶</span>
+        </div>
+        <div class="edu-topic-body">
+          <p class="sub">You will spend 80% of your time in the terminal. These commands are non-negotiable knowledge:</p>
+          <div class="code-block"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button><span class="code-comment"># Navigation</span>
+pwd                        # Print current directory
+ls -lh                     # List files (human-readable sizes)
+cd /path/to/folder         # Change directory
+cd ..                      # Go up one level
+cd ~                       # Go to home directory
+
+<span class="code-comment"># File operations</span>
+cp source.txt dest.txt     # Copy file
+mv old.txt new.txt         # Move or rename
+rm file.txt                # Delete file (PERMANENT — no Trash!)
+mkdir new_folder           # Create directory
+rm -rf folder/             # Delete directory (DANGEROUS!)
+
+<span class="code-comment"># Viewing files</span>
+cat file.txt               # Print entire file
+head -20 file.txt          # First 20 lines
+tail -20 file.txt          # Last 20 lines
+less file.txt              # Page through (press q to quit)
+wc -l file.txt             # Count lines
+
+<span class="code-comment"># Searching</span>
+grep "pattern" file.txt    # Find lines matching pattern
+grep -c ">" file.fa        # Count sequences in FASTA
+
+<span class="code-comment"># Compression</span>
+gzip file.fastq            # Compress (creates .fastq.gz)
+gunzip file.fastq.gz       # Decompress
+zcat file.fastq.gz | head  # View compressed file</div>
+          <div class="info-box warn"><span>⚠️</span><div><code>rm -rf</code> is permanent and irreversible. There is no Trash. Always double-check before running delete commands. Never run <code>rm -rf /</code> or <code>rm -rf *</code> without absolute certainty.</div></div>
+        </div>
+      </div>
+
+      <div class="edu-topic-card">
+        <div class="edu-topic-head" onclick="toggleEduTopic(this)">
+          <span class="edu-topic-num">2.2</span>
+          <span class="edu-topic-title">Setting Up Your Environment (Conda)</span>
+          <span class="edu-topic-chev">▶</span>
+        </div>
+        <div class="edu-topic-body">
+          <p class="sub">Conda is the standard package manager for bioinformatics. It installs tools and manages dependencies so they don't conflict with each other.</p>
+          <div class="code-block"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button><span class="code-comment"># 1. Install Miniconda (do this once)</span>
+wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
+bash Miniconda3-latest-Linux-x86_64.sh
+source ~/.bashrc
+
+<span class="code-comment"># 2. Add bioinformatics channels</span>
+conda config --add channels defaults
+conda config --add channels bioconda
+conda config --add channels conda-forge
+
+<span class="code-comment"># 3. Create a project environment (ALWAYS use environments!)</span>
+conda create -n rnaseq python=3.10
+conda activate rnaseq
+
+<span class="code-comment"># 4. Install tools into the environment</span>
+conda install -c bioconda fastqc trimmomatic hisat2 samtools subread
+conda install -c conda-forge r-base r-biocmanager
+
+<span class="code-comment"># 5. List installed tools</span>
+conda list
+
+<span class="code-comment"># Save environment for reproducibility</span>
+conda env export > environment.yml
+conda env create -f environment.yml  # Recreate on another machine</div>
+          <div class="info-box tip"><span>💡</span><div><strong>Always use environments.</strong> Never install bioinformatics tools into your base conda environment. One project = one environment. This prevents version conflicts between projects.</div></div>
+        </div>
+      </div>
+
+      <div class="edu-topic-card">
+        <div class="edu-topic-head" onclick="toggleEduTopic(this)">
+          <span class="edu-topic-num">2.3</span>
+          <span class="edu-topic-title">Bash Scripting for Automation</span>
+          <span class="edu-topic-chev">▶</span>
+        </div>
+        <div class="edu-topic-body">
+          <p class="sub">When you have 20 samples, you don't run commands one by one. Bash scripts automate repetitive tasks — this is the single most time-saving skill in bioinformatics.</p>
+          <div class="code-block"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button>#!/bin/bash
+<span class="code-comment"># ─────────────────────────────────────────
+# RNA-seq preprocessing pipeline
+# Usage: bash pipeline.sh
+# ─────────────────────────────────────────</span>
+
+<span class="code-comment"># Define paths (edit these)</span>
+RAW_DIR="./raw_data"
+TRIM_DIR="./trimmed"
+QC_DIR="./qc_reports"
+GENOME_DIR="./genome"
+ALIGN_DIR="./aligned"
+THREADS=8
+
+<span class="code-comment"># Create output directories</span>
+mkdir -p $TRIM_DIR $QC_DIR $ALIGN_DIR
+
+<span class="code-comment"># Loop over all samples</span>
+for R1 in ${RAW_DIR}/*_R1.fastq.gz; do
+    SAMPLE=$(basename $R1 _R1.fastq.gz)
+    R2="${RAW_DIR}/${SAMPLE}_R2.fastq.gz"
+
+    echo "Processing: $SAMPLE"
+
+    <span class="code-comment"># Trim adapters</span>
+    trimmomatic PE -threads $THREADS \
+        $R1 $R2 \
+        ${TRIM_DIR}/${SAMPLE}_R1_trimmed.fastq.gz /dev/null \
+        ${TRIM_DIR}/${SAMPLE}_R2_trimmed.fastq.gz /dev/null \
+        ILLUMINACLIP:TruSeq3-PE.fa:2:30:10 MINLEN:36
+
+    <span class="code-comment"># Align to genome</span>
+    hisat2 -p $THREADS -x ${GENOME_DIR}/index \
+        -1 ${TRIM_DIR}/${SAMPLE}_R1_trimmed.fastq.gz \
+        -2 ${TRIM_DIR}/${SAMPLE}_R2_trimmed.fastq.gz \
+        | samtools sort -@ $THREADS -o ${ALIGN_DIR}/${SAMPLE}.bam
+
+    samtools index ${ALIGN_DIR}/${SAMPLE}.bam
+    echo "Done: $SAMPLE"
+done
+
+echo "All samples processed!"</div>
+        </div>
+      </div>
+
+      <div class="edu-topic-card">
+        <div class="edu-topic-head" onclick="toggleEduTopic(this)">
+          <span class="edu-topic-num">2.4</span>
+          <span class="edu-topic-title">R for Bioinformatics — Getting Started</span>
+          <span class="edu-topic-chev">▶</span>
+        </div>
+        <div class="edu-topic-body">
+          <p class="sub">R is the language of choice for statistical analysis, visualisation, and Bioconductor packages (DESeq2, edgeR, limma). You don't need to be an expert — a working knowledge is enough.</p>
+          <div class="code-block"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button><span class="code-comment"># Install Bioconductor packages</span>
+if (!require("BiocManager")) install.packages("BiocManager")
+BiocManager::install(c("DESeq2", "edgeR", "clusterProfiler",
+                        "EnhancedVolcano", "ComplexHeatmap"))
+
+<span class="code-comment"># Read a count matrix</span>
+counts &lt;- read.csv("counts.csv", row.names=1)
+head(counts)
+dim(counts)  # Check dimensions: genes × samples
+
+<span class="code-comment"># Basic statistics</span>
+summary(colSums(counts))   # Library sizes
+boxplot(log2(counts+1))    # Visual check — should be similar heights
+
+<span class="code-comment"># dplyr / tidyverse for data wrangling</span>
+library(tidyverse)
+metadata &lt;- read.csv("metadata.csv")
+metadata |&gt; filter(condition == "treated") |&gt; pull(sample_id)</div>
+          <div class="info-box note"><span>📌</span><div><strong>Recommended R learning path:</strong> (1) R for Data Science (Hadley Wickham — free online) → (2) Bioconductor Workflows on bioconductor.org → (3) DESeq2 vignette</div></div>
+        </div>
+      </div>
+
+    </div>
+  </div><!-- end mod2 -->
+
+  <!-- ═══════════ MODULE 3: DATABASES ═══════════ -->
+  <div class="edu-module" id="edu-mod3">
+    <div class="edu-mod-header">
+      <div class="label">Module 3 · Databases &amp; Data</div>
+      <h2 class="h2">Biological Databases &amp; File Formats</h2>
+      <p class="lead">Public databases hold billions of sequences, structures, and experiments — and they are all free. Knowing which database to use and how to download data efficiently is an essential skill.</p>
+    </div>
+    <div class="edu-topic-grid">
+
+      <div class="edu-topic-card">
+        <div class="edu-topic-head" onclick="toggleEduTopic(this)">
+          <span class="edu-topic-num">3.1</span>
+          <span class="edu-topic-title">The Major Biological Databases</span>
+          <span class="edu-topic-chev">▶</span>
+        </div>
+        <div class="edu-topic-body">
+          <div class="card-grid card-grid-2" style="gap:12px;margin-top:8px;">
+            <div class="card" style="padding:16px;border-left:3px solid var(--green);"><strong>NCBI</strong> <span class="tag tag-green" style="font-size:0.65em;">Nucleotide</span><p class="sub" style="margin-top:6px;">National Center for Biotechnology Information. Houses GenBank, SRA, PubMed, RefSeq. Start here for sequences and raw data. URL: ncbi.nlm.nih.gov</p></div>
+            <div class="card" style="padding:16px;border-left:3px solid var(--blue);"><strong>Ensembl</strong> <span class="tag tag-blue" style="font-size:0.65em;">Genome</span><p class="sub" style="margin-top:6px;">Best source for annotated reference genomes and GTF annotation files for 300+ species. URL: ensembl.org</p></div>
+            <div class="card" style="padding:16px;border-left:3px solid var(--purple);"><strong>UniProt</strong> <span class="tag tag-purple" style="font-size:0.65em;">Protein</span><p class="sub" style="margin-top:6px;">Comprehensive protein database. Swiss-Prot = manually curated. TrEMBL = computationally annotated. URL: uniprot.org</p></div>
+            <div class="card" style="padding:16px;border-left:3px solid var(--orange);"><strong>RCSB PDB</strong> <span class="tag tag-orange" style="font-size:0.65em;">Structure</span><p class="sub" style="margin-top:6px;">Protein Data Bank. 200,000+ experimentally determined 3D structures of proteins and nucleic acids. URL: rcsb.org</p></div>
+            <div class="card" style="padding:16px;border-left:3px solid var(--green);"><strong>GEO (NCBI)</strong> <span class="tag tag-green" style="font-size:0.65em;">Expression</span><p class="sub" style="margin-top:6px;">Gene Expression Omnibus. Processed expression data from microarray and RNA-seq experiments. Search by organism + condition.</p></div>
+            <div class="card" style="padding:16px;border-left:3px solid var(--blue);"><strong>KEGG</strong> <span class="tag tag-blue" style="font-size:0.65em;">Pathways</span><p class="sub" style="margin-top:6px;">Kyoto Encyclopedia of Genes and Genomes. Metabolic pathways, drug targets, and disease associations. Essential for pathway analysis.</p></div>
+            <div class="card" style="padding:16px;border-left:3px solid var(--purple);"><strong>STRING</strong> <span class="tag tag-purple" style="font-size:0.65em;">Interactions</span><p class="sub" style="margin-top:6px;">Protein-protein interaction networks for 5000+ species. Visualise functional networks of your gene list.</p></div>
+            <div class="card" style="padding:16px;border-left:3px solid var(--orange);"><strong>Reactome</strong> <span class="tag tag-orange" style="font-size:0.65em;">Pathways</span><p class="sub" style="margin-top:6px;">Curated biological pathways, reactions, and processes. Especially good for human pathway analysis and visualisation.</p></div>
           </div>
         </div>
-        <div class="tutorial-step" onclick="toggleTutStep(this)">
-          <div class="tutorial-step-head"><span class="tsh-num">4</span><span class="tsh-title">Download RNA-seq data (SRA)</span><span class="tsh-chev">▶</span></div>
-          <div class="tutorial-step-body">
-            <div class="info-box warn"><span>⚠️</span><div>SRA data requires the SRA toolkit (fasterq-dump). Install it via conda: <code>conda install -c bioconda sra-tools</code></div></div>
-            <div class="code-block"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button><span class="code-comment"># Find accession on ncbi.nlm.nih.gov/sra</span>
-<span class="code-comment"># Search: your paper/experiment → click Run → copy SRR number</span>
+      </div>
 
-<span class="code-comment"># Download a single sample (single-end)</span>
+      <div class="edu-topic-card">
+        <div class="edu-topic-head" onclick="toggleEduTopic(this)">
+          <span class="edu-topic-num">3.2</span>
+          <span class="edu-topic-title">Essential File Formats Explained</span>
+          <span class="edu-topic-chev">▶</span>
+        </div>
+        <div class="edu-topic-body">
+          <p class="sub">Each step of an analysis produces a different file format. Recognising these is essential:</p>
+          <div class="card-grid card-grid-2" style="gap:10px;margin-top:8px;">
+            <div class="card" style="padding:14px;"><strong>FASTA (.fa / .fasta)</strong><p class="sub" style="margin-top:4px;">Sequence file. Each entry: a header line starting with <code>&gt;</code> followed by sequence. Used for genomes, transcriptomes, proteins.</p><div class="code-block" style="margin-top:8px;font-size:0.75em;">&gt;GeneA<br>ATGCGATCGATCG...</div></div>
+            <div class="card" style="padding:14px;"><strong>FASTQ (.fastq / .fastq.gz)</strong><p class="sub" style="margin-top:4px;">Raw sequencing reads. 4 lines per read: (1) header @, (2) sequence, (3) +, (4) quality scores (ASCII).</p><div class="code-block" style="margin-top:8px;font-size:0.75em;">@SRR1234.1<br>ATCGATCG<br>+<br>IIIIIFFF</div></div>
+            <div class="card" style="padding:14px;"><strong>SAM / BAM (.sam / .bam)</strong><p class="sub" style="margin-top:4px;">Aligned reads. SAM = plain text. BAM = binary compressed (use this for storage). Requires index (.bai) for random access.</p></div>
+            <div class="card" style="padding:14px;"><strong>GTF / GFF3 (.gtf / .gff3)</strong><p class="sub" style="margin-top:4px;">Gene annotation. Tab-separated: chromosome, source, feature, start, end, score, strand, frame, attributes. Download from Ensembl.</p></div>
+            <div class="card" style="padding:14px;"><strong>VCF (.vcf)</strong><p class="sub" style="margin-top:4px;">Variant Call Format. Lists genetic variants (SNPs, indels) with position, reference allele, alternative allele, and quality scores.</p></div>
+            <div class="card" style="padding:14px;"><strong>BED (.bed)</strong><p class="sub" style="margin-top:4px;">Genomic intervals. Minimum 3 columns: chromosome, start, end. Used for peaks (ChIP-seq), exon boundaries, regions of interest.</p></div>
+          </div>
+          <div class="info-box tip"><span>💡</span><div>Quality scores in FASTQ use ASCII encoding. Score 40 (character 'I') = 99.99% accuracy. Score 20 (character '5') = 99% accuracy. Score 10 = 90% accuracy. Always check quality before aligning.</div></div>
+        </div>
+      </div>
+
+      <div class="edu-topic-card">
+        <div class="edu-topic-head" onclick="toggleEduTopic(this)">
+          <span class="edu-topic-num">3.3</span>
+          <span class="edu-topic-title">Downloading Data from SRA &amp; Ensembl</span>
+          <span class="edu-topic-chev">▶</span>
+        </div>
+        <div class="edu-topic-body">
+          <div class="code-block"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button><span class="code-comment"># ─── Download RNA-seq data from SRA ───</span>
+<span class="code-comment"># Find accession: search ncbi.nlm.nih.gov/sra</span>
+<span class="code-comment"># Get SRR numbers from GEO Run Selector</span>
+
+<span class="code-comment"># Install SRA toolkit</span>
+conda install -c bioconda sra-tools
+
+<span class="code-comment"># Download single-end data</span>
 fasterq-dump SRR1234567 --outdir ./raw_data --progress
 
 <span class="code-comment"># Download paired-end data</span>
-fasterq-dump SRR1234567 --outdir ./raw_data --progress --split-files
+fasterq-dump SRR1234567 --outdir ./raw_data --split-files --progress
 
-<span class="code-comment"># Check what you downloaded</span>
-ls -lh ./raw_data/</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- SRA panel -->
-      <div class="tutorial-panel" id="tut-sra">
-        <div class="tutorial-header">
-          <div class="label">Databases</div>
-          <h2 class="h2">NCBI SRA — Download RNA-seq Data</h2>
-          <p class="sub">The Sequence Read Archive contains raw sequencing data from hundreds of thousands of published experiments. This tutorial shows you exactly how to find and download data for your analysis.</p>
-        </div>
-        <div class="tutorial-step open" onclick="toggleTutStep(this)">
-          <div class="tutorial-step-head"><span class="tsh-num">1</span><span class="tsh-title">Find your experiment on SRA</span><span class="tsh-chev">▶</span></div>
-          <div class="tutorial-step-body">
-            <p class="sub" style="margin-bottom:10px;">Three ways to find SRA data for your project:</p>
-            <div class="info-box note"><span>🔍</span><div><strong>From a paper:</strong> Look in the "Data availability" or "Methods" section. Authors must state accession numbers (GEO: GSE123456 or SRA: SRP123456)</div></div>
-            <div class="info-box note"><span>🔍</span><div><strong>Search by organism + technique:</strong> Go to ncbi.nlm.nih.gov/sra and search e.g. <em>"Arabidopsis thaliana RNA-seq drought stress"</em></div></div>
-            <div class="info-box note"><span>🔍</span><div><strong>From GEO:</strong> ncbi.nlm.nih.gov/geo → find dataset → click "SRA Run Selector" to get individual run accessions</div></div>
-          </div>
-        </div>
-        <div class="tutorial-step" onclick="toggleTutStep(this)">
-          <div class="tutorial-step-head"><span class="tsh-num">2</span><span class="tsh-title">Get the SRR accession numbers</span><span class="tsh-chev">▶</span></div>
-          <div class="tutorial-step-body">
-            <p class="sub" style="margin-bottom:8px;">Each sequencing run has a unique accession number. Formats: <strong>SRR</strong> (NCBI), <strong>ERR</strong> (European ENA), <strong>DRR</strong> (Japanese DDBJ)</p>
-            <p class="sub">From the SRA Run Selector page: tick the samples you need → click "Accession List" to download a file with all accession numbers at once.</p>
-            <div class="code-block"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button><span class="code-comment"># If you have a file of accession numbers (SRR_Acc_List.txt):</span>
+<span class="code-comment"># Batch download from accession list</span>
 while read acc; do
-  fasterq-dump $acc --outdir ./raw_data --progress
-done < SRR_Acc_List.txt</div>
-          </div>
-        </div>
-        <div class="tutorial-step" onclick="toggleTutStep(this)">
-          <div class="tutorial-step-head"><span class="tsh-num">3</span><span class="tsh-title">Check if data is single-end or paired-end</span><span class="tsh-chev">▶</span></div>
-          <div class="tutorial-step-body">
-            <p class="sub" style="margin-bottom:8px;">This matters for your analysis — wrong setting = garbage results.</p>
-            <div class="code-block"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button><span class="code-comment"># Check layout: look at the SRA run page under "Layout"</span>
-<span class="code-comment"># Or use fastq-dump with --info flag:</span>
-fastq-dump -I --skip-technical --readids --read-filter pass \
-  --dumpbase --split-3 --clip -N 0 -X 1 SRR1234567
+    fasterq-dump $acc --outdir ./raw_data --split-files
+done &lt; SRR_Acc_List.txt
 
-<span class="code-comment"># After fasterq-dump:</span>
-<span class="code-comment"># Single-end: creates SRR1234567.fastq (one file)</span>
-<span class="code-comment"># Paired-end: creates SRR1234567_1.fastq and SRR1234567_2.fastq (two files)</span></div>
+<span class="code-comment"># ─── Download reference genome from Ensembl ───</span>
+<span class="code-comment"># Human genome (GRCh38)</span>
+wget https://ftp.ensembl.org/pub/release-111/fasta/homo_sapiens/dna/Homo_sapiens.GRCh38.dna.primary_assembly.fa.gz
+
+<span class="code-comment"># Human GTF annotation</span>
+wget https://ftp.ensembl.org/pub/release-111/gtf/homo_sapiens/Homo_sapiens.GRCh38.111.gtf.gz
+
+<span class="code-comment"># Mouse (GRCm39)</span>
+wget https://ftp.ensembl.org/pub/release-111/fasta/mus_musculus/dna/Mus_musculus.GRCm39.dna.primary_assembly.fa.gz
+wget https://ftp.ensembl.org/pub/release-111/gtf/mus_musculus/Mus_musculus.GRCm39.111.gtf.gz
+
+gunzip *.fa.gz *.gtf.gz</div>
+        </div>
+      </div>
+
+    </div>
+  </div><!-- end mod3 -->
+
+  <!-- ═══════════ MODULE 4: SEQUENCE ANALYSIS ═══════════ -->
+  <div class="edu-module" id="edu-mod4">
+    <div class="edu-mod-header">
+      <div class="label">Module 4 · Sequence Analysis</div>
+      <h2 class="h2">BLAST, Alignment &amp; Sequence Comparison</h2>
+      <p class="lead">Sequence comparison is the backbone of bioinformatics. Whether finding a gene's function, aligning reads, or building a phylogenetic tree — everything starts with comparing sequences.</p>
+    </div>
+    <div class="edu-topic-grid">
+
+      <div class="edu-topic-card">
+        <div class="edu-topic-head" onclick="toggleEduTopic(this)">
+          <span class="edu-topic-num">4.1</span>
+          <span class="edu-topic-title">BLAST — Finding Similar Sequences</span>
+          <span class="edu-topic-chev">▶</span>
+        </div>
+        <div class="edu-topic-body">
+          <p class="sub">BLAST (Basic Local Alignment Search Tool) finds sequences in a database that are similar to your query. It's the most used tool in bioinformatics — and the most misused.</p>
+          <div class="card-grid card-grid-2" style="gap:10px;margin-top:12px;">
+            <div class="card" style="padding:14px;"><strong>blastn</strong><p class="sub" style="margin-top:4px;">Nucleotide vs nucleotide. Use for: checking if a DNA sequence is what you think it is, finding orthologous genes.</p></div>
+            <div class="card" style="padding:14px;"><strong>blastp</strong><p class="sub" style="margin-top:4px;">Protein vs protein. More sensitive than blastn for distantly related sequences. Use for: protein function annotation.</p></div>
+            <div class="card" style="padding:14px;"><strong>blastx</strong><p class="sub" style="margin-top:4px;">Nucleotide query → protein database (translates 6 frames). Use for: annotating novel nucleotide sequences.</p></div>
+            <div class="card" style="padding:14px;"><strong>tblastn</strong><p class="sub" style="margin-top:4px;">Protein query → nucleotide database (translates DB). Use for: finding homologues in unannotated genomes.</p></div>
+          </div>
+          <div class="info-box warn"><span>⚠️</span><div><strong>Understanding the E-value:</strong> Not a p-value. E-value = expected number of hits by chance. E-value &lt; 1e-5 is significant. E-value = 1 means one random hit expected — not significant. Lower is better.</div></div>
+          <div class="code-block" style="margin-top:12px;"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button><span class="code-comment"># Command-line BLAST</span>
+conda install -c bioconda blast
+
+<span class="code-comment"># Make a BLAST database from your sequences</span>
+makeblastdb -in my_genome.fa -dbtype nucl -out my_genome_db
+
+<span class="code-comment"># Run blastn</span>
+blastn -query gene.fa -db my_genome_db \
+       -out results.txt -outfmt 6 -evalue 1e-10
+
+<span class="code-comment"># outfmt 6 columns: qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore</span></div>
+        </div>
+      </div>
+
+      <div class="edu-topic-card">
+        <div class="edu-topic-head" onclick="toggleEduTopic(this)">
+          <span class="edu-topic-num">4.2</span>
+          <span class="edu-topic-title">Multiple Sequence Alignment (MSA)</span>
+          <span class="edu-topic-chev">▶</span>
+        </div>
+        <div class="edu-topic-body">
+          <p class="sub">When comparing more than two sequences simultaneously, you need a Multiple Sequence Alignment. MSA reveals conserved regions, functional domains, and evolutionary relationships.</p>
+          <div class="code-block"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button><span class="code-comment"># MUSCLE — fast MSA (good for up to ~1000 sequences)</span>
+conda install -c bioconda muscle
+muscle -align sequences.fa -output aligned.fa
+
+<span class="code-comment"># MAFFT — more accurate for divergent sequences</span>
+conda install -c bioconda mafft
+mafft --auto sequences.fa &gt; aligned.fa
+
+<span class="code-comment"># Trim poorly aligned regions (trimAl)</span>
+conda install -c bioconda trimal
+trimal -in aligned.fa -out trimmed.fa -automated1
+
+<span class="code-comment"># Visualise in terminal</span>
+head -40 aligned.fa | less</div>
+          <div class="info-box tip"><span>💡</span><div>Always trim your MSA before building a phylogenetic tree. Poorly aligned regions introduce noise. Use trimAl with <code>-automated1</code> for a good default.</div></div>
+        </div>
+      </div>
+
+      <div class="edu-topic-card">
+        <div class="edu-topic-head" onclick="toggleEduTopic(this)">
+          <span class="edu-topic-num">4.3</span>
+          <span class="edu-topic-title">Phylogenetic Trees — Evolutionary Analysis</span>
+          <span class="edu-topic-chev">▶</span>
+        </div>
+        <div class="edu-topic-body">
+          <p class="sub">A phylogenetic tree represents the evolutionary relationships between sequences or species. Longer branches = more evolutionary change.</p>
+          <div class="card-grid card-grid-2" style="gap:10px;margin-top:12px;">
+            <div class="card" style="padding:14px;"><strong>Neighbour-Joining (NJ)</strong><p class="sub" style="margin-top:4px;">Fast, distance-based. Good for quick trees. Available in MEGA, FastTree.</p></div>
+            <div class="card" style="padding:14px;"><strong>Maximum Likelihood (ML)</strong><p class="sub" style="margin-top:4px;">Statistical approach. Best method for publication. Use IQ-TREE2. Supports bootstrap support values.</p></div>
+            <div class="card" style="padding:14px;"><strong>Bayesian Inference</strong><p class="sub" style="margin-top:4px;">Probabilistic method. MrBayes, BEAST. Best for dating divergence times. Computationally expensive.</p></div>
+            <div class="card" style="padding:14px;"><strong>Bootstrap support</strong><p class="sub" style="margin-top:4px;">Reliability of each branch. Values 0–100. Nodes with &gt;70 are considered well-supported.</p></div>
+          </div>
+          <div class="code-block" style="margin-top:12px;"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button><span class="code-comment"># IQ-TREE2 — maximum likelihood tree (recommended)</span>
+conda install -c bioconda iqtree
+iqtree2 -s trimmed_alignment.fa -m TEST -B 1000 -T AUTO
+<span class="code-comment"># -m TEST: automatically selects best substitution model</span>
+<span class="code-comment"># -B 1000: 1000 ultrafast bootstrap replicates</span>
+<span class="code-comment"># Output: .treefile (open in FigTree or iTOL)</span></div>
+        </div>
+      </div>
+
+    </div>
+  </div><!-- end mod4 -->
+
+  <!-- ═══════════ MODULE 5: RNA-seq ═══════════ -->
+  <div class="edu-module" id="edu-mod5">
+    <div class="edu-mod-header">
+      <div class="label">Module 5 · Transcriptomics</div>
+      <h2 class="h2">RNA-seq Analysis — From Raw Reads to Gene Lists</h2>
+      <p class="lead">RNA sequencing (RNA-seq) measures gene expression across the entire transcriptome. This module takes you through every step of the pipeline with detailed explanations of what each tool does and why.</p>
+    </div>
+    <div class="edu-topic-grid">
+
+      <div class="edu-topic-card">
+        <div class="edu-topic-head" onclick="toggleEduTopic(this)">
+          <span class="edu-topic-num">5.1</span>
+          <span class="edu-topic-title">Experimental Design — The Most Critical Step</span>
+          <span class="edu-topic-chev">▶</span>
+        </div>
+        <div class="edu-topic-body">
+          <p class="sub" style="margin-bottom:12px;">No amount of computational analysis can rescue a poorly designed experiment. Get this right <strong>before</strong> you sequence.</p>
+          <div class="card-grid card-grid-2" style="gap:12px;margin-top:0;">
+            <div class="card" style="padding:16px;border-left:3px solid var(--green);"><strong>✅ Biological replicates</strong><p class="sub" style="margin-top:6px;">Minimum 3 per condition. More is always better. Biological replicates (different animals/cultures) &gt; technical replicates (same sample, re-sequenced).</p></div>
+            <div class="card" style="padding:16px;border-left:3px solid var(--red);"><strong>⚠️ Batch effects</strong><p class="sub" style="margin-top:6px;">Samples processed on different days/machines can show batch effects that mask real biology. Always balance batches across conditions.</p></div>
+            <div class="card" style="padding:16px;border-left:3px solid var(--blue);"><strong>📊 Sequencing depth</strong><p class="sub" style="margin-top:6px;">For differential expression: 20–30M reads/sample. For rare transcripts or lncRNA: 50–100M. For allele-specific expression: 100M+.</p></div>
+            <div class="card" style="padding:16px;border-left:3px solid var(--purple);"><strong>🔀 Strand specificity</strong><p class="sub" style="margin-top:6px;">Know your library type. Unstranded (dUTP: stranded-reverse). This matters for counting reads correctly. Check your kit documentation.</p></div>
+          </div>
+          <div class="info-box warn"><span>⚠️</span><div><strong>The golden rule:</strong> You can always pool more samples. You cannot add replicates after sequencing. Underpowered studies waste money. Use the RNASeqPower R package to calculate required sample size before starting.</div></div>
+        </div>
+      </div>
+
+      <div class="edu-topic-card">
+        <div class="edu-topic-head" onclick="toggleEduTopic(this)">
+          <span class="edu-topic-num">5.2</span>
+          <span class="edu-topic-title">Quality Control — FastQC &amp; Trimming</span>
+          <span class="edu-topic-chev">▶</span>
+        </div>
+        <div class="edu-topic-body">
+          <p class="sub">Before aligning reads, assess their quality. Poor-quality bases and adapter contamination cause misalignment and false results.</p>
+          <h4 style="margin:12px 0 8px;font-size:0.9em;font-weight:600;">FastQC output — what each module means</h4>
+          <div class="card-grid card-grid-2" style="gap:10px;margin-top:0;">
+            <div class="card" style="padding:14px;"><strong>Per base sequence quality</strong><p class="sub" style="margin-top:4px;">Should stay in green zone (&gt;28). Quality commonly drops at 3' end — normal. If it drops early, you have a problem.</p></div>
+            <div class="card" style="padding:14px;"><strong>Per sequence quality scores</strong><p class="sub" style="margin-top:4px;">Distribution of mean quality per read. Should be a single peak above Q30. A shoulder below Q20 indicates poor quality reads.</p></div>
+            <div class="card" style="padding:14px;"><strong>Adapter content</strong><p class="sub" style="margin-top:4px;">Should be near zero. If adapter sequence is detected, trim it with Trimmomatic or Trim Galore before alignment.</p></div>
+            <div class="card" style="padding:14px;"><strong>Per base GC content</strong><p class="sub" style="margin-top:4px;">Should be roughly uniform across positions. Bias at position 1-10 is normal for some protocols. Severe bias = contamination.</p></div>
+            <div class="card" style="padding:14px;"><strong>Sequence duplication</strong><p class="sub" style="margin-top:4px;">RNA-seq data often has high duplication — this is normal due to highly expressed genes. Don't worry unless &gt;80%.</p></div>
+            <div class="card" style="padding:14px;"><strong>Overrepresented sequences</strong><p class="sub" style="margin-top:4px;">Ribosomal RNA contamination is common. If rRNA is overrepresented, your rRNA depletion step failed.</p></div>
+          </div>
+          <div class="code-block" style="margin-top:12px;"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button><span class="code-comment"># Run FastQC on all samples</span>
+fastqc raw_data/*.fastq.gz -o qc_reports/ -t 8
+multiqc qc_reports/ -o qc_reports/multiqc_report  # Summary of all samples
+
+<span class="code-comment"># Trim adapters with Trim Galore (wrapper for Cutadapt)</span>
+conda install -c bioconda trim-galore
+trim_galore --paired --cores 8 \
+    sample_R1.fastq.gz sample_R2.fastq.gz \
+    --output_dir trimmed/</div>
+        </div>
+      </div>
+
+      <div class="edu-topic-card">
+        <div class="edu-topic-head" onclick="toggleEduTopic(this)">
+          <span class="edu-topic-num">5.3</span>
+          <span class="edu-topic-title">Alignment with HISAT2 &amp; STAR</span>
+          <span class="edu-topic-chev">▶</span>
+        </div>
+        <div class="edu-topic-body">
+          <p class="sub">Alignment maps each read back to its position on the reference genome. For RNA-seq, we must use <strong>splice-aware aligners</strong>.</p>
+          <div class="card-grid card-grid-2" style="gap:10px;margin-top:12px;">
+            <div class="card" style="padding:14px;"><strong>HISAT2</strong><p class="sub" style="margin-top:4px;">Memory-efficient (8 GB RAM), fast, accurate. Excellent for most organisms. Uses a graph-based index incorporating known splice sites.</p><span class="tag tag-green" style="margin-top:6px;">Recommended</span></div>
+            <div class="card" style="padding:14px;"><strong>STAR</strong><p class="sub" style="margin-top:4px;">Slightly more accurate but uses more RAM (30 GB for human). Required for some downstream tools. Gold standard in clinical settings.</p></div>
+          </div>
+          <div class="code-block" style="margin-top:12px;"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button><span class="code-comment"># Build HISAT2 genome index (do once per genome)</span>
+hisat2-build -p 8 genome.fa genome_index/hisat2_index
+
+<span class="code-comment"># Align paired-end reads</span>
+hisat2 -p 8 -x genome_index/hisat2_index \
+    -1 sample_R1_trimmed.fastq.gz \
+    -2 sample_R2_trimmed.fastq.gz \
+    --dta \
+    2&gt; sample_hisat2.log \
+    | samtools sort -@ 8 -o sample.bam
+
+samtools index sample.bam
+samtools flagstat sample.bam  # Check alignment statistics</div>
+          <div class="info-box tip"><span>💡</span><div><strong>Interpreting alignment rates:</strong> &gt;90% = excellent. 75–90% = acceptable. 50–75% = investigate (wrong genome? contamination?). &lt;50% = serious problem.</div></div>
+        </div>
+      </div>
+
+      <div class="edu-topic-card">
+        <div class="edu-topic-head" onclick="toggleEduTopic(this)">
+          <span class="edu-topic-num">5.4</span>
+          <span class="edu-topic-title">Gene Counting with featureCounts</span>
+          <span class="edu-topic-chev">▶</span>
+        </div>
+        <div class="edu-topic-body">
+          <p class="sub">After alignment, count how many reads map to each gene. This count matrix is the input for DESeq2.</p>
+          <div class="code-block"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button><span class="code-comment"># featureCounts (from Subread package)</span>
+conda install -c bioconda subread
+
+featureCounts -T 8 \
+    -a annotation.gtf \
+    -o counts.txt \
+    -s 2 \
+    -p \
+    -B \
+    aligned/*.bam
+
+<span class="code-comment"># The output is a table: genes × samples with read counts</span>
+<span class="code-comment"># Column 1: gene ID, columns 7+: counts per sample</span></div>
+          <div class="info-box warn"><span>⚠️</span><div><strong>Strandedness matters!</strong> Wrong <code>-s</code> setting can cause ~50% read loss or incorrect counting. Check your library preparation kit. Most modern kits are reverse-stranded (<code>-s 2</code>).</div></div>
+        </div>
+      </div>
+
+      <div class="edu-topic-card">
+        <div class="edu-topic-head" onclick="toggleEduTopic(this)">
+          <span class="edu-topic-num">5.5</span>
+          <span class="edu-topic-title">Differential Expression with DESeq2</span>
+          <span class="edu-topic-chev">▶</span>
+        </div>
+        <div class="edu-topic-body">
+          <p class="sub">DESeq2 identifies genes that are significantly more or less expressed between conditions. It uses a <strong>negative binomial model</strong> — appropriate for count data with biological variation.</p>
+          <div class="code-block"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button>library(DESeq2)
+
+<span class="code-comment"># 1. Load count data</span>
+counts &lt;- read.table("counts.txt", header=TRUE, row.names=1, skip=1)
+counts &lt;- counts[, 6:ncol(counts)]  # Keep only count columns
+
+<span class="code-comment"># 2. Create metadata</span>
+metadata &lt;- data.frame(
+  condition = c("control","control","control","treated","treated","treated"),
+  row.names = colnames(counts)
+)
+
+<span class="code-comment"># 3. Create DESeq2 object</span>
+dds &lt;- DESeqDataSetFromMatrix(counts, metadata, ~condition)
+
+<span class="code-comment"># 4. Filter low-count genes</span>
+dds &lt;- dds[rowSums(counts(dds)) &gt;= 10, ]
+
+<span class="code-comment"># 5. Run DESeq2</span>
+dds &lt;- DESeq(dds)
+
+<span class="code-comment"># 6. Get results</span>
+res &lt;- results(dds, contrast=c("condition","treated","control"))
+res &lt;- res[order(res$padj), ]  # Sort by adjusted p-value
+summary(res)
+
+<span class="code-comment"># 7. Export significant DEGs</span>
+sig &lt;- subset(res, padj &lt; 0.05 &amp; abs(log2FoldChange) &gt; 1)
+write.csv(as.data.frame(sig), "DEGs_significant.csv")</div>
+          <div class="info-box note"><span>📌</span><div><strong>Interpreting results:</strong> log2FoldChange = direction and magnitude. +1 = 2× higher in treated. -1 = 2× lower. padj = Benjamini-Hochberg adjusted p-value (FDR). Use padj &lt; 0.05, not pvalue.</div></div>
+        </div>
+      </div>
+
+    </div>
+  </div><!-- end mod5 -->
+
+  <!-- ═══════════ MODULE 6: GENOMICS ═══════════ -->
+  <div class="edu-module" id="edu-mod6">
+    <div class="edu-mod-header">
+      <div class="label">Module 6 · Genomics</div>
+      <h2 class="h2">DNA Sequencing, Variant Calling &amp; Genome Analysis</h2>
+      <p class="lead">Whole-genome and whole-exome sequencing reveal the genetic blueprint of an organism. This module covers variant calling, genome assembly, and annotation.</p>
+    </div>
+    <div class="edu-topic-grid">
+
+      <div class="edu-topic-card">
+        <div class="edu-topic-head" onclick="toggleEduTopic(this)">
+          <span class="edu-topic-num">6.1</span>
+          <span class="edu-topic-title">WGS/WES Pipeline — Variant Calling</span>
+          <span class="edu-topic-chev">▶</span>
+        </div>
+        <div class="edu-topic-body">
+          <p class="sub">Variant calling identifies SNPs (Single Nucleotide Polymorphisms) and indels — positions where your sample differs from the reference genome.</p>
+          <div class="code-block"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button><span class="code-comment"># Standard GATK4 variant calling pipeline</span>
+<span class="code-comment"># Step 1: Align with BWA-MEM</span>
+bwa mem -t 8 -R "@RG\tID:sample\tSM:sample\tPL:ILLUMINA" \
+    reference.fa sample_R1.fastq.gz sample_R2.fastq.gz \
+    | samtools sort -@ 8 -o sample.bam
+samtools index sample.bam
+
+<span class="code-comment"># Step 2: Mark duplicates</span>
+gatk MarkDuplicates -I sample.bam -O sample_markdup.bam -M metrics.txt
+
+<span class="code-comment"># Step 3: Base Quality Score Recalibration (BQSR)</span>
+gatk BaseRecalibrator -I sample_markdup.bam -R reference.fa \
+    --known-sites dbsnp.vcf -O recal.table
+gatk ApplyBQSR -I sample_markdup.bam -R reference.fa \
+    --bqsr-recal-file recal.table -O sample_recal.bam
+
+<span class="code-comment"># Step 4: Call variants</span>
+gatk HaplotypeCaller -I sample_recal.bam -R reference.fa \
+    -O sample.g.vcf.gz -ERC GVCF
+
+<span class="code-comment"># Step 5: Genotype and filter</span>
+gatk GenotypeGVCFs -R reference.fa -V sample.g.vcf.gz -O sample.vcf.gz
+gatk VariantFiltration -V sample.vcf.gz -O sample_filtered.vcf.gz \
+    --filter-expression "QD &lt; 2.0" --filter-name "QD2"</div>
+        </div>
+      </div>
+
+      <div class="edu-topic-card">
+        <div class="edu-topic-head" onclick="toggleEduTopic(this)">
+          <span class="edu-topic-num">6.2</span>
+          <span class="edu-topic-title">Understanding VCF Files &amp; Variant Annotation</span>
+          <span class="edu-topic-chev">▶</span>
+        </div>
+        <div class="edu-topic-body">
+          <p class="sub">A VCF file lists variants. Each row is one variant. The INFO and FORMAT fields contain the details:</p>
+          <div class="code-block" style="font-size:0.75em;">CHROM  POS     ID      REF  ALT  QUAL  FILTER  INFO
+chr1   925952  rs123   G    A    50    PASS    DP=30;AF=0.5;ANN=missense</div>
+          <div class="card-grid card-grid-2" style="gap:10px;margin-top:12px;">
+            <div class="card" style="padding:14px;"><strong>CHROM / POS</strong><p class="sub" style="margin-top:4px;">Chromosome and 1-based position on the reference genome.</p></div>
+            <div class="card" style="padding:14px;"><strong>REF / ALT</strong><p class="sub" style="margin-top:4px;">Reference allele / Alternative allele. For SNPs: single nucleotides. For indels: longer strings.</p></div>
+            <div class="card" style="padding:14px;"><strong>QUAL</strong><p class="sub" style="margin-top:4px;">Phred-scaled confidence. QUAL 30 = 1 in 1000 chance the variant is wrong. Higher is better.</p></div>
+            <div class="card" style="padding:14px;"><strong>Annotation (SnpEff)</strong><p class="sub" style="margin-top:4px;">Tools like SnpEff and ANNOVAR add biological context — synonymous, missense, stop-gained, regulatory.</p></div>
           </div>
         </div>
       </div>
 
-      <!-- NCBI panel -->
-      <div class="tutorial-panel" id="tut-ncbi">
-        <div class="tutorial-header">
-          <div class="label">Databases</div>
-          <h2 class="h2">NCBI — What is it?</h2>
-          <p class="sub">The National Center for Biotechnology Information is the world's largest biological database. Everything lives here — genes, genomes, proteins, papers, and raw sequencing data.</p>
-        </div>
-        <div class="resource-grid">
-          <div class="res-card"><div class="res-icon">🗄️</div><div><div class="res-title">GenBank</div><p class="res-desc">Annotated nucleotide sequences — individual genes, mRNA, genomes. The original biological sequence database.</p><div class="res-url">ncbi.nlm.nih.gov/genbank</div></div></div>
-          <div class="res-card"><div class="res-icon">📦</div><div><div class="res-title">SRA (Sequence Read Archive)</div><p class="res-desc">Raw sequencing reads from published studies. Millions of RNA-seq, WGS, ChIP-seq datasets available free.</p><div class="res-url">ncbi.nlm.nih.gov/sra</div></div></div>
-          <div class="res-card"><div class="res-icon">🧬</div><div><div class="res-title">Gene</div><p class="res-desc">Information about known genes — function, location, synonyms, reference sequences, pathways.</p><div class="res-url">ncbi.nlm.nih.gov/gene</div></div></div>
-          <div class="res-card"><div class="res-icon">🌐</div><div><div class="res-title">GEO (Gene Expression Omnibus)</div><p class="res-desc">Processed gene expression datasets from microarray and RNA-seq experiments. Great for finding existing datasets.</p><div class="res-url">ncbi.nlm.nih.gov/geo</div></div></div>
-          <div class="res-card"><div class="res-icon">🔬</div><div><div class="res-title">Protein</div><p class="res-desc">Protein sequences — linked to GenBank, RefSeq, UniProt. Search by name, accession, or BLAST similarity.</p><div class="res-url">ncbi.nlm.nih.gov/protein</div></div></div>
-          <div class="res-card"><div class="res-icon">🏗️</div><div><div class="res-title">Genome</div><p class="res-desc">Complete genome assemblies for thousands of species. Download FASTA, GFF, GTF annotation files.</p><div class="res-url">ncbi.nlm.nih.gov/genome</div></div></div>
-        </div>
-      </div>
+    </div>
+  </div><!-- end mod6 -->
 
-      <!-- Formats panel -->
-      <div class="tutorial-panel" id="tut-formats">
-        <div class="tutorial-header">
-          <div class="label">Reference</div>
-          <h2 class="h2">Bioinformatics File Formats</h2>
-          <p class="sub">Each step of an analysis produces a different file format. Understanding them prevents confusion about what tools expect as input and what they produce as output.</p>
-        </div>
-        <div class="card-grid card-grid-2" style="margin-top:24px;">
-          <div class="card"><div style="font-family:var(--fm);color:var(--green);font-weight:500;margin-bottom:8px;">.fastq / .fq</div><strong>Raw sequencing reads</strong><p class="sub" style="margin-top:4px;">4 lines per read: ID, sequence, separator, quality scores. Direct output from sequencing machines. Input for alignment.</p></div>
-          <div class="card"><div style="font-family:var(--fm);color:var(--blue);font-weight:500;margin-bottom:8px;">.fasta / .fa</div><strong>Reference sequences</strong><p class="sub" style="margin-top:4px;">2 lines per sequence: header line starting with >, then the nucleotide or amino acid sequence. Used for genomes and gene sequences.</p></div>
-          <div class="card"><div style="font-family:var(--fm);color:var(--purple);font-weight:500;margin-bottom:8px;">.sam / .bam / .cram</div><strong>Alignment files</strong><p class="sub" style="margin-top:4px;">SAM = text alignment. BAM = compressed binary SAM (5× smaller). CRAM = even more compressed. Output from HISAT2, BWA, STAR.</p></div>
-          <div class="card"><div style="font-family:var(--fm);color:var(--orange);font-weight:500;margin-bottom:8px;">.gtf / .gff / .gff3</div><strong>Gene annotation</strong><p class="sub" style="margin-top:4px;">Defines where genes are on the genome — start, end, exon positions. Required for featureCounts, StringTie, and DESeq2 input.</p></div>
-          <div class="card"><div style="font-family:var(--fm);color:var(--green);font-weight:500;margin-bottom:8px;">.vcf / .bcf</div><strong>Variant calls</strong><p class="sub" style="margin-top:4px;">Lists SNPs, INDELs, and structural variants. Output from GATK, FreeBayes. BCF is the binary (compressed) version.</p></div>
-          <div class="card"><div style="font-family:var(--fm);color:var(--blue);font-weight:500;margin-bottom:8px;">.bed</div><strong>Genomic intervals</strong><p class="sub" style="margin-top:4px;">Tab-separated: chromosome, start, end. Used for peaks (ChIP-seq), regulatory regions, any genomic coordinate list.</p></div>
-        </div>
-      </div>
+  <!-- ═══════════ MODULE 7: STATISTICS ═══════════ -->
+  <div class="edu-module" id="edu-mod7">
+    <div class="edu-mod-header">
+      <div class="label">Module 7 · Statistics</div>
+      <h2 class="h2">Statistical Foundations for Bioinformatics</h2>
+      <p class="lead">Bad statistics ruins good biology. This module covers the statistical concepts every bioinformatician must understand — from p-values and FDR to normalisation and dimensionality reduction.</p>
+    </div>
+    <div class="edu-topic-grid">
 
-      <!-- Databases panel -->
-      <div class="tutorial-panel" id="tut-databases">
-        <div class="tutorial-header">
-          <div class="label">Reference</div>
-          <h2 class="h2">Key Bioinformatics Databases</h2>
-          <p class="sub">A curated list of the most important databases every bioinformatician should know — with links and brief descriptions of what each one is used for.</p>
+      <div class="edu-topic-card">
+        <div class="edu-topic-head" onclick="toggleEduTopic(this)">
+          <span class="edu-topic-num">7.1</span>
+          <span class="edu-topic-title">P-values, Multiple Testing &amp; FDR</span>
+          <span class="edu-topic-chev">▶</span>
         </div>
-        <div style="margin-top:8px;">
-          <div style="font-size:0.75em;text-transform:uppercase;letter-spacing:1px;color:var(--text3);margin:20px 0 10px;">Sequence & Genome</div>
-          <div class="resource-grid">
-            <div class="res-card"><div class="res-icon">🇺🇸</div><div><div class="res-title">NCBI</div><p class="res-desc">GenBank, SRA, Gene, GEO, RefSeq, BLAST. The most comprehensive source for biological sequences.</p><div class="res-url">ncbi.nlm.nih.gov</div></div></div>
-            <div class="res-card"><div class="res-icon">🇪🇺</div><div><div class="res-title">Ensembl</div><p class="res-desc">Annotated genomes for vertebrates and other organisms. Best for reference genome + GTF downloads.</p><div class="res-url">ensembl.org</div></div></div>
-            <div class="res-card"><div class="res-icon">🌱</div><div><div class="res-title">Ensembl Plants</div><p class="res-desc">Ensembl for plant genomes — Arabidopsis, rice, maize, wheat, soybean, tomato and dozens more.</p><div class="res-url">plants.ensembl.org</div></div></div>
-            <div class="res-card"><div class="res-icon">🧬</div><div><div class="res-title">UniProt</div><p class="res-desc">Protein sequences and functional annotation. Swiss-Prot (curated) and TrEMBL (automated) sections.</p><div class="res-url">uniprot.org</div></div></div>
+        <div class="edu-topic-body">
+          <p class="sub">This is the most important concept to understand — and the most commonly misunderstood.</p>
+          <div class="info-box warn"><span>⚠️</span><div><strong>What a p-value IS:</strong> P(data | null hypothesis is true). The probability of seeing your result by chance if there were no real effect. <strong>It is NOT:</strong> the probability that your hypothesis is correct.</div></div>
+          <div class="card-grid card-grid-2" style="gap:10px;margin-top:12px;">
+            <div class="card" style="padding:16px;border-left:3px solid var(--red);"><strong>The multiple testing problem</strong><p class="sub" style="margin-top:6px;">Testing 20,000 genes at p&lt;0.05 gives ~1,000 false positives by chance. You must <strong>correct</strong> for multiple testing.</p></div>
+            <div class="card" style="padding:16px;border-left:3px solid var(--green);"><strong>Benjamini-Hochberg (FDR)</strong><p class="sub" style="margin-top:6px;">The standard correction in genomics. Controls the <strong>False Discovery Rate</strong> — the expected proportion of false positives among all significant results. DESeq2 does this automatically (padj column).</p></div>
+            <div class="card" style="padding:16px;border-left:3px solid var(--orange);"><strong>Bonferroni correction</strong><p class="sub" style="margin-top:6px;">Divide p-value threshold by number of tests. Very conservative — appropriate for GWAS where one false positive is catastrophic.</p></div>
+            <div class="card" style="padding:16px;border-left:3px solid var(--blue);"><strong>The fold-change threshold</strong><p class="sub" style="margin-top:6px;">Statistical significance alone is not enough. A gene with padj=0.0001 but log2FC=0.1 is a real change but biologically irrelevant. Always use BOTH padj &lt; 0.05 AND |log2FC| &gt; 1.</p></div>
           </div>
-          <div style="font-size:0.75em;text-transform:uppercase;letter-spacing:1px;color:var(--text3);margin:20px 0 10px;">Pathways & Function</div>
-          <div class="resource-grid">
-            <div class="res-card"><div class="res-icon">🗺️</div><div><div class="res-title">KEGG</div><p class="res-desc">Metabolic and signalling pathways for all organisms. Use for pathway enrichment after DESeq2.</p><div class="res-url">kegg.jp</div></div></div>
-            <div class="res-card"><div class="res-icon">🔵</div><div><div class="res-title">Gene Ontology (GO)</div><p class="res-desc">Standardised vocabulary for gene function. GO enrichment analysis reveals biological processes in DE gene lists.</p><div class="res-url">geneontology.org</div></div></div>
-            <div class="res-card"><div class="res-icon">🔗</div><div><div class="res-title">STRING</div><p class="res-desc">Protein interaction networks. Upload your DE gene list to see which proteins work together.</p><div class="res-url">string-db.org</div></div></div>
-            <div class="res-card"><div class="res-icon">🌿</div><div><div class="res-title">PlantTFDB</div><p class="res-desc">Plant transcription factor database. All TF families for all sequenced plant genomes.</p><div class="res-url">planttfdb.gao-lab.org</div></div></div>
+          <div class="info-box tip"><span>💡</span><div><strong>Volcano plot intuition:</strong> X-axis = log2FoldChange (effect size), Y-axis = -log10(padj) (significance). Top-right = significantly upregulated. Top-left = significantly downregulated. Large fold change but not significant = underpowered (add replicates).</div></div>
+        </div>
+      </div>
+
+      <div class="edu-topic-card">
+        <div class="edu-topic-head" onclick="toggleEduTopic(this)">
+          <span class="edu-topic-num">7.2</span>
+          <span class="edu-topic-title">Normalisation Methods</span>
+          <span class="edu-topic-chev">▶</span>
+        </div>
+        <div class="edu-topic-body">
+          <p class="sub">Raw read counts cannot be compared directly across samples or genes. Normalisation accounts for differences in library size and gene length.</p>
+          <div class="card-grid card-grid-2" style="gap:10px;margin-top:12px;">
+            <div class="card" style="padding:14px;"><strong>CPM (Counts Per Million)</strong><p class="sub" style="margin-top:4px;">Corrects for library size only. Use for <strong>within-gene comparisons across samples</strong>. Not for comparing different genes.</p></div>
+            <div class="card" style="padding:14px;"><strong>RPKM / FPKM</strong><p class="sub" style="margin-top:4px;">Corrects for library size AND gene length. Old standard. Do NOT use for DE analysis — use only for visualisation.</p></div>
+            <div class="card" style="padding:14px;"><strong>TPM (Transcripts Per Million)</strong><p class="sub" style="margin-top:4px;">Better than RPKM for comparing expression levels. TPM values sum to 1 million per sample. Current standard for expression visualisation.</p></div>
+            <div class="card" style="padding:14px;"><strong>DESeq2 normalisation</strong><p class="sub" style="margin-top:4px;">Median-of-ratios method. Corrects for library size and composition biases. Use for differential expression analysis only.</p></div>
+          </div>
+          <div class="info-box warn"><span>⚠️</span><div><strong>Common mistake:</strong> Using RPKM/FPKM for differential expression analysis. Use raw counts with DESeq2 or edgeR. These tools do their own normalisation internally.</div></div>
+        </div>
+      </div>
+
+      <div class="edu-topic-card">
+        <div class="edu-topic-head" onclick="toggleEduTopic(this)">
+          <span class="edu-topic-num">7.3</span>
+          <span class="edu-topic-title">PCA &amp; Clustering for Quality Control</span>
+          <span class="edu-topic-chev">▶</span>
+        </div>
+        <div class="edu-topic-body">
+          <p class="sub">Before differential expression, always visualise your samples. PCA and clustering reveal outliers, batch effects, and sample mix-ups.</p>
+          <div class="code-block"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button>library(DESeq2); library(ggplot2); library(pheatmap)
+
+<span class="code-comment"># PCA plot (use variance stabilised data)</span>
+vsd &lt;- vst(dds, blind=TRUE)
+plotPCA(vsd, intgroup="condition") +
+  theme_minimal() + ggtitle("PCA — Sample Overview")
+
+<span class="code-comment"># Sample correlation heatmap</span>
+sampleDists &lt;- dist(t(assay(vsd)))
+sampleDistMatrix &lt;- as.matrix(sampleDists)
+pheatmap(sampleDistMatrix,
+  clustering_distance_rows = sampleDists,
+  clustering_distance_cols = sampleDists)
+
+<span class="code-comment"># What to look for:</span>
+<span class="code-comment"># Good: Replicates cluster together, conditions separate</span>
+<span class="code-comment"># Bad:  One replicate clusters with wrong condition (mix-up!)</span>
+<span class="code-comment"># Bad:  Batches cluster together (batch effect — use ComBat)</span></div>
+        </div>
+      </div>
+
+    </div>
+  </div><!-- end mod7 -->
+
+  <!-- ═══════════ MODULE 8: ADVANCED ═══════════ -->
+  <div class="edu-module" id="edu-mod8">
+    <div class="edu-mod-header">
+      <div class="label">Module 8 · Advanced Topics</div>
+      <h2 class="h2">Single-cell RNA-seq, Pathway Analysis &amp; Machine Learning</h2>
+      <p class="lead">The frontier of bioinformatics. These topics are increasingly required in modern research — from dissecting cell heterogeneity with scRNA-seq to interpreting gene lists with pathway analysis and applying machine learning to genomic data.</p>
+    </div>
+    <div class="edu-topic-grid">
+
+      <div class="edu-topic-card">
+        <div class="edu-topic-head" onclick="toggleEduTopic(this)">
+          <span class="edu-topic-num">8.1</span>
+          <span class="edu-topic-title">Single-cell RNA-seq (scRNA-seq) — Introduction</span>
+          <span class="edu-topic-chev">▶</span>
+        </div>
+        <div class="edu-topic-body">
+          <p class="sub">Bulk RNA-seq averages expression across thousands of cells. scRNA-seq measures each cell individually, revealing cellular heterogeneity, rare cell populations, and developmental trajectories.</p>
+          <div class="card-grid card-grid-2" style="gap:10px;margin-top:12px;">
+            <div class="card" style="padding:14px;"><strong>Cell Ranger (10x Genomics)</strong><p class="sub" style="margin-top:4px;">Official pipeline for 10x Chromium data. Produces a count matrix: genes × cells. Input for Seurat/Scanpy.</p></div>
+            <div class="card" style="padding:14px;"><strong>Seurat (R) / Scanpy (Python)</strong><p class="sub" style="margin-top:4px;">The two standard scRNA-seq analysis frameworks. Clustering, UMAP/tSNE visualisation, differential expression between clusters.</p></div>
+            <div class="card" style="padding:14px;"><strong>UMAP</strong><p class="sub" style="margin-top:4px;">Visualises high-dimensional cell data in 2D. Cells close together have similar gene expression profiles. Used for cell type identification.</p></div>
+            <div class="card" style="padding:14px;"><strong>Cell type annotation</strong><p class="sub" style="margin-top:4px;">Identify clusters by known marker genes. CD3E = T cells, CD19 = B cells, EPCAM = epithelial. Or use automated tools: SingleR, CellTypist.</p></div>
+          </div>
+          <div class="code-block" style="margin-top:12px;"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button><span class="code-comment"># Basic Seurat scRNA-seq workflow</span>
+library(Seurat)
+
+<span class="code-comment"># Load 10x data</span>
+data &lt;- Read10X("filtered_feature_bc_matrix/")
+seurat &lt;- CreateSeuratObject(data, min.cells=3, min.features=200)
+
+<span class="code-comment"># Quality control</span>
+seurat[["pct_mt"]] &lt;- PercentageFeatureSet(seurat, pattern="^MT-")
+seurat &lt;- subset(seurat, nFeature_RNA&gt;200 &amp; pct_mt&lt;20)
+
+<span class="code-comment"># Normalise, find variable genes, scale</span>
+seurat &lt;- NormalizeData(seurat)
+seurat &lt;- FindVariableFeatures(seurat, nfeatures=2000)
+seurat &lt;- ScaleData(seurat)
+
+<span class="code-comment"># PCA → Cluster → UMAP</span>
+seurat &lt;- RunPCA(seurat) |&gt; FindNeighbors(dims=1:20) |&gt;
+          FindClusters(resolution=0.5) |&gt; RunUMAP(dims=1:20)
+DimPlot(seurat, label=TRUE)</div>
+        </div>
+      </div>
+
+      <div class="edu-topic-card">
+        <div class="edu-topic-head" onclick="toggleEduTopic(this)">
+          <span class="edu-topic-num">8.2</span>
+          <span class="edu-topic-title">Gene Ontology &amp; Pathway Enrichment Analysis</span>
+          <span class="edu-topic-chev">▶</span>
+        </div>
+        <div class="edu-topic-body">
+          <p class="sub">After identifying differentially expressed genes, the next question is: <em>what biological processes are affected?</em> Pathway enrichment analysis answers this.</p>
+          <div class="info-box note"><span>📌</span><div><strong>Over-Representation Analysis (ORA):</strong> Is my gene list enriched for specific pathways compared to what you'd expect by chance? Uses Fisher's exact test.</div></div>
+          <div class="info-box note"><span>📌</span><div><strong>GSEA (Gene Set Enrichment Analysis):</strong> Uses the full ranked gene list — not just a cut-off. Detects coordinated shifts in expression of a pathway. More powerful than ORA for subtle effects.</div></div>
+          <div class="code-block" style="margin-top:12px;"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button>library(clusterProfiler); library(org.Hs.eg.db)
+
+<span class="code-comment"># Convert gene symbols to Entrez IDs</span>
+gene_list &lt;- bitr(rownames(sig), fromType="SYMBOL",
+                  toType="ENTREZID", OrgDb=org.Hs.eg.db)
+
+<span class="code-comment"># GO enrichment (ORA)</span>
+ego &lt;- enrichGO(gene_list$ENTREZID, OrgDb=org.Hs.eg.db,
+                 ont="BP", pAdjustMethod="BH", qvalueCutoff=0.05)
+dotplot(ego, showCategory=20)
+
+<span class="code-comment"># KEGG pathway enrichment</span>
+kk &lt;- enrichKEGG(gene_list$ENTREZID, organism="hsa",
+                  pvalueCutoff=0.05)
+barplot(kk, showCategory=15)
+
+<span class="code-comment"># GSEA with full ranked gene list</span>
+gene_rank &lt;- setNames(res$log2FoldChange, rownames(res))
+gene_rank &lt;- sort(gene_rank, decreasing=TRUE)  # Must be sorted!
+gsea_res &lt;- gseGO(gene_rank, OrgDb=org.Hs.eg.db, ont="BP")</div>
+        </div>
+      </div>
+
+      <div class="edu-topic-card">
+        <div class="edu-topic-head" onclick="toggleEduTopic(this)">
+          <span class="edu-topic-num">8.3</span>
+          <span class="edu-topic-title">Machine Learning in Bioinformatics</span>
+          <span class="edu-topic-chev">▶</span>
+        </div>
+        <div class="edu-topic-body">
+          <p class="sub">Machine learning is now embedded across bioinformatics — from protein structure prediction (AlphaFold) to variant pathogenicity scoring and cell type classification.</p>
+          <div class="card-grid card-grid-2" style="gap:10px;margin-top:12px;">
+            <div class="card" style="padding:14px;"><strong>Random Forest</strong><p class="sub" style="margin-top:4px;">Widely used for classification (predict cancer subtype from gene expression). Provides feature importance — identify key genes.</p></div>
+            <div class="card" style="padding:14px;"><strong>Support Vector Machine (SVM)</strong><p class="sub" style="margin-top:4px;">Effective for high-dimensional data like genomics. Used for splice site prediction, protein function classification.</p></div>
+            <div class="card" style="padding:14px;"><strong>Deep Learning / CNN</strong><p class="sub" style="margin-top:4px;">Sequence-to-function models. DeepBind, Basset — predict transcription factor binding from DNA sequence.</p></div>
+            <div class="card" style="padding:14px;"><strong>Dimensionality reduction</strong><p class="sub" style="margin-top:4px;">PCA, UMAP, t-SNE for visualising high-dimensional omics data. Essential for scRNA-seq and multi-omics.</p></div>
+          </div>
+          <div class="info-box warn"><span>⚠️</span><div><strong>The overfitting trap:</strong> Genomics data has many features (20,000+ genes) and few samples. Always use cross-validation. Never test on training data. Report both training and test performance.</div></div>
+        </div>
+      </div>
+
+      <div class="edu-topic-card">
+        <div class="edu-topic-head" onclick="toggleEduTopic(this)">
+          <span class="edu-topic-num">8.4</span>
+          <span class="edu-topic-title">Metagenomics &amp; Microbiome Analysis</span>
+          <span class="edu-topic-chev">▶</span>
+        </div>
+        <div class="edu-topic-body">
+          <p class="sub">Metagenomics sequences all DNA from an environmental sample (soil, gut, ocean) — studying entire microbial communities without culturing.</p>
+          <div class="card-grid card-grid-2" style="gap:10px;margin-top:12px;">
+            <div class="card" style="padding:14px;"><strong>16S rRNA amplicon</strong><p class="sub" style="margin-top:4px;">Targets a conserved bacterial gene region. Identifies which bacteria are present. Tools: QIIME2, DADA2.</p></div>
+            <div class="card" style="padding:14px;"><strong>Shotgun metagenomics</strong><p class="sub" style="margin-top:4px;">Sequences everything. Identifies bacteria, viruses, fungi. Reveals functional potential. Tools: MetaPhlAn4, HUMAnN3.</p></div>
+            <div class="card" style="padding:14px;"><strong>Alpha diversity</strong><p class="sub" style="margin-top:4px;">Diversity within one sample. Shannon index, species richness. Higher = more diverse microbiome.</p></div>
+            <div class="card" style="padding:14px;"><strong>Beta diversity</strong><p class="sub" style="margin-top:4px;">Differences between samples. UniFrac, Bray-Curtis. Visualised with PCoA. Tests with PERMANOVA.</p></div>
           </div>
         </div>
       </div>
 
-      <!-- Generic panels for other items -->
-      <div class="tutorial-panel" id="tut-setup">
-        <div class="tutorial-header">
-          <div class="label">Getting started</div>
-          <h2 class="h2">Setting Up Your Environment</h2>
-          <p class="sub">Before running any bioinformatics analysis you need a few core tools installed. This guide covers macOS, Linux, and Windows (WSL2) setup from scratch.</p>
-        </div>
-        <div class="info-box tip"><span>🚀</span><div>The easiest way to get started is to use <strong>RNAflow</strong> — it has a built-in system checker that detects old software and provides fix commands automatically. <button onclick="showPage('tools')" style="background:none;border:none;color:var(--green);cursor:pointer;font-weight:600;text-decoration:underline;">Go to Tools →</button></div></div>
-        <div class="tutorial-step open" onclick="toggleTutStep(this)">
-          <div class="tutorial-step-head"><span class="tsh-num">1</span><span class="tsh-title">Install Conda (Miniforge)</span><span class="tsh-chev">▶</span></div>
-          <div class="tutorial-step-body">
-            <div class="code-block"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button><span class="code-comment"># macOS / Linux — install Miniforge</span>
-brew install miniforge   <span class="code-comment"># macOS with Homebrew</span>
-conda init zsh           <span class="code-comment"># initialise for zsh shell</span>
-<span class="code-comment"># Close and reopen terminal, then:</span>
-conda create -n bioinfo python=3.10 -y
-conda activate bioinfo</div>
-          </div>
-        </div>
-        <div class="tutorial-step" onclick="toggleTutStep(this)">
-          <div class="tutorial-step-head"><span class="tsh-num">2</span><span class="tsh-title">Install core bioinformatics tools</span><span class="tsh-chev">▶</span></div>
-          <div class="tutorial-step-body">
-            <div class="code-block"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button>conda install -c bioconda -c conda-forge \
-  fastqc fastp hisat2 samtools subread sra-tools -y</div>
-          </div>
-        </div>
-      </div>
+    </div>
+  </div><!-- end mod8 -->
 
-      <div class="tutorial-panel" id="tut-terminal">
-        <div class="tutorial-header"><div class="label">Getting started</div><h2 class="h2">Using the Terminal</h2><p class="sub">The terminal is a text-based interface to your computer. Most bioinformatics tools run in the terminal. This guide covers the essential commands you'll use every day.</p></div>
-        <div class="tutorial-step open" onclick="toggleTutStep(this)">
-          <div class="tutorial-step-head"><span class="tsh-num">1</span><span class="tsh-title">Essential commands</span><span class="tsh-chev">▶</span></div>
-          <div class="tutorial-step-body">
-            <div class="code-block"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button>pwd              <span class="code-comment"># Print working directory — where am I?</span>
-ls               <span class="code-comment"># List files in current folder</span>
-ls -lh           <span class="code-comment"># List with file sizes</span>
-cd foldername    <span class="code-comment"># Change directory (go into a folder)</span>
-cd ..            <span class="code-comment"># Go up one folder</span>
-mkdir myfolder   <span class="code-comment"># Create a new folder</span>
-cp file1 file2   <span class="code-comment"># Copy a file</span>
-mv file1 file2   <span class="code-comment"># Move or rename a file</span>
-rm filename      <span class="code-comment"># Delete a file (careful! no recycle bin)</span>
-head -10 file    <span class="code-comment"># Show first 10 lines of a file</span>
-wc -l file       <span class="code-comment"># Count lines in a file</span></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="tutorial-panel" id="tut-ensembl">
-        <div class="tutorial-header"><div class="label">Databases</div><h2 class="h2">Ensembl — Genome Downloads</h2><p class="sub">Ensembl provides complete, well-annotated genome assemblies for hundreds of species. It is the recommended source for reference genomes and GTF annotation files used in RNA-seq alignment.</p></div>
-        <div class="tutorial-step open" onclick="toggleTutStep(this)">
-          <div class="tutorial-step-head"><span class="tsh-num">1</span><span class="tsh-title">Finding the right FTP URL</span><span class="tsh-chev">▶</span></div>
-          <div class="tutorial-step-body">
-            <p class="sub" style="margin-bottom:8px;">Navigate to <strong>ensembl.org</strong> → your organism → scroll to "Download" → click "Download DNA sequence (FASTA)" → right-click the file ending in <code>.dna.toplevel.fa.gz</code> or <code>.dna.primary_assembly.fa.gz</code> → copy link address.</p>
-            <div class="info-box tip"><span>💡</span><div>Use <code>primary_assembly</code> for human and mouse (excludes patches). Use <code>toplevel</code> for smaller genomes (includes everything).</div></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="tutorial-panel" id="tut-rnaseq-intro">
-        <div class="tutorial-header"><div class="label">RNA-seq</div><h2 class="h2">What is RNA-seq?</h2><p class="sub">RNA sequencing measures gene expression — which genes are active in a cell at a given moment and by how much. This guide explains the concept, the biology, and the data before you start any analysis.</p></div>
-        <div class="tutorial-step open" onclick="toggleTutStep(this)">
-          <div class="tutorial-step-head"><span class="tsh-num">1</span><span class="tsh-title">The biological question RNA-seq answers</span><span class="tsh-chev">▶</span></div>
-          <div class="tutorial-step-body"><p class="sub">Every cell contains the same DNA but different cells express different genes — a liver cell and a neuron are so different because they use different subsets of their genes. RNA-seq captures a snapshot of which genes are being read (transcribed to mRNA) at a specific moment. Compare two conditions (treated vs untreated, mutant vs wildtype) and you discover which genes changed — the molecular basis of the difference.</p></div>
-        </div>
-        <div class="tutorial-step" onclick="toggleTutStep(this)">
-          <div class="tutorial-step-head"><span class="tsh-num">2</span><span class="tsh-title">The full pipeline in one diagram</span><span class="tsh-chev">▶</span></div>
-          <div class="tutorial-step-body">
-            <div class="info-box note"><span>🧬</span><div>Cells → extract RNA → make cDNA library → sequence millions of fragments → map back to genome → count per gene → statistical test → biological insight</div></div>
-            <p class="sub" style="margin-top:8px;">The BioInfoCodex RNAflow app guides you through every step of this pipeline with copy-ready commands and live execution. <button onclick="showPage('tools')" style="background:none;border:none;color:var(--green);cursor:pointer;font-weight:600;text-decoration:underline;">Get RNAflow →</button></p>
-          </div>
-        </div>
-      </div>
-
-      <div class="tutorial-panel" id="tut-qc"><div class="tutorial-header"><div class="label">RNA-seq</div><h2 class="h2">Quality Control with FastQC</h2><p class="sub">Before any analysis, always check the quality of your raw sequencing data. FastQC produces a visual HTML report for each sample in about 2 minutes. This tutorial explains what each module means and what to do when something fails.</p></div><div class="info-box tip"><span>🚀</span><div>RNAflow runs FastQC automatically and explains every result in context. <button onclick="showPage('tools')" style="background:none;border:none;color:var(--green);cursor:pointer;font-weight:600;text-decoration:underline;">Open RNAflow →</button></div></div></div>
-
-      <div class="tutorial-panel" id="tut-alignment"><div class="tutorial-header"><div class="label">RNA-seq</div><h2 class="h2">Alignment Concepts</h2><p class="sub">Alignment (or mapping) is the process of finding where each sequencing read originated on the reference genome. Understanding the basics helps you interpret alignment statistics and troubleshoot low mapping rates.</p></div><div class="info-box note"><span>📖</span><div>HISAT2 is the aligner used in RNAflow. It is splice-aware, meaning it correctly handles reads that span exon-exon junctions — critical for RNA-seq data.</div></div></div>
-
-      <div class="tutorial-panel" id="tut-deseq2-intro"><div class="tutorial-header"><div class="label">RNA-seq</div><h2 class="h2">DESeq2 — The Statistics</h2><p class="sub">DESeq2 uses a negative binomial statistical model to identify genes that are differentially expressed between conditions, accounting for biological variation between replicates.</p></div><div class="info-box warn"><span>⚠️</span><div>DESeq2 requires minimum 2 biological replicates per condition. 3+ is strongly recommended. Never compare single samples.</div></div></div>
-
-      <div class="tutorial-panel" id="tut-glossary">
-        <div class="tutorial-header"><div class="label">Reference</div><h2 class="h2">Bioinformatics Glossary</h2><p class="sub">Quick definitions for the most common terms you'll encounter.</p></div>
-        <div class="card-grid card-grid-2" style="margin-top:16px;">
-          <div class="card" style="padding:14px;"><strong>FASTQ</strong><p class="sub" style="margin-top:3px;">File format storing raw sequencing reads with quality scores. Each read = 4 lines.</p></div>
-          <div class="card" style="padding:14px;"><strong>Phred score</strong><p class="sub" style="margin-top:3px;">Quality score per base. Q30 = 99.9% accuracy. Q20 = 99% accuracy.</p></div>
-          <div class="card" style="padding:14px;"><strong>Adapter</strong><p class="sub" style="margin-top:3px;">Synthetic DNA sequence added during library prep. Must be removed before alignment.</p></div>
-          <div class="card" style="padding:14px;"><strong>BAM file</strong><p class="sub" style="margin-top:3px;">Binary Alignment Map. Compressed version of SAM. Contains where each read mapped on the genome.</p></div>
-          <div class="card" style="padding:14px;"><strong>GTF / GFF</strong><p class="sub" style="margin-top:3px;">Gene annotation file. Tells featureCounts where genes start and end on each chromosome.</p></div>
-          <div class="card" style="padding:14px;"><strong>Normalisation</strong><p class="sub" style="margin-top:3px;">Adjusting counts to account for sequencing depth differences between samples. TPM, RPKM, DESeq2 VST.</p></div>
-          <div class="card" style="padding:14px;"><strong>Log2 fold change</strong><p class="sub" style="margin-top:3px;">How much a gene changes. LFC=1 means 2× higher. LFC=-1 means 2× lower. LFC=0 = no change.</p></div>
-          <div class="card" style="padding:14px;"><strong>Adjusted p-value (padj)</strong><p class="sub" style="margin-top:3px;">P-value corrected for multiple testing (Benjamini-Hochberg). Always use padj, never raw p-value.</p></div>
-        </div>
-      </div>
-
-    </div><!-- /tutorial content -->
-  </div><!-- /sidebar layout -->
-
-</div><!-- /edu -->
+  </div><!-- end padding wrapper -->
+</div><!-- end page-edu -->
 
 <!-- ══════════════════════════════════════════
      CONTACT PAGE
@@ -2877,6 +3477,20 @@ function showTutorial(id, el) {
 // ── TUTORIAL STEPS ───────────────────────────────────────────────────────
 function toggleTutStep(el) {
   el.classList.toggle('open');
+}
+
+// ── EDUCATION MODULE TABS ────────────────────────────────────────────────
+function showEduModule(modId, el) {
+  document.querySelectorAll('.edu-module').forEach(m => m.classList.remove('active'));
+  document.querySelectorAll('.edu-mod-tab').forEach(t => t.classList.remove('active'));
+  const mod = document.getElementById('edu-' + modId);
+  if (mod) mod.classList.add('active');
+  if (el) el.classList.add('active');
+}
+
+function toggleEduTopic(headEl) {
+  const card = headEl.closest('.edu-topic-card');
+  card.classList.toggle('open');
 }
 
 // ── FAQ ──────────────────────────────────────────────────────────────────
