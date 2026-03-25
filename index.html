@@ -6175,7 +6175,7 @@ hub_genes &lt;- module_genes[order(kME[module_genes, paste0("kME", module_number
 
 <script>
 // ── PAGE NAVIGATION ──────────────────────────────────────────────────────
-function showPage(name) {
+function showPage(name, skipHash) {
   // Accept both 'home' and 'page-home' and 'page-tool-rnaflow'
   const pageId = name.startsWith('page-') ? name : 'page-' + name;
   const tabId  = name.startsWith('page-') ? name.replace('page-', '') : name;
@@ -6191,6 +6191,17 @@ function showPage(name) {
   const navTabName = tabId.startsWith('tool-') ? 'tools' : tabId;
   const tab = document.getElementById('tab-' + navTabName);
   if (tab) tab.classList.add('active');
+
+  // Save state to URL hash so refresh stays on same page
+  if (!skipHash) {
+    const hashParts = [tabId];
+    // Preserve edu module in hash if on edu page
+    if (tabId === 'edu') {
+      const activeMod = document.querySelector('.edu-module.active');
+      if (activeMod) hashParts.push(activeMod.id.replace('edu-',''));
+    }
+    location.hash = hashParts.join('/');
+  }
 
   window.scrollTo({ top: 0, behavior: 'smooth' });
   setTimeout(initReveals, 100);
@@ -6236,6 +6247,8 @@ function showEduModule(modId, el) {
   const mod = document.getElementById('edu-' + modId);
   if (mod) mod.classList.add('active');
   if (el) el.classList.add('active');
+  // Update hash to preserve module on refresh
+  location.hash = 'edu/' + modId;
 }
 
 function toggleEduTopic(headEl) {
@@ -6381,6 +6394,40 @@ setTimeout(initCounters, 600);
   }
   window.addEventListener('scroll', checkCounters, { passive: true });
   setTimeout(checkCounters, 400);
+})();
+
+// ── RESTORE PAGE STATE FROM URL HASH ON LOAD / BACK-FORWARD ─────────────
+(function() {
+  function restoreFromHash() {
+    const hash = location.hash.replace('#', '');
+    if (!hash) return;
+    const parts = hash.split('/');
+    const pageName = parts[0];
+
+    // Restore the page
+    if (pageName && document.getElementById('page-' + pageName)) {
+      showPage(pageName, true); // skipHash=true to avoid re-setting hash
+    }
+
+    // Restore edu module if on education page
+    if (pageName === 'edu' && parts[1]) {
+      const modId = parts[1];
+      const mod = document.getElementById('edu-' + modId);
+      const tab = document.querySelector('.edu-mod-tab[data-mod="' + modId + '"]');
+      if (mod) {
+        document.querySelectorAll('.edu-module').forEach(m => m.classList.remove('active'));
+        document.querySelectorAll('.edu-mod-tab').forEach(t => t.classList.remove('active'));
+        mod.classList.add('active');
+        if (tab) tab.classList.add('active');
+      }
+    }
+  }
+
+  // Restore on initial page load
+  restoreFromHash();
+
+  // Restore on browser back/forward navigation
+  window.addEventListener('hashchange', restoreFromHash);
 })();
 
 </script>
