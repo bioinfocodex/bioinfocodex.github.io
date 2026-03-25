@@ -729,6 +729,28 @@ em.p{font-style:normal;color:var(--purple);}
 .social-link:hover{border-color:var(--border2);color:var(--text);background:var(--surf);}
 .social-link .icon{font-size:1.2em;}
 
+/* ── REGISTRATION FORM ── */
+.bic-reg-card{
+  background:var(--surf);border:1px solid var(--border);border-radius:var(--r2);
+  padding:36px 32px;box-shadow:0 4px 24px rgba(0,0,0,0.06);
+}
+.bic-field{display:flex;flex-direction:column;gap:5px;margin-bottom:16px;}
+.bic-field label{font-size:0.82em;font-weight:600;color:var(--text);letter-spacing:0.2px;}
+.bic-field input,.bic-field select,.bic-field textarea{
+  width:100%;padding:10px 14px;border:1.5px solid var(--border);
+  border-radius:10px;font-size:0.9em;font-family:var(--fb);
+  background:var(--bg2);color:var(--text);transition:border-color 0.2s;
+}
+.bic-field input:focus,.bic-field select:focus,.bic-field textarea:focus{
+  outline:none;border-color:var(--green);background:var(--surf);
+  box-shadow:0 0 0 3px rgba(0,200,150,0.1);
+}
+.bic-field textarea{resize:vertical;min-height:70px;}
+@media(max-width:500px){
+  .bic-reg-card{padding:24px 18px;}
+  .bic-field-row{grid-template-columns:1fr !important;}
+}
+
 /* FAQ */
 .faq-list{margin-top:28px;}
 .faq-item{border-bottom:1px solid var(--border);overflow:hidden;}
@@ -1286,7 +1308,7 @@ nav.nav-scrolled { box-shadow: 0 4px 28px rgba(0,0,0,0.1); border-bottom-color: 
       </div>
       <div style="display:flex;gap:12px;flex-wrap:wrap;">
         <button class="hero-cta-primary" onclick="showPage('page-tool-rnaflow')">📖 Read full manual</button>
-        <a class="hero-cta-secondary" href="https://rnaflow.bioinfocodex.com" target="_blank" style="text-decoration:none;">⬇ Download free</a>
+        <button class="hero-cta-secondary" onclick="showPage('page-register')">⬇ Get RNAflow</button>
       </div>
     </div>
 
@@ -1421,9 +1443,9 @@ nav.nav-scrolled { box-shadow: 0 4px 28px rgba(0,0,0,0.1); border-bottom-color: 
   <div class="cta-banner reveal">
     <div class="cta-banner-content">
       <h2>Start your first RNA-seq analysis today</h2>
-      <p>Download RNAflow — a single HTML file, no installation wizard, no sign-up. Open it in your browser and follow the guided steps.</p>
+      <p>Register to receive your RNAflow access code. Get 50 days of full access to the complete RNA-seq analysis pipeline.</p>
       <div class="cta-btns">
-        <a class="hero-cta-primary" href="https://rnaflow.bioinfocodex.com" target="_blank" style="text-decoration:none;">⬇ Download RNAflow free</a>
+        <button class="hero-cta-primary" onclick="showPage('page-register')">⬇ Register &amp; Download</button>
         <button class="hero-cta-secondary" onclick="showPage('page-tool-rnaflow')">📖 Read the manual first</button>
       </div>
     </div>
@@ -1616,8 +1638,8 @@ nav.nav-scrolled { box-shadow: 0 4px 28px rgba(0,0,0,0.1); border-bottom-color: 
       </div>
       <div style="display:flex;flex-direction:column;gap:8px;padding:20px;background:var(--surf);border:1px solid rgba(0,200,150,0.2);border-radius:var(--r2);min-width:200px;">
         <div style="font-size:0.72em;text-transform:uppercase;letter-spacing:1px;color:var(--text3);margin-bottom:4px;">Quick download</div>
-        <a class="btn btn-green" href="https://rnaflow.bioinfocodex.com" target="_blank" style="justify-content:center;text-decoration:none;">⬇ Download RNAflow</a>
-        <div style="font-size:0.72em;color:var(--text3);text-align:center;margin-top:4px;">Free · No sign-up · Runs locally</div>
+        <button class="btn btn-green" onclick="showPage('page-register')" style="justify-content:center;width:100%;cursor:pointer;">⬇ Register &amp; Download</button>
+        <div style="font-size:0.72em;color:var(--text3);text-align:center;margin-top:4px;">50-day access · Runs locally</div>
       </div>
     </div>
   </div>
@@ -1763,7 +1785,7 @@ nav.nav-scrolled { box-shadow: 0 4px 28px rgba(0,0,0,0.1); border-bottom-color: 
             <div class="dl-banner">
               <div class="dl-banner-text"><h3>RNAflow v1.0</h3><p>Two files — keep them in the same folder</p></div>
               <div class="dl-banner-btns">
-                <a class="btn btn-green" href="https://rnaflow.bioinfocodex.com" target="_blank" style="text-decoration:none;">⬇ Download RNAflow</a>
+                <button class="btn btn-green" onclick="showPage('page-register')" style="cursor:pointer;">⬇ Register &amp; Download</button>
               </div>
             </div>
             <p class="sub">Open <code>RNAflow_App.html</code> in your browser — you will see the BioInfoCodex RNAflow interface immediately.</p>
@@ -6005,6 +6027,157 @@ hub_genes &lt;- module_genes[order(kME[module_genes, paste0("kME", module_number
 </div><!-- end page-edu -->
 
 <!-- ══════════════════════════════════════════
+     REGISTER & DOWNLOAD PAGE
+══════════════════════════════════════════ -->
+<div class="page" id="page-register">
+  <div class="section" style="max-width:680px;margin:0 auto;padding-top:100px;">
+
+    <!-- Expired banner (hidden by default) -->
+    <div id="bic-expired" style="display:none;text-align:center;padding:48px 32px;background:white;border:1.5px solid #fde68a;border-radius:18px;box-shadow:0 4px 24px rgba(0,0,0,0.06);">
+      <div style="font-size:3em;margin-bottom:16px;">⏰</div>
+      <h2 class="h2">Access Period Has Ended</h2>
+      <p class="lead" style="max-width:440px;margin:12px auto 20px;">The current access period for RNAflow has concluded. Thank you for your interest.</p>
+      <p class="sub">For future access or licensing inquiries, contact:<br><a href="mailto:info@bioinfocodex.com" style="color:var(--green);font-weight:600;">info@bioinfocodex.com</a></p>
+    </div>
+
+    <!-- STEP 1: Registration Form -->
+    <div id="bic-reg-form" class="bic-reg-card">
+      <div style="text-align:center;margin-bottom:28px;">
+        <div style="font-size:2.4em;margin-bottom:10px;">🔐</div>
+        <h2 class="h2" style="margin-bottom:8px;">Register for RNAflow</h2>
+        <p class="sub" style="max-width:460px;margin:0 auto;">Fill in your details to receive a <strong>50-day access code</strong> via email. Your information helps us improve RNAflow and keep you updated with new features.</p>
+      </div>
+      <form id="bic-form" onsubmit="return bicRegister(event)">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+          <div class="bic-field">
+            <label>First Name <span style="color:#dc2626;">*</span></label>
+            <input type="text" name="first_name" required placeholder="e.g. Sarah">
+          </div>
+          <div class="bic-field">
+            <label>Last Name <span style="color:#dc2626;">*</span></label>
+            <input type="text" name="last_name" required placeholder="e.g. Chen">
+          </div>
+        </div>
+        <div class="bic-field">
+          <label>Email Address <span style="color:#dc2626;">*</span></label>
+          <input type="email" name="email" required placeholder="your.name@university.edu">
+        </div>
+        <div class="bic-field">
+          <label>Institution / Organization <span style="color:#dc2626;">*</span></label>
+          <input type="text" name="institution" required placeholder="e.g. University of Melbourne">
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+          <div class="bic-field">
+            <label>Role</label>
+            <select name="role">
+              <option value="">Select role...</option>
+              <option>PhD Student</option><option>Postdoctoral Researcher</option>
+              <option>PI / Professor</option><option>Research Assistant</option>
+              <option>Lab Technician</option><option>Bioinformatician</option>
+              <option>Industry Scientist</option><option>Undergraduate Student</option>
+              <option>Other</option>
+            </select>
+          </div>
+          <div class="bic-field">
+            <label>Research Area</label>
+            <select name="research_area">
+              <option value="">Select area...</option>
+              <option>Genomics</option><option>Transcriptomics / RNA-seq</option>
+              <option>Cancer Biology</option><option>Immunology</option>
+              <option>Neuroscience</option><option>Plant Biology</option>
+              <option>Microbiology</option><option>Developmental Biology</option>
+              <option>Drug Discovery</option><option>Clinical Research</option>
+              <option>Bioinformatics / Computational</option><option>Other</option>
+            </select>
+          </div>
+        </div>
+        <div class="bic-field">
+          <label>How will you use RNAflow? <span style="font-weight:400;color:var(--text3);">(optional)</span></label>
+          <textarea name="purpose" rows="3" placeholder="Brief description of your project..."></textarea>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:18px;">
+          <input type="checkbox" name="updates" checked id="bic-updates" style="width:auto;margin:0;">
+          <label for="bic-updates" style="margin:0;font-size:0.82em;color:var(--text2);cursor:pointer;">Keep me updated about new features, tutorials, and releases</label>
+        </div>
+        <button type="submit" id="bic-submit" style="width:100%;padding:14px;border:none;border-radius:12px;background:linear-gradient(135deg,var(--green),#0969da);color:white;font-size:1em;font-weight:700;font-family:var(--fh);cursor:pointer;transition:all 0.2s;letter-spacing:0.3px;">
+          <span id="bic-btn-text">Request 50-Day Access Code</span>
+          <span id="bic-btn-load" style="display:none;">Sending...</span>
+        </button>
+        <p style="text-align:center;font-size:0.78em;color:var(--text3);margin-top:14px;">🔒 Your information is private. We will never share your data with third parties.</p>
+      </form>
+    </div>
+
+    <!-- STEP 2: Code Entry -->
+    <div id="bic-code-entry" class="bic-reg-card" style="display:none;max-width:500px;margin:0 auto;">
+      <div style="text-align:center;margin-bottom:24px;">
+        <div style="font-size:2.4em;margin-bottom:10px;">📬</div>
+        <h2 class="h2" style="margin-bottom:8px;">Check Your Email</h2>
+        <p class="sub">We've sent your 50-day access code to <strong id="bic-sent-email"></strong>. Enter it below to access RNAflow downloads.</p>
+      </div>
+      <form onsubmit="return bicVerifyCode(event)">
+        <div class="bic-field">
+          <label>Access Code <span style="color:#dc2626;">*</span></label>
+          <input type="text" id="bic-code-input" required placeholder="Enter your code" style="text-align:center;font-size:1.2em;letter-spacing:3px;font-family:'DM Mono',monospace;">
+        </div>
+        <div id="bic-code-err" style="display:none;color:#dc2626;font-size:0.85em;text-align:center;margin-bottom:12px;">Invalid code. Please check your email and try again.</div>
+        <button type="submit" style="width:100%;padding:14px;border:none;border-radius:12px;background:linear-gradient(135deg,var(--green),#0969da);color:white;font-size:1em;font-weight:700;font-family:var(--fh);cursor:pointer;transition:all 0.2s;">Unlock Downloads</button>
+        <p style="text-align:center;font-size:0.82em;color:var(--text3);margin-top:14px;">Didn't receive the email? Check your spam folder or <a href="#" onclick="document.getElementById('bic-code-entry').style.display='none';document.getElementById('bic-reg-form').style.display='block';return false;" style="color:var(--green);">register again</a>.</p>
+      </form>
+    </div>
+
+    <!-- STEP 3: Downloads Unlocked -->
+    <div id="bic-downloads" style="display:none;">
+      <div style="text-align:center;margin-bottom:32px;">
+        <div style="display:inline-flex;align-items:center;gap:10px;background:rgba(0,200,150,0.1);border:1.5px solid rgba(0,200,150,0.3);border-radius:14px;padding:14px 28px;">
+          <span style="font-size:1.4em;">✅</span>
+          <span style="font-weight:700;color:var(--text);font-size:1em;">Access granted — welcome, <span id="bic-welcome"></span>!</span>
+        </div>
+        <p class="sub" style="margin-top:12px;">Your 50-day access is now active. Download RNAflow for your platform below.</p>
+      </div>
+
+      <!-- Gatekeeper warning -->
+      <div style="max-width:640px;margin:0 auto 24px;background:#fffbeb;border:1.5px solid #fde68a;border-radius:14px;padding:16px 20px;display:flex;gap:12px;align-items:flex-start;">
+        <span style="font-size:1.3em;">⚠️</span>
+        <div style="font-size:0.83em;color:#78350f;line-height:1.6;">
+          <strong style="color:#92400e;">macOS users:</strong> If you see "RNAflow is damaged", open Terminal and run: <code style="background:#fef3c7;border:1px solid #fde68a;border-radius:4px;padding:2px 6px;font-family:var(--fm);">xattr -cr /Applications/RNAflow.app</code>
+        </div>
+      </div>
+
+      <div class="card-grid card-grid-2" style="max-width:640px;margin:0 auto;">
+        <div class="card" style="padding:22px;">
+          <div style="font-size:1.4em;margin-bottom:8px;">🍎</div>
+          <h3 class="h3">macOS</h3>
+          <p class="sub" style="margin-bottom:14px;">Apple Silicon (M1/M2/M3) &amp; Intel</p>
+          <a href="https://github.com/bioinfocodex/rnaflow/releases/latest/download/RNAflow-1.0.0-arm64.dmg" class="btn btn-green" style="width:100%;justify-content:center;text-decoration:none;margin-bottom:6px;">⬇ Apple Silicon .dmg</a>
+          <a href="https://github.com/bioinfocodex/rnaflow/releases/latest/download/RNAflow-1.0.0.dmg" class="btn btn-outline" style="width:100%;justify-content:center;text-decoration:none;">Intel .dmg</a>
+        </div>
+        <div class="card" style="padding:22px;">
+          <div style="font-size:1.4em;margin-bottom:8px;">🪟</div>
+          <h3 class="h3">Windows</h3>
+          <p class="sub" style="margin-bottom:14px;">64-bit (Windows 10+)</p>
+          <a href="https://github.com/bioinfocodex/rnaflow/releases/latest/download/RNAflow-Setup-1.0.0.exe" class="btn btn-green" style="width:100%;justify-content:center;text-decoration:none;margin-bottom:6px;">⬇ Installer .exe</a>
+          <a href="https://github.com/bioinfocodex/rnaflow/releases/latest/download/RNAflow-1.0.0.exe" class="btn btn-outline" style="width:100%;justify-content:center;text-decoration:none;">Portable .exe</a>
+        </div>
+        <div class="card" style="padding:22px;">
+          <div style="font-size:1.4em;margin-bottom:8px;">🐧</div>
+          <h3 class="h3">Linux</h3>
+          <p class="sub" style="margin-bottom:14px;">Ubuntu 20.04+ / Fedora 36+</p>
+          <a href="https://github.com/bioinfocodex/rnaflow/releases/latest/download/RNAflow-1.0.0.AppImage" class="btn btn-green" style="width:100%;justify-content:center;text-decoration:none;margin-bottom:6px;">⬇ AppImage</a>
+          <a href="https://github.com/bioinfocodex/rnaflow/releases/latest/download/rnaflow_1.0.0_amd64.deb" class="btn btn-outline" style="width:100%;justify-content:center;text-decoration:none;">Debian .deb</a>
+        </div>
+        <div class="card" style="padding:22px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;">
+          <div style="font-size:1.4em;margin-bottom:8px;">📖</div>
+          <h3 class="h3">Need Help?</h3>
+          <p class="sub" style="margin-bottom:14px;">Read the full pipeline manual</p>
+          <button class="btn btn-outline" onclick="showPage('page-tool-rnaflow')" style="width:100%;justify-content:center;cursor:pointer;">📖 Open Manual</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
      CONTACT PAGE
 ══════════════════════════════════════════ -->
 <div class="page" id="page-contact">
@@ -6429,6 +6602,115 @@ setTimeout(initCounters, 600);
   // Restore on browser back/forward navigation
   window.addEventListener('hashchange', restoreFromHash);
 })();
+
+// ══════════════════════════════════════════════════════════════════════════
+// RNAFLOW REGISTRATION & ACCESS CODE SYSTEM
+// ══════════════════════════════════════════════════════════════════════════
+
+// CONFIG: Formspree form ID — replace after creating your form at formspree.io
+const BIC_FORMSPREE_ID = 'YOUR_FORMSPREE_ID';
+
+// CONFIG: Valid access codes (you email these to approved registrants)
+const BIC_CODES = ['RNAFLOW2025', 'BIOINFO2025', 'RNA-ACCESS-001'];
+
+// CONFIG: Expiration date (50 days from March 25, 2026 = May 14, 2026)
+const BIC_EXPIRY = new Date('2026-05-14T23:59:59');
+
+let bicUserName = '';
+
+// Check expiration on page load
+(function() {
+  if (new Date() > BIC_EXPIRY) {
+    const f = document.getElementById('bic-reg-form');
+    const c = document.getElementById('bic-code-entry');
+    const d = document.getElementById('bic-downloads');
+    const x = document.getElementById('bic-expired');
+    if (f) f.style.display = 'none';
+    if (c) c.style.display = 'none';
+    if (d) d.style.display = 'none';
+    if (x) x.style.display = 'block';
+    localStorage.removeItem('bic_access');
+    return;
+  }
+
+  // Check if user already has access
+  const access = localStorage.getItem('bic_access');
+  const reg = localStorage.getItem('bic_reg');
+  if (access && reg) {
+    try {
+      const a = JSON.parse(access);
+      const r = JSON.parse(reg);
+      if (BIC_CODES.map(c=>c.toUpperCase()).includes(a.code.toUpperCase())) {
+        document.getElementById('bic-reg-form').style.display = 'none';
+        document.getElementById('bic-downloads').style.display = 'block';
+        document.getElementById('bic-welcome').textContent = r.name || 'Researcher';
+        bicUserName = r.name;
+      }
+    } catch(e) {}
+  }
+})();
+
+async function bicRegister(e) {
+  e.preventDefault();
+  if (new Date() > BIC_EXPIRY) { alert('Access period has ended.'); return false; }
+
+  const btn = document.getElementById('bic-submit');
+  const txt = document.getElementById('bic-btn-text');
+  const load = document.getElementById('bic-btn-load');
+  btn.disabled = true; txt.style.display = 'none'; load.style.display = 'inline';
+
+  const form = document.getElementById('bic-form');
+  const fd = new FormData(form);
+  bicUserName = fd.get('first_name');
+
+  fd.append('_submitted_at', new Date().toISOString());
+  fd.append('_subject', 'RNAflow Access Request: ' + fd.get('first_name') + ' ' + fd.get('last_name') + ' — ' + fd.get('institution'));
+
+  try {
+    if (BIC_FORMSPREE_ID !== 'YOUR_FORMSPREE_ID') {
+      await fetch('https://formspree.io/f/' + BIC_FORMSPREE_ID, {
+        method: 'POST', body: fd, headers: { 'Accept': 'application/json' }
+      });
+    }
+  } catch(err) {}
+
+  // Save registration
+  localStorage.setItem('bic_reg', JSON.stringify({
+    name: fd.get('first_name'), email: fd.get('email'), date: new Date().toISOString()
+  }));
+
+  // Show code entry
+  document.getElementById('bic-sent-email').textContent = fd.get('email');
+  document.getElementById('bic-reg-form').style.display = 'none';
+  document.getElementById('bic-code-entry').style.display = 'block';
+
+  btn.disabled = false; txt.style.display = 'inline'; load.style.display = 'none';
+  return false;
+}
+
+function bicVerifyCode(e) {
+  e.preventDefault();
+  if (new Date() > BIC_EXPIRY) { alert('Access period has ended.'); return false; }
+
+  const code = document.getElementById('bic-code-input').value.trim().toUpperCase();
+  const err = document.getElementById('bic-code-err');
+
+  if (BIC_CODES.map(c=>c.toUpperCase()).includes(code)) {
+    err.style.display = 'none';
+    document.getElementById('bic-code-entry').style.display = 'none';
+    document.getElementById('bic-downloads').style.display = 'block';
+    document.getElementById('bic-welcome').textContent = bicUserName || 'Researcher';
+
+    localStorage.setItem('bic_access', JSON.stringify({
+      code: code, granted: new Date().toISOString()
+    }));
+  } else {
+    err.style.display = 'block';
+    document.getElementById('bic-code-input').style.borderColor = '#dc2626';
+    setTimeout(() => { document.getElementById('bic-code-input').style.borderColor = ''; }, 2000);
+  }
+  return false;
+}
 
 </script>
 </body>
