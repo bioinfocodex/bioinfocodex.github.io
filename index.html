@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>BioInfoCodex — The Open Bioinformatics Codex</title>
 <meta name="description" content="BioInfoCodex: free bioinformatics tools, step-by-step tutorials, and education for researchers worldwide. RNA-seq, NGS, plasmid analysis and more.">
-<meta name="keywords" content="bioinformatics, RNA-seq, DESeq2, HISAT2, bioinformatics tools, free bioinformatics, genomics, NGS, open source bioinformatics">
+<meta name="keywords" content="bioinformatics, RNA-seq, DESeq2, HISAT2, bioinformatics tools, genomics, NGS, bioinformatics education, bioinformatics software">
 <meta property="og:title" content="BioInfoCodex — The Open Bioinformatics Codex">
 <meta property="og:description" content="Free guided bioinformatics tools and education. RNA-seq, NGS, plasmid analysis and more.">
 <meta property="og:url" content="https://bioinfocodex.com">
@@ -1241,7 +1241,7 @@ nav.nav-scrolled { box-shadow: 0 4px 28px rgba(0,0,0,0.1); border-bottom-color: 
       <div class="stat-card reveal" style="animation-delay:0.3s;">
         <span class="stat-icon">💸</span>
         <div class="stat-num">$0</div>
-        <div class="stat-desc">Forever free, open source, no account required, runs offline</div>
+        <div class="stat-desc">No account required, runs offline on your own machine</div>
       </div>
     </div>
   </div>
@@ -1410,7 +1410,7 @@ nav.nav-scrolled { box-shadow: 0 4px 28px rgba(0,0,0,0.1); border-bottom-color: 
         </div>
         <div class="why-card reveal" style="--c:var(--blue);animation-delay:0.3s;">
           <span class="why-icon">💸</span>
-          <div class="why-title">Free forever, open source</div>
+          <div class="why-title">Built for researchers</div>
           <div class="why-desc">BioInfoCodex is MIT-licensed and will always be free. No subscription, no feature paywalls, no tracking. Download and use it indefinitely, even without internet access.</div>
         </div>
       </div>
@@ -2372,6 +2372,12 @@ generated using ggplot2 (Wickham, 2016) and pheatmap (Kolde, 2019).</div>
       <div class="edu-mod-tab" onclick="showEduModule('mod6',this)" data-mod="mod6">🔬 Module 6<span class="edu-mod-sub">Genomics</span></div>
       <div class="edu-mod-tab" onclick="showEduModule('mod7',this)" data-mod="mod7">📊 Module 7<span class="edu-mod-sub">Statistics</span></div>
       <div class="edu-mod-tab" onclick="showEduModule('mod8',this)" data-mod="mod8">🚀 Module 8<span class="edu-mod-sub">Advanced</span></div>
+      <div class="edu-mod-tab" onclick="showEduModule('mod9',this)" data-mod="mod9">🧪 Module 9<span class="edu-mod-sub">Proteomics</span></div>
+      <div class="edu-mod-tab" onclick="showEduModule('mod10',this)" data-mod="mod10">🏗️ Module 10<span class="edu-mod-sub">Structural Bio</span></div>
+      <div class="edu-mod-tab" onclick="showEduModule('mod11',this)" data-mod="mod11">🧩 Module 11<span class="edu-mod-sub">Epigenomics</span></div>
+      <div class="edu-mod-tab" onclick="showEduModule('mod12',this)" data-mod="mod12">🔧 Module 12<span class="edu-mod-sub">Genome Assembly</span></div>
+      <div class="edu-mod-tab" onclick="showEduModule('mod13',this)" data-mod="mod13">👥 Module 13<span class="edu-mod-sub">Pop. Genetics</span></div>
+      <div class="edu-mod-tab" onclick="showEduModule('mod14',this)" data-mod="mod14">🕸️ Module 14<span class="edu-mod-sub">Systems Biology</span></div>
     </div>
   </div>
 
@@ -5160,6 +5166,841 @@ humann_renorm_table -i merged_genefamilies.tsv -o merged_genefamilies_cpm.tsv \
     </div>
   </div><!-- end mod8 -->
 
+  <!-- ═══════════ MODULE 9: PROTEOMICS ═══════════ -->
+  <div class="edu-module" id="edu-mod9">
+    <div class="edu-mod-header">
+      <div class="label">Module 9 · Proteomics</div>
+      <h2 class="h2">Mass Spectrometry &amp; Protein Analysis</h2>
+      <p class="lead">Proteomics studies the entire complement of proteins in a cell, tissue, or organism. Unlike the genome (static), the proteome is dynamic — it changes with conditions, time, and cell type. Mass spectrometry is the workhorse technology for large-scale protein identification and quantification.</p>
+    </div>
+    <div class="edu-topic-grid">
+
+      <div class="edu-topic-card">
+        <div class="edu-topic-head" onclick="toggleEduTopic(this)">
+          <span class="edu-topic-num">9.1</span>
+          <span class="edu-topic-title">Mass Spectrometry Principles</span>
+          <span class="edu-topic-chev">▶</span>
+        </div>
+        <div class="edu-topic-body">
+          <p class="sub">Mass spectrometry (MS) measures the mass-to-charge ratio (m/z) of ionised molecules. In proteomics, proteins are digested into peptides (typically with trypsin), separated by liquid chromatography (LC), ionised, and then measured in the mass spectrometer. The combination — LC-MS/MS — is the standard workflow for identifying and quantifying thousands of proteins in a single experiment.</p>
+
+          <h4 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">The LC-MS/MS Workflow</h4>
+          <p class="sub">A typical bottom-up proteomics experiment follows these steps: (1) <strong>Protein extraction</strong> — lyse cells, solubilise proteins. (2) <strong>Digestion</strong> — trypsin cleaves after lysine (K) and arginine (R), producing peptides of 7–35 amino acids. (3) <strong>Separation</strong> — reverse-phase liquid chromatography separates peptides by hydrophobicity over a 60–120 minute gradient. (4) <strong>Ionisation</strong> — electrospray ionisation (ESI) converts peptides into gas-phase ions. (5) <strong>MS1 scan</strong> — measures intact peptide masses. (6) <strong>MS2 scan</strong> — isolates individual peptide ions and fragments them (HCD or CID). The fragmentation pattern reveals the amino acid sequence.</p>
+
+          <h4 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">Key Instrument Types</h4>
+          <div class="card-grid card-grid-2" style="gap:10px;margin-top:8px;">
+            <div class="card" style="padding:14px;"><strong>Orbitrap (Thermo)</strong><p class="sub" style="margin-top:4px;">High resolution (120,000–500,000), high mass accuracy (&lt;2 ppm). Gold standard for discovery proteomics. Exploris 480, Q Exactive series.</p></div>
+            <div class="card" style="padding:14px;"><strong>TOF (Bruker timsTOF)</strong><p class="sub" style="margin-top:4px;">Time-of-flight with trapped ion mobility (TIMS). Very fast scan rates. DIA-PASEF enables deep proteome coverage. Excellent for clinical applications.</p></div>
+            <div class="card" style="padding:14px;"><strong>Triple Quadrupole (QQQ)</strong><p class="sub" style="margin-top:4px;">Lower resolution but extremely sensitive and quantitative. Used for targeted proteomics (MRM/SRM) — measuring specific proteins with high precision.</p></div>
+            <div class="card" style="padding:14px;"><strong>MALDI-TOF</strong><p class="sub" style="margin-top:4px;">Matrix-assisted laser desorption. Used for intact protein profiling, tissue imaging (MALDI-MSI), and microbial identification (Bruker Biotyper).</p></div>
+          </div>
+
+          <h4 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">DDA vs DIA Acquisition</h4>
+          <div class="card-grid card-grid-2" style="gap:10px;margin-top:8px;">
+            <div class="card" style="padding:14px;border-left:3px solid var(--blue);"><strong>DDA (Data-Dependent)</strong><p class="sub" style="margin-top:4px;">Selects the top N most intense ions from MS1 for fragmentation. Simple, well-established. Stochastic — may miss low-abundance peptides. Less reproducible between runs.</p></div>
+            <div class="card" style="padding:14px;border-left:3px solid var(--green);"><strong>DIA (Data-Independent)</strong><p class="sub" style="margin-top:4px;">Fragments ALL ions in wide m/z windows systematically. No selection bias. More reproducible and comprehensive. Requires spectral libraries or library-free tools (DIA-NN). Now the preferred method.</p><span class="tag tag-green" style="margin-top:6px;">Recommended</span></div>
+          </div>
+
+          <div class="info-box tip"><span>💡</span><div><strong>Modern trend:</strong> DIA with tools like <strong>DIA-NN</strong> or <strong>Spectronaut</strong> is rapidly replacing DDA for most applications. DIA-NN can identify 8,000–10,000 proteins from a single human cell line in a 90-minute gradient, with excellent quantitative reproducibility.</div></div>
+
+          <div class="chips" style="margin-top:14px;"><span class="chip">LC-MS/MS is standard workflow</span><span class="chip">Trypsin cleaves at K and R</span><span class="chip">Orbitrap = high resolution</span><span class="chip">DIA &gt; DDA for reproducibility</span><span class="chip">DIA-NN for library-free analysis</span></div>
+        </div>
+      </div>
+
+      <div class="edu-topic-card">
+        <div class="edu-topic-head" onclick="toggleEduTopic(this)">
+          <span class="edu-topic-num">9.2</span>
+          <span class="edu-topic-title">Protein Identification &amp; Database Searching</span>
+          <span class="edu-topic-chev">▶</span>
+        </div>
+        <div class="edu-topic-body">
+          <p class="sub">After acquiring MS/MS spectra, the key bioinformatics task is identifying which peptides (and therefore proteins) generated them. This is done by matching experimental spectra against theoretical spectra predicted from a protein sequence database. The process is called <strong>database searching</strong> — and it is conceptually similar to BLAST, but for mass spectra instead of sequences.</p>
+
+          <h4 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">How Database Search Works</h4>
+          <p class="sub">(1) Take each experimental MS2 spectrum. (2) In silico digest all proteins from a reference database (e.g., UniProt human) with trypsin. (3) For each candidate peptide whose mass matches the precursor mass (within tolerance), predict the theoretical fragmentation spectrum. (4) Score the match between experimental and theoretical spectra. (5) Apply statistical validation (FDR control at 1% using target-decoy approach).</p>
+
+          <h4 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">Major Search Engines</h4>
+          <div class="card-grid card-grid-3" style="gap:10px;margin-top:8px;">
+            <div class="card" style="padding:14px;"><strong>MaxQuant</strong><p class="sub" style="margin-top:4px;">Free, widely used. Built-in Andromeda search engine. Excellent for label-free and SILAC. GUI-based. Standard in academic proteomics.</p></div>
+            <div class="card" style="padding:14px;"><strong>MSFragger / FragPipe</strong><p class="sub" style="margin-top:4px;">Ultrafast open search. 100× faster than traditional engines. Integrated in FragPipe with downstream analysis. Excellent for PTM discovery.</p></div>
+            <div class="card" style="padding:14px;"><strong>DIA-NN</strong><p class="sub" style="margin-top:4px;">Deep neural network for DIA data. Library-free mode generates in silico spectral libraries. State-of-the-art sensitivity and speed.</p></div>
+          </div>
+
+          <div class="code-block"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button><span class="code-comment"># ─── MaxQuant (GUI-based, download from maxquant.org) ───</span>
+<span class="code-comment"># Key settings to configure:</span>
+<span class="code-comment">#   Raw files: add your .raw files</span>
+<span class="code-comment">#   FASTA: download from uniprot.org (reviewed Swiss-Prot + isoforms)</span>
+<span class="code-comment">#   Digestion: Trypsin/P, max 2 missed cleavages</span>
+<span class="code-comment">#   Fixed mod: Carbamidomethyl (C) — from iodoacetamide alkylation</span>
+<span class="code-comment">#   Variable mods: Oxidation (M), Acetyl (Protein N-term)</span>
+<span class="code-comment">#   FDR: 1% at PSM and protein level</span>
+<span class="code-comment">#   Match between runs: ON (transfers IDs across runs)</span>
+<span class="code-comment">#   LFQ: ON for label-free quantification</span>
+
+<span class="code-comment"># ─── DIA-NN (command line) ───</span>
+<span class="code-comment"># Download from github.com/vdemichev/DiaNN</span>
+diann --f sample1.raw --f sample2.raw --f sample3.raw \
+      --lib "" \
+      --fasta uniprot_human.fasta \
+      --gen-spec-lib \
+      --predictor \
+      --qvalue 0.01 \
+      --matrices \
+      --out-lib report-lib.tsv \
+      --out report.tsv
+
+<span class="code-comment"># Key output files:</span>
+<span class="code-comment">#   report.tsv — all identified precursors with quantities</span>
+<span class="code-comment">#   report.pg_matrix.tsv — protein group quantities (use this!)</span></div>
+
+          <div class="info-box warn"><span>⚠️</span><div><strong>Target-Decoy FDR:</strong> All search engines use a decoy database (reversed or shuffled sequences) to estimate false discovery rate. At 1% FDR: for every 100 identified proteins, ~1 is expected to be wrong. Always use 1% FDR at both PSM (peptide-spectrum match) and protein level. Never relax this to 5%.</div></div>
+
+          <div class="chips" style="margin-top:14px;"><span class="chip">1% FDR is mandatory</span><span class="chip">MaxQuant for DDA</span><span class="chip">DIA-NN for DIA</span><span class="chip">FragPipe = fastest</span><span class="chip">Use reviewed UniProt FASTA</span></div>
+        </div>
+      </div>
+
+      <div class="edu-topic-card">
+        <div class="edu-topic-head" onclick="toggleEduTopic(this)">
+          <span class="edu-topic-num">9.3</span>
+          <span class="edu-topic-title">Quantitative Proteomics &amp; Statistical Analysis</span>
+          <span class="edu-topic-chev">▶</span>
+        </div>
+        <div class="edu-topic-body">
+          <p class="sub">Quantitative proteomics measures how much of each protein is present, enabling comparison between conditions. There are two main strategies: <strong>label-free quantification (LFQ)</strong>, which compares ion intensities directly, and <strong>labelling methods</strong> (TMT, SILAC), which use chemical or metabolic tags to multiplex samples.</p>
+
+          <h4 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">Quantification Strategies</h4>
+          <div class="card-grid card-grid-3" style="gap:10px;margin-top:8px;">
+            <div class="card" style="padding:14px;border-left:3px solid var(--green);"><strong>Label-Free (LFQ)</strong><p class="sub" style="margin-top:4px;">Compare MS1 peptide intensities across runs. Simple, no extra chemistry. Requires careful normalisation. Best with DIA. MaxLFQ algorithm in MaxQuant.</p><span class="tag tag-green" style="margin-top:6px;">Most common</span></div>
+            <div class="card" style="padding:14px;border-left:3px solid var(--blue);"><strong>TMT/iTRAQ</strong><p class="sub" style="margin-top:4px;">Chemical labels with same mass but different fragmentation reporters. Multiplex up to 18 samples in one run (TMTpro 18-plex). Reduces missing values. Higher throughput.</p></div>
+            <div class="card" style="padding:14px;border-left:3px solid var(--purple);"><strong>SILAC</strong><p class="sub" style="margin-top:4px;">Metabolic labelling — grow cells with heavy amino acids (13C-Lys, 13C-Arg). Most accurate quantification. Only works for cell culture. Not for tissues/clinical samples.</p></div>
+          </div>
+
+          <h4 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">Statistical Analysis with R</h4>
+          <div class="code-block"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button><span class="code-comment"># ─── Differential protein abundance analysis ───</span>
+<span class="code-comment"># Using limma (same package used for microarrays — works great for proteomics)</span>
+
+library(limma)
+library(tidyverse)
+
+<span class="code-comment"># Load MaxQuant proteinGroups.txt or DIA-NN pg_matrix</span>
+pg &lt;- read.delim("proteinGroups.txt")
+
+<span class="code-comment"># Filter: remove contaminants, reverse hits, only identified by site</span>
+pg &lt;- pg[pg$Reverse != "+" &amp; pg$Potential.contaminant != "+" &amp;
+         pg$Only.identified.by.site != "+", ]
+
+<span class="code-comment"># Extract LFQ intensity columns and log2-transform</span>
+lfq &lt;- pg[, grep("^LFQ.intensity.", names(pg))]
+lfq[lfq == 0] &lt;- NA                    # Replace 0 with NA
+mat &lt;- log2(as.matrix(lfq))
+
+<span class="code-comment"># Filter: keep proteins with values in at least 70% of samples per group</span>
+<span class="code-comment"># (adjust based on your design)</span>
+
+<span class="code-comment"># Imputation: replace missing values (MinProb method — common)</span>
+<span class="code-comment"># Or use DEqMS / msqrob2 for more sophisticated handling</span>
+
+<span class="code-comment"># Differential analysis with limma</span>
+group &lt;- factor(c("Control","Control","Control","Treated","Treated","Treated"))
+design &lt;- model.matrix(~ 0 + group)
+colnames(design) &lt;- levels(group)
+
+fit &lt;- lmFit(mat, design)
+contrast &lt;- makeContrasts(Treated - Control, levels = design)
+fit2 &lt;- contrasts.fit(fit, contrast)
+fit3 &lt;- eBayes(fit2)
+
+results &lt;- topTable(fit3, number = Inf, sort.by = "P")
+sig &lt;- results[results$adj.P.Val &lt; 0.05 &amp; abs(results$logFC) &gt; 1, ]
+cat(nrow(sig), "significantly changed proteins (|logFC|>1, FDR<0.05)\n")</div>
+
+          <div class="info-box tip"><span>💡</span><div><strong>Missing values in proteomics:</strong> Unlike RNA-seq, proteomics data has many missing values (10–30% typically). These can be <strong>MCAR</strong> (missing completely at random — stochastic), <strong>MNAR</strong> (missing not at random — protein is below detection limit), or a mixture. Imputation strategy matters: use <strong>MinProb</strong> for MNAR, <strong>kNN</strong> for MCAR. Better yet, use statistical methods that handle missingness directly: <strong>DEqMS</strong>, <strong>msqrob2</strong>, or <strong>proDA</strong>.</div></div>
+
+          <div class="chips" style="margin-top:14px;"><span class="chip">LFQ for most experiments</span><span class="chip">TMT for multiplexing</span><span class="chip">limma works well for proteomics</span><span class="chip">Handle missing values carefully</span><span class="chip">|logFC| &gt; 1 + FDR &lt; 0.05</span></div>
+        </div>
+      </div>
+
+    </div>
+  </div><!-- end mod9 -->
+
+  <!-- ═══════════ MODULE 10: STRUCTURAL BIOINFORMATICS ═══════════ -->
+  <div class="edu-module" id="edu-mod10">
+    <div class="edu-mod-header">
+      <div class="label">Module 10 · Structural Bioinformatics</div>
+      <h2 class="h2">Protein Structure &amp; AlphaFold</h2>
+      <p class="lead">Protein function is determined by its three-dimensional structure. Structural bioinformatics uses computational methods to predict, analyse, and visualise protein structures — revolutionised by AlphaFold, which can predict structures with near-experimental accuracy.</p>
+    </div>
+    <div class="edu-topic-grid">
+
+      <div class="edu-topic-card">
+        <div class="edu-topic-head" onclick="toggleEduTopic(this)">
+          <span class="edu-topic-num">10.1</span>
+          <span class="edu-topic-title">Protein Structure Levels &amp; Databases</span>
+          <span class="edu-topic-chev">▶</span>
+        </div>
+        <div class="edu-topic-body">
+          <p class="sub">Proteins fold into defined 3D structures that determine their function. Understanding the four levels of protein structure is fundamental to structural bioinformatics and drug design.</p>
+
+          <h4 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">The Four Levels of Structure</h4>
+          <div class="card-grid card-grid-2" style="gap:10px;margin-top:8px;">
+            <div class="card" style="padding:14px;"><strong>Primary (1°)</strong><p class="sub" style="margin-top:4px;">The linear amino acid sequence. Determines all higher levels. Read from gene sequence. 20 standard amino acids linked by peptide bonds.</p></div>
+            <div class="card" style="padding:14px;"><strong>Secondary (2°)</strong><p class="sub" style="margin-top:4px;">Local folding patterns: <strong>α-helices</strong> (3.6 residues per turn, stabilised by i→i+4 hydrogen bonds) and <strong>β-sheets</strong> (parallel or antiparallel strands). Loops connect regular elements.</p></div>
+            <div class="card" style="padding:14px;"><strong>Tertiary (3°)</strong><p class="sub" style="margin-top:4px;">The complete 3D fold of a single polypeptide chain. Stabilised by hydrophobic core packing, disulfide bonds, salt bridges, and hydrogen bonds. This is what we see in PDB structures.</p></div>
+            <div class="card" style="padding:14px;"><strong>Quaternary (4°)</strong><p class="sub" style="margin-top:4px;">Assembly of multiple polypeptide chains (subunits) into a functional complex. Example: haemoglobin is a tetramer (α2β2). Many enzymes and receptors function as oligomers.</p></div>
+          </div>
+
+          <h4 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">Key Structural Databases</h4>
+          <div class="card-grid card-grid-3" style="gap:10px;margin-top:8px;">
+            <div class="card" style="padding:14px;"><strong>PDB (rcsb.org)</strong><p class="sub" style="margin-top:4px;">~220,000 experimentally determined structures. Solved by X-ray crystallography (~87%), cryo-EM (~10%), or NMR (~3%). The primary source for known structures.</p></div>
+            <div class="card" style="padding:14px;"><strong>AlphaFold DB</strong><p class="sub" style="margin-top:4px;">~200 million predicted structures covering nearly all known proteins. Free access at alphafold.ebi.ac.uk. Quality indicated by pLDDT confidence score (blue = high, orange = low).</p></div>
+            <div class="card" style="padding:14px;"><strong>UniProt</strong><p class="sub" style="margin-top:4px;">Links sequence → structure → function. Cross-references PDB and AlphaFold entries. Shows domain architecture, active sites, binding sites, and post-translational modifications.</p></div>
+          </div>
+
+          <div class="code-block"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button><span class="code-comment"># Download a PDB structure</span>
+wget https://files.rcsb.org/download/1UBQ.pdb
+
+<span class="code-comment"># Download AlphaFold prediction by UniProt ID</span>
+wget https://alphafold.ebi.ac.uk/files/AF-P0DTD1-F1-model_v4.pdb
+
+<span class="code-comment"># Batch download AlphaFold structures for a proteome</span>
+wget https://ftp.ebi.ac.uk/pub/databases/alphafold/latest/UP000005640_9606_HUMAN_v4.tar
+
+<span class="code-comment"># Visualise (install PyMOL or ChimeraX)</span>
+mamba install -c conda-forge pymol-open-source
+pymol 1UBQ.pdb</div>
+
+          <div class="info-box note"><span>📌</span><div><strong>Reading pLDDT scores:</strong> AlphaFold provides a per-residue confidence score (pLDDT, 0–100). &gt;90 = very high confidence (core domains). 70–90 = confident. 50–70 = low confidence (may be flexible). &lt;50 = disordered/unstructured regions. Always check pLDDT before interpreting predicted structures.</div></div>
+
+          <div class="chips" style="margin-top:14px;"><span class="chip">PDB for experimental structures</span><span class="chip">AlphaFold for predictions</span><span class="chip">pLDDT &gt; 70 = trustworthy</span><span class="chip">PyMOL or ChimeraX for visualisation</span></div>
+        </div>
+      </div>
+
+      <div class="edu-topic-card">
+        <div class="edu-topic-head" onclick="toggleEduTopic(this)">
+          <span class="edu-topic-num">10.2</span>
+          <span class="edu-topic-title">Structure Prediction — AlphaFold &amp; ColabFold</span>
+          <span class="edu-topic-chev">▶</span>
+        </div>
+        <div class="edu-topic-body">
+          <p class="sub">AlphaFold2, developed by DeepMind, solved the protein structure prediction problem in 2020. It predicts 3D structures from amino acid sequence alone with near-experimental accuracy. ColabFold makes it easy to run AlphaFold predictions using Google Colab — no local GPU required.</p>
+
+          <h4 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">How AlphaFold Works (Simplified)</h4>
+          <p class="sub">(1) <strong>MSA generation</strong> — searches sequence databases to find homologous proteins (evolutionary information). (2) <strong>Template search</strong> — finds known structures of related proteins in PDB. (3) <strong>Evoformer</strong> — a deep neural network processes the MSA and pairwise features through 48 attention-based blocks. (4) <strong>Structure module</strong> — converts learned representations into 3D atomic coordinates. (5) <strong>Recycling</strong> — repeats the prediction 3 times, feeding output back as input, improving accuracy each time.</p>
+
+          <h4 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">Running ColabFold</h4>
+          <div class="info-box tip"><span>💡</span><div><strong>Easiest way to predict a structure:</strong> Go to <strong>colab.research.google.com</strong> and search for "ColabFold" notebook. Paste your amino acid sequence, click "Runtime → Run all". The prediction takes 5–30 minutes depending on protein size. Output: PDB file + pLDDT scores + PAE (predicted aligned error) plot.</div></div>
+
+          <div class="code-block"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button><span class="code-comment"># ─── Local AlphaFold (requires GPU + ~2 TB databases) ───</span>
+<span class="code-comment"># Use LocalColabFold for easier local installation:</span>
+git clone https://github.com/YoshitakaMo/localcolabfold.git
+cd localcolabfold
+bash install_colabbatch_linux.sh
+
+<span class="code-comment"># Predict a single protein</span>
+colabfold_batch input.fasta output_dir/
+
+<span class="code-comment"># Predict a protein complex (separate chains with :)</span>
+<span class="code-comment"># In FASTA: &gt;complex\nSEQUENCE_CHAIN_A:SEQUENCE_CHAIN_B</span>
+colabfold_batch complex.fasta output_dir/ --model-type alphafold2_multimer_v3
+
+<span class="code-comment"># ─── AlphaFold3 (online, free for academics) ───</span>
+<span class="code-comment"># Visit alphafoldserver.com — predicts proteins, DNA, RNA, ligands, ions</span>
+<span class="code-comment"># Supports complexes of any type (protein-DNA, protein-drug, etc.)</span></div>
+
+          <div class="info-box warn"><span>⚠️</span><div><strong>Limitations of AlphaFold:</strong> (1) Does not predict conformational changes — gives a single static structure. (2) Disordered regions (low pLDDT) should not be interpreted structurally. (3) Cannot predict effects of mutations reliably. (4) Ligand/cofactor binding sites may not be accurate without the ligand present. (5) AlphaFold2 struggles with protein-protein interfaces — use AlphaFold-Multimer or AlphaFold3 for complexes.</div></div>
+
+          <div class="chips" style="margin-top:14px;"><span class="chip">ColabFold = easiest way to predict</span><span class="chip">AlphaFold3 for complexes</span><span class="chip">Check pLDDT and PAE</span><span class="chip">Static structure only</span></div>
+        </div>
+      </div>
+
+      <div class="edu-topic-card">
+        <div class="edu-topic-head" onclick="toggleEduTopic(this)">
+          <span class="edu-topic-num">10.3</span>
+          <span class="edu-topic-title">Molecular Docking &amp; Drug Discovery</span>
+          <span class="edu-topic-chev">▶</span>
+        </div>
+        <div class="edu-topic-body">
+          <p class="sub">Molecular docking predicts how a small molecule (ligand/drug) binds to a protein target. It is a cornerstone of computer-aided drug design (CADD). The goal is to find the binding pose (orientation + conformation) and estimate binding affinity. Virtual screening uses docking to test millions of compounds computationally before synthesising the most promising ones.</p>
+
+          <h4 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">Docking Tools</h4>
+          <div class="card-grid card-grid-3" style="gap:10px;margin-top:8px;">
+            <div class="card" style="padding:14px;border-left:3px solid var(--green);"><strong>AutoDock Vina</strong><p class="sub" style="margin-top:4px;">The most widely used docking tool. Fast, accurate, free. Flexible ligand + rigid receptor. Easy to use via command line.</p><span class="tag tag-green" style="margin-top:6px;">Start here</span></div>
+            <div class="card" style="padding:14px;"><strong>Gnina</strong><p class="sub" style="margin-top:4px;">CNN-based scoring function built on Vina. Better pose prediction than classical scoring. GPU-accelerated.</p></div>
+            <div class="card" style="padding:14px;"><strong>DiffDock</strong><p class="sub" style="margin-top:4px;">Diffusion model for docking. Does not require predefined binding site. State-of-the-art blind docking accuracy.</p></div>
+          </div>
+
+          <div class="code-block"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button><span class="code-comment"># ─── AutoDock Vina workflow ───</span>
+mamba install -c conda-forge autodock-vina
+mamba install -c conda-forge openbabel   # For format conversion
+
+<span class="code-comment"># 1. Prepare receptor (remove water, add hydrogens)</span>
+<span class="code-comment"># Use ADFR suite or Open Babel:</span>
+obabel receptor.pdb -O receptor.pdbqt -h
+
+<span class="code-comment"># 2. Prepare ligand</span>
+obabel ligand.sdf -O ligand.pdbqt --gen3d -h
+
+<span class="code-comment"># 3. Define search box (center on binding site)</span>
+<span class="code-comment"># 4. Run docking</span>
+vina --receptor receptor.pdbqt --ligand ligand.pdbqt \
+     --center_x 10.0 --center_y 20.0 --center_z 15.0 \
+     --size_x 20 --size_y 20 --size_z 20 \
+     --exhaustiveness 32 --num_modes 9 \
+     --out docked_poses.pdbqt
+
+<span class="code-comment"># Output: ranked poses with binding affinity (kcal/mol)</span>
+<span class="code-comment"># More negative = stronger predicted binding</span>
+<span class="code-comment"># Typical drug: -7 to -12 kcal/mol</span></div>
+
+          <div class="info-box warn"><span>⚠️</span><div><strong>Docking limitations:</strong> Docking scoring functions are approximate — they estimate binding affinity with ~2 kcal/mol error. Use docking for <strong>ranking</strong> (which compounds bind better), not absolute binding energy prediction. Always validate top hits experimentally. For more accurate binding free energies, use molecular dynamics with free energy perturbation (FEP) or MM-PBSA methods.</div></div>
+
+          <div class="chips" style="margin-top:14px;"><span class="chip">AutoDock Vina to start</span><span class="chip">DiffDock for blind docking</span><span class="chip">Use for ranking, not absolute affinity</span><span class="chip">Always validate experimentally</span></div>
+        </div>
+      </div>
+
+    </div>
+  </div><!-- end mod10 -->
+
+  <!-- ═══════════ MODULE 11: EPIGENOMICS ═══════════ -->
+  <div class="edu-module" id="edu-mod11">
+    <div class="edu-mod-header">
+      <div class="label">Module 11 · Epigenomics</div>
+      <h2 class="h2">ChIP-seq, ATAC-seq &amp; DNA Methylation</h2>
+      <p class="lead">Epigenetics studies heritable changes in gene activity that do not involve changes to the DNA sequence. These modifications — histone marks, chromatin accessibility, and DNA methylation — control which genes are on or off in each cell type. Epigenomic assays reveal the regulatory landscape of the genome.</p>
+    </div>
+    <div class="edu-topic-grid">
+
+      <div class="edu-topic-card">
+        <div class="edu-topic-head" onclick="toggleEduTopic(this)">
+          <span class="edu-topic-num">11.1</span>
+          <span class="edu-topic-title">ChIP-seq — Mapping Protein-DNA Interactions</span>
+          <span class="edu-topic-chev">▶</span>
+        </div>
+        <div class="edu-topic-body">
+          <p class="sub">Chromatin Immunoprecipitation followed by sequencing (ChIP-seq) identifies where a specific protein (transcription factor or modified histone) binds across the genome. The protein-DNA complexes are cross-linked with formaldehyde, chromatin is sheared into 200–500 bp fragments, an antibody pulls down fragments bound by the target protein, and the bound DNA is sequenced. Peaks in the sequencing signal reveal binding sites.</p>
+
+          <h4 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">ChIP-seq Analysis Pipeline</h4>
+          <div class="code-block"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button><span class="code-comment"># ─── Complete ChIP-seq pipeline ───</span>
+mamba install -c bioconda bowtie2 samtools macs2 deeptools bedtools homer
+
+<span class="code-comment"># 1. Align reads to genome (bowtie2, not HISAT2 — no splice awareness needed)</span>
+bowtie2 -x bt2_index/genome -U chip_sample.fastq.gz \
+    --very-sensitive -p 8 | samtools sort -O bam -o chip.bam
+samtools index chip.bam
+
+<span class="code-comment"># Same for input/IgG control</span>
+bowtie2 -x bt2_index/genome -U input_control.fastq.gz \
+    --very-sensitive -p 8 | samtools sort -O bam -o input.bam
+samtools index input.bam
+
+<span class="code-comment"># 2. Remove duplicates</span>
+samtools markdup -r chip.bam chip_dedup.bam
+samtools markdup -r input.bam input_dedup.bam
+
+<span class="code-comment"># 3. Call peaks with MACS2</span>
+<span class="code-comment"># For transcription factors (narrow peaks):</span>
+macs2 callpeak -t chip_dedup.bam -c input_dedup.bam \
+    -f BAM -g hs --outdir peaks/ -n my_tf -q 0.01
+
+<span class="code-comment"># For histone marks like H3K27me3 (broad peaks):</span>
+macs2 callpeak -t chip_dedup.bam -c input_dedup.bam \
+    -f BAM -g hs --outdir peaks/ -n h3k27me3 --broad --broad-cutoff 0.1
+
+<span class="code-comment"># 4. Visualise with deepTools</span>
+bamCoverage -b chip_dedup.bam -o chip.bw --normalizeUsing RPGC \
+    --effectiveGenomeSize 2913022398 --binSize 10 -p 8
+
+<span class="code-comment"># 5. Motif analysis (what TF motifs are enriched in peaks?)</span>
+findMotifsGenome.pl peaks/my_tf_peaks.narrowPeak hg38 motif_output/ -size 200</div>
+
+          <div class="info-box warn"><span>⚠️</span><div><strong>Always use an input control.</strong> ChIP-seq without a control (input DNA or IgG pulldown) will produce false peaks at open chromatin regions and repetitive elements. The control captures background signal, enabling the peak caller to distinguish real binding from noise. No control = no publication.</div></div>
+
+          <div class="info-box tip"><span>💡</span><div><strong>CUT&amp;RUN / CUT&amp;Tag:</strong> Modern alternatives to ChIP-seq that require far fewer cells (100–1,000 vs millions), have lower background, and are cheaper. CUT&amp;Tag is especially popular — it uses a protein A-Tn5 fusion to cut and tag DNA near the antibody target. Analysis is similar to ChIP-seq but use SEACR instead of MACS2 for peak calling.</div></div>
+
+          <div class="chips" style="margin-top:14px;"><span class="chip">Bowtie2 for alignment</span><span class="chip">MACS2 for peak calling</span><span class="chip">Always include input control</span><span class="chip">HOMER for motif analysis</span><span class="chip">CUT&amp;Tag is replacing ChIP-seq</span></div>
+        </div>
+      </div>
+
+      <div class="edu-topic-card">
+        <div class="edu-topic-head" onclick="toggleEduTopic(this)">
+          <span class="edu-topic-num">11.2</span>
+          <span class="edu-topic-title">ATAC-seq — Chromatin Accessibility</span>
+          <span class="edu-topic-chev">▶</span>
+        </div>
+        <div class="edu-topic-body">
+          <p class="sub">ATAC-seq (Assay for Transposase-Accessible Chromatin using sequencing) maps open chromatin regions genome-wide. It uses the Tn5 transposase, which preferentially inserts sequencing adapters into accessible (open) chromatin, avoiding tightly packed nucleosome-occupied regions. Open chromatin corresponds to active regulatory elements — promoters, enhancers, and transcription factor binding sites.</p>
+
+          <h4 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">ATAC-seq Analysis Pipeline</h4>
+          <div class="code-block"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button><span class="code-comment"># ─── ATAC-seq pipeline ───</span>
+mamba install -c bioconda bowtie2 samtools macs2 deeptools picard
+
+<span class="code-comment"># 1. Align with bowtie2 (paired-end, max fragment size 2000)</span>
+bowtie2 -x bt2_index/genome -1 atac_R1.fastq.gz -2 atac_R2.fastq.gz \
+    --very-sensitive -X 2000 --no-mixed --no-discordant -p 8 | \
+    samtools sort -O bam -o atac.bam
+
+<span class="code-comment"># 2. Remove mitochondrial reads (major contaminant in ATAC-seq!)</span>
+samtools view -h atac.bam | grep -v chrM | samtools sort -O bam -o atac_nomt.bam
+samtools index atac_nomt.bam
+
+<span class="code-comment"># 3. Remove duplicates</span>
+picard MarkDuplicates I=atac_nomt.bam O=atac_dedup.bam \
+    M=dup_metrics.txt REMOVE_DUPLICATES=true
+samtools index atac_dedup.bam
+
+<span class="code-comment"># 4. Shift reads (Tn5 inserts with +4/-5 bp offset)</span>
+alignmentSieve -b atac_dedup.bam -o atac_shifted.bam \
+    --ATACshift --minFragmentLength 0 --maxFragmentLength 2000
+
+<span class="code-comment"># 5. Call peaks (use --nomodel and shift parameters)</span>
+macs2 callpeak -t atac_shifted.bam -f BAMPE -g hs \
+    --nomodel --shift -75 --extsize 150 \
+    --outdir peaks/ -n atac -q 0.01 --keep-dup all
+
+<span class="code-comment"># 6. Generate signal track</span>
+bamCoverage -b atac_shifted.bam -o atac.bw --normalizeUsing RPGC \
+    --effectiveGenomeSize 2913022398 --binSize 10 -p 8</div>
+
+          <div class="info-box note"><span>📌</span><div><strong>Fragment size distribution:</strong> A good ATAC-seq library shows a characteristic nucleosomal ladder pattern: a peak at ~200 bp (nucleosome-free), ~400 bp (mono-nucleosome), ~600 bp (di-nucleosome). If you see only the ~200 bp peak, your transposition worked well. If the distribution is broad without clear peaks, the experiment may have had too many or too few Tn5 insertions.</div></div>
+
+          <div class="chips" style="margin-top:14px;"><span class="chip">Remove chrM reads first</span><span class="chip">Tn5 shift correction is essential</span><span class="chip">Nucleosomal ladder = good QC</span><span class="chip">No input control needed</span></div>
+        </div>
+      </div>
+
+      <div class="edu-topic-card">
+        <div class="edu-topic-head" onclick="toggleEduTopic(this)">
+          <span class="edu-topic-num">11.3</span>
+          <span class="edu-topic-title">DNA Methylation &amp; Bisulfite Sequencing</span>
+          <span class="edu-topic-chev">▶</span>
+        </div>
+        <div class="edu-topic-body">
+          <p class="sub">DNA methylation — the addition of a methyl group to the 5th carbon of cytosine (5mC) — is the most studied epigenetic modification. In mammals, it occurs predominantly at CpG dinucleotides. Methylation of gene promoters generally silences transcription. It plays critical roles in development, X-chromosome inactivation, genomic imprinting, and cancer (where aberrant methylation is a hallmark).</p>
+
+          <h4 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">Detection Methods</h4>
+          <div class="card-grid card-grid-3" style="gap:10px;margin-top:8px;">
+            <div class="card" style="padding:14px;border-left:3px solid var(--green);"><strong>WGBS</strong><p class="sub" style="margin-top:4px;">Whole-genome bisulfite sequencing. Gold standard. Single-CpG resolution across entire genome. Expensive — needs 10–15× coverage. Bisulfite converts unmethylated C→U; methylated C is protected.</p></div>
+            <div class="card" style="padding:14px;"><strong>RRBS</strong><p class="sub" style="margin-top:4px;">Reduced Representation BS. MspI digestion enriches CpG-rich regions. 1–10% of genome, covers most CpG islands. Much cheaper than WGBS.</p></div>
+            <div class="card" style="padding:14px;"><strong>Methylation Arrays</strong><p class="sub" style="margin-top:4px;">Illumina EPIC array (850K CpGs). Cheapest per-sample. Good for clinical studies. Limited to pre-selected CpGs. EPIC v2 covers ~930K sites.</p></div>
+          </div>
+
+          <div class="code-block"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button><span class="code-comment"># ─── WGBS analysis with Bismark ───</span>
+mamba install -c bioconda bismark bowtie2 samtools trim-galore
+
+<span class="code-comment"># 1. Prepare bisulfite genome (creates C→T and G→A converted versions)</span>
+bismark_genome_preparation --bowtie2 genome_folder/
+
+<span class="code-comment"># 2. Trim adapters + low quality</span>
+trim_galore --paired --rrbs read_R1.fastq.gz read_R2.fastq.gz
+
+<span class="code-comment"># 3. Align with Bismark</span>
+bismark --bowtie2 --genome genome_folder/ \
+    -1 read_R1_val_1.fq.gz -2 read_R2_val_2.fq.gz -p 4
+
+<span class="code-comment"># 4. Deduplicate</span>
+deduplicate_bismark --bam read_R1_val_1_bismark_bt2_pe.bam
+
+<span class="code-comment"># 5. Extract methylation (outputs CpG, CHG, CHH context)</span>
+bismark_methylation_extractor --paired-end --comprehensive \
+    --CX --bedGraph --genome_folder genome_folder/ \
+    read_R1_val_1_bismark_bt2_pe.deduplicated.bam
+
+<span class="code-comment"># 6. Generate summary report</span>
+bismark2report</div>
+
+          <div class="info-box tip"><span>💡</span><div><strong>Interpreting methylation:</strong> CpG island methylation at promoters = gene silencing. Gene body methylation = correlated with active transcription (paradoxically). Enhancer methylation = generally low at active enhancers. In cancer, look for promoter <strong>hypermethylation</strong> of tumour suppressors and global <strong>hypomethylation</strong> (genomic instability). DMRs (Differentially Methylated Regions) are typically more biologically meaningful than individual CpG changes — use tools like <strong>dmrseq</strong> or <strong>DSS</strong> for DMR calling.</div></div>
+
+          <div class="chips" style="margin-top:14px;"><span class="chip">WGBS = gold standard</span><span class="chip">Bismark for alignment</span><span class="chip">CpG islands at promoters</span><span class="chip">DMRs &gt; individual CpGs</span><span class="chip">Promoter methylation = silencing</span></div>
+        </div>
+      </div>
+
+    </div>
+  </div><!-- end mod11 -->
+
+  <!-- ═══════════ MODULE 12: GENOME ASSEMBLY ═══════════ -->
+  <div class="edu-module" id="edu-mod12">
+    <div class="edu-mod-header">
+      <div class="label">Module 12 · Genome Assembly &amp; Annotation</div>
+      <h2 class="h2">Building Genomes from Scratch</h2>
+      <p class="lead">De novo genome assembly reconstructs complete chromosome sequences from millions of short or long sequencing reads — like assembling a jigsaw puzzle without the picture on the box. With the emergence of long-read technologies, telomere-to-telomere assemblies are now achievable for many organisms.</p>
+    </div>
+    <div class="edu-topic-grid">
+
+      <div class="edu-topic-card">
+        <div class="edu-topic-head" onclick="toggleEduTopic(this)">
+          <span class="edu-topic-num">12.1</span>
+          <span class="edu-topic-title">De Novo Assembly — Short &amp; Long Reads</span>
+          <span class="edu-topic-chev">▶</span>
+        </div>
+        <div class="edu-topic-body">
+          <p class="sub">Genome assembly combines overlapping reads into longer contiguous sequences (contigs), then scaffolds contigs into chromosome-scale sequences. The approach depends fundamentally on read length: short reads (150 bp Illumina) cannot span repetitive elements, producing fragmented assemblies. Long reads (10–100 kb from PacBio HiFi or Oxford Nanopore) span most repeats, enabling near-complete assemblies.</p>
+
+          <h4 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">Assembly Strategies</h4>
+          <div class="card-grid card-grid-2" style="gap:10px;margin-top:8px;">
+            <div class="card" style="padding:14px;"><strong>Short-read (de Bruijn graph)</strong><p class="sub" style="margin-top:4px;">Chops reads into k-mers, builds a graph where k-mers are nodes and overlaps are edges. Traverses the graph to produce contigs. Tools: <strong>SPAdes</strong> (small genomes, metagenomes), <strong>MEGAHIT</strong> (metagenomes). Good for bacteria, not for complex eukaryotes.</p></div>
+            <div class="card" style="padding:14px;"><strong>Long-read (overlap-layout-consensus)</strong><p class="sub" style="margin-top:4px;">Finds overlaps between all read pairs, constructs a layout graph, derives consensus sequence. Tools: <strong>hifiasm</strong> (PacBio HiFi — best), <strong>Flye</strong> (Nanopore/PacBio CLR). Produces chromosome-scale contigs for most genomes.</p></div>
+          </div>
+
+          <div class="code-block"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button><span class="code-comment"># ─── Bacterial genome (short reads, SPAdes) ───</span>
+mamba install -c bioconda spades quast
+
+spades.py -1 reads_R1.fastq.gz -2 reads_R2.fastq.gz \
+    -o spades_output/ -t 16 --careful
+
+<span class="code-comment"># ─── Eukaryotic genome (PacBio HiFi, hifiasm) ───</span>
+mamba install -c bioconda hifiasm
+
+<span class="code-comment"># Haplotype-resolved assembly (diploid)</span>
+hifiasm -o asm -t 32 hifi_reads.fastq.gz
+
+<span class="code-comment"># Convert GFA to FASTA</span>
+awk '/^S/{print ">"$2"\n"$3}' asm.bp.p_ctg.gfa | fold &gt; primary_assembly.fa
+
+<span class="code-comment"># ─── Nanopore (Flye) ───</span>
+mamba install -c bioconda flye
+
+flye --nano-hq nanopore_reads.fastq.gz \
+    --out-dir flye_output/ --threads 32 --genome-size 500m
+
+<span class="code-comment"># Polish Nanopore assembly with short reads (Illumina)</span>
+mamba install -c bioconda pilon
+pilon --genome flye_output/assembly.fasta \
+    --frags illumina_aligned.bam --output polished</div>
+
+          <div class="info-box note"><span>📌</span><div><strong>Assembly quality metrics:</strong> <strong>N50</strong> = the contig length such that 50% of the assembly is in contigs of this size or larger. Higher N50 = more contiguous. <strong>L50</strong> = how many contigs make up 50% of the assembly. Lower L50 = better. <strong>BUSCO</strong> = completeness assessment based on universal single-copy orthologs (aim for &gt;95% complete). Always report all three.</div></div>
+
+          <div class="chips" style="margin-top:14px;"><span class="chip">hifiasm for HiFi reads</span><span class="chip">SPAdes for bacteria</span><span class="chip">N50 measures contiguity</span><span class="chip">BUSCO measures completeness</span><span class="chip">Polish Nanopore with Illumina</span></div>
+        </div>
+      </div>
+
+      <div class="edu-topic-card">
+        <div class="edu-topic-head" onclick="toggleEduTopic(this)">
+          <span class="edu-topic-num">12.2</span>
+          <span class="edu-topic-title">Assembly QC — BUSCO &amp; QUAST</span>
+          <span class="edu-topic-chev">▶</span>
+        </div>
+        <div class="edu-topic-body">
+          <p class="sub">An assembly is only useful if it is correct and complete. Quality assessment uses two complementary approaches: <strong>contiguity statistics</strong> (N50, total length, number of contigs) measured by QUAST, and <strong>gene completeness</strong> measured by BUSCO (Benchmarking Universal Single-Copy Orthologs), which checks whether expected genes are present and intact.</p>
+
+          <div class="code-block"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button><span class="code-comment"># ─── QUAST — contiguity statistics ───</span>
+mamba install -c bioconda quast
+
+quast assembly.fa -o quast_output/ -t 8
+<span class="code-comment"># If you have a reference genome for comparison:</span>
+quast assembly.fa -r reference.fa -g genes.gff -o quast_output/ -t 8
+
+<span class="code-comment"># Key outputs: N50, L50, total length, # contigs, GC%, misassemblies</span>
+
+<span class="code-comment"># ─── BUSCO — gene completeness ───</span>
+mamba install -c bioconda busco
+
+<span class="code-comment"># Choose the right lineage dataset for your organism:</span>
+busco --list-datasets   # Shows all available lineages
+
+<span class="code-comment"># Run BUSCO</span>
+busco -i assembly.fa -o busco_output -m genome \
+    -l mammalia_odb10 -c 16
+
+<span class="code-comment"># Interpretation:</span>
+<span class="code-comment">#   C: &gt;95% = excellent assembly</span>
+<span class="code-comment">#   C: 90-95% = good</span>
+<span class="code-comment">#   C: &lt;80% = significant genes missing (check lineage choice)</span>
+<span class="code-comment">#   D: &gt;5% = possible contamination or collapsed haplotypes</span></div>
+
+          <div class="info-box tip"><span>💡</span><div><strong>Merqury</strong> is a reference-free assembly evaluation tool that uses k-mer counts from raw reads to assess completeness, accuracy, and phasing of haplotype-resolved assemblies. It is now the gold standard for HiFi assemblies.</div></div>
+
+          <div class="chips" style="margin-top:14px;"><span class="chip">BUSCO &gt;95% = excellent</span><span class="chip">QUAST for contiguity stats</span><span class="chip">Merqury for k-mer QC</span><span class="chip">Choose correct BUSCO lineage</span></div>
+        </div>
+      </div>
+
+      <div class="edu-topic-card">
+        <div class="edu-topic-head" onclick="toggleEduTopic(this)">
+          <span class="edu-topic-num">12.3</span>
+          <span class="edu-topic-title">Gene Prediction &amp; Genome Annotation</span>
+          <span class="edu-topic-chev">▶</span>
+        </div>
+        <div class="edu-topic-body">
+          <p class="sub">After assembling a genome, the next step is annotation — finding where the genes are and what they encode. Gene prediction uses ab initio methods (statistical models trained on known gene structures), homology-based methods (aligning known proteins or transcripts), and evidence-based methods (using RNA-seq data from the same organism). Modern pipelines combine all three approaches.</p>
+
+          <h4 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">Annotation Pipeline</h4>
+          <div class="code-block"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button><span class="code-comment"># ─── Prokaryotic annotation (fast, automated) ───</span>
+mamba install -c bioconda prokka
+
+prokka assembly.fa --outdir annotation/ --prefix my_organism \
+    --kingdom Bacteria --genus Streptomyces --cpus 16
+
+<span class="code-comment"># Output: .gff (gene coordinates), .faa (protein sequences),</span>
+<span class="code-comment">#         .ffn (gene nucleotide sequences), .gbk (GenBank format)</span>
+
+<span class="code-comment"># ─── Eukaryotic annotation (more complex) ───</span>
+<span class="code-comment"># Step 1: Mask repeats (RepeatMasker)</span>
+mamba install -c bioconda repeatmasker
+RepeatMasker -species "homo sapiens" -pa 16 -xsmall assembly.fa
+
+<span class="code-comment"># Step 2: Align RNA-seq evidence (HISAT2 → StringTie)</span>
+hisat2 -x genome_index -1 rnaseq_R1.fq.gz -2 rnaseq_R2.fq.gz -p 16 | \
+    samtools sort -O bam -o rnaseq_aligned.bam
+stringtie rnaseq_aligned.bam -o transcripts.gtf
+
+<span class="code-comment"># Step 3: Run BRAKER2/3 (combines ab initio + RNA-seq + protein evidence)</span>
+<span class="code-comment"># BRAKER3 (recommended — integrates GeneMark + AUGUSTUS + protein hints)</span>
+braker.pl --genome=assembly.fa.masked \
+    --bam=rnaseq_aligned.bam \
+    --prot_seq=proteins_from_related_species.fa \
+    --softmasking --threads 16
+
+<span class="code-comment"># Step 4: Functional annotation (assign GO terms, domains, pathways)</span>
+mamba install -c bioconda interproscan
+interproscan.sh -i predicted_proteins.faa -f tsv -dp -goterms -pa</div>
+
+          <div class="info-box warn"><span>⚠️</span><div><strong>Repeat masking is essential:</strong> Eukaryotic genomes can be 40–80% repetitive. Without masking, gene predictors will predict thousands of spurious genes in transposable elements. Always run RepeatMasker before gene prediction. Use soft-masking (lowercase, not N-replacement) so gene predictors can still use the sequence information.</div></div>
+
+          <div class="chips" style="margin-top:14px;"><span class="chip">Prokka for bacteria</span><span class="chip">BRAKER3 for eukaryotes</span><span class="chip">RepeatMasker before gene prediction</span><span class="chip">RNA-seq evidence improves accuracy</span><span class="chip">InterProScan for functional annotation</span></div>
+        </div>
+      </div>
+
+    </div>
+  </div><!-- end mod12 -->
+
+  <!-- ═══════════ MODULE 13: POPULATION GENETICS ═══════════ -->
+  <div class="edu-module" id="edu-mod13">
+    <div class="edu-mod-header">
+      <div class="label">Module 13 · Population Genetics &amp; GWAS</div>
+      <h2 class="h2">Genetic Variation in Populations</h2>
+      <p class="lead">Population genetics studies how allele frequencies change within and between populations over time. Genome-wide association studies (GWAS) connect genetic variants to phenotypes and diseases, forming the basis of precision medicine.</p>
+    </div>
+    <div class="edu-topic-grid">
+
+      <div class="edu-topic-card">
+        <div class="edu-topic-head" onclick="toggleEduTopic(this)">
+          <span class="edu-topic-num">13.1</span>
+          <span class="edu-topic-title">Population Structure &amp; Hardy-Weinberg Equilibrium</span>
+          <span class="edu-topic-chev">▶</span>
+        </div>
+        <div class="edu-topic-body">
+          <p class="sub">Hardy-Weinberg Equilibrium (HWE) describes the expected genotype frequencies in a population with no evolutionary forces acting. For a variant with allele frequencies p (reference) and q (alternative), expected genotype frequencies are: p² (homozygous ref), 2pq (heterozygous), q² (homozygous alt). Deviations from HWE can indicate selection, population stratification, genotyping errors, or inbreeding.</p>
+
+          <h4 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">Key Population Genetics Concepts</h4>
+          <div class="card-grid card-grid-2" style="gap:10px;margin-top:8px;">
+            <div class="card" style="padding:14px;"><strong>Allele Frequency</strong><p class="sub" style="margin-top:4px;">The proportion of a specific allele in a population. If 80 of 200 chromosomes carry the T allele, frequency = 0.40. Minor allele frequency (MAF) &lt; 0.01 = rare variant.</p></div>
+            <div class="card" style="padding:14px;"><strong>Genetic Drift</strong><p class="sub" style="margin-top:4px;">Random fluctuation of allele frequencies due to finite population size. Stronger in small populations. Founder effect and bottleneck are examples of extreme drift.</p></div>
+            <div class="card" style="padding:14px;"><strong>FST (Fixation Index)</strong><p class="sub" style="margin-top:4px;">Measures genetic differentiation between populations. FST = 0 means identical; FST = 1 means completely different. Human populations: FST ≈ 0.12 globally.</p></div>
+            <div class="card" style="padding:14px;"><strong>Linkage Disequilibrium (LD)</strong><p class="sub" style="margin-top:4px;">Non-random association between alleles at different loci. Nearby variants are in LD (inherited together). Measured by r². LD decays with physical distance due to recombination.</p></div>
+          </div>
+
+          <div class="code-block"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button><span class="code-comment"># ─── Population structure analysis with PLINK ───</span>
+mamba install -c bioconda plink2
+
+<span class="code-comment"># 1. Basic QC filtering</span>
+plink2 --vcf cohort.vcf.gz --maf 0.01 --geno 0.05 --hwe 1e-6 \
+    --mind 0.1 --make-pgen --out filtered
+
+<span class="code-comment"># 2. LD pruning (remove correlated variants for PCA)</span>
+plink2 --pfile filtered --indep-pairwise 50 5 0.2 --out pruned
+plink2 --pfile filtered --extract pruned.prune.in --make-pgen --out pruned_data
+
+<span class="code-comment"># 3. PCA for population structure</span>
+plink2 --pfile pruned_data --pca 20 --out pca_results
+
+<span class="code-comment"># 4. Plot PC1 vs PC2 in R:</span>
+<span class="code-comment">#   pca &lt;- read.table("pca_results.eigenvec", header=TRUE)</span>
+<span class="code-comment">#   plot(pca$PC1, pca$PC2, col=as.factor(pca$Population))</span>
+
+<span class="code-comment"># 5. ADMIXTURE analysis (ancestry proportions)</span>
+mamba install -c bioconda admixture
+<span class="code-comment"># Convert to BED format first, then:</span>
+for K in 2 3 4 5; do
+    admixture pruned_data.bed $K --cv -j16
+done</div>
+
+          <div class="info-box note"><span>📌</span><div><strong>Population stratification in GWAS:</strong> If cases and controls come from different ancestral backgrounds, allele frequency differences due to ancestry (not disease) will create false associations. This is why GWAS always includes PCA components as covariates — to correct for population structure. Typically the top 10–20 PCs are included.</div></div>
+
+          <div class="chips" style="margin-top:14px;"><span class="chip">HWE test for QC</span><span class="chip">PCA reveals population structure</span><span class="chip">PLINK2 for genetic analysis</span><span class="chip">FST measures differentiation</span><span class="chip">LD decays with distance</span></div>
+        </div>
+      </div>
+
+      <div class="edu-topic-card">
+        <div class="edu-topic-head" onclick="toggleEduTopic(this)">
+          <span class="edu-topic-num">13.2</span>
+          <span class="edu-topic-title">GWAS — Genome-Wide Association Studies</span>
+          <span class="edu-topic-chev">▶</span>
+        </div>
+        <div class="edu-topic-body">
+          <p class="sub">GWAS tests each genetic variant across the genome for association with a phenotype (disease, height, drug response, etc.). It is a hypothesis-free approach — no prior knowledge of which genes are involved is needed. Since millions of variants are tested simultaneously, very stringent significance thresholds are required (p &lt; 5×10⁻⁸ for genome-wide significance). GWAS results are visualised as Manhattan plots.</p>
+
+          <h4 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">GWAS Pipeline</h4>
+          <div class="code-block"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button><span class="code-comment"># ─── GWAS with PLINK2 ───</span>
+<span class="code-comment"># Assumes: genotypes in VCF/PGEN, phenotype file (FID IID PHENO)</span>
+
+<span class="code-comment"># 1. Sample &amp; variant QC</span>
+plink2 --vcf genotypes.vcf.gz \
+    --maf 0.01 \            # Remove rare variants (MAF &lt; 1%)
+    --geno 0.02 \           # Remove variants missing in &gt;2% of samples
+    --mind 0.05 \           # Remove samples missing &gt;5% of variants
+    --hwe 1e-6 \            # Remove variants violating HWE
+    --make-pgen --out qc_data
+
+<span class="code-comment"># 2. Calculate PCs for population stratification</span>
+plink2 --pfile qc_data --indep-pairwise 50 5 0.2 --out prune
+plink2 --pfile qc_data --extract prune.prune.in --pca 20 --out pcs
+
+<span class="code-comment"># 3. Run association (logistic for case/control, linear for quantitative)</span>
+plink2 --pfile qc_data \
+    --pheno pheno.txt --pheno-name Disease \
+    --covar pcs.eigenvec --covar-col-nums 3-12 \
+    --glm --out gwas_results
+
+<span class="code-comment"># 4. Genome-wide significance threshold: p &lt; 5e-8</span>
+<span class="code-comment"># Suggestive significance: p &lt; 1e-5</span>
+
+<span class="code-comment"># 5. Manhattan plot in R:</span>
+<span class="code-comment">#   library(qqman)</span>
+<span class="code-comment">#   manhattan(gwas, chr="CHROM", bp="POS", p="P", snp="ID")</span></div>
+
+          <h4 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">Interpreting GWAS Results</h4>
+          <div class="info-box warn"><span>⚠️</span><div><strong>GWAS finds associations, not causation.</strong> A significant SNP is usually a <strong>tag SNP</strong> in LD with the true causal variant — not the causal variant itself. Fine-mapping (credible set analysis, SuSiE) is needed to narrow down the causal variant. Functional validation (CRISPR, reporter assays) is needed to prove causality. Most GWAS hits are in non-coding regions (enhancers, promoters), not in protein-coding exons.</div></div>
+
+          <div class="info-box tip"><span>💡</span><div><strong>Post-GWAS analysis:</strong> After finding significant loci, perform: (1) <strong>Fine-mapping</strong> — identify the most likely causal variant. (2) <strong>Colocalization</strong> (coloc, eCAVIAR) — test if a GWAS signal and an eQTL signal share the same causal variant. (3) <strong>Gene mapping</strong> — assign GWAS hits to likely target genes using eQTL data, chromatin interaction (Hi-C), and distance. (4) <strong>Pathway enrichment</strong> — test if GWAS hits are enriched in specific biological pathways. (5) <strong>Polygenic Risk Scores</strong> — combine effects of all variants to predict individual risk.</div></div>
+
+          <div class="chips" style="margin-top:14px;"><span class="chip">p &lt; 5e-8 for genome-wide significance</span><span class="chip">Always correct for population structure</span><span class="chip">GWAS = association, not causation</span><span class="chip">Fine-mapping for causal variants</span><span class="chip">Manhattan plot for visualisation</span></div>
+        </div>
+      </div>
+
+    </div>
+  </div><!-- end mod13 -->
+
+  <!-- ═══════════ MODULE 14: SYSTEMS BIOLOGY ═══════════ -->
+  <div class="edu-module" id="edu-mod14">
+    <div class="edu-mod-header">
+      <div class="label">Module 14 · Systems Biology &amp; Network Analysis</div>
+      <h2 class="h2">Networks, Interactions &amp; Integrative Analysis</h2>
+      <p class="lead">Systems biology views biological processes as interconnected networks rather than isolated pathways. By integrating multi-omics data — transcriptomics, proteomics, metabolomics — with interaction networks, we can understand how molecular changes propagate through biological systems.</p>
+    </div>
+    <div class="edu-topic-grid">
+
+      <div class="edu-topic-card">
+        <div class="edu-topic-head" onclick="toggleEduTopic(this)">
+          <span class="edu-topic-num">14.1</span>
+          <span class="edu-topic-title">Protein-Protein Interaction Networks</span>
+          <span class="edu-topic-chev">▶</span>
+        </div>
+        <div class="edu-topic-body">
+          <p class="sub">Protein-Protein Interaction (PPI) networks represent physical or functional associations between proteins. Nodes are proteins, edges represent interactions. Highly connected proteins (hubs) tend to be essential. PPI networks help identify functional modules, predict protein function, and prioritise drug targets.</p>
+
+          <h4 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">Key Resources &amp; Tools</h4>
+          <div class="card-grid card-grid-3" style="gap:10px;margin-top:8px;">
+            <div class="card" style="padding:14px;"><strong>STRING (string-db.org)</strong><p class="sub" style="margin-top:4px;">Largest PPI database. Integrates experimental data, co-expression, text mining, genomic context. Confidence scores 0–1. Use score &gt; 0.7 for high-confidence interactions.</p></div>
+            <div class="card" style="padding:14px;"><strong>Cytoscape</strong><p class="sub" style="margin-top:4px;">Desktop software for network visualisation and analysis. Supports plugins (clusterMaker, MCODE for module detection, CytoHubba for hub identification). Essential for publication figures.</p></div>
+            <div class="card" style="padding:14px;"><strong>BioGRID</strong><p class="sub" style="margin-top:4px;">Curated repository of experimentally validated interactions (protein, genetic, chemical). Over 2 million interactions. Higher confidence than computationally predicted interactions.</p></div>
+          </div>
+
+          <h4 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">Network Analysis Concepts</h4>
+          <div class="card-grid card-grid-2" style="gap:10px;margin-top:8px;">
+            <div class="card" style="padding:14px;"><strong>Degree</strong><p class="sub" style="margin-top:4px;">Number of connections a node has. High-degree nodes (hubs) are often essential genes. Degree distribution follows a power law in biological networks (scale-free property).</p></div>
+            <div class="card" style="padding:14px;"><strong>Betweenness Centrality</strong><p class="sub" style="margin-top:4px;">How often a node lies on shortest paths between other nodes. Bottleneck proteins control information flow through the network — they are often good drug targets.</p></div>
+            <div class="card" style="padding:14px;"><strong>Clustering Coefficient</strong><p class="sub" style="margin-top:4px;">How densely connected a node's neighbours are. Nodes in protein complexes have high clustering. Used to detect functional modules (MCODE algorithm).</p></div>
+            <div class="card" style="padding:14px;"><strong>Modules/Communities</strong><p class="sub" style="margin-top:4px;">Densely connected subnetworks often correspond to protein complexes or functional pathways. Detect with MCODE, Louvain, or Markov clustering (MCL).</p></div>
+          </div>
+
+          <div class="code-block"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button><span class="code-comment"># ─── Network analysis in Python with NetworkX ───</span>
+pip install networkx pandas matplotlib
+
+<span class="code-comment"># Build network from STRING export</span>
+import networkx as nx
+import pandas as pd
+
+edges = pd.read_csv("string_interactions.tsv", sep="\t")
+edges = edges[edges["combined_score"] &gt; 700]   # High confidence
+
+G = nx.from_pandas_edgelist(edges, "protein1", "protein2",
+                            edge_attr="combined_score")
+
+<span class="code-comment"># Key network metrics</span>
+print(f"Nodes: {G.number_of_nodes()}, Edges: {G.number_of_edges()}")
+print(f"Density: {nx.density(G):.4f}")
+print(f"Components: {nx.number_connected_components(G)}")
+
+<span class="code-comment"># Find hub genes (top 10 by degree)</span>
+degree = dict(G.degree())
+hubs = sorted(degree, key=degree.get, reverse=True)[:10]
+print("Hub genes:", hubs)
+
+<span class="code-comment"># Betweenness centrality (bottleneck nodes)</span>
+betw = nx.betweenness_centrality(G)
+bottlenecks = sorted(betw, key=betw.get, reverse=True)[:10]
+
+<span class="code-comment"># Community detection (Louvain)</span>
+from networkx.algorithms.community import louvain_communities
+communities = louvain_communities(G, resolution=1.0)
+print(f"Found {len(communities)} communities")</div>
+
+          <div class="info-box tip"><span>💡</span><div><strong>DEG-PPI integration:</strong> A powerful approach is to overlay your differentially expressed genes onto a PPI network. This reveals which functional modules are disrupted in your condition. Steps: (1) Get DEGs from RNA-seq. (2) Query STRING with DEG list. (3) Import network into Cytoscape. (4) Colour nodes by log2FC (red = up, blue = down). (5) Run MCODE to find activated/repressed modules. (6) Run pathway enrichment on each module separately.</div></div>
+
+          <div class="chips" style="margin-top:14px;"><span class="chip">STRING for PPI data</span><span class="chip">Cytoscape for visualisation</span><span class="chip">Hub genes are often essential</span><span class="chip">MCODE for module detection</span><span class="chip">Overlay DEGs on PPI networks</span></div>
+        </div>
+      </div>
+
+      <div class="edu-topic-card">
+        <div class="edu-topic-head" onclick="toggleEduTopic(this)">
+          <span class="edu-topic-num">14.2</span>
+          <span class="edu-topic-title">Gene Regulatory Networks &amp; Multi-Omics Integration</span>
+          <span class="edu-topic-chev">▶</span>
+        </div>
+        <div class="edu-topic-body">
+          <p class="sub">Gene Regulatory Networks (GRNs) describe how transcription factors (TFs) control the expression of target genes. Unlike PPI networks which show physical contacts, GRNs show regulatory relationships — which TFs activate or repress which genes. Multi-omics integration combines transcriptomics, proteomics, metabolomics, and epigenomics data to build comprehensive models of cellular regulation.</p>
+
+          <h4 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">GRN Inference Methods</h4>
+          <div class="card-grid card-grid-2" style="gap:10px;margin-top:8px;">
+            <div class="card" style="padding:14px;border-left:3px solid var(--green);"><strong>SCENIC / pySCENIC</strong><p class="sub" style="margin-top:4px;">Infers GRNs from single-cell RNA-seq data. Uses GRNBoost2 (random forest) for coexpression, then validates with TF binding motif enrichment (RcisTarget). Outputs regulon activity scores per cell.</p><span class="tag tag-green" style="margin-top:6px;">Best for scRNA-seq</span></div>
+            <div class="card" style="padding:14px;"><strong>WGCNA</strong><p class="sub" style="margin-top:4px;">Weighted Gene Co-expression Network Analysis. Groups genes into co-expression modules, correlates modules with clinical traits. Excellent for bulk RNA-seq. Widely used, well-cited. R package.</p></div>
+            <div class="card" style="padding:14px;"><strong>ARACNe / VIPER</strong><p class="sub" style="margin-top:4px;">Mutual information-based network inference. VIPER then infers TF activity from target gene expression. Widely used in cancer biology for identifying master regulators.</p></div>
+            <div class="card" style="padding:14px;"><strong>CellOracle</strong><p class="sub" style="margin-top:4px;">Combines scRNA-seq + scATAC-seq to build context-specific GRNs. Simulates TF perturbations in silico. Predicts effects of gene knockouts on cell fate.</p></div>
+          </div>
+
+          <h4 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">Multi-Omics Integration Strategies</h4>
+          <p class="sub">Integrating multiple data types reveals biology invisible to any single assay:</p>
+          <div class="card-grid card-grid-2" style="gap:10px;margin-top:8px;">
+            <div class="card" style="padding:14px;"><strong>Correlation-based</strong><p class="sub" style="margin-top:4px;">Correlate mRNA ↔ protein levels, mRNA ↔ metabolite levels. Discordant pairs (high mRNA, low protein) suggest post-transcriptional regulation. Tools: mixOmics (R), MOFA+.</p></div>
+            <div class="card" style="padding:14px;"><strong>Pathway-based</strong><p class="sub" style="margin-top:4px;">Map all omics data onto KEGG/Reactome pathways. Identify pathways with consistent changes across data types. Tools: Paintomics, iPath, OmicsNet.</p></div>
+            <div class="card" style="padding:14px;"><strong>Factor analysis (MOFA+)</strong><p class="sub" style="margin-top:4px;">Multi-Omics Factor Analysis decomposes multiple data matrices into shared latent factors. Identifies which sources of variation are shared vs unique to each data type.</p></div>
+            <div class="card" style="padding:14px;"><strong>Network-based</strong><p class="sub" style="margin-top:4px;">Construct multilayer networks connecting genes, proteins, metabolites. Network propagation algorithms (Random Walk with Restart) identify key regulators driving multi-level changes.</p></div>
+          </div>
+
+          <div class="code-block"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button><span class="code-comment"># ─── WGCNA in R (bulk RNA-seq co-expression networks) ───</span>
+library(WGCNA)
+
+<span class="code-comment"># Prepare normalised expression matrix (genes × samples)</span>
+<span class="code-comment"># Use VST-transformed counts from DESeq2</span>
+
+<span class="code-comment"># Choose soft-thresholding power (aim for scale-free topology R² &gt; 0.8)</span>
+powers &lt;- c(1:20)
+sft &lt;- pickSoftThreshold(datExpr, powerVector = powers, verbose = 5)
+<span class="code-comment"># Plot: sft$fitIndices[,1] vs -sign(sft$fitIndices[,3]) * sft$fitIndices[,2]</span>
+
+<span class="code-comment"># Build network and identify modules</span>
+net &lt;- blockwiseModules(datExpr, power = 6,
+    TOMType = "unsigned", minModuleSize = 30,
+    reassignThreshold = 0, mergeCutHeight = 0.25,
+    numericLabels = TRUE, saveTOMs = TRUE)
+
+<span class="code-comment"># Correlate modules with clinical traits</span>
+moduleTraitCor &lt;- cor(net$MEs, traits, use = "p")
+moduleTraitPvalue &lt;- corPvalueStudent(moduleTraitCor, nSamples)
+
+<span class="code-comment"># Find hub genes in a module of interest</span>
+module_genes &lt;- names(datExpr)[net$colors == module_number]
+kME &lt;- signedKME(datExpr, net$MEs)
+hub_genes &lt;- module_genes[order(kME[module_genes, paste0("kME", module_number)],
+    decreasing = TRUE)[1:20]]</div>
+
+          <div class="info-box note"><span>📌</span><div><strong>The future is multi-modal single-cell:</strong> Technologies like CITE-seq (RNA + surface protein), Multiome (RNA + ATAC), SHARE-seq, and spatial transcriptomics with paired proteomics are enabling true multi-omics integration at single-cell resolution. Tools like <strong>MOFA+</strong>, <strong>WNN (Seurat v4)</strong>, and <strong>scVI/totalVI</strong> are designed for these integrated analyses.</div></div>
+
+          <div class="chips" style="margin-top:14px;"><span class="chip">WGCNA for bulk co-expression</span><span class="chip">SCENIC for scRNA-seq GRNs</span><span class="chip">MOFA+ for multi-omics</span><span class="chip">Always validate key findings</span><span class="chip">Multi-modal single-cell is the future</span></div>
+        </div>
+      </div>
+
+    </div>
+  </div><!-- end mod14 -->
+
   </div><!-- end padding wrapper -->
 </div><!-- end page-edu -->
 
@@ -5198,7 +6039,7 @@ humann_renorm_table -i merged_genefamilies.tsv -o merged_genefamilies_cpm.tsv \
         </div>
         <div class="contact-item">
           <div class="contact-item-icon">📍</div>
-          <div><div class="contact-item-label">Location</div><div class="contact-item-val">Open-source project — contributors worldwide</div></div>
+          <div><div class="contact-item-label">Location</div><div class="contact-item-val">Global project — contributors worldwide</div></div>
         </div>
       </div>
 
@@ -5222,7 +6063,7 @@ humann_renorm_table -i merged_genefamilies.tsv -o merged_genefamilies_cpm.tsv \
         <div class="faq-list">
           <div class="faq-item" onclick="toggleFAQ(this)">
             <div class="faq-q">Is BioInfoCodex really free forever? <span class="faq-chev">▼</span></div>
-            <div class="faq-a"><div class="faq-a-inner">Yes. BioInfoCodex is open-source software released under the MIT licence. All tools and tutorials are and will remain free. There is no premium tier, no subscription, and no paywalled features.</div></div>
+            <div class="faq-a"><div class="faq-a-inner">BioInfoCodex tools and tutorials are currently available to everyone. We are committed to supporting the research community. There is no subscription or paywalled features at this time.</div></div>
           </div>
           <div class="faq-item" onclick="toggleFAQ(this)">
             <div class="faq-q">Does my data get uploaded anywhere? <span class="faq-chev">▼</span></div>
@@ -5296,7 +6137,7 @@ humann_renorm_table -i merged_genefamilies.tsv -o merged_genefamilies_cpm.tsv \
   <div class="footer-grid">
     <div>
       <div class="footer-brand-name">BioInfo<span>Codex</span></div>
-      <p class="footer-brand-desc">Free, open-source bioinformatics tools and education for researchers at every level. Built by scientists, for scientists.</p>
+      <p class="footer-brand-desc">Bioinformatics tools and education for researchers at every level. Built by scientists, for scientists.</p>
     </div>
     <div class="footer-col">
       <h4>Tools</h4>
@@ -5327,7 +6168,7 @@ humann_renorm_table -i merged_genefamilies.tsv -o merged_genefamilies_cpm.tsv \
     </div>
   </div>
   <div class="footer-bottom">
-    <div>© 2025 BioInfoCodex · bioinfocodex.com · Open-source · MIT Licence</div>
+    <div>© 2025 BioInfoCodex · bioinfocodex.com · All rights reserved</div>
     <div>Free forever · No tracking · No paywalls</div>
   </div>
 </footer>
