@@ -514,9 +514,17 @@ em.p{font-style:normal;color:var(--purple);}
    TOOLS PAGE
 ══════════════════════════════════════════ */
 .tools-hero{
-  padding:80px 6vw 52px;
-  background:linear-gradient(180deg,rgba(0,200,150,0.04) 0%,transparent 100%);
-  border-bottom:1px solid var(--border);
+  padding:100px 6vw 72px;
+  background:#030510;
+  border-bottom:1px solid rgba(255,255,255,0.06);
+  position:relative;overflow:hidden;
+  min-height:400px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;
+}
+.tools-hero .label{color:var(--green);position:relative;z-index:2;}
+.tools-hero .h1{color:#fff;position:relative;z-index:2;}
+.tools-hero .lead{color:rgba(200,220,255,0.75);position:relative;z-index:2;}
+#tools-dots-canvas{
+  position:absolute;inset:0;width:100%;height:100%;z-index:0;pointer-events:none;
 }
 .tool-category{margin-bottom:56px;}
 .tool-category-title{
@@ -1491,9 +1499,10 @@ nav.nav-scrolled { box-shadow: 0 4px 28px rgba(0,0,0,0.1); border-bottom-color: 
 <div class="page" id="page-tools">
 
   <div class="tools-hero">
-    <div class="label">Software</div>
-    <h1 class="h1">Bioinfo Tools</h1>
-    <p class="lead">Free, guided pipelines for every major bioinformatics workflow. Each tool has its own complete manual — click any tool to read the documentation, download, and get started.</p>
+    <canvas id="tools-dots-canvas"></canvas>
+    <div class="label" style="position:relative;z-index:2;">Software</div>
+    <h1 class="h1" style="position:relative;z-index:2;">Bioinfo Tools</h1>
+    <p class="lead" style="position:relative;z-index:2;">Free, guided pipelines for every major bioinformatics workflow. Each tool has its own complete manual — click any tool to read the documentation, download, and get started.</p>
   </div>
 
   <div class="section">
@@ -6786,17 +6795,131 @@ function bicVerifyCode(e) {
   return false;
 }
 
+// ── DOTTED WAVE SURFACE — TOOLS PAGE ─────────────────────────────────────
+(function(){
+  const canvas = document.getElementById('tools-dots-canvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  if (!ctx) return;
+
+  const AMOUNTX = 50, AMOUNTY = 50, SEPARATION = 28;
+  let count = 0, mouseX = 0, mouseY = 0, animId = null;
+
+  function resize(){
+    const hero = canvas.parentElement;
+    if (!hero) return;
+    canvas.width = hero.offsetWidth;
+    canvas.height = hero.offsetHeight;
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  canvas.parentElement.addEventListener('mousemove', function(e){
+    const rect = canvas.getBoundingClientRect();
+    mouseX = (e.clientX - rect.left - rect.width/2) * 0.5;
+    mouseY = (e.clientY - rect.top - rect.height/2) * 0.3;
+  });
+
+  function draw(){
+    animId = requestAnimationFrame(draw);
+    const w = canvas.width, h = canvas.height;
+    const halfW = w / 2, halfH = h / 2;
+
+    ctx.fillStyle = 'rgba(3,5,16,1)';
+    ctx.fillRect(0, 0, w, h);
+
+    const camY = 350 + mouseY;
+    const fov = 600;
+
+    for(let ix = 0; ix < AMOUNTX; ix++){
+      for(let iy = 0; iy < AMOUNTY; iy++){
+        const wx = ix * SEPARATION - ((AMOUNTX * SEPARATION) / 2);
+        const wz = iy * SEPARATION - ((AMOUNTY * SEPARATION) / 2);
+        const wy = (Math.sin((ix + count) * 0.3) * 50) +
+                   (Math.sin((iy + count) * 0.5) * 50);
+
+        const dx = wx + mouseX * 0.3;
+        const dy = wy - camY;
+        const dz = wz + 1200;
+        if(dz <= 0) continue;
+
+        const scale = fov / dz;
+        const sx = dx * scale + halfW;
+        const sy = dy * scale + halfH;
+
+        if(sx < -20 || sx > w+20 || sy < -20 || sy > h+20) continue;
+
+        const depthN = Math.max(0, Math.min(1, 1 - dz / 3000));
+        const dotSz = Math.max(0.5, 3 * scale);
+        const alpha = depthN * 0.9 + 0.1;
+
+        const hue = (wy + 50) / 100;
+        let r, g, b;
+        if(hue > 0.5){
+          const t = (hue - 0.5) * 2;
+          r = 0*(1-t)+30*t|0; g = 200*(1-t)+160*t|0; b = 150*(1-t)+255*t|0;
+        } else {
+          const t = hue * 2;
+          r = 100*(1-t)|0; g = 60*(1-t)+200*t|0; b = 200*(1-t)+150*t|0;
+        }
+
+        ctx.beginPath();
+        ctx.arc(sx, sy, dotSz, 0, 6.283);
+        ctx.fillStyle = `rgba(${r},${g},${b},${(alpha*0.9).toFixed(2)})`;
+        ctx.fill();
+
+        if(dotSz > 1){
+          ctx.beginPath();
+          ctx.arc(sx, sy, dotSz * 2.5, 0, 6.283);
+          ctx.fillStyle = `rgba(${r},${g},${b},${(alpha*0.08).toFixed(3)})`;
+          ctx.fill();
+        }
+      }
+    }
+    count += 0.07;
+  }
+
+  // Only animate when tools page is visible
+  const observer = new MutationObserver(function(){
+    const page = document.getElementById('page-tools');
+    if (page && page.classList.contains('active')){
+      resize();
+      if (!animId) draw();
+    } else {
+      if (animId) { cancelAnimationFrame(animId); animId = null; }
+    }
+  });
+  observer.observe(document.getElementById('page-tools'), { attributes: true, attributeFilter: ['class'] });
+
+  // Start if already active
+  const page = document.getElementById('page-tools');
+  if (page && page.classList.contains('active')) draw();
+})();
+
 // ── NAV DARK/LIGHT TOGGLE BASED ON HERO ─────────────────────────────────
 function updateNavTheme(){
   const nav = document.querySelector('nav');
-  const hero = document.querySelector('.hero');
-  if (!hero || !nav) return;
-  const page = document.getElementById('page-home');
-  if (page && page.classList.contains('active') && window.scrollY < hero.offsetHeight - 64) {
-    nav.classList.add('nav-dark');
-  } else {
-    nav.classList.remove('nav-dark');
+  if (!nav) return;
+  let dark = false;
+  // Home page hero
+  const homeHero = document.querySelector('.hero');
+  const homePage = document.getElementById('page-home');
+  if (homePage && homePage.classList.contains('active') && homeHero && window.scrollY < homeHero.offsetHeight - 64) {
+    dark = true;
   }
+  // Tools page hero
+  const toolsPage = document.getElementById('page-tools');
+  const toolsHero = document.querySelector('.tools-hero');
+  if (toolsPage && toolsPage.classList.contains('active') && toolsHero && window.scrollY < toolsHero.offsetHeight - 64) {
+    dark = true;
+  }
+  // Education page hero
+  const eduPage = document.getElementById('page-edu');
+  const eduHero = document.querySelector('.edu-hero');
+  if (eduPage && eduPage.classList.contains('active') && eduHero && window.scrollY < eduHero.offsetHeight - 64) {
+    dark = true;
+  }
+  if (dark) { nav.classList.add('nav-dark'); } else { nav.classList.remove('nav-dark'); }
 }
 window.addEventListener('scroll', updateNavTheme);
 setInterval(updateNavTheme, 300);
