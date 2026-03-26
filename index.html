@@ -574,10 +574,52 @@ em.p{font-style:normal;color:var(--purple);}
    EDUCATION PAGE
 ══════════════════════════════════════════ */
 .edu-hero{
-  padding:80px 6vw 52px;
-  background:linear-gradient(180deg,rgba(124,58,237,0.04) 0%,transparent 100%);
-  border-bottom:1px solid var(--border);
+  padding:100px 6vw 72px;
+  background:#0a0a0a;
+  border-bottom:1px solid rgba(255,255,255,0.06);
+  position:relative;overflow:hidden;
+  min-height:420px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;
 }
+.edu-hero .label{color:rgba(124,58,237,0.9);}
+.edu-hero .h1{color:#fff;position:relative;z-index:2;}
+.edu-hero .lead{color:rgba(200,210,230,0.8);position:relative;z-index:2;}
+.edu-hero .tag{position:relative;z-index:2;backdrop-filter:blur(8px);}
+.edu-hero .tag-green{background:rgba(0,200,150,0.15);border-color:rgba(0,200,150,0.35);}
+.edu-hero .tag-blue{background:rgba(9,105,218,0.15);border-color:rgba(9,105,218,0.35);}
+.edu-hero .tag-purple{background:rgba(124,58,237,0.15);border-color:rgba(124,58,237,0.35);}
+.edu-hero .tag-orange{background:rgba(240,136,62,0.15);border-color:rgba(240,136,62,0.35);}
+
+/* Floating paths SVG container */
+.edu-paths-wrap{position:absolute;inset:0;pointer-events:none;overflow:hidden;}
+.edu-paths-wrap svg{width:100%;height:100%;}
+.edu-paths-wrap path{
+  stroke-dasharray:1600;
+  stroke-dashoffset:1600;
+}
+/* Staggered path animations */
+@keyframes eduPathDraw{
+  0%{stroke-dashoffset:1600;opacity:0.15;}
+  50%{stroke-dashoffset:0;opacity:0.5;}
+  100%{stroke-dashoffset:-1600;opacity:0.15;}
+}
+.edu-paths-wrap path{animation:eduPathDraw var(--dur,22s) linear infinite;}
+
+/* Animated title letters */
+@keyframes eduLetterIn{
+  from{opacity:0;transform:translateY(40px);}
+  to{opacity:1;transform:translateY(0);}
+}
+.edu-hero .h1 .edu-letter{
+  display:inline-block;
+  animation:eduLetterIn 0.6s cubic-bezier(0.22,1,0.36,1) forwards;
+  animation-delay:var(--d,0s);
+  opacity:0;
+  background:linear-gradient(135deg,#e2e8f0,#94a3b8);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+.edu-hero .h1 .edu-word{display:inline-block;margin-right:0.3em;}
+.edu-hero .h1 .edu-word:last-child{margin-right:0;}
 .edu-sidebar-layout{display:grid;grid-template-columns:240px 1fr;gap:40px;padding:52px 6vw;align-items:start;}
 .edu-sidebar{
   background:var(--surf);border:1px solid var(--border);
@@ -2360,11 +2402,16 @@ generated using ggplot2 (Wickham, 2016) and pheatmap (Kolde, 2019).</div>
 <div class="page" id="page-edu">
 
   <div class="edu-hero">
-    <div class="label">🎓 Bioinformatics Academy</div>
-    <h1 class="h1">Learn Bioinformatics</h1>
-    <p class="lead">A comprehensive university-level curriculum — from molecular biology fundamentals to advanced genomic data analysis. Written by researchers, for researchers.</p>
-    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:24px;">
-      <span class="tag tag-green">8 Modules</span>
+    <!-- Floating Paths Background (left set) -->
+    <div class="edu-paths-wrap" id="edu-paths-left"></div>
+    <!-- Floating Paths Background (right set, mirrored) -->
+    <div class="edu-paths-wrap" id="edu-paths-right"></div>
+
+    <div class="label" style="position:relative;z-index:2;">🎓 Bioinformatics Academy</div>
+    <h1 class="h1" id="edu-hero-title"></h1>
+    <p class="lead" style="position:relative;z-index:2;max-width:700px;margin:0 auto;">A comprehensive university-level curriculum — from molecular biology fundamentals to advanced genomic data analysis. Written by researchers, for researchers.</p>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:24px;justify-content:center;position:relative;z-index:2;">
+      <span class="tag tag-green">14 Modules</span>
       <span class="tag tag-blue">50+ Topics</span>
       <span class="tag tag-purple">Real Code Examples</span>
       <span class="tag tag-orange">Beginner → Advanced</span>
@@ -6416,6 +6463,45 @@ function toggleEduTopic(headEl) {
   const card = headEl.closest('.edu-topic-card');
   card.classList.toggle('open');
 }
+
+// ── EDUCATION FLOATING PATHS BACKGROUND ──────────────────────────────────
+(function(){
+  function generatePaths(container, position) {
+    if (!container) return;
+    const paths = [];
+    for (let i = 0; i < 36; i++) {
+      const d = `M-${380 - i * 5 * position} -${189 + i * 6}C-${380 - i * 5 * position} -${189 + i * 6} -${312 - i * 5 * position} ${216 - i * 6} ${152 - i * 5 * position} ${343 - i * 6}C${616 - i * 5 * position} ${470 - i * 6} ${684 - i * 5 * position} ${875 - i * 6} ${684 - i * 5 * position} ${875 - i * 6}`;
+      const opacity = 0.1 + i * 0.03;
+      const width = 0.5 + i * 0.03;
+      const dur = 20 + Math.random() * 10;
+      paths.push(`<path d="${d}" stroke="currentColor" stroke-width="${width}" stroke-opacity="${opacity}" fill="none" style="--dur:${dur}s;animation-delay:-${Math.random()*dur}s"/>`);
+    }
+    container.innerHTML = `<svg class="w-full h-full" viewBox="0 0 696 316" fill="none" style="color:rgba(148,163,184,0.6)"><title>Background Paths</title>${paths.join('')}</svg>`;
+  }
+  generatePaths(document.getElementById('edu-paths-left'), 1);
+  generatePaths(document.getElementById('edu-paths-right'), -1);
+
+  // Animated title letters
+  const titleEl = document.getElementById('edu-hero-title');
+  if (titleEl) {
+    const words = ['Learn', 'Bioinformatics'];
+    let delay = 0;
+    words.forEach((word, wi) => {
+      const span = document.createElement('span');
+      span.className = 'edu-word';
+      word.split('').forEach((letter) => {
+        const ls = document.createElement('span');
+        ls.className = 'edu-letter';
+        ls.style.setProperty('--d', delay + 's');
+        ls.textContent = letter;
+        span.appendChild(ls);
+        delay += 0.03;
+      });
+      titleEl.appendChild(span);
+      delay += 0.07;
+    });
+  }
+})();
 
 // ── FAQ ──────────────────────────────────────────────────────────────────
 function toggleFAQ(el) {
