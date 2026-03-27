@@ -6880,16 +6880,22 @@ function bicVerifyCode(e) {
   }
 
   // Only animate when tools page is visible
+  function startDots(){ resize(); if(!animId) draw(); }
+  function stopDots(){ if(animId){ cancelAnimationFrame(animId); animId = null; } }
+
   const observer = new MutationObserver(function(){
     const page = document.getElementById('page-tools');
-    if (page && page.classList.contains('active')){
-      resize();
-      if (!animId) draw();
-    } else {
-      if (animId) { cancelAnimationFrame(animId); animId = null; }
-    }
+    if (page && page.classList.contains('active')){ startDots(); } else { stopDots(); }
   });
   observer.observe(document.getElementById('page-tools'), { attributes: true, attributeFilter: ['class'] });
+
+  document.addEventListener('visibilitychange', function(){
+    if(document.hidden){ stopDots(); }
+    else {
+      const p = document.getElementById('page-tools');
+      if(p && p.classList.contains('active')) startDots();
+    }
+  });
 
   // Start if already active
   const page = document.getElementById('page-tools');
@@ -6921,8 +6927,11 @@ function updateNavTheme(){
   }
   if (dark) { nav.classList.add('nav-dark'); } else { nav.classList.remove('nav-dark'); }
 }
-window.addEventListener('scroll', updateNavTheme);
-setInterval(updateNavTheme, 300);
+window.addEventListener('scroll', updateNavTheme, {passive:true});
+// Update on page change instead of polling
+document.querySelectorAll('.page').forEach(function(p){
+  new MutationObserver(updateNavTheme).observe(p, {attributes:true, attributeFilter:['class']});
+});
 updateNavTheme();
 
 // ── WEBGL SHADER HERO — SCATTERED DNA STARS ─────────────────────────────
@@ -7086,6 +7095,7 @@ void main(){
   }
   window.addEventListener('resize', resize);
 
+  let shaderAnimId = null;
   function loop(now){
     gl.clearColor(0,0,0,1);
     gl.clear(gl.COLOR_BUFFER_BIT);
@@ -7095,9 +7105,31 @@ void main(){
     gl.uniform1f(uTime, now * 1e-3);
     gl.uniform2f(uMouse, mouseX, mouseY);
     gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
-    requestAnimationFrame(loop);
+    shaderAnimId = requestAnimationFrame(loop);
   }
-  requestAnimationFrame(loop);
+
+  // Only run shader when home page is visible
+  function startShader(){ if(!shaderAnimId){ resize(); shaderAnimId = requestAnimationFrame(loop); } }
+  function stopShader(){ if(shaderAnimId){ cancelAnimationFrame(shaderAnimId); shaderAnimId = null; } }
+
+  const homeObs = new MutationObserver(function(){
+    const p = document.getElementById('page-home');
+    if(p && p.classList.contains('active')){ startShader(); } else { stopShader(); }
+  });
+  homeObs.observe(document.getElementById('page-home'), { attributes:true, attributeFilter:['class'] });
+
+  // Also pause when tab is hidden
+  document.addEventListener('visibilitychange', function(){
+    if(document.hidden){ stopShader(); }
+    else {
+      const p = document.getElementById('page-home');
+      if(p && p.classList.contains('active')) startShader();
+    }
+  });
+
+  // Start if home is active now
+  const hp = document.getElementById('page-home');
+  if(hp && hp.classList.contains('active')) startShader();
 })();
 
 </script>
