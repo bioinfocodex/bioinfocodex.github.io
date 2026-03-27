@@ -603,6 +603,7 @@ em.p{font-style:normal;color:var(--purple);}
 .edu-paths-wrap path{
   stroke-dasharray:1600;
   stroke-dashoffset:1600;
+  will-change:stroke-dashoffset,opacity;
 }
 /* Staggered path animations */
 @keyframes eduPathDraw{
@@ -611,6 +612,8 @@ em.p{font-style:normal;color:var(--purple);}
   100%{stroke-dashoffset:-1600;opacity:0.15;}
 }
 .edu-paths-wrap path{animation:eduPathDraw var(--dur,22s) linear infinite;}
+/* Pause when edu page not visible */
+.page:not(.active) .edu-paths-wrap path{animation-play-state:paused;}
 
 /* Animated title letters */
 @keyframes eduLetterIn{
@@ -6478,7 +6481,7 @@ function toggleEduTopic(headEl) {
   function generatePaths(container, position) {
     if (!container) return;
     const paths = [];
-    for (let i = 0; i < 36; i++) {
+    for (let i = 0; i < 16; i++) {
       const d = `M-${380 - i * 5 * position} -${189 + i * 6}C-${380 - i * 5 * position} -${189 + i * 6} -${312 - i * 5 * position} ${216 - i * 6} ${152 - i * 5 * position} ${343 - i * 6}C${616 - i * 5 * position} ${470 - i * 6} ${684 - i * 5 * position} ${875 - i * 6} ${684 - i * 5 * position} ${875 - i * 6}`;
       const opacity = 0.1 + i * 0.03;
       const width = 0.5 + i * 0.03;
