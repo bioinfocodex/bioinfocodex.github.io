@@ -581,6 +581,48 @@ em.p{font-style:normal;color:var(--purple);}
 /* ══════════════════════════════════════════
    EDUCATION PAGE
 ══════════════════════════════════════════ */
+/* Dark theme for entire education page */
+#page-edu{
+  background:#0d1117 !important;color:#c9d1d9 !important;
+  --bg:#0d1117;--bg2:#161b22;--bg3:#1c2128;--surf:#161b22;
+  --border:rgba(255,255,255,0.08);--border2:rgba(255,255,255,0.14);
+  --text:#c9d1d9;--text2:#8b949e;--text3:#6e7681;
+}
+#page-edu .section{background:#0d1117 !important;}
+#page-edu .edu-topic-card{background:#161b22 !important;border-color:rgba(255,255,255,0.08) !important;}
+#page-edu .edu-topic-card:hover{box-shadow:0 4px 20px rgba(0,0,0,0.3) !important;}
+#page-edu .edu-topic-head:hover{background:rgba(0,200,150,0.06) !important;}
+#page-edu .edu-topic-num{background:#1c2128 !important;border-color:rgba(255,255,255,0.1) !important;}
+#page-edu .edu-topic-body{color:#c9d1d9 !important;}
+#page-edu .edu-topic-card.open .edu-topic-head{border-bottom-color:rgba(255,255,255,0.08) !important;}
+#page-edu .edu-mod-tab:hover{background:rgba(0,200,150,0.06) !important;color:#c9d1d9 !important;}
+#page-edu .edu-mod-tab{color:#8b949e !important;}
+#page-edu .edu-mod-tab.active{color:var(--green) !important;}
+#page-edu .edu-mod-sub{color:#6e7681 !important;}
+#page-edu .edu-mod-tab.active .edu-mod-sub{color:var(--green) !important;}
+#page-edu .h2, #page-edu .edu-topic-title{color:#e6edf3 !important;}
+#page-edu .sub, #page-edu p{color:#8b949e !important;}
+#page-edu .edu-topic-body p{color:#c9d1d9 !important;}
+#page-edu .edu-topic-body .sub{color:#8b949e !important;}
+#page-edu code{background:rgba(0,200,150,0.1) !important;color:#7ee787 !important;}
+#page-edu pre{background:#0d1117 !important;border:1px solid rgba(255,255,255,0.08) !important;color:#c9d1d9 !important;}
+#page-edu .info-box.tip{background:rgba(0,200,150,0.08) !important;border-color:rgba(0,200,150,0.2) !important;color:#c9d1d9 !important;}
+#page-edu .info-box.note{background:rgba(9,105,218,0.08) !important;border-color:rgba(9,105,218,0.2) !important;color:#c9d1d9 !important;}
+#page-edu .info-box.warn{background:rgba(240,136,62,0.08) !important;border-color:rgba(240,136,62,0.2) !important;color:#c9d1d9 !important;}
+#page-edu .card{background:#161b22 !important;border-color:rgba(255,255,255,0.08) !important;color:#c9d1d9 !important;}
+#page-edu .res-card{background:#161b22 !important;border-color:rgba(255,255,255,0.08) !important;}
+#page-edu .res-card:hover{background:#1c2128 !important;border-color:rgba(255,255,255,0.14) !important;}
+#page-edu strong{color:#e6edf3 !important;}
+#page-edu a{color:var(--green) !important;}
+#page-edu .comparison-card{background:#161b22 !important;border-color:rgba(255,255,255,0.08) !important;}
+#page-edu .key-takeaway{background:rgba(0,200,150,0.06) !important;border-color:rgba(0,200,150,0.15) !important;color:#c9d1d9 !important;}
+#page-edu .edu-mod-header p{color:#8b949e !important;}
+#page-edu li{color:#c9d1d9 !important;}
+#page-edu table{border-color:rgba(255,255,255,0.08) !important;}
+#page-edu th{background:#1c2128 !important;color:#e6edf3 !important;border-color:rgba(255,255,255,0.08) !important;}
+#page-edu td{border-color:rgba(255,255,255,0.08) !important;color:#c9d1d9 !important;}
+#page-edu .label{color:rgba(124,58,237,0.9) !important;}
+
 .edu-hero{
   padding:100px 6vw 72px;
   background:#0a0a0a;
@@ -2381,7 +2423,7 @@ generated using ggplot2 (Wickham, 2016) and pheatmap (Kolde, 2019).</div>
         <div style="font-weight:700;font-size:1.05em;margin-bottom:4px;">macOS</div>
         <div class="sub" style="margin-bottom:4px;">.dmg installer · macOS 12+</div>
         <div class="sub" style="margin-bottom:18px;">95 MB · v1.0.0</div>
-        <a href="https://YOUR-LAB-SERVER-URL/releases/GeneNet-1.0.0.dmg" class="btn btn-green" style="display:inline-flex;gap:6px;cursor:pointer;text-decoration:none;">⬇ Download for macOS</a>
+        <a href="https://bioinfocodex.com/releases/GeneNet-1.0.0.dmg" class="btn btn-green" style="display:inline-flex;gap:6px;cursor:pointer;text-decoration:none;">⬇ Download for macOS</a>
       </div>
 
       <!-- Linux -->
@@ -2390,7 +2432,7 @@ generated using ggplot2 (Wickham, 2016) and pheatmap (Kolde, 2019).</div>
         <div style="font-weight:700;font-size:1.05em;margin-bottom:4px;">Linux</div>
         <div class="sub" style="margin-bottom:4px;">.AppImage · Ubuntu, Fedora, Debian</div>
         <div class="sub" style="margin-bottom:18px;">100 MB · v1.0.0</div>
-        <a href="https://YOUR-LAB-SERVER-URL/releases/GeneNet-1.0.0.AppImage" class="btn btn-green" style="display:inline-flex;gap:6px;cursor:pointer;text-decoration:none;">⬇ Download for Linux</a>
+        <a href="https://bioinfocodex.com/releases/GeneNet-1.0.0.AppImage" class="btn btn-green" style="display:inline-flex;gap:6px;cursor:pointer;text-decoration:none;">⬇ Download for Linux</a>
       </div>
 
       <!-- Windows -->
@@ -2409,7 +2451,7 @@ generated using ggplot2 (Wickham, 2016) and pheatmap (Kolde, 2019).</div>
         <div style="font-weight:700;font-size:1em;margin-bottom:4px;">🔗 Already have a connection code?</div>
         <div class="sub">Connect directly via the browser — no download needed.</div>
       </div>
-      <a href="https://YOUR-LAB-SERVER-URL/connect" class="btn btn-green" style="display:inline-flex;gap:6px;cursor:pointer;text-decoration:none;white-space:nowrap;">→ Connect to Lab</a>
+      <a href="https://bioinfocodex.com/connect" class="btn btn-green" style="display:inline-flex;gap:6px;cursor:pointer;text-decoration:none;white-space:nowrap;">→ Connect to Lab</a>
     </div>
 
     <!-- How it works -->
@@ -2553,7 +2595,7 @@ generated using ggplot2 (Wickham, 2016) and pheatmap (Kolde, 2019).</div>
   </div>
 
   <!-- Module tab bar -->
-  <div style="background:#fff;border-bottom:1px solid var(--border);padding:0 6vw;position:sticky;top:64px;z-index:100;overflow-x:auto;">
+  <div style="background:#161b22;border-bottom:1px solid rgba(255,255,255,0.08);padding:0 6vw;position:sticky;top:64px;z-index:100;overflow-x:auto;">
     <div style="display:flex;gap:0;min-width:max-content;">
       <div class="edu-mod-tab active" onclick="showEduModule('mod1',this)" data-mod="mod1">📘 Module 1<span class="edu-mod-sub">Foundations</span></div>
       <div class="edu-mod-tab" onclick="showEduModule('mod2',this)" data-mod="mod2">💻 Module 2<span class="edu-mod-sub">Computing</span></div>
