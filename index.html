@@ -1518,6 +1518,7 @@ nav.nav-scrolled { box-shadow: 0 4px 28px rgba(0,0,0,0.1); border-bottom-color: 
       <button class="filter-btn" onclick="filterTools('epi',this)">Epigenomics</button>
       <button class="filter-btn" onclick="filterTools('plant',this)">Plants</button>
       <button class="filter-btn" onclick="filterTools('micro',this)">Microbiome</button>
+      <button class="filter-btn" onclick="filterTools('lab',this)">Lab Management</button>
     </div>
 
     <!-- Available now -->
@@ -1547,6 +1548,30 @@ nav.nav-scrolled { box-shadow: 0 4px 28px rgba(0,0,0,0.1); border-bottom-color: 
             <span style="font-size:0.78em;color:var(--text3);">🐧 Linux</span>
             <span style="font-size:0.78em;color:var(--text3);">🪟 Windows WSL2</span>
             <span style="font-size:0.78em;color:var(--green);margin-left:auto;font-weight:600;">Full manual →</span>
+          </div>
+        </div>
+
+        <!-- GeneNet hub card -->
+        <div class="tool-hub-card live" data-tags="lab live" onclick="showPage('page-tool-genenet')">
+          <div class="tool-hub-arrow">→</div>
+          <div class="tool-top" style="margin-bottom:12px;">
+            <div class="tool-icon-wrap">🧬</div>
+            <div class="tool-meta">
+              <div class="tool-name">GeneNet Lab</div>
+              <div class="tool-version">v1.0.0 · Released 2026</div>
+            </div>
+            <span class="tag tag-green">Live</span>
+          </div>
+          <p class="tool-desc">Full-featured lab management platform. Install on your computer and connect to your central lab system using a connection code. Manage experiments, samples, and data in one place.</p>
+          <div class="chips" style="margin-bottom:50px;">
+            <span class="chip">Lab Management</span><span class="chip">Sample Tracking</span><span class="chip">Data Sync</span>
+            <span class="chip">Connection Codes</span><span class="chip">Cross-platform</span>
+          </div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;">
+            <span style="font-size:0.78em;color:var(--text3);">🍎 macOS</span>
+            <span style="font-size:0.78em;color:var(--text3);">🐧 Linux</span>
+            <span style="font-size:0.78em;color:var(--text3);">🪟 Windows <span style="font-size:0.85em;opacity:0.6;">(soon)</span></span>
+            <span style="font-size:0.78em;color:var(--green);margin-left:auto;font-weight:600;">Full details →</span>
           </div>
         </div>
 
@@ -2333,6 +2358,103 @@ generated using ggplot2 (Wickham, 2016) and pheatmap (Kolde, 2019).</div>
   </div><!-- end layout -->
 
 </div><!-- /tool-rnaflow -->
+
+<!-- ══ GeneNet Lab Detail Page ══ -->
+<div class="page" id="page-tool-genenet">
+  <div class="tool-detail-hero">
+    <div class="breadcrumb"><span onclick="showPage('page-tools')">🧬 Bioinfo Tools</span><span class="breadcrumb-sep">›</span><span style="color:var(--text);">GeneNet Lab</span></div>
+    <div class="label">Lab Management Platform</div>
+    <h1 class="h1" style="font-size:2.5em;">GeneNet Lab <span style="font-size:0.4em;vertical-align:middle;color:var(--green);">v1.0.0</span></h1>
+    <p class="lead" style="max-width:640px;margin:0 auto;">A full-featured lab management platform. Install on your computer and connect to your central lab system using a connection code.</p>
+    <div style="display:inline-block;margin-top:12px;background:rgba(88,166,255,0.1);border:1px solid rgba(88,166,255,0.3);border-radius:20px;padding:4px 14px;font-size:0.8em;color:#58a6ff;font-weight:600;">Version 1.0.0</div>
+  </div>
+
+  <div class="section" style="max-width:900px;margin:0 auto;padding:40px 6vw;">
+
+    <!-- Download Cards -->
+    <h2 class="tool-section-title">Download GeneNet</h2>
+    <div class="card-grid" style="grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;margin-bottom:32px;">
+
+      <!-- macOS -->
+      <div class="card" style="padding:28px;text-align:center;">
+        <div style="font-size:2.5em;margin-bottom:12px;">🍎</div>
+        <div style="font-weight:700;font-size:1.05em;margin-bottom:4px;">macOS</div>
+        <div class="sub" style="margin-bottom:4px;">.dmg installer · macOS 12+</div>
+        <div class="sub" style="margin-bottom:18px;">95 MB · v1.0.0</div>
+        <a href="https://YOUR-LAB-SERVER-URL/releases/GeneNet-1.0.0.dmg" class="btn btn-green" style="display:inline-flex;gap:6px;cursor:pointer;text-decoration:none;">⬇ Download for macOS</a>
+      </div>
+
+      <!-- Linux -->
+      <div class="card" style="padding:28px;text-align:center;">
+        <div style="font-size:2.5em;margin-bottom:12px;">🐧</div>
+        <div style="font-weight:700;font-size:1.05em;margin-bottom:4px;">Linux</div>
+        <div class="sub" style="margin-bottom:4px;">.AppImage · Ubuntu, Fedora, Debian</div>
+        <div class="sub" style="margin-bottom:18px;">100 MB · v1.0.0</div>
+        <a href="https://YOUR-LAB-SERVER-URL/releases/GeneNet-1.0.0.AppImage" class="btn btn-green" style="display:inline-flex;gap:6px;cursor:pointer;text-decoration:none;">⬇ Download for Linux</a>
+      </div>
+
+      <!-- Windows -->
+      <div class="card" style="padding:28px;text-align:center;opacity:0.55;">
+        <div style="font-size:2.5em;margin-bottom:12px;">🪟</div>
+        <div style="font-weight:700;font-size:1.05em;margin-bottom:4px;">Windows</div>
+        <div class="sub" style="margin-bottom:4px;">.exe installer · Windows 10/11</div>
+        <div class="sub" style="margin-bottom:18px;">&nbsp;</div>
+        <span class="btn btn-outline" style="display:inline-flex;gap:6px;cursor:default;opacity:0.6;">Coming Soon</span>
+      </div>
+    </div>
+
+    <!-- Connect to Lab -->
+    <div class="card" style="padding:24px;margin-bottom:32px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;border-color:rgba(88,166,255,0.25);background:rgba(88,166,255,0.06);">
+      <div>
+        <div style="font-weight:700;font-size:1em;margin-bottom:4px;">🔗 Already have a connection code?</div>
+        <div class="sub">Connect directly via the browser — no download needed.</div>
+      </div>
+      <a href="https://YOUR-LAB-SERVER-URL/connect" class="btn btn-green" style="display:inline-flex;gap:6px;cursor:pointer;text-decoration:none;white-space:nowrap;">→ Connect to Lab</a>
+    </div>
+
+    <!-- How it works -->
+    <h2 class="tool-section-title">How it works</h2>
+    <div class="card" style="padding:28px;margin-bottom:32px;">
+      <div style="display:flex;flex-direction:column;gap:14px;">
+        <div style="display:flex;gap:14px;align-items:flex-start;">
+          <div style="min-width:28px;height:28px;border-radius:50%;background:rgba(88,166,255,0.15);border:1px solid rgba(88,166,255,0.3);color:#58a6ff;display:flex;align-items:center;justify-content:center;font-size:0.75em;font-weight:800;">1</div>
+          <div><strong>Download</strong> the installer for your operating system above.</div>
+        </div>
+        <div style="display:flex;gap:14px;align-items:flex-start;">
+          <div style="min-width:28px;height:28px;border-radius:50%;background:rgba(88,166,255,0.15);border:1px solid rgba(88,166,255,0.3);color:#58a6ff;display:flex;align-items:center;justify-content:center;font-size:0.75em;font-weight:800;">2</div>
+          <div><strong>Install &amp; launch</strong> GeneNet. On first launch you'll see the Connect screen.</div>
+        </div>
+        <div style="display:flex;gap:14px;align-items:flex-start;">
+          <div style="min-width:28px;height:28px;border-radius:50%;background:rgba(88,166,255,0.15);border:1px solid rgba(88,166,255,0.3);color:#58a6ff;display:flex;align-items:center;justify-content:center;font-size:0.75em;font-weight:800;">3</div>
+          <div><strong>Enter your connection code</strong> (e.g. <code style="font-family:monospace;background:rgba(88,166,255,0.1);padding:2px 8px;border-radius:4px;">LAB-84921</code>) from your lab admin.</div>
+        </div>
+        <div style="display:flex;gap:14px;align-items:flex-start;">
+          <div style="min-width:28px;height:28px;border-radius:50%;background:rgba(88,166,255,0.15);border:1px solid rgba(88,166,255,0.3);color:#58a6ff;display:flex;align-items:center;justify-content:center;font-size:0.75em;font-weight:800;">4</div>
+          <div><strong>Register or sign in.</strong> You'll stay connected until the admin removes your access.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- macOS Gatekeeper Warning -->
+    <div class="card" style="padding:20px;border-color:rgba(234,179,8,0.3);background:rgba(234,179,8,0.05);margin-bottom:24px;">
+      <div style="display:flex;gap:12px;align-items:flex-start;">
+        <span style="font-size:1.4em;">⚠️</span>
+        <div>
+          <strong style="color:#eab308;">macOS users:</strong> If you see "GeneNet is damaged and can't be opened", run this command in Terminal:
+          <div style="margin-top:8px;background:rgba(0,0,0,0.3);border-radius:8px;padding:10px 14px;font-family:monospace;font-size:0.85em;color:#e2e8f0;">
+            xattr -cr ~/Downloads/GeneNet*.dmg
+          </div>
+          <div class="sub" style="margin-top:6px;">This removes the macOS quarantine flag from unsigned apps. You only need to do this once.</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="text-align:center;margin-top:32px;">
+      <button class="btn btn-outline" onclick="showPage('tools')" style="cursor:pointer;">← Back to all tools</button>
+    </div>
+
+  </div>
+</div>
 
 <!-- ══ STUB PAGES for future tools ══ -->
 <div class="page" id="page-tool-ngsuite">
