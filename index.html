@@ -797,7 +797,7 @@ em.p{font-style:normal;color:var(--purple);}
   max-height:0;overflow:hidden;transition:max-height 0.4s ease;
   padding:0 20px;
 }
-.edu-topic-card.open .edu-topic-body{max-height:none;padding:0 20px 20px;}
+.edu-topic-card.open .edu-topic-body{max-height:4000px;padding:0 20px 20px;}
 .edu-topic-card.open .edu-topic-head{border-bottom:1px solid var(--border);}
 
 /* info-box colours for light theme */
@@ -4774,6 +4774,190 @@ cat annotated.vcf | snpSift filter "ANN[*].IMPACT = 'HIGH'" &gt; high_impact.vcf
         </div>
       </div>
 
+      <!-- ── 6.3 NGS Library Preparation & DNA Fragmentation ── -->
+      <div class="edu-topic-card">
+        <div class="edu-topic-head" onclick="toggleEduTopic(this)">
+          <span class="edu-topic-num">6.3</span>
+          <span class="edu-topic-title">NGS Library Preparation — DNA Fragmentation Methods</span>
+          <span class="edu-topic-chev">▶</span>
+        </div>
+        <div class="edu-topic-body">
+
+          <p class="sub">Next-generation sequencers read DNA in short stretches of 50–300 bp. Human genomic DNA is ~3 billion bp long — a molecule millions of times too large to sequence directly. Before any library can be prepared, the DNA must be broken into sequenceable fragments. The fragmentation method you choose affects coverage uniformity, sequence bias, DNA input requirements, and the cost of your experiment.</p>
+
+          <!-- Key stats -->
+          <div class="card-grid card-grid-2" style="gap:10px;margin:14px 0;">
+            <div class="card" style="padding:14px;border-left:3px solid var(--green);">
+              <strong>~3 billion bp</strong>
+              <p class="sub" style="margin-top:4px;">Human genome size — the full length of DNA that must be broken down before sequencing.</p>
+            </div>
+            <div class="card" style="padding:14px;border-left:3px solid var(--blue);">
+              <strong>150–300 bp</strong>
+              <p class="sub" style="margin-top:4px;">Target fragment size for standard Illumina short-read sequencing. Longer fragments reduce cluster density.</p>
+            </div>
+            <div class="card" style="padding:14px;border-left:3px solid var(--purple);">
+              <strong>30× depth</strong>
+              <p class="sub" style="margin-top:4px;">Minimum sequencing depth for confident variant calling in whole-genome sequencing.</p>
+            </div>
+            <div class="card" style="padding:14px;border-left:3px solid var(--orange);">
+              <strong>4 methods</strong>
+              <p class="sub" style="margin-top:4px;">Probe sonication, acoustic shearing (Covaris AFA), enzymatic digestion, and tagmentation (Tn5).</p>
+            </div>
+          </div>
+
+          <!-- Four methods -->
+          <h4 style="margin:18px 0 10px;font-size:0.92em;font-weight:600;">The four fragmentation approaches</h4>
+
+          <div class="card-grid card-grid-2" style="gap:10px;margin-bottom:14px;">
+
+            <div class="card" style="padding:16px;border-top:3px solid var(--green);">
+              <strong style="color:var(--green);">1 — Probe Sonication</strong>
+              <p class="sub" style="margin-top:6px;">A metal probe is submerged directly in the DNA sample and vibrates at ultrasonic frequency (~20 kHz). The vibration creates <strong>cavitation</strong> — microscopic bubbles that collapse violently, generating shear forces that break phosphodiester bonds. Fragment size is controlled by adjusting pulse duration, amplitude, and number of cycles.</p>
+              <div style="margin-top:10px;font-size:0.78em;color:var(--text3);">
+                Fragment size: <strong>100 bp – 1 kb</strong> &nbsp;·&nbsp;
+                Bias: <strong>moderate</strong> &nbsp;·&nbsp;
+                Cost: <strong>medium (~$3k)</strong>
+              </div>
+              <div class="info-box tip" style="margin-top:10px;"><span>💡</span><div>Common instruments: Branson SFX, Cole-Parmer. Protocols are flexible and easy to troubleshoot — ideal for teaching labs and pilot experiments.</div></div>
+            </div>
+
+            <div class="card" style="padding:16px;border-top:3px solid var(--blue);">
+              <strong style="color:var(--blue);">2 — Covaris AFA (Acoustic Focused Acoustics)</strong>
+              <p class="sub" style="margin-top:6px;">Covaris instruments use a precisely focused acoustic transducer to deliver energy through the tube wall — the probe never touches the sample. This eliminates cross-contamination and heat, and produces extremely reproducible fragment size distributions. The gold standard for clinical genomics and large-scale sequencing projects.</p>
+              <div style="margin-top:10px;font-size:0.78em;color:var(--text3);">
+                Fragment size: <strong>150–500 bp</strong> &nbsp;·&nbsp;
+                Bias: <strong>minimal</strong> &nbsp;·&nbsp;
+                Cost: <strong>high (~$80k+)</strong>
+              </div>
+              <div class="info-box note" style="margin-top:10px;"><span>⚠️</span><div>High capital cost but unmatched reproducibility. Required for regulatory-compliance environments (clinical labs, FDA submissions).</div></div>
+            </div>
+
+            <div class="card" style="padding:16px;border-top:3px solid var(--purple);">
+              <strong style="color:var(--purple);">3 — Enzymatic Fragmentation</strong>
+              <p class="sub" style="margin-top:6px;">Nucleases (typically DNase I or a proprietary enzyme cocktail) are used to randomly cleave dsDNA. Reaction conditions (enzyme concentration, temperature, time) control fragment size. Requires only a thermocycler — no specialised equipment. Commercial kits include NEBNext Ultra II FS and Kapa HyperPlus.</p>
+              <div style="margin-top:10px;font-size:0.78em;color:var(--text3);">
+                Fragment size: <strong>200–700 bp</strong> &nbsp;·&nbsp;
+                Bias: <strong>AT/GC bias possible</strong> &nbsp;·&nbsp;
+                Cost: <strong>low</strong>
+              </div>
+              <div class="info-box tip" style="margin-top:10px;"><span>💡</span><div>Best for budget labs or high-throughput (96+ samples/day). Can be automated on liquid handling platforms (Hamilton, Tecan) for plate-scale processing.</div></div>
+            </div>
+
+            <div class="card" style="padding:16px;border-top:3px solid var(--orange);">
+              <strong style="color:var(--orange);">4 — Tagmentation (Tn5 Transposase)</strong>
+              <p class="sub" style="margin-top:6px;">The Tn5 transposase enzyme simultaneously fragments DNA and inserts sequencing adapters in a single reaction — dramatically simplifying library preparation. Tn5 preferentially inserts at AT-rich, accessible regions of chromatin. This is both a bias (for WGS) and a feature (for ATAC-seq, where open chromatin is precisely what you want to measure).</p>
+              <div style="margin-top:10px;font-size:0.78em;color:var(--text3);">
+                Fragment size: <strong>150–500 bp</strong> &nbsp;·&nbsp;
+                Bias: <strong>AT-rich preference</strong> &nbsp;·&nbsp;
+                Speed: <strong>very fast (1 step)</strong>
+              </div>
+              <div class="info-box note" style="margin-top:10px;"><span>🧬</span><div>Essential for ATAC-seq — the assay is fundamentally built on Tn5 inserting at open chromatin. Also ideal for low DNA input (&lt;10 ng) samples such as rare cell populations.</div></div>
+            </div>
+
+          </div>
+
+          <!-- Comparison table -->
+          <h4 style="margin:18px 0 10px;font-size:0.92em;font-weight:600;">Comparison at a glance</h4>
+          <div style="overflow-x:auto;">
+            <table class="ref-table" style="width:100%;font-size:0.83em;">
+              <tr>
+                <th>Method</th><th>Fragment size</th><th>Size control</th><th>Sequence bias</th><th>Equipment cost</th><th>Best for</th>
+              </tr>
+              <tr>
+                <td><strong>Probe sonication</strong></td><td>100 bp – 1 kb</td>
+                <td><span class="tag tag-yellow">Moderate</span></td>
+                <td><span class="tag tag-yellow">Moderate</span></td>
+                <td>~$3k</td><td>Teaching labs, flexible protocols</td>
+              </tr>
+              <tr>
+                <td><strong>Covaris AFA</strong></td><td>150–500 bp</td>
+                <td><span class="tag tag-green">Excellent</span></td>
+                <td><span class="tag tag-green">Minimal</span></td>
+                <td>~$80k+</td><td>Clinical WGS, large cohorts</td>
+              </tr>
+              <tr>
+                <td><strong>Enzymatic</strong></td><td>200–700 bp</td>
+                <td><span class="tag tag-yellow">Moderate</span></td>
+                <td><span class="tag tag-yellow">AT/GC bias</span></td>
+                <td>Low (kit only)</td><td>High-throughput, automation</td>
+              </tr>
+              <tr>
+                <td><strong>Tagmentation (Tn5)</strong></td><td>150–500 bp</td>
+                <td><span class="tag tag-yellow">Moderate</span></td>
+                <td><span class="tag tag-red">AT-rich bias</span></td>
+                <td>Low (kit only)</td><td>ATAC-seq, low input WGS</td>
+              </tr>
+            </table>
+          </div>
+
+          <!-- Practical guide -->
+          <h4 style="margin:18px 0 10px;font-size:0.92em;font-weight:600;">Which method should you use?</h4>
+          <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:14px;">
+            <div class="card" style="padding:12px 16px;display:flex;gap:14px;align-items:flex-start;">
+              <span style="font-size:0.75em;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;color:var(--text3);min-width:120px;flex-shrink:0;padding-top:2px;">Gold-standard WGS</span>
+              <div><strong>Covaris AFA</strong> — unmatched reproducibility and minimal bias. Essential when accuracy and regulatory compliance matter.</div>
+            </div>
+            <div class="card" style="padding:12px 16px;display:flex;gap:14px;align-items:flex-start;">
+              <span style="font-size:0.75em;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;color:var(--text3);min-width:120px;flex-shrink:0;padding-top:2px;">Budget lab</span>
+              <div><strong>Enzymatic fragmentation</strong> (e.g. NEBNext Ultra II FS, Kapa HyperPlus). No specialised instrument needed — just a thermocycler and pipettes.</div>
+            </div>
+            <div class="card" style="padding:12px 16px;display:flex;gap:14px;align-items:flex-start;">
+              <span style="font-size:0.75em;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;color:var(--text3);min-width:120px;flex-shrink:0;padding-top:2px;">Low input (&lt;10 ng)</span>
+              <div><strong>Tagmentation</strong> — Tn5 is optimised for picogram-level inputs, ideal for rare cell populations or precious samples.</div>
+            </div>
+            <div class="card" style="padding:12px 16px;display:flex;gap:14px;align-items:flex-start;">
+              <span style="font-size:0.75em;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;color:var(--text3);min-width:120px;flex-shrink:0;padding-top:2px;">ATAC-seq</span>
+              <div><strong>Tagmentation only</strong> — Tn5 preferentially inserts at open chromatin. The assay is fundamentally built around this property.</div>
+            </div>
+            <div class="card" style="padding:12px 16px;display:flex;gap:14px;align-items:flex-start;">
+              <span style="font-size:0.75em;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;color:var(--text3);min-width:120px;flex-shrink:0;padding-top:2px;">High throughput</span>
+              <div><strong>Enzymatic or Covaris S-series</strong> — both can be automated on liquid handling platforms for 96+ samples per day.</div>
+            </div>
+            <div class="card" style="padding:12px 16px;display:flex;gap:14px;align-items:flex-start;">
+              <span style="font-size:0.75em;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;color:var(--text3);min-width:120px;flex-shrink:0;padding-top:2px;">Teaching / pilot</span>
+              <div><strong>Probe sonication</strong> — instruments are common, protocols are flexible, and the method is easy to troubleshoot and understand.</div>
+            </div>
+          </div>
+
+          <!-- Library prep pipeline -->
+          <h4 style="margin:18px 0 10px;font-size:0.92em;font-weight:600;">Where fragmentation sits in the full library preparation workflow</h4>
+          <div style="display:flex;flex-direction:column;gap:4px;margin-bottom:14px;">
+            <div class="card" style="padding:12px 16px;border-left:3px solid var(--green);background:rgba(0,212,160,0.05);">
+              <strong style="color:var(--green);">① Fragmentation ← You are here</strong>
+              <p class="sub" style="margin-top:2px;">DNA broken to 150–500 bp target size by sonication, enzymes, or Tn5 transposase.</p>
+            </div>
+            <div class="card" style="padding:12px 16px;"><strong>② End repair</strong><p class="sub" style="margin-top:2px;">Ragged 3′/5′ ends polished to blunt ends using polymerase and exonuclease activity.</p></div>
+            <div class="card" style="padding:12px 16px;"><strong>③ A-tailing</strong><p class="sub" style="margin-top:2px;">Single adenine added to the 3′ end for adapter ligation compatibility.</p></div>
+            <div class="card" style="padding:12px 16px;"><strong>④ Adapter ligation</strong><p class="sub" style="margin-top:2px;">Platform-specific adapters and index barcodes ligated to both ends of each fragment.</p></div>
+            <div class="card" style="padding:12px 16px;"><strong>⑤ Size selection</strong><p class="sub" style="margin-top:2px;">SPRI beads or gel electrophoresis remove very small and very large fragments.</p></div>
+            <div class="card" style="padding:12px 16px;"><strong>⑥ PCR amplification</strong><p class="sub" style="margin-top:2px;">Library amplified (optional) to sufficient quantity for sequencing. Excessive cycles increase duplicates.</p></div>
+          </div>
+
+          <!-- Glossary -->
+          <h4 style="margin:18px 0 10px;font-size:0.92em;font-weight:600;">Key terms</h4>
+          <div class="card-grid card-grid-2" style="gap:8px;margin-bottom:14px;">
+            <div class="card" style="padding:12px;"><strong>Phosphodiester bond</strong><p class="sub" style="margin-top:3px;">The covalent bond linking nucleotides in a DNA strand. All fragmentation methods ultimately break this bond.</p></div>
+            <div class="card" style="padding:12px;"><strong>Cavitation</strong><p class="sub" style="margin-top:3px;">Formation and violent collapse of microscopic bubbles in liquid, driven by ultrasonic energy. The mechanical force shatters DNA.</p></div>
+            <div class="card" style="padding:12px;"><strong>AFA (Adaptive Focused Acoustics)</strong><p class="sub" style="margin-top:3px;">Covaris technology using a focused acoustic transducer to shear DNA without any probe touching the sample — eliminating cross-contamination.</p></div>
+            <div class="card" style="padding:12px;"><strong>DNase I</strong><p class="sub" style="margin-top:3px;">An endonuclease that cleaves both strands of dsDNA, commonly used in enzymatic fragmentation kits.</p></div>
+            <div class="card" style="padding:12px;"><strong>Tn5 transposase</strong><p class="sub" style="margin-top:3px;">A bacterial enzyme that inserts into dsDNA and simultaneously cuts and ligates adapters — the basis of tagmentation.</p></div>
+            <div class="card" style="padding:12px;"><strong>SPRI beads</strong><p class="sub" style="margin-top:3px;">Solid-Phase Reversible Immobilisation — magnetic beads used to selectively bind DNA fragments by size during cleanup steps.</p></div>
+            <div class="card" style="padding:12px;"><strong>Sequence bias</strong><p class="sub" style="margin-top:3px;">Tendency of a fragmentation method to over- or under-represent certain nucleotide sequences, affecting coverage uniformity.</p></div>
+            <div class="card" style="padding:12px;"><strong>ATAC-seq</strong><p class="sub" style="margin-top:3px;">Assay for Transposase-Accessible Chromatin — uses Tn5 tagmentation to map open chromatin regions genome-wide.</p></div>
+          </div>
+
+          <div class="chips" style="margin-top:14px;">
+            <span class="chip">Probe sonication = cavitation-based shearing</span>
+            <span class="chip">Covaris AFA = gold standard</span>
+            <span class="chip">Enzymatic = no specialist equipment</span>
+            <span class="chip">Tn5 = fragmentation + adapter in one step</span>
+            <span class="chip">Target: 150–300 bp for Illumina</span>
+            <span class="chip">ATAC-seq requires tagmentation</span>
+          </div>
+
+        </div>
+      </div><!-- end 6.3 -->
+
     </div>
   </div><!-- end mod6 -->
 
@@ -6702,6 +6886,13 @@ function showEduModule(modId, el) {
 function toggleEduTopic(headEl) {
   const card = headEl.closest('.edu-topic-card');
   card.classList.toggle('open');
+  // If opening, scroll body into view after transition
+  if (card.classList.contains('open')) {
+    setTimeout(() => {
+      const body = card.querySelector('.edu-topic-body');
+      if (body) body.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }, 420);
+  }
 }
 
 // ── EDUCATION FLOATING PATHS BACKGROUND ──────────────────────────────────
@@ -6888,8 +7079,8 @@ document.addEventListener('DOMContentLoaded', () => setTimeout(initCounters, 300
   document.addEventListener('DOMContentLoaded', () => setTimeout(checkCounters, 200));
   // Re-run whenever showPage navigates to home
   const _origSP = window.showPage;
-  window.showPage = function(name) {
-    if (_origSP) _origSP(name);
+  window.showPage = function(name, skipHash) {
+    if (_origSP) _origSP(name, skipHash);
     const n = (name || '').replace('page-','');
     if (n === 'home' || n === '') setTimeout(checkCounters, 150);
   };
