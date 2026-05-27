@@ -6836,6 +6836,8 @@ function initCounters() {
 }
 window.addEventListener('scroll', initCounters, { passive: true });
 setTimeout(initCounters, 600);
+setTimeout(initCounters, 1200);
+document.addEventListener('DOMContentLoaded', () => setTimeout(initCounters, 300));
 
 // ── PIPELINE STEP CYCLING ───────────────────────────────────────────────
 (function() {
@@ -6881,6 +6883,16 @@ setTimeout(initCounters, 600);
   }
   window.addEventListener('scroll', checkCounters, { passive: true });
   setTimeout(checkCounters, 400);
+  setTimeout(checkCounters, 900);
+  setTimeout(checkCounters, 1800);
+  document.addEventListener('DOMContentLoaded', () => setTimeout(checkCounters, 200));
+  // Re-run whenever showPage navigates to home
+  const _origSP = window.showPage;
+  window.showPage = function(name) {
+    if (_origSP) _origSP(name);
+    const n = (name || '').replace('page-','');
+    if (n === 'home' || n === '') setTimeout(checkCounters, 150);
+  };
 })();
 
 // ── RESTORE PAGE STATE FROM URL HASH ON LOAD / BACK-FORWARD ─────────────
