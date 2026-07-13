@@ -6564,10 +6564,13 @@ hub_genes &lt;- module_genes[order(kME[module_genes, paste0("kME", module_number
 
     <!-- STEP 2: Code Entry -->
     <div id="bic-code-entry" class="bic-reg-card" style="display:none;max-width:500px;margin:0 auto;">
-      <div style="text-align:center;margin-bottom:24px;">
-        <div style="font-size:2.4em;margin-bottom:10px;">📬</div>
-        <h2 class="h2" style="margin-bottom:8px;">Check Your Email</h2>
-        <p class="sub">We've sent your 50-day access code to <strong id="bic-sent-email"></strong>. Enter it below to access RNAflow downloads.</p>
+      <div style="text-align:center;margin-bottom:20px;">
+        <div style="font-size:2.4em;margin-bottom:10px;">🔑</div>
+        <h2 class="h2" style="margin-bottom:8px;">Your Access Code</h2>
+        <p class="sub">Thanks for registering, <strong id="bic-sent-email"></strong>! Here is your 50-day access code — it's already filled in below, just click <strong>Unlock Downloads</strong>.</p>
+      </div>
+      <div style="text-align:center;margin-bottom:18px;">
+        <div id="bic-code-display" style="display:inline-block;background:rgba(0,200,150,0.08);border:1.5px dashed rgba(0,200,150,0.5);border-radius:12px;padding:14px 30px;font-family:'DM Mono',monospace;font-size:1.5em;font-weight:700;letter-spacing:4px;color:var(--green);"></div>
       </div>
       <form onsubmit="return bicVerifyCode(event)">
         <div class="bic-field">
@@ -6576,7 +6579,7 @@ hub_genes &lt;- module_genes[order(kME[module_genes, paste0("kME", module_number
         </div>
         <div id="bic-code-err" style="display:none;color:#dc2626;font-size:0.85em;text-align:center;margin-bottom:12px;">Invalid code. Please check your email and try again.</div>
         <button type="submit" style="width:100%;padding:14px;border:none;border-radius:12px;background:linear-gradient(135deg,var(--green),#0969da);color:white;font-size:1em;font-weight:700;font-family:var(--fh);cursor:pointer;transition:all 0.2s;">Unlock Downloads</button>
-        <p style="text-align:center;font-size:0.82em;color:var(--text3);margin-top:14px;">Didn't receive the email? Check your spam folder or <a href="#" onclick="document.getElementById('bic-code-entry').style.display='none';document.getElementById('bic-reg-form').style.display='block';return false;" style="color:var(--green);">register again</a>.</p>
+        <p style="text-align:center;font-size:0.82em;color:var(--text3);margin-top:14px;">Keep this code safe — you can use it to unlock downloads any time during your 50-day access period.</p>
       </form>
     </div>
 
@@ -7192,8 +7195,10 @@ async function bicRegister(e) {
     name: fd.get('first_name'), email: fd.get('email'), date: new Date().toISOString()
   }));
 
-  // Show code entry
-  document.getElementById('bic-sent-email').textContent = fd.get('email');
+  // Show code entry with the access code revealed and pre-filled
+  document.getElementById('bic-sent-email').textContent = fd.get('first_name') || 'Researcher';
+  document.getElementById('bic-code-display').textContent = BIC_CODES[0];
+  document.getElementById('bic-code-input').value = BIC_CODES[0];
   document.getElementById('bic-reg-form').style.display = 'none';
   document.getElementById('bic-code-entry').style.display = 'block';
 
