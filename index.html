@@ -1401,7 +1401,7 @@ nav.nav-scrolled { box-shadow: 0 4px 28px rgba(0,0,0,0.1); border-bottom-color: 
           <div class="fv-dot" style="background:#f85149;"></div>
           <div class="fv-dot" style="background:#e3b341;margin-left:5px;"></div>
           <div class="fv-dot" style="background:#3fb950;margin-left:5px;"></div>
-          <span class="fv-title">RNAflow_App.html — analysis progress</span>
+          <span class="fv-title">RNAflow — analysis progress</span>
         </div>
         <div class="fv-body">
           <div class="fv-step done"><span class="fv-step-num">✓</span><span class="fv-step-label">Configure project</span></div>
@@ -1501,7 +1501,7 @@ nav.nav-scrolled { box-shadow: 0 4px 28px rgba(0,0,0,0.1); border-bottom-color: 
         <div class="why-card reveal" style="--c:var(--purple);animation-delay:0.2s;">
           <span class="why-icon">⚡</span>
           <div class="why-title">From zero to results</div>
-          <div class="why-desc">No bioinformatics PhD required. Open the HTML file, enter your SRA accessions, and follow the guided steps. The app generates every command and walks you through each one.</div>
+          <div class="why-desc">No bioinformatics PhD required. Open the app, enter your SRA accessions, and follow the guided steps. RNAflow generates every command and walks you through each one.</div>
         </div>
         <div class="why-card reveal" style="--c:var(--orange);animation-delay:0.1s;">
           <span class="why-icon">🖥️</span>
@@ -1575,7 +1575,7 @@ nav.nav-scrolled { box-shadow: 0 4px 28px rgba(0,0,0,0.1); border-bottom-color: 
             <div class="tool-icon-wrap">🧬</div>
             <div class="tool-meta">
               <div class="tool-name">RNAflow</div>
-              <div class="tool-version">v1.0 · Released 2025</div>
+              <div class="tool-version">v2.0 · Released 2026</div>
             </div>
             <span class="tag tag-green">Live</span>
           </div>
@@ -1600,7 +1600,7 @@ nav.nav-scrolled { box-shadow: 0 4px 28px rgba(0,0,0,0.1); border-bottom-color: 
             <div class="tool-icon-wrap">🧬</div>
             <div class="tool-meta">
               <div class="tool-name">GeneNet Lab</div>
-              <div class="tool-version">v1.0.0 · Released 2026</div>
+              <div class="tool-version">v2.0.0 · Released 2026</div>
             </div>
             <span class="tag tag-green">Live</span>
           </div>
@@ -1742,7 +1742,7 @@ nav.nav-scrolled { box-shadow: 0 4px 28px rgba(0,0,0,0.1); border-bottom-color: 
     <div style="display:flex;align-items:flex-start;gap:20px;flex-wrap:wrap;">
       <div style="flex:1;">
         <div class="label">RNA-seq Analysis Software</div>
-        <h1 class="h1" style="font-size:clamp(1.8em,4vw,3em);">RNAflow <span style="color:var(--green);font-size:0.6em;vertical-align:middle;">v1.0</span></h1>
+        <h1 class="h1" style="font-size:clamp(1.8em,4vw,3em);">RNAflow <span style="color:var(--green);font-size:0.6em;vertical-align:middle;">v2.0</span></h1>
         <p class="lead">Complete RNA-seq analysis pipeline — from raw sequencing files to publication-ready figures. Works on 15+ organisms with a full manual explaining every step and every result.</p>
       </div>
       <div style="display:flex;flex-direction:column;gap:8px;padding:20px;background:var(--surf);border:1px solid rgba(0,200,150,0.2);border-radius:var(--r2);min-width:200px;">
@@ -1885,19 +1885,19 @@ nav.nav-scrolled { box-shadow: 0 4px 28px rgba(0,0,0,0.1); border-bottom-color: 
       <!-- INSTALLATION -->
       <div class="tool-section" id="ts-install">
         <div class="tool-section-title">Installation</div>
-        <p class="tool-section-sub">RNAflow is an HTML file — no installation wizard needed. Download it, download the server file, and open it in your browser. The app guides you through installing all the bioinformatics tools.</p>
+        <p class="tool-section-sub">RNAflow is a native desktop app for macOS, Windows, and Linux. Download the installer for your system and open it — the app then guides you through installing the bioinformatics tools it needs.</p>
 
         <div class="manual-step open" onclick="toggleManualStep(this)">
-          <div class="manual-step-head"><span class="ms-num">1</span><span class="ms-title">Download RNAflow</span><span class="ms-chev">▶</span></div>
+          <div class="manual-step-head"><span class="ms-num">1</span><span class="ms-title">Download &amp; install RNAflow</span><span class="ms-chev">▶</span></div>
           <div class="manual-step-body"><div class="msb-inner">
-            <p class="sub" style="margin-bottom:14px;">Download both files and save them to the same folder (e.g. your Desktop):</p>
+            <p class="sub" style="margin-bottom:14px;">Register once, then download the installer for your operating system:</p>
             <div class="dl-banner">
-              <div class="dl-banner-text"><h3>RNAflow v1.0</h3><p>Two files — keep them in the same folder</p></div>
+              <div class="dl-banner-text"><h3>RNAflow v2.0</h3><p>Native desktop app · macOS, Windows &amp; Linux</p></div>
               <div class="dl-banner-btns">
                 <button class="btn btn-green" onclick="showPage('page-register')" style="cursor:pointer;">⬇ Register &amp; Download</button>
               </div>
             </div>
-            <p class="sub">Open <code>RNAflow_App.html</code> in your browser — you will see the BioInfoCodex RNAflow interface immediately.</p>
+            <p class="sub">Run the installer, then launch RNAflow like any other app — the BioInfoCodex interface opens immediately. No browser and no separate files needed.</p>
           </div></div>
         </div>
 
@@ -1945,16 +1945,12 @@ install.packages(c("ggplot2", "pheatmap", "ggrepel", "dplyr", "RColorBrewer"))</
         </div>
 
         <div class="manual-step" onclick="toggleManualStep(this)">
-          <div class="manual-step-head"><span class="ms-num">5</span><span class="ms-title">Start the local server (for Run mode)</span><span class="ms-chev">▶</span></div>
+          <div class="manual-step-head"><span class="ms-num">5</span><span class="ms-title">Python 3 — powers Run mode</span><span class="ms-chev">▶</span></div>
           <div class="manual-step-body"><div class="msb-inner">
-            <p class="sub" style="margin-bottom:10px;">If you want to use Run mode (commands execute automatically with one click), start the server in a Terminal window before opening the app. Keep this window open while working.</p>
-            <div class="code-block"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button><span class="code-comment"># Navigate to your Desktop (or wherever you saved the files)</span>
-cd ~/Desktop
-
-<span class="code-comment"># Start the server</span>
-python3 rnaflow_server.py</div>
-            <p class="sub" style="margin-top:10px;">You will see: <em style="color:var(--green);">RNAflow Local Server — ready · Listening on 127.0.0.1:7788</em></p>
-            <div class="info-box note"><span>🔒</span><div>The server only listens on <code>127.0.0.1</code> (your own computer). It is completely invisible to any other computer on your network or the internet. Your data never leaves your machine.</div></div>
+            <p class="sub" style="margin-bottom:10px;">RNAflow bundles its local server and starts it automatically every time you launch the app — there is nothing to run by hand. Run mode (commands execute with one click) uses Python 3, so make sure Python is installed. The Miniforge install from Step 2 already includes it.</p>
+            <p class="sub" style="margin-bottom:10px;">When the server is ready, the connection dot in the app's top bar turns green. If you ever need to restart it, use the <strong>Server ▸ Start Local Server</strong> menu.</p>
+            <div class="info-box note"><span>🔒</span><div>The bundled server only listens on <code>127.0.0.1</code> (your own computer). It is completely invisible to any other computer on your network or the internet. Your data never leaves your machine.</div></div>
+            <div class="info-box tip"><span>💡</span><div>No Python installed? RNAflow still works in <strong>Copy mode</strong> — copy each generated command and paste it into your terminal manually.</div></div>
           </div></div>
         </div>
       </div>
@@ -2385,7 +2381,7 @@ generated using ggplot2 (Wickham, 2016) and pheatmap (Kolde, 2019).</div>
         <div class="tool-section-title">Troubleshooting</div>
         <p class="tool-section-sub">Solutions to the most common problems encountered during RNA-seq analysis with RNAflow.</p>
         <div class="faq-list" style="margin-top:16px;">
-          <div class="faq-item" onclick="toggleFAQ(this)"><div class="faq-q">The Run button is greyed out — what do I do? <span class="faq-chev">▼</span></div><div class="faq-a"><div class="faq-a-inner">The local server is not running. Open Terminal, navigate to the folder containing rnaflow_server.py, and run: <code>python3 rnaflow_server.py</code>. Keep that Terminal window open. The green dot in the top bar will appear when connected. If you prefer not to use the server, use Mode B (Copy) to copy commands manually.</div></div></div>
+          <div class="faq-item" onclick="toggleFAQ(this)"><div class="faq-q">The Run button is greyed out — what do I do? <span class="faq-chev">▼</span></div><div class="faq-a"><div class="faq-a-inner">RNAflow starts its local server automatically when the app launches, so this usually clears on its own. If the Run button stays greyed out, make sure Python 3 is installed (Run mode needs it), then restart the server from the <strong>Server ▸ Start Local Server</strong> menu. The green dot in the top bar appears when connected. If you prefer not to use Run mode, use Mode B (Copy) to copy commands manually.</div></div></div>
           <div class="faq-item" onclick="toggleFAQ(this)"><div class="faq-q">HISAT2 alignment rate is below 70% <span class="faq-chev">▼</span></div><div class="faq-a"><div class="faq-a-inner">Most common cause: the wrong organism was selected. Check your SRA accession on ncbi.nlm.nih.gov/sra to confirm the organism. Also confirm that the genome FASTA and GTF annotation are from the same Ensembl release number. A mismatch between these two files causes very low alignment rates.</div></div></div>
           <div class="faq-item" onclick="toggleFAQ(this)"><div class="faq-q">DESeq2 gives an error about zero counts or missing samples <span class="faq-chev">▼</span></div><div class="faq-a"><div class="faq-a-inner">This usually means the column names in your count matrix don't match the sample names in your metadata. Check that the order of samples in the count table matches the order in the DESeq2 script exactly. Also ensure you have at least 2 samples per condition.</div></div></div>
           <div class="faq-item" onclick="toggleFAQ(this)"><div class="faq-q">featureCounts assigned only 20–30% of reads <span class="faq-chev">▼</span></div><div class="faq-a"><div class="faq-a-inner">The GTF annotation version does not match the genome FASTA. Make sure both files are from the same Ensembl release number and the same species. For example, Ensembl release 109 genome FASTA must be used with the Ensembl release 109 GTF file.</div></div></div>
@@ -2406,10 +2402,10 @@ generated using ggplot2 (Wickham, 2016) and pheatmap (Kolde, 2019).</div>
   <div class="tool-detail-hero">
     <div class="breadcrumb"><span onclick="showPage('page-tools')">🧬 Bioinfo Tools</span><span class="breadcrumb-sep">›</span><span style="color:var(--text);">GeneNet Lab</span></div>
     <div class="label">Lab Management Platform</div>
-    <h1 class="h1" style="font-size:2.5em;">GeneNet Lab <span style="font-size:0.4em;vertical-align:middle;color:var(--green);">v1.0.0</span></h1>
+    <h1 class="h1" style="font-size:2.5em;">GeneNet Lab <span style="font-size:0.4em;vertical-align:middle;color:var(--green);">v2.0.0</span></h1>
     <p class="lead" style="max-width:680px;margin:0 auto;">A full-featured lab management platform with team access control, seat-based licensing, OneDrive storage, and a desktop app for macOS and Linux.</p>
     <div style="display:inline-flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:14px;">
-      <div style="background:rgba(88,166,255,0.1);border:1px solid rgba(88,166,255,0.3);border-radius:20px;padding:4px 14px;font-size:0.8em;color:#58a6ff;font-weight:600;">Version 1.0.0</div>
+      <div style="background:rgba(88,166,255,0.1);border:1px solid rgba(88,166,255,0.3);border-radius:20px;padding:4px 14px;font-size:0.8em;color:#58a6ff;font-weight:600;">Version 2.0.0</div>
     </div>
   </div>
 
@@ -2424,8 +2420,8 @@ generated using ggplot2 (Wickham, 2016) and pheatmap (Kolde, 2019).</div>
         <div style="font-size:2.5em;margin-bottom:12px;">🍎</div>
         <div style="font-weight:700;font-size:1.05em;margin-bottom:4px;">macOS</div>
         <div class="sub" style="margin-bottom:4px;">.dmg installer · macOS 12+</div>
-        <div class="sub" style="margin-bottom:18px;">95 MB · v1.0.0</div>
-        <a href="https://bioinfocodex.com/releases/GeneNet-1.0.0.dmg" class="btn btn-green" style="display:inline-flex;gap:6px;cursor:pointer;text-decoration:none;">⬇ Download for macOS</a>
+        <div class="sub" style="margin-bottom:18px;">95 MB · v2.0.0</div>
+        <a href="https://bioinfocodex.com/releases/GeneNet-2.0.0.dmg" class="btn btn-green" style="display:inline-flex;gap:6px;cursor:pointer;text-decoration:none;">⬇ Download for macOS</a>
       </div>
 
       <!-- Linux -->
@@ -2433,8 +2429,8 @@ generated using ggplot2 (Wickham, 2016) and pheatmap (Kolde, 2019).</div>
         <div style="font-size:2.5em;margin-bottom:12px;">🐧</div>
         <div style="font-weight:700;font-size:1.05em;margin-bottom:4px;">Linux</div>
         <div class="sub" style="margin-bottom:4px;">.AppImage · Ubuntu, Fedora, Debian</div>
-        <div class="sub" style="margin-bottom:18px;">100 MB · v1.0.0</div>
-        <a href="https://bioinfocodex.com/releases/GeneNet-1.0.0.AppImage" class="btn btn-green" style="display:inline-flex;gap:6px;cursor:pointer;text-decoration:none;">⬇ Download for Linux</a>
+        <div class="sub" style="margin-bottom:18px;">100 MB · v2.0.0</div>
+        <a href="https://bioinfocodex.com/releases/GeneNet-2.0.0.AppImage" class="btn btn-green" style="display:inline-flex;gap:6px;cursor:pointer;text-decoration:none;">⬇ Download for Linux</a>
       </div>
 
       <!-- Windows -->
@@ -2442,8 +2438,8 @@ generated using ggplot2 (Wickham, 2016) and pheatmap (Kolde, 2019).</div>
         <div style="font-size:2.5em;margin-bottom:12px;">🪟</div>
         <div style="font-weight:700;font-size:1.05em;margin-bottom:4px;">Windows</div>
         <div class="sub" style="margin-bottom:4px;">.exe installer · Windows 10/11</div>
-        <div class="sub" style="margin-bottom:18px;">78 MB · v1.0.0</div>
-        <a href="https://bioinfocodex.com/releases/GeneNet-Setup-1.0.0.exe" class="btn btn-green" style="display:inline-flex;gap:6px;cursor:pointer;text-decoration:none;">⬇ Download for Windows</a>
+        <div class="sub" style="margin-bottom:18px;">78 MB · v2.0.0</div>
+        <a href="https://bioinfocodex.com/releases/GeneNet-Setup-2.0.0.exe" class="btn btn-green" style="display:inline-flex;gap:6px;cursor:pointer;text-decoration:none;">⬇ Download for Windows</a>
       </div>
     </div>
 
@@ -6607,22 +6603,22 @@ hub_genes &lt;- module_genes[order(kME[module_genes, paste0("kME", module_number
           <div style="font-size:1.4em;margin-bottom:8px;">🍎</div>
           <h3 class="h3">macOS</h3>
           <p class="sub" style="margin-bottom:14px;">Apple Silicon (M1/M2/M3) &amp; Intel</p>
-          <a href="https://github.com/bioinfocodex/rnaflow/releases/latest/download/RNAflow-1.0.0-arm64.dmg" class="btn btn-green" style="width:100%;justify-content:center;text-decoration:none;margin-bottom:6px;">⬇ Apple Silicon .dmg</a>
-          <a href="https://github.com/bioinfocodex/rnaflow/releases/latest/download/RNAflow-1.0.0.dmg" class="btn btn-outline" style="width:100%;justify-content:center;text-decoration:none;">Intel .dmg</a>
+          <a href="https://github.com/bioinfocodex/rnaflow/releases/latest/download/RNAflow-2.0.0-arm64.dmg" class="btn btn-green" style="width:100%;justify-content:center;text-decoration:none;margin-bottom:6px;">⬇ Apple Silicon .dmg</a>
+          <a href="https://github.com/bioinfocodex/rnaflow/releases/latest/download/RNAflow-2.0.0.dmg" class="btn btn-outline" style="width:100%;justify-content:center;text-decoration:none;">Intel .dmg</a>
         </div>
         <div class="card" style="padding:22px;">
           <div style="font-size:1.4em;margin-bottom:8px;">🪟</div>
           <h3 class="h3">Windows</h3>
           <p class="sub" style="margin-bottom:14px;">64-bit (Windows 10+)</p>
-          <a href="https://github.com/bioinfocodex/rnaflow/releases/latest/download/RNAflow-Setup-1.0.0.exe" class="btn btn-green" style="width:100%;justify-content:center;text-decoration:none;margin-bottom:6px;">⬇ Installer .exe</a>
-          <a href="https://github.com/bioinfocodex/rnaflow/releases/latest/download/RNAflow-1.0.0.exe" class="btn btn-outline" style="width:100%;justify-content:center;text-decoration:none;">Portable .exe</a>
+          <a href="https://github.com/bioinfocodex/rnaflow/releases/latest/download/RNAflow-Setup-2.0.0.exe" class="btn btn-green" style="width:100%;justify-content:center;text-decoration:none;margin-bottom:6px;">⬇ Installer .exe</a>
+          <a href="https://github.com/bioinfocodex/rnaflow/releases/latest/download/RNAflow-2.0.0.exe" class="btn btn-outline" style="width:100%;justify-content:center;text-decoration:none;">Portable .exe</a>
         </div>
         <div class="card" style="padding:22px;">
           <div style="font-size:1.4em;margin-bottom:8px;">🐧</div>
           <h3 class="h3">Linux</h3>
           <p class="sub" style="margin-bottom:14px;">Ubuntu 20.04+ / Fedora 36+</p>
-          <a href="https://github.com/bioinfocodex/rnaflow/releases/latest/download/RNAflow-1.0.0.AppImage" class="btn btn-green" style="width:100%;justify-content:center;text-decoration:none;margin-bottom:6px;">⬇ AppImage</a>
-          <a href="https://github.com/bioinfocodex/rnaflow/releases/latest/download/rnaflow_1.0.0_amd64.deb" class="btn btn-outline" style="width:100%;justify-content:center;text-decoration:none;">Debian .deb</a>
+          <a href="https://github.com/bioinfocodex/rnaflow/releases/latest/download/RNAflow-2.0.0.AppImage" class="btn btn-green" style="width:100%;justify-content:center;text-decoration:none;margin-bottom:6px;">⬇ AppImage</a>
+          <a href="https://github.com/bioinfocodex/rnaflow/releases/latest/download/rnaflow_2.0.0_amd64.deb" class="btn btn-outline" style="width:100%;justify-content:center;text-decoration:none;">Debian .deb</a>
         </div>
         <div class="card" style="padding:22px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;">
           <div style="font-size:1.4em;margin-bottom:8px;">📖</div>
