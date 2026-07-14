@@ -1231,6 +1231,7 @@ nav.nav-scrolled { box-shadow: 0 4px 28px rgba(0,0,0,0.1); border-bottom-color: 
     <div class="nav-tab active" id="tab-home"     onclick="showPage('home')">🏠 Home</div>
     <div class="nav-tab"        id="tab-tools"    onclick="showPage('tools')">🧬 Bioinfo Tools</div>
     <div class="nav-tab"        id="tab-edu"      onclick="showPage('edu')">📚 Education</div>
+    <div class="nav-tab"        id="tab-resources" onclick="showPage('resources')">🔗 Resources</div>
     <div class="nav-tab"        id="tab-register" onclick="showPage('register')">⬇️ Register & Download</div>
     <div class="nav-tab"        id="tab-contact"  onclick="showPage('contact')">✉️ Contact</div>
   </div>
@@ -1244,6 +1245,7 @@ nav.nav-scrolled { box-shadow: 0 4px 28px rgba(0,0,0,0.1); border-bottom-color: 
   <div class="nav-tab" onclick="showPage('home');toggleMobile()">🏠 Home</div>
   <div class="nav-tab" onclick="showPage('tools');toggleMobile()">🧬 Bioinfo Tools</div>
   <div class="nav-tab" onclick="showPage('edu');toggleMobile()">📚 Education</div>
+  <div class="nav-tab" onclick="showPage('resources');toggleMobile()">🔗 Resources</div>
   <div class="nav-tab" onclick="showPage('register');toggleMobile()">⬇️ Register & Download</div>
   <div class="nav-tab" onclick="showPage('contact');toggleMobile()">✉️ Contact</div>
 </div>
@@ -6760,6 +6762,128 @@ hub_genes &lt;- module_genes[order(kME[module_genes, paste0("kME", module_number
   </div>
 
 </div><!-- /contact -->
+
+<!-- ══════════════════════════════════════════
+     RESOURCES
+══════════════════════════════════════════ -->
+<div class="page" id="page-resources">
+  <style>
+    #page-resources .res-cat { margin-bottom: 42px; }
+    #page-resources .res-cat-title { font-size: 1.05em; font-weight: 800; font-family: var(--fh); color: var(--text); margin: 0 0 16px; display:flex; align-items:center; gap:12px; }
+    #page-resources .res-cat-title .rc-line { flex:1; height:1px; background:var(--border); }
+    #page-resources .res-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(256px,1fr)); gap:14px; }
+    #page-resources .res-card { display:block; text-decoration:none; background:var(--surf); border:1px solid var(--border); border-radius:14px; padding:15px 17px; transition:transform .18s ease, border-color .18s ease, box-shadow .18s ease; }
+    #page-resources .res-card:hover { transform:translateY(-3px); border-color:var(--green); box-shadow:0 10px 28px rgba(0,0,0,0.22); }
+    #page-resources .res-name { font-weight:700; color:var(--text); font-size:0.98em; display:flex; align-items:center; justify-content:space-between; gap:8px; }
+    #page-resources .res-name .ext { color:var(--text3); font-size:0.9em; transition:color .18s; }
+    #page-resources .res-card:hover .res-name .ext { color:var(--green); }
+    #page-resources .res-domain { font-family:var(--fm); font-size:0.72em; color:var(--green); margin:4px 0 9px; word-break:break-all; }
+    #page-resources .res-desc { font-size:0.83em; color:var(--text2); line-height:1.55; }
+  </style>
+
+  <div class="tools-hero">
+    <div class="label" style="position:relative;z-index:2;">🔗 Curated Links</div>
+    <h1 class="h1" style="position:relative;z-index:2;">Bioinformatics Resources</h1>
+    <p class="lead" style="position:relative;z-index:2;">A hand-picked directory of the most useful bioinformatics websites, databases, and tools — so you never lose track of them. Every link opens in a new tab.</p>
+  </div>
+
+  <div class="section" style="max-width:1080px;margin:0 auto;">
+
+    <div class="res-cat">
+      <div class="res-cat-title">🧬 Sequences &amp; Genomes <span class="rc-line"></span></div>
+      <div class="res-grid">
+        <a class="res-card" href="https://www.ncbi.nlm.nih.gov" target="_blank" rel="noopener noreferrer"><div class="res-name">NCBI <span class="ext">↗</span></div><div class="res-domain">ncbi.nlm.nih.gov</div><div class="res-desc">The central hub of 40+ databases — genes, genomes, proteins &amp; literature.</div></a>
+        <a class="res-card" href="https://blast.ncbi.nlm.nih.gov" target="_blank" rel="noopener noreferrer"><div class="res-name">BLAST <span class="ext">↗</span></div><div class="res-domain">blast.ncbi.nlm.nih.gov</div><div class="res-desc">Find regions of similarity between your sequence and known ones.</div></a>
+        <a class="res-card" href="https://www.ensembl.org" target="_blank" rel="noopener noreferrer"><div class="res-name">Ensembl <span class="ext">↗</span></div><div class="res-domain">ensembl.org</div><div class="res-desc">Genome browser &amp; annotation across vertebrates and other species.</div></a>
+        <a class="res-card" href="https://genome.ucsc.edu" target="_blank" rel="noopener noreferrer"><div class="res-name">UCSC Genome Browser <span class="ext">↗</span></div><div class="res-domain">genome.ucsc.edu</div><div class="res-desc">Explore genomes visually with rich, layered data tracks.</div></a>
+        <a class="res-card" href="https://www.ebi.ac.uk" target="_blank" rel="noopener noreferrer"><div class="res-name">EMBL-EBI <span class="ext">↗</span></div><div class="res-domain">ebi.ac.uk</div><div class="res-desc">Europe's collection of molecular biology databases and tools.</div></a>
+      </div>
+    </div>
+
+    <div class="res-cat">
+      <div class="res-cat-title">🧪 Proteins &amp; Structures <span class="rc-line"></span></div>
+      <div class="res-grid">
+        <a class="res-card" href="https://www.uniprot.org" target="_blank" rel="noopener noreferrer"><div class="res-name">UniProt <span class="ext">↗</span></div><div class="res-domain">uniprot.org</div><div class="res-desc">Comprehensive protein sequences, function &amp; annotation.</div></a>
+        <a class="res-card" href="https://www.rcsb.org" target="_blank" rel="noopener noreferrer"><div class="res-name">RCSB PDB <span class="ext">↗</span></div><div class="res-domain">rcsb.org</div><div class="res-desc">Experimentally determined 3D structures of biomolecules.</div></a>
+        <a class="res-card" href="https://alphafold.ebi.ac.uk" target="_blank" rel="noopener noreferrer"><div class="res-name">AlphaFold DB <span class="ext">↗</span></div><div class="res-domain">alphafold.ebi.ac.uk</div><div class="res-desc">200M+ AI-predicted protein structures, free to explore.</div></a>
+        <a class="res-card" href="https://www.ebi.ac.uk/interpro/" target="_blank" rel="noopener noreferrer"><div class="res-name">InterPro &amp; Pfam <span class="ext">↗</span></div><div class="res-domain">ebi.ac.uk/interpro</div><div class="res-desc">Protein families, domains &amp; functional sites (includes Pfam).</div></a>
+      </div>
+    </div>
+
+    <div class="res-cat">
+      <div class="res-cat-title">📊 Expression &amp; Function <span class="rc-line"></span></div>
+      <div class="res-grid">
+        <a class="res-card" href="https://www.ncbi.nlm.nih.gov/geo/" target="_blank" rel="noopener noreferrer"><div class="res-name">GEO <span class="ext">↗</span></div><div class="res-domain">ncbi.nlm.nih.gov/geo</div><div class="res-desc">Public repository of gene-expression &amp; functional genomics data.</div></a>
+        <a class="res-card" href="https://www.ncbi.nlm.nih.gov/sra" target="_blank" rel="noopener noreferrer"><div class="res-name">SRA <span class="ext">↗</span></div><div class="res-domain">ncbi.nlm.nih.gov/sra</div><div class="res-desc">The Sequence Read Archive — raw sequencing reads (used by RNAflow).</div></a>
+        <a class="res-card" href="https://www.ebi.ac.uk/gxa/home" target="_blank" rel="noopener noreferrer"><div class="res-name">Expression Atlas <span class="ext">↗</span></div><div class="res-domain">ebi.ac.uk/gxa</div><div class="res-desc">Discover where and when genes are expressed.</div></a>
+        <a class="res-card" href="https://www.proteinatlas.org" target="_blank" rel="noopener noreferrer"><div class="res-name">Human Protein Atlas <span class="ext">↗</span></div><div class="res-domain">proteinatlas.org</div><div class="res-desc">Protein localization &amp; expression across tissues and cells.</div></a>
+      </div>
+    </div>
+
+    <div class="res-cat">
+      <div class="res-cat-title">🔀 Pathways &amp; Networks <span class="rc-line"></span></div>
+      <div class="res-grid">
+        <a class="res-card" href="https://www.genome.jp/kegg/" target="_blank" rel="noopener noreferrer"><div class="res-name">KEGG <span class="ext">↗</span></div><div class="res-domain">genome.jp/kegg</div><div class="res-desc">Metabolic &amp; signaling pathway maps and reference data.</div></a>
+        <a class="res-card" href="https://reactome.org" target="_blank" rel="noopener noreferrer"><div class="res-name">Reactome <span class="ext">↗</span></div><div class="res-domain">reactome.org</div><div class="res-desc">Free, curated database of biological pathways.</div></a>
+        <a class="res-card" href="https://string-db.org" target="_blank" rel="noopener noreferrer"><div class="res-name">STRING <span class="ext">↗</span></div><div class="res-domain">string-db.org</div><div class="res-desc">Known and predicted protein–protein interaction networks.</div></a>
+        <a class="res-card" href="https://biit.cs.ut.ee/gprofiler/" target="_blank" rel="noopener noreferrer"><div class="res-name">g:Profiler <span class="ext">↗</span></div><div class="res-domain">biit.cs.ut.ee/gprofiler</div><div class="res-desc">Functional enrichment analysis for gene lists.</div></a>
+        <a class="res-card" href="https://david.ncifcrf.gov" target="_blank" rel="noopener noreferrer"><div class="res-name">DAVID <span class="ext">↗</span></div><div class="res-domain">david.ncifcrf.gov</div><div class="res-desc">Functional annotation &amp; enrichment for large gene lists.</div></a>
+      </div>
+    </div>
+
+    <div class="res-cat">
+      <div class="res-cat-title">🧫 Variants &amp; Disease <span class="rc-line"></span></div>
+      <div class="res-grid">
+        <a class="res-card" href="https://www.ncbi.nlm.nih.gov/snp/" target="_blank" rel="noopener noreferrer"><div class="res-name">dbSNP <span class="ext">↗</span></div><div class="res-domain">ncbi.nlm.nih.gov/snp</div><div class="res-desc">Catalog of short genetic variations across the genome.</div></a>
+        <a class="res-card" href="https://www.ncbi.nlm.nih.gov/clinvar/" target="_blank" rel="noopener noreferrer"><div class="res-name">ClinVar <span class="ext">↗</span></div><div class="res-domain">ncbi.nlm.nih.gov/clinvar</div><div class="res-desc">Genetic variants and their clinical significance.</div></a>
+        <a class="res-card" href="https://gnomad.broadinstitute.org" target="_blank" rel="noopener noreferrer"><div class="res-name">gnomAD <span class="ext">↗</span></div><div class="res-domain">gnomad.broadinstitute.org</div><div class="res-desc">Population-scale variant allele frequencies.</div></a>
+        <a class="res-card" href="https://www.omim.org" target="_blank" rel="noopener noreferrer"><div class="res-name">OMIM <span class="ext">↗</span></div><div class="res-domain">omim.org</div><div class="res-desc">Catalog of human genes and genetic disorders.</div></a>
+      </div>
+    </div>
+
+    <div class="res-cat">
+      <div class="res-cat-title">💊 Docking &amp; Drug Discovery <span class="rc-line"></span></div>
+      <div class="res-grid">
+        <a class="res-card" href="https://www.swissdock.ch" target="_blank" rel="noopener noreferrer"><div class="res-name">SwissDock <span class="ext">↗</span></div><div class="res-domain">swissdock.ch</div><div class="res-desc">Web service to predict protein–small molecule docking.</div></a>
+        <a class="res-card" href="https://vina.scripps.edu" target="_blank" rel="noopener noreferrer"><div class="res-name">AutoDock Vina <span class="ext">↗</span></div><div class="res-domain">vina.scripps.edu</div><div class="res-desc">Widely used open-source molecular docking engine.</div></a>
+        <a class="res-card" href="https://www.swissadme.ch" target="_blank" rel="noopener noreferrer"><div class="res-name">SwissADME <span class="ext">↗</span></div><div class="res-domain">swissadme.ch</div><div class="res-desc">Predict drug-likeness &amp; pharmacokinetics of molecules.</div></a>
+        <a class="res-card" href="https://pubchem.ncbi.nlm.nih.gov" target="_blank" rel="noopener noreferrer"><div class="res-name">PubChem <span class="ext">↗</span></div><div class="res-domain">pubchem.ncbi.nlm.nih.gov</div><div class="res-desc">Chemical compounds, structures &amp; bioactivity data.</div></a>
+        <a class="res-card" href="https://www.ebi.ac.uk/chembl/" target="_blank" rel="noopener noreferrer"><div class="res-name">ChEMBL <span class="ext">↗</span></div><div class="res-domain">ebi.ac.uk/chembl</div><div class="res-desc">Database of bioactive, drug-like molecules.</div></a>
+        <a class="res-card" href="https://go.drugbank.com" target="_blank" rel="noopener noreferrer"><div class="res-name">DrugBank <span class="ext">↗</span></div><div class="res-domain">go.drugbank.com</div><div class="res-desc">Detailed drug, mechanism &amp; drug-target information.</div></a>
+      </div>
+    </div>
+
+    <div class="res-cat">
+      <div class="res-cat-title">🛠️ Everyday Tools <span class="rc-line"></span></div>
+      <div class="res-grid">
+        <a class="res-card" href="https://www.ebi.ac.uk/jdispatcher/msa/clustalo" target="_blank" rel="noopener noreferrer"><div class="res-name">Clustal Omega <span class="ext">↗</span></div><div class="res-domain">ebi.ac.uk · clustalo</div><div class="res-desc">Fast, accurate multiple sequence alignment.</div></a>
+        <a class="res-card" href="https://mafft.cbrc.jp/alignment/server/" target="_blank" rel="noopener noreferrer"><div class="res-name">MAFFT <span class="ext">↗</span></div><div class="res-domain">mafft.cbrc.jp</div><div class="res-desc">Multiple sequence alignment for larger datasets.</div></a>
+        <a class="res-card" href="https://primer3.org" target="_blank" rel="noopener noreferrer"><div class="res-name">Primer3 <span class="ext">↗</span></div><div class="res-domain">primer3.org</div><div class="res-desc">Design PCR primers from a target sequence.</div></a>
+        <a class="res-card" href="https://www.ncbi.nlm.nih.gov/tools/primer-blast/" target="_blank" rel="noopener noreferrer"><div class="res-name">Primer-BLAST <span class="ext">↗</span></div><div class="res-domain">ncbi.nlm.nih.gov · primer-blast</div><div class="res-desc">Design primers and check their specificity in one step.</div></a>
+        <a class="res-card" href="https://igv.org" target="_blank" rel="noopener noreferrer"><div class="res-name">IGV <span class="ext">↗</span></div><div class="res-domain">igv.org</div><div class="res-desc">Integrative Genomics Viewer for alignments &amp; tracks.</div></a>
+        <a class="res-card" href="https://www.jalview.org" target="_blank" rel="noopener noreferrer"><div class="res-name">Jalview <span class="ext">↗</span></div><div class="res-domain">jalview.org</div><div class="res-desc">Editor for sequence alignments &amp; annotation.</div></a>
+        <a class="res-card" href="https://pymol.org" target="_blank" rel="noopener noreferrer"><div class="res-name">PyMOL <span class="ext">↗</span></div><div class="res-domain">pymol.org</div><div class="res-desc">Molecular visualization for 3D structures.</div></a>
+        <a class="res-card" href="https://www.cgl.ucsf.edu/chimerax/" target="_blank" rel="noopener noreferrer"><div class="res-name">UCSF ChimeraX <span class="ext">↗</span></div><div class="res-domain">cgl.ucsf.edu/chimerax</div><div class="res-desc">Next-gen structure visualization &amp; analysis.</div></a>
+        <a class="res-card" href="https://usegalaxy.org" target="_blank" rel="noopener noreferrer"><div class="res-name">Galaxy <span class="ext">↗</span></div><div class="res-domain">usegalaxy.org</div><div class="res-desc">Run bioinformatics pipelines with no coding required.</div></a>
+        <a class="res-card" href="https://www.benchling.com" target="_blank" rel="noopener noreferrer"><div class="res-name">Benchling <span class="ext">↗</span></div><div class="res-domain">benchling.com</div><div class="res-desc">Cloud lab notebook &amp; molecular biology suite.</div></a>
+        <a class="res-card" href="https://www.addgene.org" target="_blank" rel="noopener noreferrer"><div class="res-name">Addgene <span class="ext">↗</span></div><div class="res-domain">addgene.org</div><div class="res-desc">Nonprofit repository for sharing plasmids.</div></a>
+        <a class="res-card" href="https://www.snapgene.com" target="_blank" rel="noopener noreferrer"><div class="res-name">SnapGene <span class="ext">↗</span></div><div class="res-domain">snapgene.com</div><div class="res-desc">Plan, visualize &amp; document cloning and plasmids.</div></a>
+      </div>
+    </div>
+
+    <div class="res-cat">
+      <div class="res-cat-title">🎓 Learn &amp; Community <span class="rc-line"></span></div>
+      <div class="res-grid">
+        <a class="res-card" href="https://rosalind.info" target="_blank" rel="noopener noreferrer"><div class="res-name">Rosalind <span class="ext">↗</span></div><div class="res-domain">rosalind.info</div><div class="res-desc">Learn bioinformatics by solving programming problems.</div></a>
+        <a class="res-card" href="https://www.biostars.org" target="_blank" rel="noopener noreferrer"><div class="res-name">Biostars <span class="ext">↗</span></div><div class="res-domain">biostars.org</div><div class="res-desc">Active Q&amp;A community for bioinformatics questions.</div></a>
+        <a class="res-card" href="https://www.bioconductor.org" target="_blank" rel="noopener noreferrer"><div class="res-name">Bioconductor <span class="ext">↗</span></div><div class="res-domain">bioconductor.org</div><div class="res-desc">R packages for the analysis of genomic data.</div></a>
+      </div>
+    </div>
+
+    <p style="text-align:center;color:var(--text3);font-size:0.8em;margin-top:8px;">Know a resource we should add? <span style="color:var(--green);cursor:pointer;" onclick="showPage('contact')">Suggest it →</span></p>
+
+  </div>
+</div><!-- /resources -->
 
 <!-- ══════════════════════════════════════════
      FOOTER
