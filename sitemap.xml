@@ -1,10 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  Every route the app serves. This replaced a single-entry sitemap: navigation
-  used to run through location.hash, and search engines discard fragments, so
-  14 education modules and 8 tool pages all sat behind one indexable URL.
-  Routing now uses history.pushState with real paths, and each of these has
-  its own title and meta description.
+  One entry, deliberately — and this is now a hosting limit rather than an app
+  limit.
+
+  Routing was moved to history.pushState, so every page has a real path with
+  its own title, description and canonical: /tools/rnaflow, /learn/rna-seq and
+  26 others. Those work for anyone using the site, including deep links and
+  back/forward.
+
+  What they cannot do yet is get indexed. GitHub Pages has no server-side
+  rewrite, so a cold request for /tools/rnaflow is answered by 404.html — which
+  Pages serves with an HTTP 404 status. The browser then redirects and the page
+  loads correctly, but a crawler has already been told the URL does not exist.
+  Listing those 28 paths here would just fill Search Console with errors.
+
+  Two ways to make them real, both requiring a hosting change:
+    - Serve the site from Netlify, which this repo already has a netlify.toml
+      for. A rewrite rule returns 200 for every route.
+    - Or pre-render one static file per route, each containing only that page's
+      content, so no JavaScript is needed to see it.
+
+  Once either is in place, expand this file to the full 28.
 -->
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
@@ -12,167 +28,5 @@
     <lastmod>2026-08-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
-  </url>
-  <url>
-    <loc>https://bioinfocodex.com/tools</loc>
-    <lastmod>2026-08-24</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://bioinfocodex.com/learn</loc>
-    <lastmod>2026-08-24</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://bioinfocodex.com/tools/rnaflow</loc>
-    <lastmod>2026-08-24</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://bioinfocodex.com/tools/genenet</loc>
-    <lastmod>2026-08-24</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://bioinfocodex.com/download</loc>
-    <lastmod>2026-08-24</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://bioinfocodex.com/resources</loc>
-    <lastmod>2026-08-24</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://bioinfocodex.com/tools/ngsuite</loc>
-    <lastmod>2026-08-24</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
-    <loc>https://bioinfocodex.com/tools/plasmidmap</loc>
-    <lastmod>2026-08-24</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
-    <loc>https://bioinfocodex.com/tools/chipflow</loc>
-    <lastmod>2026-08-24</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
-    <loc>https://bioinfocodex.com/tools/metaflow</loc>
-    <lastmod>2026-08-24</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
-    <loc>https://bioinfocodex.com/tools/scrnaflow</loc>
-    <lastmod>2026-08-24</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
-    <loc>https://bioinfocodex.com/tools/proteomics</loc>
-    <lastmod>2026-08-24</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
-    <loc>https://bioinfocodex.com/contact</loc>
-    <lastmod>2026-08-24</lastmod>
-    <changefreq>yearly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
-    <loc>https://bioinfocodex.com/learn/foundations</loc>
-    <lastmod>2026-08-24</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://bioinfocodex.com/learn/computing</loc>
-    <lastmod>2026-08-24</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://bioinfocodex.com/learn/databases</loc>
-    <lastmod>2026-08-24</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://bioinfocodex.com/learn/sequence-analysis</loc>
-    <lastmod>2026-08-24</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://bioinfocodex.com/learn/rna-seq</loc>
-    <lastmod>2026-08-24</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://bioinfocodex.com/learn/genomics</loc>
-    <lastmod>2026-08-24</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://bioinfocodex.com/learn/statistics</loc>
-    <lastmod>2026-08-24</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://bioinfocodex.com/learn/advanced</loc>
-    <lastmod>2026-08-24</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://bioinfocodex.com/learn/proteomics</loc>
-    <lastmod>2026-08-24</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://bioinfocodex.com/learn/structural-biology</loc>
-    <lastmod>2026-08-24</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://bioinfocodex.com/learn/epigenomics</loc>
-    <lastmod>2026-08-24</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://bioinfocodex.com/learn/genome-assembly</loc>
-    <lastmod>2026-08-24</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://bioinfocodex.com/learn/population-genetics</loc>
-    <lastmod>2026-08-24</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://bioinfocodex.com/learn/systems-biology</loc>
-    <lastmod>2026-08-24</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
   </url>
 </urlset>
