@@ -11,6 +11,28 @@
 <meta property="og:url" content="https://bioinfocodex.com">
 <meta property="og:type" content="website">
 <link rel="canonical" href="https://bioinfocodex.com">
+
+<!-- Icons. SVG first for browsers that take it (scales to any size), 32px PNG
+     as the fallback. The Apple icon is opaque and padded because iOS ignores
+     transparency and applies its own rounded mask. -->
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/favicon.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<meta name="theme-color" content="#00c896">
+
+<!-- Share card. og:image alone is not enough for X, which needs the twitter:*
+     pair, and both want an absolute URL. 1200x630 is the ratio Slack, X,
+     LinkedIn and Facebook all crop cleanly. -->
+<meta property="og:image" content="https://bioinfocodex.com/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="BioInfoCodex — bioinformatics, step by step. Guided pipelines from raw FASTQ to publication figures.">
+<meta property="og:site_name" content="BioInfoCodex">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="BioInfoCodex — The Open Bioinformatics Codex">
+<meta name="twitter:description" content="Free guided bioinformatics tools and education. RNA-seq, NGS, plasmid analysis and more.">
+<meta name="twitter:image" content="https://bioinfocodex.com/og-image.png">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=DM+Mono:wght@400;500&family=Playfair+Display:ital,wght@0,700;0,800;0,900;1,700;1,800&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
 /* ══════════════════════════════════════════
