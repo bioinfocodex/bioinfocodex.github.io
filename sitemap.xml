@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  One entry, and that is not an oversight.
+
+  The site is a single-page app: navigation runs through showPage(), which
+  writes a location.hash. Search engines discard fragments, so #tools,
+  #edu/rna-seq and the rest are not separate URLs and cannot be listed here.
+  Everything on the site — 14 education modules, 46 topics, 94 code examples —
+  lives behind this one address.
+
+  This file becomes worth expanding once routing moves to history.pushState
+  with real paths (/tools/rnaflow, /learn/chip-seq). At that point each route
+  gets its own <url> block with its own title and description.
+-->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://bioinfocodex.com/</loc>
+    <lastmod>2026-08-24</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+</urlset>

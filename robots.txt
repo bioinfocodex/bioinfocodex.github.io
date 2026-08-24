@@ -1,0 +1,17 @@
+# bioinfocodex.com
+# https://bioinfocodex.com/robots.txt
+
+# No blanket "Allow: /" here on purpose. Anything not disallowed is already
+# crawlable, and a leading Allow: / shadows the rules below in parsers that
+# match in order rather than by specificity.
+User-agent: *
+Disallow: /RNAflow_App.html
+Disallow: /rnaflow_server.py
+
+# Those two are byte-identical to the copies at rnaflow.bioinfocodex.com.
+# Crawling both splits ranking between two hosts for the same file, and the raw
+# app is a 370 KB download rather than a page anyone should reach from search.
+# rnaflow.bioinfocodex.com is the canonical home for RNAflow. Both files stay
+# downloadable — robots.txt affects crawlers, not people.
+
+Sitemap: https://bioinfocodex.com/sitemap.xml
