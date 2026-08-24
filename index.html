@@ -213,6 +213,20 @@ em.p{font-style:normal;color:var(--purple);}
    overflow-x:hidden would break those. */
 .page{overflow-x:clip;}
 
+/* ─── Keyboard focus ──────────────────────────────────────────────────────
+   The site had no focus styling at all, so a keyboard user could not see
+   where they were even once elements became focusable. :focus-visible keeps
+   it off for mouse clicks. */
+:focus-visible{
+  outline:3px solid var(--green);
+  outline-offset:2px;
+  border-radius:4px;
+}
+/* Chrome shows a default ring on click for role=button; suppress that one
+   only, never the :focus-visible ring above. */
+[role="button"]:focus:not(:focus-visible){outline:none;}
+[role="button"]{cursor:pointer;}
+
 /* Respect a reduced-motion preference: the site runs 13 keyframe
    animations, and for some people that means nausea rather than polish.
    Scroll-reveal opacity is forced on so nothing stays invisible. */
@@ -1248,7 +1262,7 @@ nav.nav-scrolled { box-shadow: 0 4px 28px rgba(0,0,0,0.1); border-bottom-color: 
      NAVIGATION
 ══════════════════════════════════════════ -->
 <nav>
-  <div class="nav-logo" onclick="showPage('home')" style="cursor:pointer;gap:12px;">
+  <div class="nav-logo" onclick="showPage('home')" style="cursor:pointer;gap:12px;" role="button" tabindex="0">
     <!-- Logo mark: hexagon with DNA strand inside -->
     <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:38px;height:38px;">
       <defs>
@@ -1290,12 +1304,12 @@ nav.nav-scrolled { box-shadow: 0 4px 28px rgba(0,0,0,0.1); border-bottom-color: 
   </div>
 
   <div class="nav-tabs">
-    <div class="nav-tab active" id="tab-home"     onclick="showPage('home')">🏠 Home</div>
-    <div class="nav-tab"        id="tab-tools"    onclick="showPage('tools')">🧬 Bioinfo Tools</div>
-    <div class="nav-tab"        id="tab-edu"      onclick="showPage('edu')">📚 Education</div>
-    <div class="nav-tab"        id="tab-resources" onclick="showPage('resources')">🔗 Resources</div>
-    <div class="nav-tab"        id="tab-register" onclick="showPage('register')">⬇️ Register & Download</div>
-    <div class="nav-tab"        id="tab-contact"  onclick="showPage('contact')">✉️ Contact</div>
+    <div class="nav-tab active" id="tab-home"     onclick="showPage('home')" role="button" tabindex="0">🏠 Home</div>
+    <div class="nav-tab"        id="tab-tools"    onclick="showPage('tools')" role="button" tabindex="0">🧬 Bioinfo Tools</div>
+    <div class="nav-tab"        id="tab-edu"      onclick="showPage('edu')" role="button" tabindex="0">📚 Education</div>
+    <div class="nav-tab"        id="tab-resources" onclick="showPage('resources')" role="button" tabindex="0">🔗 Resources</div>
+    <div class="nav-tab"        id="tab-register" onclick="showPage('register')" role="button" tabindex="0">⬇️ Register & Download</div>
+    <div class="nav-tab"        id="tab-contact"  onclick="showPage('contact')" role="button" tabindex="0">✉️ Contact</div>
   </div>
 
   <div class="nav-spacer"></div>
@@ -1304,12 +1318,12 @@ nav.nav-scrolled { box-shadow: 0 4px 28px rgba(0,0,0,0.1); border-bottom-color: 
 
 <!-- Mobile menu -->
 <div class="mobile-menu" id="mobile-menu">
-  <div class="nav-tab" onclick="showPage('home');toggleMobile()">🏠 Home</div>
-  <div class="nav-tab" onclick="showPage('tools');toggleMobile()">🧬 Bioinfo Tools</div>
-  <div class="nav-tab" onclick="showPage('edu');toggleMobile()">📚 Education</div>
-  <div class="nav-tab" onclick="showPage('resources');toggleMobile()">🔗 Resources</div>
-  <div class="nav-tab" onclick="showPage('register');toggleMobile()">⬇️ Register & Download</div>
-  <div class="nav-tab" onclick="showPage('contact');toggleMobile()">✉️ Contact</div>
+  <div class="nav-tab" onclick="showPage('home');toggleMobile()" role="button" tabindex="0">🏠 Home</div>
+  <div class="nav-tab" onclick="showPage('tools');toggleMobile()" role="button" tabindex="0">🧬 Bioinfo Tools</div>
+  <div class="nav-tab" onclick="showPage('edu');toggleMobile()" role="button" tabindex="0">📚 Education</div>
+  <div class="nav-tab" onclick="showPage('resources');toggleMobile()" role="button" tabindex="0">🔗 Resources</div>
+  <div class="nav-tab" onclick="showPage('register');toggleMobile()" role="button" tabindex="0">⬇️ Register & Download</div>
+  <div class="nav-tab" onclick="showPage('contact');toggleMobile()" role="button" tabindex="0">✉️ Contact</div>
 </div>
 
 <!-- ══════════════════════════════════════════
@@ -1500,43 +1514,43 @@ nav.nav-scrolled { box-shadow: 0 4px 28px rgba(0,0,0,0.1); border-bottom-color: 
         <p class="sub" style="max-width:600px;margin:0 auto;">Each step generates ready-to-run commands with full explanations. Follow in order, or jump to any step — the app remembers where you left off.</p>
       </div>
       <div class="pipeline-grid">
-        <div class="pipe-step reveal" onclick="showPage('page-tool-rnaflow')">
+        <div class="pipe-step reveal" onclick="showPage('page-tool-rnaflow')" role="button" tabindex="0">
           <div class="pipe-icon-wrap">⚙️<span class="pipe-num">1</span></div>
           <div class="pipe-name">Configure</div>
         </div>
-        <div class="pipe-step reveal" style="animation-delay:0.05s;" onclick="showPage('page-tool-rnaflow')">
+        <div class="pipe-step reveal" style="animation-delay:0.05s;" onclick="showPage('page-tool-rnaflow')" role="button" tabindex="0">
           <div class="pipe-icon-wrap">⬇️<span class="pipe-num">2</span></div>
           <div class="pipe-name">Download data</div>
         </div>
-        <div class="pipe-step reveal" style="animation-delay:0.1s;" onclick="showPage('page-tool-rnaflow')">
+        <div class="pipe-step reveal" style="animation-delay:0.1s;" onclick="showPage('page-tool-rnaflow')" role="button" tabindex="0">
           <div class="pipe-icon-wrap">🔍<span class="pipe-num">3</span></div>
           <div class="pipe-name">Quality control</div>
         </div>
-        <div class="pipe-step reveal" style="animation-delay:0.15s;" onclick="showPage('page-tool-rnaflow')">
+        <div class="pipe-step reveal" style="animation-delay:0.15s;" onclick="showPage('page-tool-rnaflow')" role="button" tabindex="0">
           <div class="pipe-icon-wrap">✂️<span class="pipe-num">4</span></div>
           <div class="pipe-name">Trimming</div>
         </div>
-        <div class="pipe-step reveal" style="animation-delay:0.2s;" onclick="showPage('page-tool-rnaflow')">
+        <div class="pipe-step reveal" style="animation-delay:0.2s;" onclick="showPage('page-tool-rnaflow')" role="button" tabindex="0">
           <div class="pipe-icon-wrap">🧬<span class="pipe-num">5</span></div>
           <div class="pipe-name">Genome &amp; index</div>
         </div>
-        <div class="pipe-step highlight reveal" style="animation-delay:0.25s;" onclick="showPage('page-tool-rnaflow')">
+        <div class="pipe-step highlight reveal" style="animation-delay:0.25s;" onclick="showPage('page-tool-rnaflow')" role="button" tabindex="0">
           <div class="pipe-icon-wrap">📍<span class="pipe-num">6</span></div>
           <div class="pipe-name">Alignment</div>
         </div>
-        <div class="pipe-step highlight reveal" style="animation-delay:0.3s;" onclick="showPage('page-tool-rnaflow')">
+        <div class="pipe-step highlight reveal" style="animation-delay:0.3s;" onclick="showPage('page-tool-rnaflow')" role="button" tabindex="0">
           <div class="pipe-icon-wrap">🔢<span class="pipe-num">7</span></div>
           <div class="pipe-name">Gene counting</div>
         </div>
-        <div class="pipe-step highlight reveal" style="animation-delay:0.35s;" onclick="showPage('page-tool-rnaflow')">
+        <div class="pipe-step highlight reveal" style="animation-delay:0.35s;" onclick="showPage('page-tool-rnaflow')" role="button" tabindex="0">
           <div class="pipe-icon-wrap">🧬<span class="pipe-num">8</span></div>
           <div class="pipe-name">Gene family</div>
         </div>
-        <div class="pipe-step reveal" style="animation-delay:0.4s;" onclick="showPage('page-tool-rnaflow')">
+        <div class="pipe-step reveal" style="animation-delay:0.4s;" onclick="showPage('page-tool-rnaflow')" role="button" tabindex="0">
           <div class="pipe-icon-wrap">📊<span class="pipe-num">9</span></div>
           <div class="pipe-name">DESeq2</div>
         </div>
-        <div class="pipe-step reveal" style="animation-delay:0.45s;" onclick="showPage('page-tool-rnaflow')">
+        <div class="pipe-step reveal" style="animation-delay:0.45s;" onclick="showPage('page-tool-rnaflow')" role="button" tabindex="0">
           <div class="pipe-icon-wrap">🌋<span class="pipe-num">10</span></div>
           <div class="pipe-name">Plots &amp; results</div>
         </div>
@@ -1633,7 +1647,7 @@ nav.nav-scrolled { box-shadow: 0 4px 28px rgba(0,0,0,0.1); border-bottom-color: 
       <div class="card-grid card-grid-2">
 
         <!-- RNAflow hub card -->
-        <div class="tool-hub-card live" data-tags="rna live plant" onclick="showPage('page-tool-rnaflow')">
+        <div class="tool-hub-card live" data-tags="rna live plant" onclick="showPage('page-tool-rnaflow')" role="button" tabindex="0">
           <div class="tool-hub-arrow">→</div>
           <div class="tool-top" style="margin-bottom:12px;">
             <div class="tool-icon-wrap">🧬</div>
@@ -1658,7 +1672,7 @@ nav.nav-scrolled { box-shadow: 0 4px 28px rgba(0,0,0,0.1); border-bottom-color: 
         </div>
 
         <!-- GeneNet hub card -->
-        <div class="tool-hub-card live" data-tags="lab live" onclick="showPage('page-tool-genenet')">
+        <div class="tool-hub-card live" data-tags="lab live" onclick="showPage('page-tool-genenet')" role="button" tabindex="0">
           <div class="tool-hub-arrow">→</div>
           <div class="tool-top" style="margin-bottom:12px;">
             <div class="tool-icon-wrap">🧬</div>
@@ -1689,7 +1703,7 @@ nav.nav-scrolled { box-shadow: 0 4px 28px rgba(0,0,0,0.1); border-bottom-color: 
       <div class="tool-category-title" style="color:var(--text3);">In development</div>
       <div class="card-grid card-grid-2">
 
-        <div class="tool-hub-card coming" data-tags="dna live" onclick="showPage('page-tool-ngsuite')">
+        <div class="tool-hub-card coming" data-tags="dna live" onclick="showPage('page-tool-ngsuite')" role="button" tabindex="0">
           <div class="tool-top">
             <div class="tool-icon-wrap" style="opacity:0.6;">🔬</div>
             <div class="tool-meta">
@@ -1705,7 +1719,7 @@ nav.nav-scrolled { box-shadow: 0 4px 28px rgba(0,0,0,0.1); border-bottom-color: 
           </div>
         </div>
 
-        <div class="tool-hub-card coming" data-tags="dna" onclick="showPage('page-tool-plasmidmap')">
+        <div class="tool-hub-card coming" data-tags="dna" onclick="showPage('page-tool-plasmidmap')" role="button" tabindex="0">
           <div class="tool-top">
             <div class="tool-icon-wrap" style="opacity:0.6;">⭕</div>
             <div class="tool-meta">
@@ -1721,7 +1735,7 @@ nav.nav-scrolled { box-shadow: 0 4px 28px rgba(0,0,0,0.1); border-bottom-color: 
           </div>
         </div>
 
-        <div class="tool-hub-card coming" data-tags="epi" onclick="showPage('page-tool-chipflow')">
+        <div class="tool-hub-card coming" data-tags="epi" onclick="showPage('page-tool-chipflow')" role="button" tabindex="0">
           <div class="tool-top">
             <div class="tool-icon-wrap" style="opacity:0.6;">🏔️</div>
             <div class="tool-meta">
@@ -1737,7 +1751,7 @@ nav.nav-scrolled { box-shadow: 0 4px 28px rgba(0,0,0,0.1); border-bottom-color: 
           </div>
         </div>
 
-        <div class="tool-hub-card coming" data-tags="micro" onclick="showPage('page-tool-metaflow')">
+        <div class="tool-hub-card coming" data-tags="micro" onclick="showPage('page-tool-metaflow')" role="button" tabindex="0">
           <div class="tool-top">
             <div class="tool-icon-wrap" style="opacity:0.6;">🌿</div>
             <div class="tool-meta">
@@ -1753,7 +1767,7 @@ nav.nav-scrolled { box-shadow: 0 4px 28px rgba(0,0,0,0.1); border-bottom-color: 
           </div>
         </div>
 
-        <div class="tool-hub-card coming" data-tags="rna" onclick="showPage('page-tool-scrnaflow')">
+        <div class="tool-hub-card coming" data-tags="rna" onclick="showPage('page-tool-scrnaflow')" role="button" tabindex="0">
           <div class="tool-top">
             <div class="tool-icon-wrap" style="opacity:0.6;">🔭</div>
             <div class="tool-meta">
@@ -1769,7 +1783,7 @@ nav.nav-scrolled { box-shadow: 0 4px 28px rgba(0,0,0,0.1); border-bottom-color: 
           </div>
         </div>
 
-        <div class="tool-hub-card coming" data-tags="plant rna" onclick="showPage('page-tool-proteomics')">
+        <div class="tool-hub-card coming" data-tags="plant rna" onclick="showPage('page-tool-proteomics')" role="button" tabindex="0">
           <div class="tool-top">
             <div class="tool-icon-wrap" style="opacity:0.6;">⚗️</div>
             <div class="tool-meta">
@@ -1799,7 +1813,7 @@ nav.nav-scrolled { box-shadow: 0 4px 28px rgba(0,0,0,0.1); border-bottom-color: 
   <!-- Hero -->
   <div class="tool-detail-hero">
     <div class="breadcrumb">
-      <span onclick="showPage('page-tools')">🧬 Bioinfo Tools</span>
+      <span onclick="showPage('page-tools')" role="button" tabindex="0">🧬 Bioinfo Tools</span>
       <span class="breadcrumb-sep">›</span>
       <span style="color:var(--text);">RNAflow</span>
     </div>
@@ -1824,29 +1838,29 @@ nav.nav-scrolled { box-shadow: 0 4px 28px rgba(0,0,0,0.1); border-bottom-color: 
     <div class="tool-detail-sidebar">
       <div style="font-size:0.7em;text-transform:uppercase;letter-spacing:1.5px;color:var(--text3);margin-bottom:12px;">Contents</div>
 
-      <div class="tool-nav-item active" onclick="showToolSection('ts-overview',this)">📋 Overview</div>
-      <div class="tool-nav-item" onclick="showToolSection('ts-requirements',this)">💻 Requirements</div>
-      <div class="tool-nav-item" onclick="showToolSection('ts-install',this)">⚙️ Installation</div>
+      <div class="tool-nav-item active" onclick="showToolSection('ts-overview',this)" role="button" tabindex="0">📋 Overview</div>
+      <div class="tool-nav-item" onclick="showToolSection('ts-requirements',this)" role="button" tabindex="0">💻 Requirements</div>
+      <div class="tool-nav-item" onclick="showToolSection('ts-install',this)" role="button" tabindex="0">⚙️ Installation</div>
 
       <div class="tool-nav-group">
         <div class="tool-nav-group-title">Pipeline Manual</div>
-        <div class="tool-nav-item" onclick="showToolSection('ts-step1',this)">1 · Configure project</div>
-        <div class="tool-nav-item" onclick="showToolSection('ts-step2',this)">2 · Download data</div>
-        <div class="tool-nav-item" onclick="showToolSection('ts-step3',this)">3 · Quality control</div>
-        <div class="tool-nav-item" onclick="showToolSection('ts-step4',this)">4 · Trimming</div>
-        <div class="tool-nav-item" onclick="showToolSection('ts-step5',this)">5 · Genome &amp; index</div>
-        <div class="tool-nav-item" onclick="showToolSection('ts-step6',this)">6 · Alignment</div>
-        <div class="tool-nav-item" onclick="showToolSection('ts-step7',this)">7 · Gene counting</div>
-        <div class="tool-nav-item" onclick="showToolSection('ts-genefam',this)">8 · Gene family analysis</div>
-        <div class="tool-nav-item" onclick="showToolSection('ts-step8',this)">9 · DESeq2 analysis</div>
-        <div class="tool-nav-item" onclick="showToolSection('ts-step9',this)">10 · Plots &amp; results</div>
+        <div class="tool-nav-item" onclick="showToolSection('ts-step1',this)" role="button" tabindex="0">1 · Configure project</div>
+        <div class="tool-nav-item" onclick="showToolSection('ts-step2',this)" role="button" tabindex="0">2 · Download data</div>
+        <div class="tool-nav-item" onclick="showToolSection('ts-step3',this)" role="button" tabindex="0">3 · Quality control</div>
+        <div class="tool-nav-item" onclick="showToolSection('ts-step4',this)" role="button" tabindex="0">4 · Trimming</div>
+        <div class="tool-nav-item" onclick="showToolSection('ts-step5',this)" role="button" tabindex="0">5 · Genome &amp; index</div>
+        <div class="tool-nav-item" onclick="showToolSection('ts-step6',this)" role="button" tabindex="0">6 · Alignment</div>
+        <div class="tool-nav-item" onclick="showToolSection('ts-step7',this)" role="button" tabindex="0">7 · Gene counting</div>
+        <div class="tool-nav-item" onclick="showToolSection('ts-genefam',this)" role="button" tabindex="0">8 · Gene family analysis</div>
+        <div class="tool-nav-item" onclick="showToolSection('ts-step8',this)" role="button" tabindex="0">9 · DESeq2 analysis</div>
+        <div class="tool-nav-item" onclick="showToolSection('ts-step9',this)" role="button" tabindex="0">10 · Plots &amp; results</div>
       </div>
 
       <div class="tool-nav-group">
         <div class="tool-nav-group-title">Reference</div>
-        <div class="tool-nav-item" onclick="showToolSection('ts-interpret',this)">📊 Interpreting results</div>
-        <div class="tool-nav-item" onclick="showToolSection('ts-organisms',this)">🌍 Supported organisms</div>
-        <div class="tool-nav-item" onclick="showToolSection('ts-faq',this)">❓ Troubleshooting</div>
+        <div class="tool-nav-item" onclick="showToolSection('ts-interpret',this)" role="button" tabindex="0">📊 Interpreting results</div>
+        <div class="tool-nav-item" onclick="showToolSection('ts-organisms',this)" role="button" tabindex="0">🌍 Supported organisms</div>
+        <div class="tool-nav-item" onclick="showToolSection('ts-faq',this)" role="button" tabindex="0">❓ Troubleshooting</div>
       </div>
     </div>
 
@@ -1951,7 +1965,7 @@ nav.nav-scrolled { box-shadow: 0 4px 28px rgba(0,0,0,0.1); border-bottom-color: 
         <div class="tool-section-title">Installation</div>
         <p class="tool-section-sub">RNAflow is a native desktop app for macOS, Windows, and Linux. Download the installer for your system and open it — the app then guides you through installing the bioinformatics tools it needs.</p>
 
-        <div class="manual-step open" onclick="toggleManualStep(this)">
+        <div class="manual-step open" onclick="toggleManualStep(this)" role="button" tabindex="0" aria-expanded="false">
           <div class="manual-step-head"><span class="ms-num">1</span><span class="ms-title">Download &amp; install RNAflow</span><span class="ms-chev">▶</span></div>
           <div class="manual-step-body"><div class="msb-inner">
             <p class="sub" style="margin-bottom:14px;">Register once, then download the installer for your operating system:</p>
@@ -1965,7 +1979,7 @@ nav.nav-scrolled { box-shadow: 0 4px 28px rgba(0,0,0,0.1); border-bottom-color: 
           </div></div>
         </div>
 
-        <div class="manual-step" onclick="toggleManualStep(this)">
+        <div class="manual-step" onclick="toggleManualStep(this)" role="button" tabindex="0" aria-expanded="false">
           <div class="manual-step-head"><span class="ms-num">2</span><span class="ms-title">Install Conda (Miniforge) — if not already installed</span><span class="ms-chev">▶</span></div>
           <div class="manual-step-body"><div class="msb-inner">
             <p class="sub" style="margin-bottom:10px;">Conda is a package manager that installs bioinformatics tools. If you already have Anaconda or Miniconda, skip this step. The app's System Check will detect it automatically.</p>
@@ -1980,7 +1994,7 @@ bash Miniforge3-Linux-x86_64.sh   <span class="code-comment"># Linux</span>
           </div></div>
         </div>
 
-        <div class="manual-step" onclick="toggleManualStep(this)">
+        <div class="manual-step" onclick="toggleManualStep(this)" role="button" tabindex="0" aria-expanded="false">
           <div class="manual-step-head"><span class="ms-num">3</span><span class="ms-title">Create the rnaseq environment and install tools</span><span class="ms-chev">▶</span></div>
           <div class="manual-step-body"><div class="msb-inner">
             <p class="sub" style="margin-bottom:10px;">RNAflow uses a dedicated Conda environment called <code>rnaseq</code>. This keeps all bioinformatics tools isolated from your other software.</p>
@@ -1996,7 +2010,7 @@ conda install -c bioconda -c conda-forge   fastqc fastp hisat2 samtools subread 
           </div></div>
         </div>
 
-        <div class="manual-step" onclick="toggleManualStep(this)">
+        <div class="manual-step" onclick="toggleManualStep(this)" role="button" tabindex="0" aria-expanded="false">
           <div class="manual-step-head"><span class="ms-num">4</span><span class="ms-title">Install R and required packages</span><span class="ms-chev">▶</span></div>
           <div class="manual-step-body"><div class="msb-inner">
             <p class="sub" style="margin-bottom:10px;">R and RStudio are used for the DESeq2 statistical analysis and all plots. Download R from <strong>r-project.org</strong> and RStudio from <strong>posit.co/download/rstudio-desktop</strong>.</p>
@@ -2008,7 +2022,7 @@ install.packages(c("ggplot2", "pheatmap", "ggrepel", "dplyr", "RColorBrewer"))</
           </div></div>
         </div>
 
-        <div class="manual-step" onclick="toggleManualStep(this)">
+        <div class="manual-step" onclick="toggleManualStep(this)" role="button" tabindex="0" aria-expanded="false">
           <div class="manual-step-head"><span class="ms-num">5</span><span class="ms-title">Python 3 — powers Run mode</span><span class="ms-chev">▶</span></div>
           <div class="manual-step-body"><div class="msb-inner">
             <p class="sub" style="margin-bottom:10px;">RNAflow bundles its local server and starts it automatically every time you launch the app — there is nothing to run by hand. Run mode (commands execute with one click) uses Python 3, so make sure Python is installed. The Miniforge install from Step 2 already includes it.</p>
@@ -2024,7 +2038,7 @@ install.packages(c("ggplot2", "pheatmap", "ggrepel", "dplyr", "RColorBrewer"))</
         <div class="tool-section-title">Step 1 — Configure your project</div>
         <p class="tool-section-sub">Before running any commands, you set up your experiment details in the Configure page. RNAflow uses these settings to automatically generate every command throughout the pipeline.</p>
 
-        <div class="manual-step open" onclick="toggleManualStep(this)">
+        <div class="manual-step open" onclick="toggleManualStep(this)" role="button" tabindex="0" aria-expanded="false">
           <div class="manual-step-head"><span class="ms-num">1</span><span class="ms-title">Select your organism</span><span class="ms-chev">▶</span></div>
           <div class="manual-step-body"><div class="msb-inner">
             <p class="sub">Choose from 15 pre-loaded organisms or enter custom genome URLs. When you select an organism, the genome FASTA and GTF annotation URLs are automatically filled in with the correct Ensembl links.</p>
@@ -2036,7 +2050,7 @@ install.packages(c("ggplot2", "pheatmap", "ggrepel", "dplyr", "RColorBrewer"))</
           </div></div>
         </div>
 
-        <div class="manual-step" onclick="toggleManualStep(this)">
+        <div class="manual-step" onclick="toggleManualStep(this)" role="button" tabindex="0" aria-expanded="false">
           <div class="manual-step-head"><span class="ms-num">2</span><span class="ms-title">Name your conditions and add SRA accessions</span><span class="ms-chev">▶</span></div>
           <div class="manual-step-body"><div class="msb-inner">
             <p class="sub" style="margin-bottom:10px;">Give meaningful names to your two conditions (e.g. <code>wildtype</code> and <code>mutant</code>, or <code>control</code> and <code>drought_treated</code>). Then add SRA accession numbers for each replicate.</p>
@@ -2048,7 +2062,7 @@ install.packages(c("ggplot2", "pheatmap", "ggrepel", "dplyr", "RColorBrewer"))</
           </div></div>
         </div>
 
-        <div class="manual-step" onclick="toggleManualStep(this)">
+        <div class="manual-step" onclick="toggleManualStep(this)" role="button" tabindex="0" aria-expanded="false">
           <div class="manual-step-head"><span class="ms-num">3</span><span class="ms-title">Choose read type: single-end or paired-end</span><span class="ms-chev">▶</span></div>
           <div class="manual-step-body"><div class="msb-inner">
             <p class="sub" style="margin-bottom:10px;">This describes how the sequencing library was prepared. If unsure, check the SRA run page — it shows the "Layout" as SINGLE or PAIRED.</p>
@@ -2071,7 +2085,7 @@ install.packages(c("ggplot2", "pheatmap", "ggrepel", "dplyr", "RColorBrewer"))</
         <div class="tool-section-title">Step 2 — Download raw data</div>
         <p class="tool-section-sub">RNAflow downloads your raw sequencing files directly from NCBI SRA using fasterq-dump. The files are saved into your project folder automatically.</p>
 
-        <div class="manual-step open" onclick="toggleManualStep(this)">
+        <div class="manual-step open" onclick="toggleManualStep(this)" role="button" tabindex="0" aria-expanded="false">
           <div class="manual-step-head"><span class="ms-num">1</span><span class="ms-title">What happens during download</span><span class="ms-chev">▶</span></div>
           <div class="manual-step-body"><div class="msb-inner">
             <p class="sub">The command <code>fasterq-dump</code> connects to NCBI's servers and downloads compressed sequencing data, then decompresses it into FASTQ format. Each sample is typically 1–10 GB depending on the sequencing depth.</p>
@@ -2096,7 +2110,7 @@ install.packages(c("ggplot2", "pheatmap", "ggrepel", "dplyr", "RColorBrewer"))</
         <div class="tool-section-title">Step 3 — Quality control with FastQC</div>
         <p class="tool-section-sub">FastQC examines your raw reads and produces a visual HTML report for each sample. Always run this before any analysis — it reveals problems that would invalidate your results if not addressed.</p>
 
-        <div class="manual-step open" onclick="toggleManualStep(this)">
+        <div class="manual-step open" onclick="toggleManualStep(this)" role="button" tabindex="0" aria-expanded="false">
           <div class="manual-step-head"><span class="ms-num">1</span><span class="ms-title">What FastQC checks</span><span class="ms-chev">▶</span></div>
           <div class="manual-step-body"><div class="msb-inner">
             <div class="card-grid card-grid-2">
@@ -2110,7 +2124,7 @@ install.packages(c("ggplot2", "pheatmap", "ggrepel", "dplyr", "RColorBrewer"))</
           </div></div>
         </div>
 
-        <div class="manual-step" onclick="toggleManualStep(this)">
+        <div class="manual-step" onclick="toggleManualStep(this)" role="button" tabindex="0" aria-expanded="false">
           <div class="manual-step-head"><span class="ms-num">2</span><span class="ms-title">Reading the MultiQC summary report</span><span class="ms-chev">▶</span></div>
           <div class="manual-step-body"><div class="msb-inner">
             <p class="sub" style="margin-bottom:10px;">MultiQC combines all individual FastQC reports into one interactive HTML page. Open it in your browser after FastQC completes.</p>
@@ -2128,7 +2142,7 @@ install.packages(c("ggplot2", "pheatmap", "ggrepel", "dplyr", "RColorBrewer"))</
         <div class="tool-section-title">Step 4 — Adapter trimming with fastp</div>
         <p class="tool-section-sub">fastp removes adapter sequences, low-quality bases, and very short reads. It is fast, accurate, and works for both single-end and paired-end data automatically.</p>
 
-        <div class="manual-step open" onclick="toggleManualStep(this)">
+        <div class="manual-step open" onclick="toggleManualStep(this)" role="button" tabindex="0" aria-expanded="false">
           <div class="manual-step-head"><span class="ms-num">1</span><span class="ms-title">What fastp does and why it matters</span><span class="ms-chev">▶</span></div>
           <div class="manual-step-body"><div class="msb-inner">
             <p class="sub" style="margin-bottom:10px;">Adapter sequences are synthetic DNA added during library preparation — they are not part of your biological sample. If not removed, they interfere with alignment because the aligner cannot find a match for them in your genome. Low-quality bases at the ends of reads are also trimmed to improve alignment accuracy.</p>
@@ -2136,7 +2150,7 @@ install.packages(c("ggplot2", "pheatmap", "ggrepel", "dplyr", "RColorBrewer"))</
           </div></div>
         </div>
 
-        <div class="manual-step" onclick="toggleManualStep(this)">
+        <div class="manual-step" onclick="toggleManualStep(this)" role="button" tabindex="0" aria-expanded="false">
           <div class="manual-step-head"><span class="ms-num">2</span><span class="ms-title">fastp settings used by RNAflow</span><span class="ms-chev">▶</span></div>
           <div class="manual-step-body"><div class="msb-inner">
             <p class="sub" style="margin-bottom:8px;">RNAflow uses these fastp settings — all chosen to be conservative and appropriate for most RNA-seq experiments:</p>
@@ -2153,7 +2167,7 @@ install.packages(c("ggplot2", "pheatmap", "ggrepel", "dplyr", "RColorBrewer"))</
         <div class="tool-section-title">Step 5 — Genome download and HISAT2 index</div>
         <p class="tool-section-sub">The reference genome and gene annotation are downloaded from Ensembl, then HISAT2 builds an index — a compressed searchable version of the genome that makes alignment fast.</p>
 
-        <div class="manual-step open" onclick="toggleManualStep(this)">
+        <div class="manual-step open" onclick="toggleManualStep(this)" role="button" tabindex="0" aria-expanded="false">
           <div class="manual-step-head"><span class="ms-num">1</span><span class="ms-title">What files are downloaded and why</span><span class="ms-chev">▶</span></div>
           <div class="manual-step-body"><div class="msb-inner">
             <div class="card-grid card-grid-2">
@@ -2170,7 +2184,7 @@ install.packages(c("ggplot2", "pheatmap", "ggrepel", "dplyr", "RColorBrewer"))</
         <div class="tool-section-title">Step 6 — Alignment with HISAT2</div>
         <p class="tool-section-sub">HISAT2 maps each sequencing read back to its location on the reference genome. It is splice-aware, meaning it correctly handles reads that span exon-exon junctions — essential for accurate RNA-seq alignment.</p>
 
-        <div class="manual-step open" onclick="toggleManualStep(this)">
+        <div class="manual-step open" onclick="toggleManualStep(this)" role="button" tabindex="0" aria-expanded="false">
           <div class="manual-step-head"><span class="ms-num">1</span><span class="ms-title">Understanding alignment statistics</span><span class="ms-chev">▶</span></div>
           <div class="manual-step-body"><div class="msb-inner">
             <p class="sub" style="margin-bottom:10px;">HISAT2 reports alignment statistics for each sample. These appear in the terminal output and are saved in your aligned/ folder as .log files.</p>
@@ -2185,7 +2199,7 @@ install.packages(c("ggplot2", "pheatmap", "ggrepel", "dplyr", "RColorBrewer"))</
           </div></div>
         </div>
 
-        <div class="manual-step" onclick="toggleManualStep(this)">
+        <div class="manual-step" onclick="toggleManualStep(this)" role="button" tabindex="0" aria-expanded="false">
           <div class="manual-step-head"><span class="ms-num">2</span><span class="ms-title">BAM file sorting and indexing</span><span class="ms-chev">▶</span></div>
           <div class="manual-step-body"><div class="msb-inner">
             <p class="sub">After alignment, HISAT2 produces SAM files (text format). RNAflow then uses samtools to convert these to BAM (binary, 5× smaller), sort them by chromosome position, and index them. This is required by featureCounts and enables fast access to any region of the genome.</p>
@@ -2199,7 +2213,7 @@ install.packages(c("ggplot2", "pheatmap", "ggrepel", "dplyr", "RColorBrewer"))</
         <div class="tool-section-title">Step 7 — Gene counting with featureCounts</div>
         <p class="tool-section-sub">featureCounts counts how many reads aligned to each gene in each sample. This produces a count matrix — the input to DESeq2 for statistical analysis.</p>
 
-        <div class="manual-step open" onclick="toggleManualStep(this)">
+        <div class="manual-step open" onclick="toggleManualStep(this)" role="button" tabindex="0" aria-expanded="false">
           <div class="manual-step-head"><span class="ms-num">1</span><span class="ms-title">Understanding the count matrix</span><span class="ms-chev">▶</span></div>
           <div class="manual-step-body"><div class="msb-inner">
             <p class="sub" style="margin-bottom:10px;">The output is a table where rows are genes and columns are samples. Each number is the count of reads that mapped to that gene in that sample.</p>
@@ -2212,7 +2226,7 @@ AT1G01030    102       98      115       44       39       51</div>
           </div></div>
         </div>
 
-        <div class="manual-step" onclick="toggleManualStep(this)">
+        <div class="manual-step" onclick="toggleManualStep(this)" role="button" tabindex="0" aria-expanded="false">
           <div class="manual-step-head"><span class="ms-num">2</span><span class="ms-title">featureCounts assignment statistics</span><span class="ms-chev">▶</span></div>
           <div class="manual-step-body"><div class="msb-inner">
             <div class="result-explain result-good"><div class="result-explain-title">✅ Good: 60–80% assigned reads</div><div class="result-explain-text">Most reads were successfully assigned to a gene. This is a normal and expected range for RNA-seq data.</div></div>
@@ -2227,7 +2241,7 @@ AT1G01030    102       98      115       44       39       51</div>
         <div class="tool-section-title">Step 8 — Differential expression with DESeq2</div>
         <p class="tool-section-sub">DESeq2 is the gold-standard R package for RNA-seq differential expression analysis. It uses a negative binomial statistical model to identify genes that genuinely change between your conditions, accounting for biological variation.</p>
 
-        <div class="manual-step open" onclick="toggleManualStep(this)">
+        <div class="manual-step open" onclick="toggleManualStep(this)" role="button" tabindex="0" aria-expanded="false">
           <div class="manual-step-head"><span class="ms-num">1</span><span class="ms-title">What DESeq2 does step by step</span><span class="ms-chev">▶</span></div>
           <div class="manual-step-body"><div class="msb-inner">
             <div class="card-grid card-grid-2">
@@ -2239,7 +2253,7 @@ AT1G01030    102       98      115       44       39       51</div>
           </div></div>
         </div>
 
-        <div class="manual-step" onclick="toggleManualStep(this)">
+        <div class="manual-step" onclick="toggleManualStep(this)" role="button" tabindex="0" aria-expanded="false">
           <div class="manual-step-head"><span class="ms-num">2</span><span class="ms-title">Understanding DESeq2 results columns</span><span class="ms-chev">▶</span></div>
           <div class="manual-step-body"><div class="msb-inner">
             <div class="code-block"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button><span class="code-comment"># DESeq2 results table — one row per gene:</span>
@@ -2257,7 +2271,7 @@ AT1G01020   47.1   -1.82    0.31   -5.87  4.4e-09  6.1e-08</div>
           </div></div>
         </div>
 
-        <div class="manual-step" onclick="toggleManualStep(this)">
+        <div class="manual-step" onclick="toggleManualStep(this)" role="button" tabindex="0" aria-expanded="false">
           <div class="manual-step-head"><span class="ms-num">3</span><span class="ms-title">Interpreting the DESeq2 summary</span><span class="ms-chev">▶</span></div>
           <div class="manual-step-body"><div class="msb-inner">
             <p class="sub" style="margin-bottom:10px;">After running DESeq2, the summary() function prints a table like this:</p>
@@ -2277,7 +2291,7 @@ low counts     : 578, 10%       ← filtered out (normal)</div>
         <div class="tool-section-title">Step 9 — Plots and visualisation</div>
         <p class="tool-section-sub">RNAflow generates three standard visualisations used in RNA-seq publications: a volcano plot, a heatmap, and a PCA plot. All are saved as 300 DPI PNG files suitable for direct use in papers and theses.</p>
 
-        <div class="manual-step open" onclick="toggleManualStep(this)">
+        <div class="manual-step open" onclick="toggleManualStep(this)" role="button" tabindex="0" aria-expanded="false">
           <div class="manual-step-head"><span class="ms-num">1</span><span class="ms-title">Volcano plot — what it shows</span><span class="ms-chev">▶</span></div>
           <div class="manual-step-body"><div class="msb-inner">
             <p class="sub" style="margin-bottom:10px;">A volcano plot visualises all genes simultaneously — fold change on the x-axis and statistical significance on the y-axis. It gets its name from its characteristic shape.</p>
@@ -2295,7 +2309,7 @@ low counts     : 578, 10%       ← filtered out (normal)</div>
           </div></div>
         </div>
 
-        <div class="manual-step" onclick="toggleManualStep(this)">
+        <div class="manual-step" onclick="toggleManualStep(this)" role="button" tabindex="0" aria-expanded="false">
           <div class="manual-step-head"><span class="ms-num">2</span><span class="ms-title">Heatmap — what it shows</span><span class="ms-chev">▶</span></div>
           <div class="manual-step-body"><div class="msb-inner">
             <p class="sub" style="margin-bottom:10px;">The heatmap shows the top 40 most significant genes as a colour grid — each row is a gene, each column is a sample. Colour represents expression level (scaled across the row).</p>
@@ -2310,7 +2324,7 @@ low counts     : 578, 10%       ← filtered out (normal)</div>
           </div></div>
         </div>
 
-        <div class="manual-step" onclick="toggleManualStep(this)">
+        <div class="manual-step" onclick="toggleManualStep(this)" role="button" tabindex="0" aria-expanded="false">
           <div class="manual-step-head"><span class="ms-num">3</span><span class="ms-title">PCA plot — what it shows</span><span class="ms-chev">▶</span></div>
           <div class="manual-step-body"><div class="msb-inner">
             <p class="sub" style="margin-bottom:10px;">Principal Component Analysis (PCA) reduces the expression of thousands of genes to just 2 dimensions. It shows how similar or different your samples are to each other overall.</p>
@@ -2332,7 +2346,7 @@ low counts     : 578, 10%       ← filtered out (normal)</div>
         <div class="tool-section-title">Gene Family Analysis</div>
         <p class="tool-section-sub">For large genomes (wheat, maize, human, soybean), researchers often want to focus on one biological family rather than all 30,000+ genes. RNAflow includes 40+ gene families across 8 categories.</p>
 
-        <div class="manual-step open" onclick="toggleManualStep(this)">
+        <div class="manual-step open" onclick="toggleManualStep(this)" role="button" tabindex="0" aria-expanded="false">
           <div class="manual-step-head"><span class="ms-num">1</span><span class="ms-title">When to use gene family analysis</span><span class="ms-chev">▶</span></div>
           <div class="manual-step-body"><div class="msb-inner">
             <div class="result-explain result-info"><div class="result-explain-title">📋 Use gene family analysis when:</div><div class="result-explain-text">
@@ -2345,7 +2359,7 @@ low counts     : 578, 10%       ← filtered out (normal)</div>
           </div></div>
         </div>
 
-        <div class="manual-step" onclick="toggleManualStep(this)">
+        <div class="manual-step" onclick="toggleManualStep(this)" role="button" tabindex="0" aria-expanded="false">
           <div class="manual-step-head"><span class="ms-num">2</span><span class="ms-title">Available gene families</span><span class="ms-chev">▶</span></div>
           <div class="manual-step-body"><div class="msb-inner">
             <div class="card-grid card-grid-2">
@@ -2365,7 +2379,7 @@ low counts     : 578, 10%       ← filtered out (normal)</div>
         <div class="tool-section-title">Interpreting your results</div>
         <p class="tool-section-sub">A quick reference guide for the most common questions researchers have when looking at their RNAflow results for the first time.</p>
 
-        <div class="manual-step open" onclick="toggleManualStep(this)">
+        <div class="manual-step open" onclick="toggleManualStep(this)" role="button" tabindex="0" aria-expanded="false">
           <div class="manual-step-head"><span class="ms-num">1</span><span class="ms-title">How do I decide which genes are significant?</span><span class="ms-chev">▶</span></div>
           <div class="manual-step-body"><div class="msb-inner">
             <div class="result-explain result-good"><div class="result-explain-title">✅ Standard significance criteria</div><div class="result-explain-text">
@@ -2377,7 +2391,7 @@ low counts     : 578, 10%       ← filtered out (normal)</div>
           </div></div>
         </div>
 
-        <div class="manual-step" onclick="toggleManualStep(this)">
+        <div class="manual-step" onclick="toggleManualStep(this)" role="button" tabindex="0" aria-expanded="false">
           <div class="manual-step-head"><span class="ms-num">2</span><span class="ms-title">What do I do with my list of significant genes?</span><span class="ms-chev">▶</span></div>
           <div class="manual-step-body"><div class="msb-inner">
             <p class="sub" style="margin-bottom:10px;">Once you have a list of significant DE genes, these are the typical next steps in a research project:</p>
@@ -2390,7 +2404,7 @@ low counts     : 578, 10%       ← filtered out (normal)</div>
           </div></div>
         </div>
 
-        <div class="manual-step" onclick="toggleManualStep(this)">
+        <div class="manual-step" onclick="toggleManualStep(this)" role="button" tabindex="0" aria-expanded="false">
           <div class="manual-step-head"><span class="ms-num">3</span><span class="ms-title">How to cite RNAflow and its tools in your paper</span><span class="ms-chev">▶</span></div>
           <div class="manual-step-body"><div class="msb-inner">
             <p class="sub" style="margin-bottom:10px;">In your Methods section, cite each tool used in the pipeline. Example methods text:</p>
@@ -2445,14 +2459,14 @@ generated using ggplot2 (Wickham, 2016) and pheatmap (Kolde, 2019).</div>
         <div class="tool-section-title">Troubleshooting</div>
         <p class="tool-section-sub">Solutions to the most common problems encountered during RNA-seq analysis with RNAflow.</p>
         <div class="faq-list" style="margin-top:16px;">
-          <div class="faq-item" onclick="toggleFAQ(this)"><div class="faq-q">The Run button is greyed out — what do I do? <span class="faq-chev">▼</span></div><div class="faq-a"><div class="faq-a-inner">RNAflow starts its local server automatically when the app launches, so this usually clears on its own. If the Run button stays greyed out, make sure Python 3 is installed (Run mode needs it), then restart the server from the <strong>Server ▸ Start Local Server</strong> menu. The green dot in the top bar appears when connected. If you prefer not to use Run mode, use Mode B (Copy) to copy commands manually.</div></div></div>
-          <div class="faq-item" onclick="toggleFAQ(this)"><div class="faq-q">HISAT2 alignment rate is below 70% <span class="faq-chev">▼</span></div><div class="faq-a"><div class="faq-a-inner">Most common cause: the wrong organism was selected. Check your SRA accession on ncbi.nlm.nih.gov/sra to confirm the organism. Also confirm that the genome FASTA and GTF annotation are from the same Ensembl release number. A mismatch between these two files causes very low alignment rates.</div></div></div>
-          <div class="faq-item" onclick="toggleFAQ(this)"><div class="faq-q">DESeq2 gives an error about zero counts or missing samples <span class="faq-chev">▼</span></div><div class="faq-a"><div class="faq-a-inner">This usually means the column names in your count matrix don't match the sample names in your metadata. Check that the order of samples in the count table matches the order in the DESeq2 script exactly. Also ensure you have at least 2 samples per condition.</div></div></div>
-          <div class="faq-item" onclick="toggleFAQ(this)"><div class="faq-q">featureCounts assigned only 20–30% of reads <span class="faq-chev">▼</span></div><div class="faq-a"><div class="faq-a-inner">The GTF annotation version does not match the genome FASTA. Make sure both files are from the same Ensembl release number and the same species. For example, Ensembl release 109 genome FASTA must be used with the Ensembl release 109 GTF file.</div></div></div>
-          <div class="faq-item" onclick="toggleFAQ(this)"><div class="faq-q">I have no significant genes after DESeq2 <span class="faq-chev">▼</span></div><div class="faq-a"><div class="faq-a-inner">Common causes: (1) The biological conditions are too similar — try a larger fold-change or different time point. (2) Insufficient replicates — fewer than 3 replicates reduces statistical power. (3) Too few reads — aim for 10–20 million reads per sample. (4) The PCA shows samples don't separate — may indicate a sample labelling or metadata error.</div></div></div>
-          <div class="faq-item" onclick="toggleFAQ(this)"><div class="faq-q">How do I add more replicates or samples? <span class="faq-chev">▼</span></div><div class="faq-a"><div class="faq-a-inner">Go to the Configure page → click the + Add replicate button under each condition to add more SRA accession rows. You can add as many replicates as needed. All downstream commands update automatically.</div></div></div>
-          <div class="faq-item" onclick="toggleFAQ(this)"><div class="faq-q">The download is very slow or fails halfway <span class="faq-chev">▼</span></div><div class="faq-a"><div class="faq-a-inner">NCBI SRA downloads can be slow, especially for large files. If a download fails, simply run the fasterq-dump command again — it will resume from where it stopped. For very large datasets, consider downloading overnight or using the NCBI SRA toolkit's prefetch command first.</div></div></div>
-          <div class="faq-item" onclick="toggleFAQ(this)"><div class="faq-q">Can I analyse more than two conditions? <span class="faq-chev">▼</span></div><div class="faq-a"><div class="faq-a-inner">RNAflow currently supports two-condition comparisons (one control vs one treatment). For multi-condition experiments (e.g. timepoints, multiple treatments), run the pipeline separately for each pairwise comparison you are interested in. Future versions of RNAflow will support multi-factor designs.</div></div></div>
+          <div class="faq-item" onclick="toggleFAQ(this)" role="button" tabindex="0" aria-expanded="false"><div class="faq-q">The Run button is greyed out — what do I do? <span class="faq-chev">▼</span></div><div class="faq-a"><div class="faq-a-inner">RNAflow starts its local server automatically when the app launches, so this usually clears on its own. If the Run button stays greyed out, make sure Python 3 is installed (Run mode needs it), then restart the server from the <strong>Server ▸ Start Local Server</strong> menu. The green dot in the top bar appears when connected. If you prefer not to use Run mode, use Mode B (Copy) to copy commands manually.</div></div></div>
+          <div class="faq-item" onclick="toggleFAQ(this)" role="button" tabindex="0" aria-expanded="false"><div class="faq-q">HISAT2 alignment rate is below 70% <span class="faq-chev">▼</span></div><div class="faq-a"><div class="faq-a-inner">Most common cause: the wrong organism was selected. Check your SRA accession on ncbi.nlm.nih.gov/sra to confirm the organism. Also confirm that the genome FASTA and GTF annotation are from the same Ensembl release number. A mismatch between these two files causes very low alignment rates.</div></div></div>
+          <div class="faq-item" onclick="toggleFAQ(this)" role="button" tabindex="0" aria-expanded="false"><div class="faq-q">DESeq2 gives an error about zero counts or missing samples <span class="faq-chev">▼</span></div><div class="faq-a"><div class="faq-a-inner">This usually means the column names in your count matrix don't match the sample names in your metadata. Check that the order of samples in the count table matches the order in the DESeq2 script exactly. Also ensure you have at least 2 samples per condition.</div></div></div>
+          <div class="faq-item" onclick="toggleFAQ(this)" role="button" tabindex="0" aria-expanded="false"><div class="faq-q">featureCounts assigned only 20–30% of reads <span class="faq-chev">▼</span></div><div class="faq-a"><div class="faq-a-inner">The GTF annotation version does not match the genome FASTA. Make sure both files are from the same Ensembl release number and the same species. For example, Ensembl release 109 genome FASTA must be used with the Ensembl release 109 GTF file.</div></div></div>
+          <div class="faq-item" onclick="toggleFAQ(this)" role="button" tabindex="0" aria-expanded="false"><div class="faq-q">I have no significant genes after DESeq2 <span class="faq-chev">▼</span></div><div class="faq-a"><div class="faq-a-inner">Common causes: (1) The biological conditions are too similar — try a larger fold-change or different time point. (2) Insufficient replicates — fewer than 3 replicates reduces statistical power. (3) Too few reads — aim for 10–20 million reads per sample. (4) The PCA shows samples don't separate — may indicate a sample labelling or metadata error.</div></div></div>
+          <div class="faq-item" onclick="toggleFAQ(this)" role="button" tabindex="0" aria-expanded="false"><div class="faq-q">How do I add more replicates or samples? <span class="faq-chev">▼</span></div><div class="faq-a"><div class="faq-a-inner">Go to the Configure page → click the + Add replicate button under each condition to add more SRA accession rows. You can add as many replicates as needed. All downstream commands update automatically.</div></div></div>
+          <div class="faq-item" onclick="toggleFAQ(this)" role="button" tabindex="0" aria-expanded="false"><div class="faq-q">The download is very slow or fails halfway <span class="faq-chev">▼</span></div><div class="faq-a"><div class="faq-a-inner">NCBI SRA downloads can be slow, especially for large files. If a download fails, simply run the fasterq-dump command again — it will resume from where it stopped. For very large datasets, consider downloading overnight or using the NCBI SRA toolkit's prefetch command first.</div></div></div>
+          <div class="faq-item" onclick="toggleFAQ(this)" role="button" tabindex="0" aria-expanded="false"><div class="faq-q">Can I analyse more than two conditions? <span class="faq-chev">▼</span></div><div class="faq-a"><div class="faq-a-inner">RNAflow currently supports two-condition comparisons (one control vs one treatment). For multi-condition experiments (e.g. timepoints, multiple treatments), run the pipeline separately for each pairwise comparison you are interested in. Future versions of RNAflow will support multi-factor designs.</div></div></div>
         </div>
       </div>
 
@@ -2464,7 +2478,7 @@ generated using ggplot2 (Wickham, 2016) and pheatmap (Kolde, 2019).</div>
 <!-- ══ GeneNet Lab Detail Page ══ -->
 <div class="page" id="page-tool-genenet">
   <div class="tool-detail-hero">
-    <div class="breadcrumb"><span onclick="showPage('page-tools')">🧬 Bioinfo Tools</span><span class="breadcrumb-sep">›</span><span style="color:var(--text);">GeneNet Lab</span></div>
+    <div class="breadcrumb"><span onclick="showPage('page-tools')" role="button" tabindex="0">🧬 Bioinfo Tools</span><span class="breadcrumb-sep">›</span><span style="color:var(--text);">GeneNet Lab</span></div>
     <div class="label">Lab Management Platform</div>
     <h1 class="h1" style="font-size:2.5em;">GeneNet Lab <span style="font-size:0.4em;vertical-align:middle;color:var(--green);">v2.0.0</span></h1>
     <p class="lead" style="max-width:680px;margin:0 auto;">A full-featured lab management platform with team access control, seat-based licensing, OneDrive storage, and a desktop app for macOS and Linux.</p>
@@ -2486,7 +2500,7 @@ generated using ggplot2 (Wickham, 2016) and pheatmap (Kolde, 2019).</div>
         <div style="font-weight:700;font-size:1.05em;margin-bottom:4px;">macOS</div>
         <div class="sub" style="margin-bottom:4px;">.dmg installer · macOS 12+</div>
         <div class="sub" style="margin-bottom:18px;">95 MB · v2.0.0</div>
-        <span class="btn btn-green" onclick="showPage('contact')" style="display:inline-flex;gap:6px;cursor:pointer;text-decoration:none;">✉ Request access</span>
+        <span class="btn btn-green" onclick="showPage('contact')" style="display:inline-flex;gap:6px;cursor:pointer;text-decoration:none;" role="button" tabindex="0">✉ Request access</span>
       </div>
 
       <!-- Linux -->
@@ -2495,7 +2509,7 @@ generated using ggplot2 (Wickham, 2016) and pheatmap (Kolde, 2019).</div>
         <div style="font-weight:700;font-size:1.05em;margin-bottom:4px;">Linux</div>
         <div class="sub" style="margin-bottom:4px;">.AppImage · Ubuntu, Fedora, Debian</div>
         <div class="sub" style="margin-bottom:18px;">100 MB · v2.0.0</div>
-        <span class="btn btn-green" onclick="showPage('contact')" style="display:inline-flex;gap:6px;cursor:pointer;text-decoration:none;">✉ Request access</span>
+        <span class="btn btn-green" onclick="showPage('contact')" style="display:inline-flex;gap:6px;cursor:pointer;text-decoration:none;" role="button" tabindex="0">✉ Request access</span>
       </div>
 
       <!-- Windows -->
@@ -2504,7 +2518,7 @@ generated using ggplot2 (Wickham, 2016) and pheatmap (Kolde, 2019).</div>
         <div style="font-weight:700;font-size:1.05em;margin-bottom:4px;">Windows</div>
         <div class="sub" style="margin-bottom:4px;">.exe installer · Windows 10/11</div>
         <div class="sub" style="margin-bottom:18px;">78 MB · v2.0.0</div>
-        <span class="btn btn-green" onclick="showPage('contact')" style="display:inline-flex;gap:6px;cursor:pointer;text-decoration:none;">✉ Request access</span>
+        <span class="btn btn-green" onclick="showPage('contact')" style="display:inline-flex;gap:6px;cursor:pointer;text-decoration:none;" role="button" tabindex="0">✉ Request access</span>
       </div>
     </div>
 
@@ -2626,7 +2640,7 @@ generated using ggplot2 (Wickham, 2016) and pheatmap (Kolde, 2019).</div>
 <!-- ══ STUB PAGES for future tools ══ -->
 <div class="page" id="page-tool-ngsuite">
   <div class="tool-detail-hero">
-    <div class="breadcrumb"><span onclick="showPage('page-tools')">🧬 Bioinfo Tools</span><span class="breadcrumb-sep">›</span><span style="color:var(--text);">NGSuite</span></div>
+    <div class="breadcrumb"><span onclick="showPage('page-tools')" role="button" tabindex="0">🧬 Bioinfo Tools</span><span class="breadcrumb-sep">›</span><span style="color:var(--text);">NGSuite</span></div>
     <div class="label">Whole-genome sequencing pipeline</div>
     <h1 class="h1" style="font-size:2.5em;">NGSuite <span style="color:var(--orange);font-size:0.5em;vertical-align:middle;">In development</span></h1>
     <p class="lead">Variant calling, SNP/INDEL annotation, structural variant detection, population genetics. Powered by GATK4, BWA-MEM2, and VEP.</p>
@@ -2638,7 +2652,7 @@ generated using ggplot2 (Wickham, 2016) and pheatmap (Kolde, 2019).</div>
 </div>
 <div class="page" id="page-tool-plasmidmap">
   <div class="tool-detail-hero">
-    <div class="breadcrumb"><span onclick="showPage('page-tools')">🧬 Bioinfo Tools</span><span class="breadcrumb-sep">›</span><span style="color:var(--text);">PlasmidMap</span></div>
+    <div class="breadcrumb"><span onclick="showPage('page-tools')" role="button" tabindex="0">🧬 Bioinfo Tools</span><span class="breadcrumb-sep">›</span><span style="color:var(--text);">PlasmidMap</span></div>
     <div class="label">Plasmid design and annotation</div>
     <h1 class="h1" style="font-size:2.5em;">PlasmidMap <span style="color:var(--orange);font-size:0.5em;vertical-align:middle;">In development</span></h1>
     <p class="lead">Design plasmids, find restriction sites, annotate features, and export publication-ready circular maps. Import from GenBank.</p>
@@ -2650,7 +2664,7 @@ generated using ggplot2 (Wickham, 2016) and pheatmap (Kolde, 2019).</div>
 </div>
 <div class="page" id="page-tool-chipflow">
   <div class="tool-detail-hero">
-    <div class="breadcrumb"><span onclick="showPage('page-tools')">🧬 Bioinfo Tools</span><span class="breadcrumb-sep">›</span><span style="color:var(--text);">ChIPflow</span></div>
+    <div class="breadcrumb"><span onclick="showPage('page-tools')" role="button" tabindex="0">🧬 Bioinfo Tools</span><span class="breadcrumb-sep">›</span><span style="color:var(--text);">ChIPflow</span></div>
     <div class="label">ChIP-seq and ATAC-seq pipeline</div>
     <h1 class="h1" style="font-size:2.5em;">ChIPflow <span style="color:var(--orange);font-size:0.5em;vertical-align:middle;">Coming 2026</span></h1>
     <p class="lead">Peak calling with MACS2, motif analysis with HOMER, differential chromatin accessibility, BigWig tracks for genome browsers.</p>
@@ -2662,7 +2676,7 @@ generated using ggplot2 (Wickham, 2016) and pheatmap (Kolde, 2019).</div>
 </div>
 <div class="page" id="page-tool-metaflow">
   <div class="tool-detail-hero">
-    <div class="breadcrumb"><span onclick="showPage('page-tools')">🧬 Bioinfo Tools</span><span class="breadcrumb-sep">›</span><span style="color:var(--text);">MetaFlow</span></div>
+    <div class="breadcrumb"><span onclick="showPage('page-tools')" role="button" tabindex="0">🧬 Bioinfo Tools</span><span class="breadcrumb-sep">›</span><span style="color:var(--text);">MetaFlow</span></div>
     <div class="label">Metagenomics and microbiome pipeline</div>
     <h1 class="h1" style="font-size:2.5em;">MetaFlow <span style="color:var(--orange);font-size:0.5em;vertical-align:middle;">Coming 2026</span></h1>
     <p class="lead">16S rRNA and whole-metagenome shotgun analysis. Taxonomic classification, alpha/beta diversity, differential abundance with QIIME2 and Kraken2.</p>
@@ -2674,7 +2688,7 @@ generated using ggplot2 (Wickham, 2016) and pheatmap (Kolde, 2019).</div>
 </div>
 <div class="page" id="page-tool-scrnaflow">
   <div class="tool-detail-hero">
-    <div class="breadcrumb"><span onclick="showPage('page-tools')">🧬 Bioinfo Tools</span><span class="breadcrumb-sep">›</span><span style="color:var(--text);">scRNAflow</span></div>
+    <div class="breadcrumb"><span onclick="showPage('page-tools')" role="button" tabindex="0">🧬 Bioinfo Tools</span><span class="breadcrumb-sep">›</span><span style="color:var(--text);">scRNAflow</span></div>
     <div class="label">Single-cell RNA-seq pipeline</div>
     <h1 class="h1" style="font-size:2.5em;">scRNAflow <span style="color:var(--orange);font-size:0.5em;vertical-align:middle;">Coming 2026</span></h1>
     <p class="lead">Single-cell RNA-seq analysis using Seurat. Cell clustering, UMAP visualisation, marker gene identification, trajectory analysis.</p>
@@ -2686,7 +2700,7 @@ generated using ggplot2 (Wickham, 2016) and pheatmap (Kolde, 2019).</div>
 </div>
 <div class="page" id="page-tool-proteomics">
   <div class="tool-detail-hero">
-    <div class="breadcrumb"><span onclick="showPage('page-tools')">🧬 Bioinfo Tools</span><span class="breadcrumb-sep">›</span><span style="color:var(--text);">ProteomicsLab</span></div>
+    <div class="breadcrumb"><span onclick="showPage('page-tools')" role="button" tabindex="0">🧬 Bioinfo Tools</span><span class="breadcrumb-sep">›</span><span style="color:var(--text);">ProteomicsLab</span></div>
     <div class="label">Mass spectrometry proteomics pipeline</div>
     <h1 class="h1" style="font-size:2.5em;">ProteomicsLab <span style="color:var(--orange);font-size:0.5em;vertical-align:middle;">Coming 2026</span></h1>
     <p class="lead">Label-free quantification, TMT/iTRAQ, post-translational modification analysis, pathway enrichment. Powered by MaxQuant.</p>
@@ -2722,20 +2736,20 @@ generated using ggplot2 (Wickham, 2016) and pheatmap (Kolde, 2019).</div>
   <!-- Module tab bar -->
   <div style="background:#161b22;border-bottom:1px solid rgba(255,255,255,0.08);padding:0 6vw;position:sticky;top:64px;z-index:100;overflow-x:auto;">
     <div style="display:flex;gap:0;min-width:max-content;">
-      <div class="edu-mod-tab active" onclick="showEduModule('mod1',this)" data-mod="mod1">📘 Module 1<span class="edu-mod-sub">Foundations</span></div>
-      <div class="edu-mod-tab" onclick="showEduModule('mod2',this)" data-mod="mod2">💻 Module 2<span class="edu-mod-sub">Computing</span></div>
-      <div class="edu-mod-tab" onclick="showEduModule('mod3',this)" data-mod="mod3">🗄️ Module 3<span class="edu-mod-sub">Databases</span></div>
-      <div class="edu-mod-tab" onclick="showEduModule('mod4',this)" data-mod="mod4">🔍 Module 4<span class="edu-mod-sub">Sequence Analysis</span></div>
-      <div class="edu-mod-tab" onclick="showEduModule('mod5',this)" data-mod="mod5">🧬 Module 5<span class="edu-mod-sub">RNA-seq</span></div>
-      <div class="edu-mod-tab" onclick="showEduModule('mod6',this)" data-mod="mod6">🔬 Module 6<span class="edu-mod-sub">Genomics</span></div>
-      <div class="edu-mod-tab" onclick="showEduModule('mod7',this)" data-mod="mod7">📊 Module 7<span class="edu-mod-sub">Statistics</span></div>
-      <div class="edu-mod-tab" onclick="showEduModule('mod8',this)" data-mod="mod8">🚀 Module 8<span class="edu-mod-sub">Advanced</span></div>
-      <div class="edu-mod-tab" onclick="showEduModule('mod9',this)" data-mod="mod9">🧪 Module 9<span class="edu-mod-sub">Proteomics</span></div>
-      <div class="edu-mod-tab" onclick="showEduModule('mod10',this)" data-mod="mod10">🏗️ Module 10<span class="edu-mod-sub">Structural Bio</span></div>
-      <div class="edu-mod-tab" onclick="showEduModule('mod11',this)" data-mod="mod11">🧩 Module 11<span class="edu-mod-sub">Epigenomics</span></div>
-      <div class="edu-mod-tab" onclick="showEduModule('mod12',this)" data-mod="mod12">🔧 Module 12<span class="edu-mod-sub">Genome Assembly</span></div>
-      <div class="edu-mod-tab" onclick="showEduModule('mod13',this)" data-mod="mod13">👥 Module 13<span class="edu-mod-sub">Pop. Genetics</span></div>
-      <div class="edu-mod-tab" onclick="showEduModule('mod14',this)" data-mod="mod14">🕸️ Module 14<span class="edu-mod-sub">Systems Biology</span></div>
+      <div class="edu-mod-tab active" onclick="showEduModule('mod1',this)" data-mod="mod1" role="button" tabindex="0">📘 Module 1<span class="edu-mod-sub">Foundations</span></div>
+      <div class="edu-mod-tab" onclick="showEduModule('mod2',this)" data-mod="mod2" role="button" tabindex="0">💻 Module 2<span class="edu-mod-sub">Computing</span></div>
+      <div class="edu-mod-tab" onclick="showEduModule('mod3',this)" data-mod="mod3" role="button" tabindex="0">🗄️ Module 3<span class="edu-mod-sub">Databases</span></div>
+      <div class="edu-mod-tab" onclick="showEduModule('mod4',this)" data-mod="mod4" role="button" tabindex="0">🔍 Module 4<span class="edu-mod-sub">Sequence Analysis</span></div>
+      <div class="edu-mod-tab" onclick="showEduModule('mod5',this)" data-mod="mod5" role="button" tabindex="0">🧬 Module 5<span class="edu-mod-sub">RNA-seq</span></div>
+      <div class="edu-mod-tab" onclick="showEduModule('mod6',this)" data-mod="mod6" role="button" tabindex="0">🔬 Module 6<span class="edu-mod-sub">Genomics</span></div>
+      <div class="edu-mod-tab" onclick="showEduModule('mod7',this)" data-mod="mod7" role="button" tabindex="0">📊 Module 7<span class="edu-mod-sub">Statistics</span></div>
+      <div class="edu-mod-tab" onclick="showEduModule('mod8',this)" data-mod="mod8" role="button" tabindex="0">🚀 Module 8<span class="edu-mod-sub">Advanced</span></div>
+      <div class="edu-mod-tab" onclick="showEduModule('mod9',this)" data-mod="mod9" role="button" tabindex="0">🧪 Module 9<span class="edu-mod-sub">Proteomics</span></div>
+      <div class="edu-mod-tab" onclick="showEduModule('mod10',this)" data-mod="mod10" role="button" tabindex="0">🏗️ Module 10<span class="edu-mod-sub">Structural Bio</span></div>
+      <div class="edu-mod-tab" onclick="showEduModule('mod11',this)" data-mod="mod11" role="button" tabindex="0">🧩 Module 11<span class="edu-mod-sub">Epigenomics</span></div>
+      <div class="edu-mod-tab" onclick="showEduModule('mod12',this)" data-mod="mod12" role="button" tabindex="0">🔧 Module 12<span class="edu-mod-sub">Genome Assembly</span></div>
+      <div class="edu-mod-tab" onclick="showEduModule('mod13',this)" data-mod="mod13" role="button" tabindex="0">👥 Module 13<span class="edu-mod-sub">Pop. Genetics</span></div>
+      <div class="edu-mod-tab" onclick="showEduModule('mod14',this)" data-mod="mod14" role="button" tabindex="0">🕸️ Module 14<span class="edu-mod-sub">Systems Biology</span></div>
     </div>
   </div>
 
@@ -2754,7 +2768,7 @@ generated using ggplot2 (Wickham, 2016) and pheatmap (Kolde, 2019).</div>
 
       <!-- Topic 1.1 -->
       <div class="edu-topic-card">
-        <div class="edu-topic-head" onclick="toggleEduTopic(this)">
+        <div class="edu-topic-head" onclick="toggleEduTopic(this)" role="button" tabindex="0" aria-expanded="false">
           <span class="edu-topic-num">1.1</span>
           <span class="edu-topic-title">What is Bioinformatics?</span>
           <span class="edu-topic-chev">▶</span>
@@ -2837,7 +2851,7 @@ generated using ggplot2 (Wickham, 2016) and pheatmap (Kolde, 2019).</div>
 
       <!-- Topic 1.2 -->
       <div class="edu-topic-card">
-        <div class="edu-topic-head" onclick="toggleEduTopic(this)">
+        <div class="edu-topic-head" onclick="toggleEduTopic(this)" role="button" tabindex="0" aria-expanded="false">
           <span class="edu-topic-num">1.2</span>
           <span class="edu-topic-title">DNA, RNA and Proteins — The Central Dogma</span>
           <span class="edu-topic-chev">▶</span>
@@ -2912,7 +2926,7 @@ generated using ggplot2 (Wickham, 2016) and pheatmap (Kolde, 2019).</div>
 
       <!-- Topic 1.3 -->
       <div class="edu-topic-card">
-        <div class="edu-topic-head" onclick="toggleEduTopic(this)">
+        <div class="edu-topic-head" onclick="toggleEduTopic(this)" role="button" tabindex="0" aria-expanded="false">
           <span class="edu-topic-num">1.3</span>
           <span class="edu-topic-title">Genome Organisation &amp; Gene Structure</span>
           <span class="edu-topic-chev">▶</span>
@@ -2977,7 +2991,7 @@ generated using ggplot2 (Wickham, 2016) and pheatmap (Kolde, 2019).</div>
 
       <!-- Topic 1.4 -->
       <div class="edu-topic-card">
-        <div class="edu-topic-head" onclick="toggleEduTopic(this)">
+        <div class="edu-topic-head" onclick="toggleEduTopic(this)" role="button" tabindex="0" aria-expanded="false">
           <span class="edu-topic-num">1.4</span>
           <span class="edu-topic-title">Sequencing Technologies</span>
           <span class="edu-topic-chev">▶</span>
@@ -3091,7 +3105,7 @@ generated using ggplot2 (Wickham, 2016) and pheatmap (Kolde, 2019).</div>
     <div class="edu-topic-grid">
 
       <div class="edu-topic-card">
-        <div class="edu-topic-head" onclick="toggleEduTopic(this)">
+        <div class="edu-topic-head" onclick="toggleEduTopic(this)" role="button" tabindex="0" aria-expanded="false">
           <span class="edu-topic-num">2.1</span>
           <span class="edu-topic-title">Essential Linux / Terminal Commands</span>
           <span class="edu-topic-chev">▶</span>
@@ -3252,7 +3266,7 @@ join -t$'\t' -1 1 -2 1 &lt;(sort file1.txt) &lt;(sort file2.txt)</div>
       </div>
 
       <div class="edu-topic-card">
-        <div class="edu-topic-head" onclick="toggleEduTopic(this)">
+        <div class="edu-topic-head" onclick="toggleEduTopic(this)" role="button" tabindex="0" aria-expanded="false">
           <span class="edu-topic-num">2.2</span>
           <span class="edu-topic-title">Setting Up Your Environment (Conda)</span>
           <span class="edu-topic-chev">▶</span>
@@ -3366,7 +3380,7 @@ module purge                  <span class="code-comment"># Unload all modules</s
       </div>
 
       <div class="edu-topic-card">
-        <div class="edu-topic-head" onclick="toggleEduTopic(this)">
+        <div class="edu-topic-head" onclick="toggleEduTopic(this)" role="button" tabindex="0" aria-expanded="false">
           <span class="edu-topic-num">2.3</span>
           <span class="edu-topic-title">Bash Scripting for Automation</span>
           <span class="edu-topic-chev">▶</span>
@@ -3541,7 +3555,7 @@ bash scripts/pipeline.sh
       </div>
 
       <div class="edu-topic-card">
-        <div class="edu-topic-head" onclick="toggleEduTopic(this)">
+        <div class="edu-topic-head" onclick="toggleEduTopic(this)" role="button" tabindex="0" aria-expanded="false">
           <span class="edu-topic-num">2.4</span>
           <span class="edu-topic-title">R for Bioinformatics — Getting Started</span>
           <span class="edu-topic-chev">▶</span>
@@ -3672,7 +3686,7 @@ summary(res)
     <div class="edu-topic-grid">
 
       <div class="edu-topic-card">
-        <div class="edu-topic-head" onclick="toggleEduTopic(this)">
+        <div class="edu-topic-head" onclick="toggleEduTopic(this)" role="button" tabindex="0" aria-expanded="false">
           <span class="edu-topic-num">3.1</span>
           <span class="edu-topic-title">The Major Biological Databases</span>
           <span class="edu-topic-chev">▶</span>
@@ -3742,7 +3756,7 @@ mamba install -c bioconda entrez-direct</div>
       </div>
 
       <div class="edu-topic-card">
-        <div class="edu-topic-head" onclick="toggleEduTopic(this)">
+        <div class="edu-topic-head" onclick="toggleEduTopic(this)" role="button" tabindex="0" aria-expanded="false">
           <span class="edu-topic-num">3.2</span>
           <span class="edu-topic-title">Essential File Formats Explained</span>
           <span class="edu-topic-chev">▶</span>
@@ -3826,7 +3840,7 @@ md5sum -c file.md5                                 <span class="code-comment"># 
       </div>
 
       <div class="edu-topic-card">
-        <div class="edu-topic-head" onclick="toggleEduTopic(this)">
+        <div class="edu-topic-head" onclick="toggleEduTopic(this)" role="button" tabindex="0" aria-expanded="false">
           <span class="edu-topic-num">3.3</span>
           <span class="edu-topic-title">Downloading Data from SRA &amp; Ensembl</span>
           <span class="edu-topic-chev">▶</span>
@@ -3931,7 +3945,7 @@ done &lt; mapping.txt</div>
     <div class="edu-topic-grid">
 
       <div class="edu-topic-card">
-        <div class="edu-topic-head" onclick="toggleEduTopic(this)">
+        <div class="edu-topic-head" onclick="toggleEduTopic(this)" role="button" tabindex="0" aria-expanded="false">
           <span class="edu-topic-num">4.1</span>
           <span class="edu-topic-title">BLAST — Finding Similar Sequences</span>
           <span class="edu-topic-chev">▶</span>
@@ -3998,7 +4012,7 @@ blastp -query speciesB.fa -db speciesA_db -outfmt 6 -evalue 1e-10 > B_vs_A.tsv</
       </div>
 
       <div class="edu-topic-card">
-        <div class="edu-topic-head" onclick="toggleEduTopic(this)">
+        <div class="edu-topic-head" onclick="toggleEduTopic(this)" role="button" tabindex="0" aria-expanded="false">
           <span class="edu-topic-num">4.2</span>
           <span class="edu-topic-title">Multiple Sequence Alignment (MSA)</span>
           <span class="edu-topic-chev">▶</span>
@@ -4056,7 +4070,7 @@ trimal -in aligned.fa -sident             # Show sequence identity matrix
       </div>
 
       <div class="edu-topic-card">
-        <div class="edu-topic-head" onclick="toggleEduTopic(this)">
+        <div class="edu-topic-head" onclick="toggleEduTopic(this)" role="button" tabindex="0" aria-expanded="false">
           <span class="edu-topic-num">4.3</span>
           <span class="edu-topic-title">Phylogenetic Trees — Evolutionary Analysis</span>
           <span class="edu-topic-chev">▶</span>
@@ -4157,7 +4171,7 @@ iqtree2 -s protein_alignment.fa -m TEST -B 1000 -T AUTO -st AA</div>
     <div class="edu-topic-grid">
 
       <div class="edu-topic-card">
-        <div class="edu-topic-head" onclick="toggleEduTopic(this)">
+        <div class="edu-topic-head" onclick="toggleEduTopic(this)" role="button" tabindex="0" aria-expanded="false">
           <span class="edu-topic-num">5.1</span>
           <span class="edu-topic-title">Experimental Design — The Most Critical Step</span>
           <span class="edu-topic-chev">▶</span>
@@ -4219,7 +4233,7 @@ rnapower(depth=20, cv=0.4, effect=0.58, alpha=0.05, power=0.8)
       </div>
 
       <div class="edu-topic-card">
-        <div class="edu-topic-head" onclick="toggleEduTopic(this)">
+        <div class="edu-topic-head" onclick="toggleEduTopic(this)" role="button" tabindex="0" aria-expanded="false">
           <span class="edu-topic-num">5.2</span>
           <span class="edu-topic-title">Quality Control — FastQC &amp; Trimming</span>
           <span class="edu-topic-chev">▶</span>
@@ -4294,7 +4308,7 @@ multiqc qc_reports/post_trim/ -o qc_reports/post_trim_multiqc/</div>
       </div>
 
       <div class="edu-topic-card">
-        <div class="edu-topic-head" onclick="toggleEduTopic(this)">
+        <div class="edu-topic-head" onclick="toggleEduTopic(this)" role="button" tabindex="0" aria-expanded="false">
           <span class="edu-topic-num">5.3</span>
           <span class="edu-topic-title">Alignment with HISAT2 &amp; STAR</span>
           <span class="edu-topic-chev">▶</span>
@@ -4397,7 +4411,7 @@ bamCoverage -b sample.bam \
       </div>
 
       <div class="edu-topic-card">
-        <div class="edu-topic-head" onclick="toggleEduTopic(this)">
+        <div class="edu-topic-head" onclick="toggleEduTopic(this)" role="button" tabindex="0" aria-expanded="false">
           <span class="edu-topic-num">5.4</span>
           <span class="edu-topic-title">Gene Counting with featureCounts</span>
           <span class="edu-topic-chev">▶</span>
@@ -4493,7 +4507,7 @@ dds &lt;- DESeqDataSetFromTximport(txi, metadata, ~condition)</div>
       </div>
 
       <div class="edu-topic-card">
-        <div class="edu-topic-head" onclick="toggleEduTopic(this)">
+        <div class="edu-topic-head" onclick="toggleEduTopic(this)" role="button" tabindex="0" aria-expanded="false">
           <span class="edu-topic-num">5.5</span>
           <span class="edu-topic-title">Differential Expression with DESeq2</span>
           <span class="edu-topic-chev">▶</span>
@@ -4631,7 +4645,7 @@ write.csv(res_annotated, "all_genes_DESeq2.csv", row.names=FALSE)</div>
     <div class="edu-topic-grid">
 
       <div class="edu-topic-card">
-        <div class="edu-topic-head" onclick="toggleEduTopic(this)">
+        <div class="edu-topic-head" onclick="toggleEduTopic(this)" role="button" tabindex="0" aria-expanded="false">
           <span class="edu-topic-num">6.1</span>
           <span class="edu-topic-title">WGS/WES Pipeline — Variant Calling</span>
           <span class="edu-topic-chev">▶</span>
@@ -4723,7 +4737,7 @@ gatk VariantFiltration -V sample.vcf.gz -O sample_filtered.vcf.gz \
       </div>
 
       <div class="edu-topic-card">
-        <div class="edu-topic-head" onclick="toggleEduTopic(this)">
+        <div class="edu-topic-head" onclick="toggleEduTopic(this)" role="button" tabindex="0" aria-expanded="false">
           <span class="edu-topic-num">6.2</span>
           <span class="edu-topic-title">Understanding VCF Files &amp; Variant Annotation</span>
           <span class="edu-topic-chev">▶</span>
@@ -4837,7 +4851,7 @@ cat annotated.vcf | snpSift filter "ANN[*].IMPACT = 'HIGH'" &gt; high_impact.vcf
 
       <!-- ── 6.3 NGS Library Preparation & DNA Fragmentation ── -->
       <div class="edu-topic-card">
-        <div class="edu-topic-head" onclick="toggleEduTopic(this)">
+        <div class="edu-topic-head" onclick="toggleEduTopic(this)" role="button" tabindex="0" aria-expanded="false">
           <span class="edu-topic-num">6.3</span>
           <span class="edu-topic-title">NGS Library Preparation — DNA Fragmentation Methods</span>
           <span class="edu-topic-chev">▶</span>
@@ -5032,7 +5046,7 @@ cat annotated.vcf | snpSift filter "ANN[*].IMPACT = 'HIGH'" &gt; high_impact.vcf
     <div class="edu-topic-grid">
 
       <div class="edu-topic-card">
-        <div class="edu-topic-head" onclick="toggleEduTopic(this)">
+        <div class="edu-topic-head" onclick="toggleEduTopic(this)" role="button" tabindex="0" aria-expanded="false">
           <span class="edu-topic-num">7.1</span>
           <span class="edu-topic-title">P-values, Multiple Testing &amp; FDR</span>
           <span class="edu-topic-chev">▶</span>
@@ -5091,7 +5105,7 @@ p.adjust(p_values, method = "BH")
       </div>
 
       <div class="edu-topic-card">
-        <div class="edu-topic-head" onclick="toggleEduTopic(this)">
+        <div class="edu-topic-head" onclick="toggleEduTopic(this)" role="button" tabindex="0" aria-expanded="false">
           <span class="edu-topic-num">7.2</span>
           <span class="edu-topic-title">Normalisation Methods</span>
           <span class="edu-topic-chev">▶</span>
@@ -5143,7 +5157,7 @@ dge$samples</div>
       </div>
 
       <div class="edu-topic-card">
-        <div class="edu-topic-head" onclick="toggleEduTopic(this)">
+        <div class="edu-topic-head" onclick="toggleEduTopic(this)" role="button" tabindex="0" aria-expanded="false">
           <span class="edu-topic-num">7.3</span>
           <span class="edu-topic-title">PCA &amp; Clustering for Quality Control</span>
           <span class="edu-topic-chev">▶</span>
@@ -5261,7 +5275,7 @@ pheatmap(mat,
     <div class="edu-topic-grid">
 
       <div class="edu-topic-card">
-        <div class="edu-topic-head" onclick="toggleEduTopic(this)">
+        <div class="edu-topic-head" onclick="toggleEduTopic(this)" role="button" tabindex="0" aria-expanded="false">
           <span class="edu-topic-num">8.1</span>
           <span class="edu-topic-title">Single-cell RNA-seq (scRNA-seq) — Introduction</span>
           <span class="edu-topic-chev">▶</span>
@@ -5353,7 +5367,7 @@ seurat &lt;- ScaleData(seurat, vars.to.regress=c("S.Score","G2M.Score"))</div>
       </div>
 
       <div class="edu-topic-card">
-        <div class="edu-topic-head" onclick="toggleEduTopic(this)">
+        <div class="edu-topic-head" onclick="toggleEduTopic(this)" role="button" tabindex="0" aria-expanded="false">
           <span class="edu-topic-num">8.2</span>
           <span class="edu-topic-title">Gene Ontology &amp; Pathway Enrichment Analysis</span>
           <span class="edu-topic-chev">▶</span>
@@ -5451,7 +5465,7 @@ emapplot(pairwise_termsim(ego_simplified), showCategory=20)</div>
       </div>
 
       <div class="edu-topic-card">
-        <div class="edu-topic-head" onclick="toggleEduTopic(this)">
+        <div class="edu-topic-head" onclick="toggleEduTopic(this)" role="button" tabindex="0" aria-expanded="false">
           <span class="edu-topic-num">8.3</span>
           <span class="edu-topic-title">Machine Learning in Bioinformatics</span>
           <span class="edu-topic-chev">▶</span>
@@ -5559,7 +5573,7 @@ def one_hot_encode(seq):
       </div>
 
       <div class="edu-topic-card">
-        <div class="edu-topic-head" onclick="toggleEduTopic(this)">
+        <div class="edu-topic-head" onclick="toggleEduTopic(this)" role="button" tabindex="0" aria-expanded="false">
           <span class="edu-topic-num">8.4</span>
           <span class="edu-topic-title">Metagenomics &amp; Microbiome Analysis</span>
           <span class="edu-topic-chev">▶</span>
@@ -5718,7 +5732,7 @@ humann_renorm_table -i merged_genefamilies.tsv -o merged_genefamilies_cpm.tsv \
     <div class="edu-topic-grid">
 
       <div class="edu-topic-card">
-        <div class="edu-topic-head" onclick="toggleEduTopic(this)">
+        <div class="edu-topic-head" onclick="toggleEduTopic(this)" role="button" tabindex="0" aria-expanded="false">
           <span class="edu-topic-num">9.1</span>
           <span class="edu-topic-title">Mass Spectrometry Principles</span>
           <span class="edu-topic-chev">▶</span>
@@ -5750,7 +5764,7 @@ humann_renorm_table -i merged_genefamilies.tsv -o merged_genefamilies_cpm.tsv \
       </div>
 
       <div class="edu-topic-card">
-        <div class="edu-topic-head" onclick="toggleEduTopic(this)">
+        <div class="edu-topic-head" onclick="toggleEduTopic(this)" role="button" tabindex="0" aria-expanded="false">
           <span class="edu-topic-num">9.2</span>
           <span class="edu-topic-title">Protein Identification &amp; Database Searching</span>
           <span class="edu-topic-chev">▶</span>
@@ -5802,7 +5816,7 @@ diann --f sample1.raw --f sample2.raw --f sample3.raw \
       </div>
 
       <div class="edu-topic-card">
-        <div class="edu-topic-head" onclick="toggleEduTopic(this)">
+        <div class="edu-topic-head" onclick="toggleEduTopic(this)" role="button" tabindex="0" aria-expanded="false">
           <span class="edu-topic-num">9.3</span>
           <span class="edu-topic-title">Quantitative Proteomics &amp; Statistical Analysis</span>
           <span class="edu-topic-chev">▶</span>
@@ -5875,7 +5889,7 @@ cat(nrow(sig), "significantly changed proteins (|logFC|>1, FDR<0.05)\n")</div>
     <div class="edu-topic-grid">
 
       <div class="edu-topic-card">
-        <div class="edu-topic-head" onclick="toggleEduTopic(this)">
+        <div class="edu-topic-head" onclick="toggleEduTopic(this)" role="button" tabindex="0" aria-expanded="false">
           <span class="edu-topic-num">10.1</span>
           <span class="edu-topic-title">Protein Structure Levels &amp; Databases</span>
           <span class="edu-topic-chev">▶</span>
@@ -5918,7 +5932,7 @@ pymol 1UBQ.pdb</div>
       </div>
 
       <div class="edu-topic-card">
-        <div class="edu-topic-head" onclick="toggleEduTopic(this)">
+        <div class="edu-topic-head" onclick="toggleEduTopic(this)" role="button" tabindex="0" aria-expanded="false">
           <span class="edu-topic-num">10.2</span>
           <span class="edu-topic-title">Structure Prediction — AlphaFold &amp; ColabFold</span>
           <span class="edu-topic-chev">▶</span>
@@ -5956,7 +5970,7 @@ colabfold_batch complex.fasta output_dir/ --model-type alphafold2_multimer_v3
       </div>
 
       <div class="edu-topic-card">
-        <div class="edu-topic-head" onclick="toggleEduTopic(this)">
+        <div class="edu-topic-head" onclick="toggleEduTopic(this)" role="button" tabindex="0" aria-expanded="false">
           <span class="edu-topic-num">10.3</span>
           <span class="edu-topic-title">Molecular Docking &amp; Drug Discovery</span>
           <span class="edu-topic-chev">▶</span>
@@ -6013,7 +6027,7 @@ vina --receptor receptor.pdbqt --ligand ligand.pdbqt \
     <div class="edu-topic-grid">
 
       <div class="edu-topic-card">
-        <div class="edu-topic-head" onclick="toggleEduTopic(this)">
+        <div class="edu-topic-head" onclick="toggleEduTopic(this)" role="button" tabindex="0" aria-expanded="false">
           <span class="edu-topic-num">11.1</span>
           <span class="edu-topic-title">ChIP-seq — Mapping Protein-DNA Interactions</span>
           <span class="edu-topic-chev">▶</span>
@@ -6064,7 +6078,7 @@ findMotifsGenome.pl peaks/my_tf_peaks.narrowPeak hg38 motif_output/ -size 200</d
       </div>
 
       <div class="edu-topic-card">
-        <div class="edu-topic-head" onclick="toggleEduTopic(this)">
+        <div class="edu-topic-head" onclick="toggleEduTopic(this)" role="button" tabindex="0" aria-expanded="false">
           <span class="edu-topic-num">11.2</span>
           <span class="edu-topic-title">ATAC-seq — Chromatin Accessibility</span>
           <span class="edu-topic-chev">▶</span>
@@ -6110,7 +6124,7 @@ bamCoverage -b atac_shifted.bam -o atac.bw --normalizeUsing RPGC \
       </div>
 
       <div class="edu-topic-card">
-        <div class="edu-topic-head" onclick="toggleEduTopic(this)">
+        <div class="edu-topic-head" onclick="toggleEduTopic(this)" role="button" tabindex="0" aria-expanded="false">
           <span class="edu-topic-num">11.3</span>
           <span class="edu-topic-title">DNA Methylation &amp; Bisulfite Sequencing</span>
           <span class="edu-topic-chev">▶</span>
@@ -6168,7 +6182,7 @@ bismark2report</div>
     <div class="edu-topic-grid">
 
       <div class="edu-topic-card">
-        <div class="edu-topic-head" onclick="toggleEduTopic(this)">
+        <div class="edu-topic-head" onclick="toggleEduTopic(this)" role="button" tabindex="0" aria-expanded="false">
           <span class="edu-topic-num">12.1</span>
           <span class="edu-topic-title">De Novo Assembly — Short &amp; Long Reads</span>
           <span class="edu-topic-chev">▶</span>
@@ -6215,7 +6229,7 @@ pilon --genome flye_output/assembly.fasta \
       </div>
 
       <div class="edu-topic-card">
-        <div class="edu-topic-head" onclick="toggleEduTopic(this)">
+        <div class="edu-topic-head" onclick="toggleEduTopic(this)" role="button" tabindex="0" aria-expanded="false">
           <span class="edu-topic-num">12.2</span>
           <span class="edu-topic-title">Assembly QC — BUSCO &amp; QUAST</span>
           <span class="edu-topic-chev">▶</span>
@@ -6255,7 +6269,7 @@ busco -i assembly.fa -o busco_output -m genome \
       </div>
 
       <div class="edu-topic-card">
-        <div class="edu-topic-head" onclick="toggleEduTopic(this)">
+        <div class="edu-topic-head" onclick="toggleEduTopic(this)" role="button" tabindex="0" aria-expanded="false">
           <span class="edu-topic-num">12.3</span>
           <span class="edu-topic-title">Gene Prediction &amp; Genome Annotation</span>
           <span class="edu-topic-chev">▶</span>
@@ -6313,7 +6327,7 @@ interproscan.sh -i predicted_proteins.faa -f tsv -dp -goterms -pa</div>
     <div class="edu-topic-grid">
 
       <div class="edu-topic-card">
-        <div class="edu-topic-head" onclick="toggleEduTopic(this)">
+        <div class="edu-topic-head" onclick="toggleEduTopic(this)" role="button" tabindex="0" aria-expanded="false">
           <span class="edu-topic-num">13.1</span>
           <span class="edu-topic-title">Population Structure &amp; Hardy-Weinberg Equilibrium</span>
           <span class="edu-topic-chev">▶</span>
@@ -6361,7 +6375,7 @@ done</div>
       </div>
 
       <div class="edu-topic-card">
-        <div class="edu-topic-head" onclick="toggleEduTopic(this)">
+        <div class="edu-topic-head" onclick="toggleEduTopic(this)" role="button" tabindex="0" aria-expanded="false">
           <span class="edu-topic-num">13.2</span>
           <span class="edu-topic-title">GWAS — Genome-Wide Association Studies</span>
           <span class="edu-topic-chev">▶</span>
@@ -6420,7 +6434,7 @@ plink2 --pfile qc_data \
     <div class="edu-topic-grid">
 
       <div class="edu-topic-card">
-        <div class="edu-topic-head" onclick="toggleEduTopic(this)">
+        <div class="edu-topic-head" onclick="toggleEduTopic(this)" role="button" tabindex="0" aria-expanded="false">
           <span class="edu-topic-num">14.1</span>
           <span class="edu-topic-title">Protein-Protein Interaction Networks</span>
           <span class="edu-topic-chev">▶</span>
@@ -6482,7 +6496,7 @@ print(f"Found {len(communities)} communities")</div>
       </div>
 
       <div class="edu-topic-card">
-        <div class="edu-topic-head" onclick="toggleEduTopic(this)">
+        <div class="edu-topic-head" onclick="toggleEduTopic(this)" role="button" tabindex="0" aria-expanded="false">
           <span class="edu-topic-num">14.2</span>
           <span class="edu-topic-title">Gene Regulatory Networks &amp; Multi-Omics Integration</span>
           <span class="edu-topic-chev">▶</span>
@@ -6749,23 +6763,23 @@ hub_genes &lt;- module_genes[order(kME[module_genes, paste0("kME", module_number
         <h3 class="h3" style="margin-bottom:4px;">Frequently asked questions</h3>
         <p class="sub" style="margin-bottom:16px;">Quick answers before you send a message.</p>
         <div class="faq-list">
-          <div class="faq-item" onclick="toggleFAQ(this)">
+          <div class="faq-item" onclick="toggleFAQ(this)" role="button" tabindex="0" aria-expanded="false">
             <div class="faq-q">Is BioInfoCodex really free forever? <span class="faq-chev">▼</span></div>
             <div class="faq-a"><div class="faq-a-inner">BioInfoCodex tools and tutorials are currently available to everyone. We are committed to supporting the research community. There is no subscription or paywalled features at this time.</div></div>
           </div>
-          <div class="faq-item" onclick="toggleFAQ(this)">
+          <div class="faq-item" onclick="toggleFAQ(this)" role="button" tabindex="0" aria-expanded="false">
             <div class="faq-q">Does my data get uploaded anywhere? <span class="faq-chev">▼</span></div>
             <div class="faq-a"><div class="faq-a-inner">No. All computation happens on your own computer. The HTML app and Python server communicate only via localhost (127.0.0.1) — your data never leaves your machine. There is no server, no cloud, no analytics on your files.</div></div>
           </div>
-          <div class="faq-item" onclick="toggleFAQ(this)">
+          <div class="faq-item" onclick="toggleFAQ(this)" role="button" tabindex="0" aria-expanded="false">
             <div class="faq-q">Can I contribute a tool or tutorial? <span class="faq-chev">▼</span></div>
             <div class="faq-a"><div class="faq-a-inner">Absolutely. We welcome contributions from researchers and developers. Open a pull request on GitHub, or send us an email describing what you'd like to add. All contributors are credited.</div></div>
           </div>
-          <div class="faq-item" onclick="toggleFAQ(this)">
+          <div class="faq-item" onclick="toggleFAQ(this)" role="button" tabindex="0" aria-expanded="false">
             <div class="faq-q">I found a bug — how do I report it? <span class="faq-chev">▼</span></div>
             <div class="faq-a"><div class="faq-a-inner">The best way is to open a GitHub issue with a description of what you did, what you expected, and what happened (include any error messages). You can also use the contact form and we'll log it.</div></div>
           </div>
-          <div class="faq-item" onclick="toggleFAQ(this)">
+          <div class="faq-item" onclick="toggleFAQ(this)" role="button" tabindex="0" aria-expanded="false">
             <div class="faq-q">Can I cite BioInfoCodex in my paper? <span class="faq-chev">▼</span></div>
             <div class="faq-a"><div class="faq-a-inner">We are preparing a manuscript for submission. In the meantime, you can cite the GitHub repository URL and version number. We'll post the citation format as soon as the preprint is on bioRxiv.</div></div>
           </div>
@@ -6955,7 +6969,7 @@ hub_genes &lt;- module_genes[order(kME[module_genes, paste0("kME", module_number
       </div>
     </div>
 
-    <p style="text-align:center;color:var(--text3);font-size:0.8em;margin-top:8px;">Know a resource we should add? <span style="color:var(--green);cursor:pointer;" onclick="showPage('contact')">Suggest it →</span></p>
+    <p style="text-align:center;color:var(--text3);font-size:0.8em;margin-top:8px;">Know a resource we should add? <span style="color:var(--green);cursor:pointer;" onclick="showPage('contact')" role="button" tabindex="0">Suggest it →</span></p>
 
   </div>
 
@@ -7010,27 +7024,27 @@ hub_genes &lt;- module_genes[order(kME[module_genes, paste0("kME", module_number
     <div class="footer-col">
       <h4>Tools</h4>
       <ul>
-        <li onclick="showPage('tools')">RNAflow — RNA-seq</li>
-        <li onclick="showPage('tools')">NGSuite — Genomics</li>
-        <li onclick="showPage('tools')">PlasmidMap</li>
-        <li onclick="showPage('tools')">ChIPflow</li>
+        <li onclick="showPage('tools')" role="button" tabindex="0">RNAflow — RNA-seq</li>
+        <li onclick="showPage('tools')" role="button" tabindex="0">NGSuite — Genomics</li>
+        <li onclick="showPage('tools')" role="button" tabindex="0">PlasmidMap</li>
+        <li onclick="showPage('tools')" role="button" tabindex="0">ChIPflow</li>
       </ul>
     </div>
     <div class="footer-col">
       <h4>Education</h4>
       <ul>
-        <li onclick="showPage('edu')">Download sequences</li>
-        <li onclick="showPage('edu')">RNA-seq basics</li>
-        <li onclick="showPage('edu')">File formats</li>
-        <li onclick="showPage('edu')">Database guide</li>
+        <li onclick="showPage('edu')" role="button" tabindex="0">Download sequences</li>
+        <li onclick="showPage('edu')" role="button" tabindex="0">RNA-seq basics</li>
+        <li onclick="showPage('edu')" role="button" tabindex="0">File formats</li>
+        <li onclick="showPage('edu')" role="button" tabindex="0">Database guide</li>
       </ul>
     </div>
     <div class="footer-col">
       <h4>Platform</h4>
       <ul>
-        <li onclick="showPage('home')">About BioInfoCodex</li>
-        <li onclick="showPage('home')">Team</li>
-        <li onclick="showPage('contact')">Contact</li>
+        <li onclick="showPage('home')" role="button" tabindex="0">About BioInfoCodex</li>
+        <li onclick="showPage('home')" role="button" tabindex="0">Team</li>
+        <li onclick="showPage('contact')" role="button" tabindex="0">Contact</li>
         <li>GitHub (coming soon)</li>
       </ul>
     </div>
@@ -7355,6 +7369,42 @@ document.addEventListener('DOMContentLoaded', () => setTimeout(initCounters, 300
   // Restore on browser back/forward navigation
   window.addEventListener('hashchange', restoreFromHash);
 })();
+// ── KEYBOARD ACTIVATION FOR role="button" ELEMENTS ──────────────────────
+// 171 controls on this page are divs, spans and li elements with onclick —
+// tool cards, accordion headers, tabs. Marking them role="button" and
+// tabindex="0" gets them into the tab order and announced correctly, but a
+// real <button> also fires on Enter and Space, and those need wiring by hand.
+// One delegated listener covers every one of them, including any added later.
+document.addEventListener('keydown', function (e) {
+  if (e.key !== 'Enter' && e.key !== ' ' && e.key !== 'Spacebar') return;
+  const el = e.target.closest('[role="button"][tabindex]');
+  if (!el) return;
+  if (el.matches('button, a, input, select, textarea')) return;
+  e.preventDefault();          // stop Space scrolling the page
+  el.click();
+});
+
+// Accordions announce their state. Rather than hook the click event — which
+// depends on handler ordering and misses programmatic opens — watch the class
+// that actually encodes the state. toggleManualStep and toggleFAQ flip 'open'
+// on the element itself; toggleEduTopic flips it on the enclosing
+// .edu-topic-card. A MutationObserver on the right node covers both, and an
+// initial pass fixes the accordions that render already open.
+(function () {
+  const sync = function (head) {
+    const holder = head.closest('.edu-topic-card') || head;
+    const open = holder.classList.contains('open') || head.classList.contains('open');
+    const want = open ? 'true' : 'false';
+    if (head.getAttribute('aria-expanded') !== want) head.setAttribute('aria-expanded', want);
+  };
+  document.querySelectorAll('[aria-expanded]').forEach(function (head) {
+    sync(head);                                   // correct the initial state
+    const holder = head.closest('.edu-topic-card') || head;
+    new MutationObserver(function () { sync(head); })
+      .observe(holder, { attributes: true, attributeFilter: ['class'] });
+  });
+})();
+
 
 // ══════════════════════════════════════════════════════════════════════════
 // RNAFLOW REGISTRATION & ACCESS CODE SYSTEM
