@@ -55,6 +55,22 @@ hosting change and no JavaScript to read, but it is a real build step and the
 in-app navigation has to fall back to a full page load when a section is not
 in the DOM. More work, and worth it mainly if moving hosts is off the table.
 
+## One quirk worth knowing
+
+`https://bioinfocodex.com/_redirects` returns 404 today, and that is expected —
+GitHub Pages runs Jekyll, which excludes files whose names begin with an
+underscore from the published output. The file is in the repository, which is
+what matters: Netlify reads it from the repo, not from the Pages build.
+
+```
+$ curl -sI https://raw.githubusercontent.com/bioinfocodex/bioinfocodex.github.io/main/_redirects | head -1
+HTTP/2 200
+```
+
+If you ever want Pages itself to stop running Jekyll, add an empty `.nojekyll`
+file at the root. Not needed for the switch, so it is deliberately not here —
+no reason to change how the current deploy is processed while it works.
+
 ## What not to do
 
 Do not use a `301` in `_redirects` for the app routes. A redirect changes the
