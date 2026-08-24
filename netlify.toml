@@ -1,0 +1,29 @@
+# Netlify configuration for bioinfocodex.com
+#
+# This repo currently deploys via GitHub Pages (.github/workflows/deploy-site.yml).
+# Pages cannot rewrite, so app routes are answered by 404.html with a 404 status
+# and never get indexed. Pointing the domain at Netlify instead fixes that; the
+# rules live in _redirects.
+
+[build]
+  publish = "."
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options        = "DENY"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy        = "strict-origin-when-cross-origin"
+    Permissions-Policy     = "geolocation=(), microphone=(), camera=()"
+
+# The app is one HTML file that changes on every content edit — never cache it.
+[[headers]]
+  for = "/index.html"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
+
+# Icons and the share card are content-stable; let them cache hard.
+[[headers]]
+  for = "/*.png"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"

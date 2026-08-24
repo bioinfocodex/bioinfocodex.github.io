@@ -1,0 +1,19 @@
+# Netlify rewrite rules. Inert on GitHub Pages, which ignores this file.
+#
+# The whole point: serve index.html for every app route with a 200 status,
+# instead of GitHub Pages' 404.html-with-404-status. That is the single thing
+# standing between the current setup and /tools/rnaflow being indexable.
+#
+# 200 = rewrite (URL stays, content served) — not 301, which would bounce
+# every deep link back to the home page and lose the path.
+
+/tools/*      /index.html   200
+/learn/*      /index.html   200
+/tools        /index.html   200
+/learn        /index.html   200
+/download     /index.html   200
+/resources    /index.html   200
+/contact      /index.html   200
+
+# Anything genuinely missing still gets a real 404 from 404.html.
+/*            /404.html     404
