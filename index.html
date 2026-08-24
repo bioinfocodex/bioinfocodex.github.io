@@ -33,7 +33,21 @@
 <meta name="twitter:title" content="BioInfoCodex — The Open Bioinformatics Codex">
 <meta name="twitter:description" content="Free guided bioinformatics tools and education. RNA-seq, NGS, plasmid analysis and more.">
 <meta name="twitter:image" content="https://bioinfocodex.com/og-image.png">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=DM+Mono:wght@400;500&family=Playfair+Display:ital,wght@0,700;0,800;0,900;1,700;1,800&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<!-- Trimmed from six families / 40 declared variants to three.
+     DM Sans (12 variants) and Playfair Display (10) were referenced nowhere in
+     the stylesheet or the markup, and Syne only as a fallback behind Space
+     Grotesk on the logo. Inter carries every heading and all body text, DM Mono
+     every code block, Space Grotesk the wordmark.
+
+     The measured win is the render-blocking stylesheet, which every visit
+     fetches before anything paints: 42,060 -> 5,602 bytes, and 108 -> 14
+     @font-face declarations to parse. Font file bytes are roughly unchanged:
+     browsers only download faces that something actually renders in, so the
+     three unused families were never being fetched, and Google serves Inter as
+     one variable file whether you ask for a range or seven fixed weights. -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300..800&family=DM+Mono:wght@400;500&family=Space+Grotesk:wght@700&display=swap" rel="stylesheet">
 <style>
 /* ══════════════════════════════════════════
    RESET & TOKENS
@@ -1270,8 +1284,8 @@ nav.nav-scrolled { box-shadow: 0 4px 28px rgba(0,0,0,0.1); border-bottom-color: 
     </svg>
     <!-- Logo text: two-tone wordmark -->
     <div style="display:flex;flex-direction:column;line-height:1;gap:1px;">
-      <span style="font-family:'Space Grotesk','Syne',sans-serif;font-weight:700;font-size:1em;letter-spacing:-0.5px;color:#0d1117;">BioInfo</span>
-      <span style="font-family:'Space Grotesk','Syne',sans-serif;font-weight:700;font-size:1em;letter-spacing:-0.5px;background:linear-gradient(90deg,#00d4a0,#0096ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">Codex</span>
+      <span style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1em;letter-spacing:-0.5px;color:#0d1117;">BioInfo</span>
+      <span style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1em;letter-spacing:-0.5px;background:linear-gradient(90deg,#00d4a0,#0096ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">Codex</span>
     </div>
   </div>
 
