@@ -212,6 +212,18 @@ em.p{font-style:normal;color:var(--purple);}
    sticky sidebars (.edu-sidebar, .tool-detail-sidebar) keep working;
    overflow-x:hidden would break those. */
 .page{overflow-x:clip;}
+/* ─── Icons ───────────────────────────────────────────────────────────────
+   Sized in em so they track the text they sit beside, and nudged off the
+   baseline to sit optically centred. inline-block keeps the surrounding
+   layout in inline flow exactly as the emoji did. */
+.ico{width:1.05em;height:1.05em;display:inline-block;vertical-align:-0.16em;
+     flex-shrink:0;stroke:currentColor;fill:none;}
+.info-box > .ico{width:1.15em;height:1.15em;margin-top:0.1em;}
+.info-box.tip  > .ico{color:var(--green);}
+.info-box.warn > .ico{color:#f0883e;}
+.info-box.note > .ico{color:var(--blue);}
+.nav-tab .ico{margin-right:7px;}
+
 
 /* ─── Keyboard focus ──────────────────────────────────────────────────────
    The site had no focus styling at all, so a keyboard user could not see
@@ -1255,6 +1267,32 @@ nav.nav-scrolled { box-shadow: 0 4px 28px rgba(0,0,0,0.1); border-bottom-color: 
 
 </head>
 <body>
+<!-- Icon sprite. Hand-authored 24x24 stroke icons on currentColor, so they
+     inherit text colour and theme rather than being fixed-colour images the way
+     emoji are. Referenced with <svg class="ico"><use href="#i-…"></svg> and
+     marked aria-hidden, since every one sits next to text that already says the
+     same thing. -->
+<svg xmlns="http://www.w3.org/2000/svg" style="display:none" aria-hidden="true"><defs>
+<symbol id="i-tip" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+<path d="M9 18h6M10 22h4M12 2a7 7 0 0 0-4 12.7V17h8v-2.3A7 7 0 0 0 12 2Z"/></symbol>
+<symbol id="i-warn" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+<path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z"/><path d="M12 9v4M12 17h.01"/></symbol>
+<symbol id="i-note" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+<circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></symbol>
+<symbol id="i-home" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+<path d="m3 10 9-7 9 7v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2Z"/><path d="M9 22V12h6v10"/></symbol>
+<symbol id="i-tools" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+<path d="M9 2v6L4.6 17.4A2 2 0 0 0 6.4 20h11.2a2 2 0 0 0 1.8-2.6L15 8V2"/><path d="M8 2h8M7.5 13h9"/></symbol>
+<symbol id="i-learn" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+<path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2Z"/></symbol>
+<symbol id="i-link" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+<path d="M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.7 1.7"/><path d="M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7L12.2 19"/></symbol>
+<symbol id="i-download" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5M12 15V3"/></symbol>
+<symbol id="i-mail" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+<rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></symbol>
+</defs></svg>
+
 
 <div class="bg-grid"></div>
 
@@ -1304,12 +1342,12 @@ nav.nav-scrolled { box-shadow: 0 4px 28px rgba(0,0,0,0.1); border-bottom-color: 
   </div>
 
   <div class="nav-tabs">
-    <div class="nav-tab active" id="tab-home"     onclick="showPage('home')" role="button" tabindex="0">🏠 Home</div>
-    <div class="nav-tab"        id="tab-tools"    onclick="showPage('tools')" role="button" tabindex="0">🧬 Bioinfo Tools</div>
-    <div class="nav-tab"        id="tab-edu"      onclick="showPage('edu')" role="button" tabindex="0">📚 Education</div>
-    <div class="nav-tab"        id="tab-resources" onclick="showPage('resources')" role="button" tabindex="0">🔗 Resources</div>
-    <div class="nav-tab"        id="tab-register" onclick="showPage('register')" role="button" tabindex="0">⬇️ Register & Download</div>
-    <div class="nav-tab"        id="tab-contact"  onclick="showPage('contact')" role="button" tabindex="0">✉️ Contact</div>
+    <div class="nav-tab active" id="tab-home"     onclick="showPage('home')" role="button" tabindex="0"><svg class="ico" aria-hidden="true"><use href="#i-home"></use></svg>Home</div>
+    <div class="nav-tab"        id="tab-tools"    onclick="showPage('tools')" role="button" tabindex="0"><svg class="ico" aria-hidden="true"><use href="#i-tools"></use></svg>Bioinfo Tools</div>
+    <div class="nav-tab"        id="tab-edu"      onclick="showPage('edu')" role="button" tabindex="0"><svg class="ico" aria-hidden="true"><use href="#i-learn"></use></svg>Education</div>
+    <div class="nav-tab"        id="tab-resources" onclick="showPage('resources')" role="button" tabindex="0"><svg class="ico" aria-hidden="true"><use href="#i-link"></use></svg>Resources</div>
+    <div class="nav-tab"        id="tab-register" onclick="showPage('register')" role="button" tabindex="0"><svg class="ico" aria-hidden="true"><use href="#i-download"></use></svg>Register & Download</div>
+    <div class="nav-tab"        id="tab-contact"  onclick="showPage('contact')" role="button" tabindex="0"><svg class="ico" aria-hidden="true"><use href="#i-mail"></use></svg>Contact</div>
   </div>
 
   <div class="nav-spacer"></div>
@@ -1318,12 +1356,12 @@ nav.nav-scrolled { box-shadow: 0 4px 28px rgba(0,0,0,0.1); border-bottom-color: 
 
 <!-- Mobile menu -->
 <div class="mobile-menu" id="mobile-menu">
-  <div class="nav-tab" onclick="showPage('home');toggleMobile()" role="button" tabindex="0">🏠 Home</div>
-  <div class="nav-tab" onclick="showPage('tools');toggleMobile()" role="button" tabindex="0">🧬 Bioinfo Tools</div>
-  <div class="nav-tab" onclick="showPage('edu');toggleMobile()" role="button" tabindex="0">📚 Education</div>
-  <div class="nav-tab" onclick="showPage('resources');toggleMobile()" role="button" tabindex="0">🔗 Resources</div>
-  <div class="nav-tab" onclick="showPage('register');toggleMobile()" role="button" tabindex="0">⬇️ Register & Download</div>
-  <div class="nav-tab" onclick="showPage('contact');toggleMobile()" role="button" tabindex="0">✉️ Contact</div>
+  <div class="nav-tab" onclick="showPage('home');toggleMobile()" role="button" tabindex="0"><svg class="ico" aria-hidden="true"><use href="#i-home"></use></svg>Home</div>
+  <div class="nav-tab" onclick="showPage('tools');toggleMobile()" role="button" tabindex="0"><svg class="ico" aria-hidden="true"><use href="#i-tools"></use></svg>Bioinfo Tools</div>
+  <div class="nav-tab" onclick="showPage('edu');toggleMobile()" role="button" tabindex="0"><svg class="ico" aria-hidden="true"><use href="#i-learn"></use></svg>Education</div>
+  <div class="nav-tab" onclick="showPage('resources');toggleMobile()" role="button" tabindex="0"><svg class="ico" aria-hidden="true"><use href="#i-link"></use></svg>Resources</div>
+  <div class="nav-tab" onclick="showPage('register');toggleMobile()" role="button" tabindex="0"><svg class="ico" aria-hidden="true"><use href="#i-download"></use></svg>Register & Download</div>
+  <div class="nav-tab" onclick="showPage('contact');toggleMobile()" role="button" tabindex="0"><svg class="ico" aria-hidden="true"><use href="#i-mail"></use></svg>Contact</div>
 </div>
 
 <!-- ══════════════════════════════════════════
@@ -1881,7 +1919,7 @@ nav.nav-scrolled { box-shadow: 0 4px 28px rgba(0,0,0,0.1); border-bottom-color: 
 
         <h3 class="h3" style="margin-top:24px;">What does RNA-seq measure?</h3>
         <p class="sub">RNA sequencing measures <strong style="color:var(--text);">gene expression</strong> — which genes are active in a cell and by how much. Every cell contains the same DNA, but different cells (or the same cell under different conditions) activate different genes. RNA-seq captures a snapshot of this activity by sequencing the RNA molecules present at a specific moment.</p>
-        <div class="info-box note" style="margin-top:12px;"><span>🔬</span><div>Think of it this way: DNA is the instruction manual for your entire body. RNA is the specific page that is currently being read. RNA-seq tells you which pages are being read, in which cells, and how intensively.</div></div>
+        <div class="info-box note" style="margin-top:12px;"><svg class="ico" aria-hidden="true"><use href="#i-note"></use></svg><div>Think of it this way: DNA is the instruction manual for your entire body. RNA is the specific page that is currently being read. RNA-seq tells you which pages are being read, in which cells, and how intensively.</div></div>
 
         <h3 class="h3" style="margin-top:24px;">What biological questions can RNAflow answer?</h3>
         <div class="card-grid card-grid-2" style="margin-top:0;">
@@ -1957,7 +1995,7 @@ nav.nav-scrolled { box-shadow: 0 4px 28px rgba(0,0,0,0.1); border-bottom-color: 
           </div>
         </div>
 
-        <div class="info-box tip"><span>💡</span><div><strong>Large genome note:</strong> For human, mouse, wheat, and maize, genome files are 3–30 GB. Use the app on a computer with a fast internet connection for the download steps.</div></div>
+        <div class="info-box tip"><svg class="ico" aria-hidden="true"><use href="#i-tip"></use></svg><div><strong>Large genome note:</strong> For human, mouse, wheat, and maize, genome files are 3–30 GB. Use the app on a computer with a fast internet connection for the download steps.</div></div>
       </div>
 
       <!-- INSTALLATION -->
@@ -1983,14 +2021,14 @@ nav.nav-scrolled { box-shadow: 0 4px 28px rgba(0,0,0,0.1); border-bottom-color: 
           <div class="manual-step-head"><span class="ms-num">2</span><span class="ms-title">Install Conda (Miniforge) — if not already installed</span><span class="ms-chev">▶</span></div>
           <div class="manual-step-body"><div class="msb-inner">
             <p class="sub" style="margin-bottom:10px;">Conda is a package manager that installs bioinformatics tools. If you already have Anaconda or Miniconda, skip this step. The app's System Check will detect it automatically.</p>
-            <div class="info-box note"><span>🌐</span><div>Download Miniforge from: <strong>github.com/conda-forge/miniforge/releases</strong> — scroll to the latest release and download the installer for your operating system.</div></div>
+            <div class="info-box note"><svg class="ico" aria-hidden="true"><use href="#i-note"></use></svg><div>Download Miniforge from: <strong>github.com/conda-forge/miniforge/releases</strong> — scroll to the latest release and download the installer for your operating system.</div></div>
             <div class="code-block"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button><span class="code-comment"># macOS / Linux — run in Terminal after downloading:</span>
 bash Miniforge3-MacOSX-arm64.sh   <span class="code-comment"># macOS Apple Silicon</span>
 bash Miniforge3-MacOSX-x86_64.sh  <span class="code-comment"># macOS Intel</span>
 bash Miniforge3-Linux-x86_64.sh   <span class="code-comment"># Linux</span>
 <span class="code-comment"># Follow the prompts, accept the licence, allow it to initialise conda</span>
 <span class="code-comment"># Close and reopen Terminal when finished</span></div>
-            <div class="info-box warn"><span>⚠️</span><div>On Windows: install WSL2 first (search "Turn Windows features on or off" → enable "Windows Subsystem for Linux"), then install Ubuntu from the Microsoft Store. Open Ubuntu, then install Miniforge inside Ubuntu.</div></div>
+            <div class="info-box warn"><svg class="ico" aria-hidden="true"><use href="#i-warn"></use></svg><div>On Windows: install WSL2 first (search "Turn Windows features on or off" → enable "Windows Subsystem for Linux"), then install Ubuntu from the Microsoft Store. Open Ubuntu, then install Miniforge inside Ubuntu.</div></div>
           </div></div>
         </div>
 
@@ -2018,7 +2056,7 @@ conda install -c bioconda -c conda-forge   fastqc fastp hisat2 samtools subread 
 if (!require("BiocManager")) install.packages("BiocManager")
 BiocManager::install("DESeq2")
 install.packages(c("ggplot2", "pheatmap", "ggrepel", "dplyr", "RColorBrewer"))</div>
-            <div class="info-box tip"><span>💡</span><div>Package installation takes 10–20 minutes the first time. You only need to do this once.</div></div>
+            <div class="info-box tip"><svg class="ico" aria-hidden="true"><use href="#i-tip"></use></svg><div>Package installation takes 10–20 minutes the first time. You only need to do this once.</div></div>
           </div></div>
         </div>
 
@@ -2027,8 +2065,8 @@ install.packages(c("ggplot2", "pheatmap", "ggrepel", "dplyr", "RColorBrewer"))</
           <div class="manual-step-body"><div class="msb-inner">
             <p class="sub" style="margin-bottom:10px;">RNAflow bundles its local server and starts it automatically every time you launch the app — there is nothing to run by hand. Run mode (commands execute with one click) uses Python 3, so make sure Python is installed. The Miniforge install from Step 2 already includes it.</p>
             <p class="sub" style="margin-bottom:10px;">When the server is ready, the connection dot in the app's top bar turns green. If you ever need to restart it, use the <strong>Server ▸ Start Local Server</strong> menu.</p>
-            <div class="info-box note"><span>🔒</span><div>The bundled server only listens on <code>127.0.0.1</code> (your own computer). It is completely invisible to any other computer on your network or the internet. Your data never leaves your machine.</div></div>
-            <div class="info-box tip"><span>💡</span><div>No Python installed? RNAflow still works in <strong>Copy mode</strong> — copy each generated command and paste it into your terminal manually.</div></div>
+            <div class="info-box note"><svg class="ico" aria-hidden="true"><use href="#i-note"></use></svg><div>The bundled server only listens on <code>127.0.0.1</code> (your own computer). It is completely invisible to any other computer on your network or the internet. Your data never leaves your machine.</div></div>
+            <div class="info-box tip"><svg class="ico" aria-hidden="true"><use href="#i-tip"></use></svg><div>No Python installed? RNAflow still works in <strong>Copy mode</strong> — copy each generated command and paste it into your terminal manually.</div></div>
           </div></div>
         </div>
       </div>
@@ -2046,7 +2084,7 @@ install.packages(c("ggplot2", "pheatmap", "ggrepel", "dplyr", "RColorBrewer"))</
               <div class="card" style="padding:14px;"><strong>🐾 Animals</strong><p class="sub" style="margin-top:4px;">Human, Mouse, Rat, Zebrafish, Drosophila, C. elegans, Yeast</p></div>
               <div class="card" style="padding:14px;"><strong>🌱 Plants</strong><p class="sub" style="margin-top:4px;">Arabidopsis, Rice, Maize, Wheat, Soybean, Tomato, Yarrowia</p></div>
             </div>
-            <div class="info-box tip"><span>💡</span><div>For organisms not in the list, select <strong>Custom</strong> and paste your own Ensembl FTP URLs. The manual explains exactly how to find these on ensembl.org and plants.ensembl.org.</div></div>
+            <div class="info-box tip"><svg class="ico" aria-hidden="true"><use href="#i-tip"></use></svg><div>For organisms not in the list, select <strong>Custom</strong> and paste your own Ensembl FTP URLs. The manual explains exactly how to find these on ensembl.org and plants.ensembl.org.</div></div>
           </div></div>
         </div>
 
@@ -2054,7 +2092,7 @@ install.packages(c("ggplot2", "pheatmap", "ggrepel", "dplyr", "RColorBrewer"))</
           <div class="manual-step-head"><span class="ms-num">2</span><span class="ms-title">Name your conditions and add SRA accessions</span><span class="ms-chev">▶</span></div>
           <div class="manual-step-body"><div class="msb-inner">
             <p class="sub" style="margin-bottom:10px;">Give meaningful names to your two conditions (e.g. <code>wildtype</code> and <code>mutant</code>, or <code>control</code> and <code>drought_treated</code>). Then add SRA accession numbers for each replicate.</p>
-            <div class="info-box note"><span>🔍</span><div><strong>Finding SRA accessions:</strong> Go to ncbi.nlm.nih.gov/sra → search your paper title or dataset ID → click the experiment → note the SRR/ERR/DRR number for each sample. These start with SRR, ERR, or DRR.</div></div>
+            <div class="info-box note"><svg class="ico" aria-hidden="true"><use href="#i-note"></use></svg><div><strong>Finding SRA accessions:</strong> Go to ncbi.nlm.nih.gov/sra → search your paper title or dataset ID → click the experiment → note the SRR/ERR/DRR number for each sample. These start with SRR, ERR, or DRR.</div></div>
             <div class="result-explain result-info">
               <div class="result-explain-title">📋 How many replicates do I need?</div>
               <div class="result-explain-text">DESeq2 requires a minimum of <strong>2 biological replicates per condition</strong>, but 3 is strongly recommended and is standard for publication. Biological replicates are separate biological samples (different plants, animals, or cultures) — not the same sample sequenced twice.</div>
@@ -2174,7 +2212,7 @@ install.packages(c("ggplot2", "pheatmap", "ggrepel", "dplyr", "RColorBrewer"))</
               <div class="result-explain result-info" style="margin:0;"><div class="result-explain-title">Genome FASTA (.fa.gz)</div><div class="result-explain-text">The complete DNA sequence of your organism's genome, one chromosome at a time. This is what the aligner maps your reads to. File size: 30 MB (yeast) to 15 GB (wheat).</div></div>
               <div class="result-explain result-info" style="margin:0;"><div class="result-explain-title">Gene annotation GTF (.gtf.gz)</div><div class="result-explain-text">A table of exactly where every gene and exon is located on the genome — chromosome, start position, end position, strand. Used by HISAT2 for splice-aware alignment and by featureCounts to assign reads to genes.</div></div>
             </div>
-            <div class="info-box warn" style="margin-top:12px;"><span>⏱️</span><div>Building the HISAT2 index takes 5–30 minutes depending on genome size. Human takes ~20 minutes, yeast takes ~2 minutes. This only needs to be done once — the index can be reused for future experiments with the same organism.</div></div>
+            <div class="info-box warn" style="margin-top:12px;"><svg class="ico" aria-hidden="true"><use href="#i-warn"></use></svg><div>Building the HISAT2 index takes 5–30 minutes depending on genome size. Human takes ~20 minutes, yeast takes ~2 minutes. This only needs to be done once — the index can be reused for future experiments with the same organism.</div></div>
           </div></div>
         </div>
       </div>
@@ -2449,7 +2487,7 @@ generated using ggplot2 (Wickham, 2016) and pheatmap (Kolde, 2019).</div>
               <li>Soybean — <em>Glycine max</em> (Glycine_max_v2.1)</li>
               <li>Tomato — <em>Solanum lycopersicum</em> (SL3.0)</li>
             </ul>
-            <div class="info-box tip" style="margin-top:12px;"><span>💡</span><div>For organisms not listed, select <strong>Custom</strong> and paste your own Ensembl FTP URLs.</div></div>
+            <div class="info-box tip" style="margin-top:12px;"><svg class="ico" aria-hidden="true"><use href="#i-tip"></use></svg><div>For organisms not listed, select <strong>Custom</strong> and paste your own Ensembl FTP URLs.</div></div>
           </div>
         </div>
       </div>
@@ -2776,7 +2814,7 @@ generated using ggplot2 (Wickham, 2016) and pheatmap (Kolde, 2019).</div>
         <div class="edu-topic-body">
           <p class="sub">Bioinformatics is an interdisciplinary science that develops and applies computational methods to analyse biological data. It sits at the intersection of <strong>biology</strong>, <strong>computer science</strong>, <strong>mathematics</strong>, and <strong>statistics</strong>. The field emerged because modern biology generates data at a scale that is impossible to analyse by hand — a single whole-genome sequencing run produces hundreds of gigabytes of raw data, and large consortia such as the UK Biobank have sequenced over 500,000 individuals.</p>
 
-          <div class="info-box tip"><span>💡</span><div>Think of a sequencing machine as a very sophisticated camera. It produces a "photograph" of millions of DNA/RNA fragments. Bioinformatics is the darkroom — the place where raw data becomes biological insight.</div></div>
+          <div class="info-box tip"><svg class="ico" aria-hidden="true"><use href="#i-tip"></use></svg><div>Think of a sequencing machine as a very sophisticated camera. It produces a "photograph" of millions of DNA/RNA fragments. Bioinformatics is the darkroom — the place where raw data becomes biological insight.</div></div>
 
           <h4 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">A Brief History</h4>
           <p class="sub">The roots of bioinformatics trace back to the 1960s, when <strong>Margaret Dayhoff</strong> compiled the first protein sequence database — the Atlas of Protein Sequence and Structure — and developed the PAM substitution matrices still used in sequence alignment today. In the 1970s, Needleman-Wunsch (1970) and Smith-Waterman (1981) published their foundational sequence alignment algorithms. The launch of the <strong>Human Genome Project</strong> in 1990 was a watershed moment: a $3 billion, 13-year international effort that produced the first draft of the human genome in 2001. Since then, sequencing costs have plummeted dramatically — from roughly $100 million per genome in 2001 to under $200 today — falling faster than Moore's Law. This exponential cost reduction has democratised genomics and made bioinformatics skills essential for modern biological research.</p>
@@ -2840,7 +2878,7 @@ generated using ggplot2 (Wickham, 2016) and pheatmap (Kolde, 2019).</div>
             <span class="chip">HPC / SLURM</span>
           </div>
 
-          <div class="info-box note" style="margin-top:14px;"><span>📝</span><div><strong>Key Takeaways:</strong><br>
+          <div class="info-box note" style="margin-top:14px;"><svg class="ico" aria-hidden="true"><use href="#i-note"></use></svg><div><strong>Key Takeaways:</strong><br>
           &bull; Bioinformatics combines biology + CS + statistics to extract meaning from biological data<br>
           &bull; The field was born from protein databases in the 1960s and exploded with the Human Genome Project<br>
           &bull; Sequencing costs have fallen over a million-fold, making data generation easy — analysis is now the bottleneck<br>
@@ -2904,7 +2942,7 @@ generated using ggplot2 (Wickham, 2016) and pheatmap (Kolde, 2019).</div>
           <p class="sub">RNA is chemically less stable than DNA for two reasons: (1) the 2'-OH group on the ribose sugar makes RNA susceptible to alkaline hydrolysis, and (2) RNA is single-stranded, making it vulnerable to RNases (ubiquitous enzymes that degrade RNA). This instability is why RNA extraction requires careful technique — RNase-free conditions, working on ice, and rapid processing. It also means RNA quality degrades over time, which is why we measure <strong>RIN (RNA Integrity Number)</strong> before sequencing.</p>
 
           <h4 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">Exceptions to the Central Dogma</h4>
-          <div class="info-box warn"><span>⚠️</span><div>The central dogma has important exceptions that are biologically and clinically significant:</div></div>
+          <div class="info-box warn"><svg class="ico" aria-hidden="true"><use href="#i-warn"></use></svg><div>The central dogma has important exceptions that are biologically and clinically significant:</div></div>
           <div class="card-grid card-grid-2" style="margin-top:10px;gap:10px;">
             <div class="card" style="padding:14px;"><strong>Reverse Transcription</strong><p class="sub" style="margin-top:4px;">RNA &rarr; DNA. Performed by <strong>reverse transcriptase</strong> in retroviruses (HIV) and retrotransposons. Also used in the lab to create cDNA from mRNA (the basis of RNA-seq library preparation).</p></div>
             <div class="card" style="padding:14px;"><strong>RNA Replication</strong><p class="sub" style="margin-top:4px;">RNA &rarr; RNA. RNA viruses (influenza, SARS-CoV-2) use RNA-dependent RNA polymerase (RdRp) to replicate their genomes. This enzyme is a drug target (e.g., remdesivir).</p></div>
@@ -2915,7 +2953,7 @@ generated using ggplot2 (Wickham, 2016) and pheatmap (Kolde, 2019).</div>
           <h4 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">Non-coding RNA</h4>
           <p class="sub">Not all RNA becomes protein. In fact, the vast majority of transcribed RNA in human cells is non-coding. Key types include: <strong>rRNA</strong> (ribosomal RNA — ~80% of total RNA, forms the ribosome structure), <strong>tRNA</strong> (transfer RNA — carries amino acids during translation), <strong>miRNA</strong> (microRNA — ~22 nt, silences gene expression post-transcriptionally), <strong>lncRNA</strong> (long non-coding RNA — &gt;200 nt, diverse regulatory roles), and <strong>circRNA</strong> (circular RNA — resistant to degradation, potential biomarkers). These are increasingly studied in bioinformatics.</p>
 
-          <div class="info-box note" style="margin-top:14px;"><span>📝</span><div><strong>Key Takeaways:</strong><br>
+          <div class="info-box note" style="margin-top:14px;"><svg class="ico" aria-hidden="true"><use href="#i-note"></use></svg><div><strong>Key Takeaways:</strong><br>
           &bull; The central dogma: DNA &rarr; RNA &rarr; Protein, with important exceptions (reverse transcription, RNA viruses, prions)<br>
           &bull; Base pairing: A-T (DNA) / A-U (RNA) with 2 H-bonds; G-C with 3 H-bonds (stronger)<br>
           &bull; Transcription produces pre-mRNA that is capped, polyadenylated, and spliced before export<br>
@@ -2978,9 +3016,9 @@ generated using ggplot2 (Wickham, 2016) and pheatmap (Kolde, 2019).</div>
             <div class="card" style="padding:14px;"><strong>Mutually exclusive exons</strong><p class="sub" style="margin-top:4px;">One of two exons is included, but never both. The choice is regulated in a tissue-specific manner.</p></div>
           </div>
 
-          <div class="info-box warn" style="margin-top:14px;"><span>⚠️</span><div>When aligning RNA-seq reads to a genome, use a <strong>splice-aware aligner</strong> (STAR, HISAT2) — not a simple aligner like BWA. Otherwise reads spanning exon-exon junctions will fail to align. If you need isoform-level analysis, consider tools like <strong>Salmon</strong> or <strong>Kallisto</strong> for transcript-level quantification, or <strong>PacBio IsoSeq</strong> for full-length transcript sequencing.</div></div>
+          <div class="info-box warn" style="margin-top:14px;"><svg class="ico" aria-hidden="true"><use href="#i-warn"></use></svg><div>When aligning RNA-seq reads to a genome, use a <strong>splice-aware aligner</strong> (STAR, HISAT2) — not a simple aligner like BWA. Otherwise reads spanning exon-exon junctions will fail to align. If you need isoform-level analysis, consider tools like <strong>Salmon</strong> or <strong>Kallisto</strong> for transcript-level quantification, or <strong>PacBio IsoSeq</strong> for full-length transcript sequencing.</div></div>
 
-          <div class="info-box note" style="margin-top:14px;"><span>📝</span><div><strong>Key Takeaways:</strong><br>
+          <div class="info-box note" style="margin-top:14px;"><svg class="ico" aria-hidden="true"><use href="#i-note"></use></svg><div><strong>Key Takeaways:</strong><br>
           &bull; Eukaryotic genomes are organised into chromosomes with euchromatin (active) and heterochromatin (silent) regions<br>
           &bull; Genome size does not correlate with complexity (C-value paradox) — most large genomes are inflated by repetitive elements<br>
           &bull; Promoters, enhancers, and CpG islands control when and where genes are expressed<br>
@@ -3081,9 +3119,9 @@ generated using ggplot2 (Wickham, 2016) and pheatmap (Kolde, 2019).</div>
             <div class="card" style="padding:16px;border-top:3px solid var(--purple);"><strong>Choose Nanopore when:</strong><p class="sub" style="margin-top:6px;">&bull; Rapid pathogen identification<br>&bull; Field work (MinION is portable)<br>&bull; Direct RNA sequencing (no RT step)<br>&bull; Epigenetic modifications (m5C, m6A)<br>&bull; Ultra-long reads needed</p></div>
           </div>
 
-          <div class="info-box tip" style="margin-top:14px;"><span>💡</span><div><strong>Hybrid approaches:</strong> Many genome assembly projects now combine <strong>Illumina short reads</strong> (for accuracy/polishing) with <strong>long reads</strong> (for scaffolding and resolving repeats). The T2T (Telomere-to-Telomere) consortium used PacBio HiFi and Oxford Nanopore ultra-long reads to complete the first truly gapless human genome assembly in 2022.</div></div>
+          <div class="info-box tip" style="margin-top:14px;"><svg class="ico" aria-hidden="true"><use href="#i-tip"></use></svg><div><strong>Hybrid approaches:</strong> Many genome assembly projects now combine <strong>Illumina short reads</strong> (for accuracy/polishing) with <strong>long reads</strong> (for scaffolding and resolving repeats). The T2T (Telomere-to-Telomere) consortium used PacBio HiFi and Oxford Nanopore ultra-long reads to complete the first truly gapless human genome assembly in 2022.</div></div>
 
-          <div class="info-box note" style="margin-top:14px;"><span>📝</span><div><strong>Key Takeaways:</strong><br>
+          <div class="info-box note" style="margin-top:14px;"><svg class="ico" aria-hidden="true"><use href="#i-note"></use></svg><div><strong>Key Takeaways:</strong><br>
           &bull; Illumina sequencing-by-synthesis uses fluorescent reversible terminators to read one base per cycle across billions of clusters<br>
           &bull; PHRED quality scores are logarithmic: Q30 means a 1/1,000 chance of error<br>
           &bull; Quality degrades at read ends; Illumina errors are substitutions, while long-read errors are typically indels<br>
@@ -3150,7 +3188,7 @@ gzip file.fastq            <span class="code-comment"># Compress (creates .fastq
 gunzip file.fastq.gz       <span class="code-comment"># Decompress</span>
 zcat file.fastq.gz | head  <span class="code-comment"># View compressed file without decompressing</span></div>
 
-          <div class="info-box warn"><span>⚠️</span><div><code>rm -rf</code> is permanent and irreversible. There is no Trash. Always double-check before running delete commands. Never run <code>rm -rf /</code> or <code>rm -rf *</code> without absolute certainty.</div></div>
+          <div class="info-box warn"><svg class="ico" aria-hidden="true"><use href="#i-warn"></use></svg><div><code>rm -rf</code> is permanent and irreversible. There is no Trash. Always double-check before running delete commands. Never run <code>rm -rf /</code> or <code>rm -rf *</code> without absolute certainty.</div></div>
 
           <h4 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">File Permissions</h4>
           <p class="sub">Linux file permissions control who can read, write, and execute files. Understanding permissions is essential because scripts need execute permission, and shared HPC directories require correct group permissions.</p>
@@ -3256,7 +3294,7 @@ sort -u gene_list.txt > unique_genes.txt
 <span class="code-comment"># Join two files by a common column</span>
 join -t$'\t' -1 1 -2 1 &lt;(sort file1.txt) &lt;(sort file2.txt)</div>
 
-          <div class="info-box note" style="margin-top:14px;"><span>📝</span><div><strong>Key Takeaways:</strong><br>
+          <div class="info-box note" style="margin-top:14px;"><svg class="ico" aria-hidden="true"><use href="#i-note"></use></svg><div><strong>Key Takeaways:</strong><br>
           &bull; Master navigation (cd, ls, pwd), file operations (cp, mv, rm), and file viewing (head, tail, less, grep)<br>
           &bull; Understand permissions (chmod 755) — your scripts must be executable to run<br>
           &bull; Pipes and redirection are the foundation of bioinformatics one-liners<br>
@@ -3291,7 +3329,7 @@ conda config --add channels bioconda
 conda config --add channels conda-forge
 conda config --set channel_priority strict  <span class="code-comment"># Important for reproducibility</span></div>
 
-          <div class="info-box tip"><span>💡</span><div><strong>Why Mamba over Conda?</strong> Mamba is a drop-in replacement for conda that uses a C++ solver instead of Python. It resolves dependencies 10-50x faster than conda. With Miniforge, mamba is included by default. Just replace <code>conda install</code> with <code>mamba install</code> — everything else is the same.</div></div>
+          <div class="info-box tip"><svg class="ico" aria-hidden="true"><use href="#i-tip"></use></svg><div><strong>Why Mamba over Conda?</strong> Mamba is a drop-in replacement for conda that uses a C++ solver instead of Python. It resolves dependencies 10-50x faster than conda. With Miniforge, mamba is included by default. Just replace <code>conda install</code> with <code>mamba install</code> — everything else is the same.</div></div>
 
           <h4 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">Creating and Managing Environments</h4>
           <div class="code-block"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button><span class="code-comment"># Create a project environment (ALWAYS use environments!)</span>
@@ -3314,7 +3352,7 @@ conda env create -f environment.yml
 conda env list                  <span class="code-comment"># List all environments</span>
 conda deactivate                <span class="code-comment"># Return to base</span>
 conda env remove -n old_env     <span class="code-comment"># Delete an environment</span></div>
-          <div class="info-box warn"><span>⚠️</span><div><strong>Never install tools into your base environment.</strong> One project = one environment. This prevents version conflicts between projects and ensures reproducibility.</div></div>
+          <div class="info-box warn"><svg class="ico" aria-hidden="true"><use href="#i-warn"></use></svg><div><strong>Never install tools into your base environment.</strong> One project = one environment. This prevents version conflicts between projects and ensures reproducibility.</div></div>
 
           <h4 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">Containers: Docker and Singularity</h4>
           <p class="sub">Containers go beyond conda by packaging the <em>entire</em> operating system, libraries, and tools into a single portable image. This guarantees that the software runs identically on any machine. Docker is the standard for local development; <strong>Singularity (Apptainer)</strong> is the standard on HPC clusters because it does not require root privileges.</p>
@@ -3370,7 +3408,7 @@ module list                   <span class="code-comment"># Show currently loaded
 module unload samtools        <span class="code-comment"># Unload a module</span>
 module purge                  <span class="code-comment"># Unload all modules</span></div>
 
-          <div class="info-box note" style="margin-top:14px;"><span>📝</span><div><strong>Key Takeaways:</strong><br>
+          <div class="info-box note" style="margin-top:14px;"><svg class="ico" aria-hidden="true"><use href="#i-note"></use></svg><div><strong>Key Takeaways:</strong><br>
           &bull; Use Mamba (via Miniforge) instead of plain Conda for much faster dependency resolution<br>
           &bull; Always create separate environments for each project; never install into base<br>
           &bull; Containers (Docker/Singularity) provide the highest level of reproducibility<br>
@@ -3450,7 +3488,7 @@ set -euo pipefail
 <span class="code-comment"># Without pipefail, this would silently fail if hisat2 crashes:</span>
 hisat2 -x index -U reads.fq | samtools sort -o out.bam
 <span class="code-comment"># With pipefail, the script stops and reports the error</span></div>
-          <div class="info-box warn"><span>⚠️</span><div><code>set -euo pipefail</code> should be on line 2 of every bioinformatics script. Without it, you may not notice when a critical step fails, leading to incorrect results downstream.</div></div>
+          <div class="info-box warn"><svg class="ico" aria-hidden="true"><use href="#i-warn"></use></svg><div><code>set -euo pipefail</code> should be on line 2 of every bioinformatics script. Without it, you may not notice when a critical step fails, leading to incorrect results downstream.</div></div>
 
           <h4 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">Logging Output</h4>
           <div class="code-block"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button>#!/bin/bash
@@ -3543,9 +3581,9 @@ bash scripts/pipeline.sh
 <span class="code-comment"># Monitor with: squeue -u $USER</span>
 <span class="code-comment"># Cancel with: scancel JOB_ID</span></div>
 
-          <div class="info-box tip" style="margin-top:12px;"><span>💡</span><div><strong>SLURM array jobs</strong> let you submit one script that runs many times with different inputs — perfect for processing many samples in parallel: <code>#SBATCH --array=1-20</code> and use <code>$SLURM_ARRAY_TASK_ID</code> to select the sample.</div></div>
+          <div class="info-box tip" style="margin-top:12px;"><svg class="ico" aria-hidden="true"><use href="#i-tip"></use></svg><div><strong>SLURM array jobs</strong> let you submit one script that runs many times with different inputs — perfect for processing many samples in parallel: <code>#SBATCH --array=1-20</code> and use <code>$SLURM_ARRAY_TASK_ID</code> to select the sample.</div></div>
 
-          <div class="info-box note" style="margin-top:14px;"><span>📝</span><div><strong>Key Takeaways:</strong><br>
+          <div class="info-box note" style="margin-top:14px;"><svg class="ico" aria-hidden="true"><use href="#i-note"></use></svg><div><strong>Key Takeaways:</strong><br>
           &bull; Always start scripts with <code>set -euo pipefail</code> to catch errors early<br>
           &bull; Use variables for paths and parameters — makes scripts reusable<br>
           &bull; Log everything: timestamps, tool versions, and parameters used<br>
@@ -3662,9 +3700,9 @@ res &lt;- results(dds, contrast = c("condition", "treated", "control"))
 summary(res)
 ```</div>
 
-          <div class="info-box note" style="margin-top:14px;"><span>📌</span><div><strong>Recommended R learning path:</strong> (1) R for Data Science by Hadley Wickham (free online at r4ds.had.co.nz) &rarr; (2) Bioconductor Workflows at bioconductor.org &rarr; (3) DESeq2 vignette &rarr; (4) ggplot2 book (ggplot2-book.org)</div></div>
+          <div class="info-box note" style="margin-top:14px;"><svg class="ico" aria-hidden="true"><use href="#i-note"></use></svg><div><strong>Recommended R learning path:</strong> (1) R for Data Science by Hadley Wickham (free online at r4ds.had.co.nz) &rarr; (2) Bioconductor Workflows at bioconductor.org &rarr; (3) DESeq2 vignette &rarr; (4) ggplot2 book (ggplot2-book.org)</div></div>
 
-          <div class="info-box note" style="margin-top:14px;"><span>📝</span><div><strong>Key Takeaways:</strong><br>
+          <div class="info-box note" style="margin-top:14px;"><svg class="ico" aria-hidden="true"><use href="#i-note"></use></svg><div><strong>Key Takeaways:</strong><br>
           &bull; Install R + RStudio for interactive analysis; use Bioconductor for genomics-specific packages<br>
           &bull; The tidyverse (dplyr, ggplot2, tidyr) is essential for data wrangling and visualisation<br>
           &bull; ggplot2 builds plots in layers — master aes(), geom_*, and theme() for publication figures<br>
@@ -3744,9 +3782,9 @@ esearch -db sra -query '"Homo sapiens"[Organism] AND "RNA-Seq"[Strategy]' | efet
 mamba install -c bioconda entrez-direct</div>
 
           <h4 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">How to Cite Databases</h4>
-          <div class="info-box tip"><span>💡</span><div>Always cite the databases you use in your Methods section. Each database publishes a yearly "Database Issue" paper in <em>Nucleic Acids Research</em>. For example: "Reference genome and annotation were obtained from Ensembl release 111 (Cunningham et al., 2024). Raw sequencing data were downloaded from the NCBI Sequence Read Archive (accession SRP123456)."</div></div>
+          <div class="info-box tip"><svg class="ico" aria-hidden="true"><use href="#i-tip"></use></svg><div>Always cite the databases you use in your Methods section. Each database publishes a yearly "Database Issue" paper in <em>Nucleic Acids Research</em>. For example: "Reference genome and annotation were obtained from Ensembl release 111 (Cunningham et al., 2024). Raw sequencing data were downloaded from the NCBI Sequence Read Archive (accession SRP123456)."</div></div>
 
-          <div class="info-box note" style="margin-top:14px;"><span>📝</span><div><strong>Key Takeaways:</strong><br>
+          <div class="info-box note" style="margin-top:14px;"><svg class="ico" aria-hidden="true"><use href="#i-note"></use></svg><div><strong>Key Takeaways:</strong><br>
           &bull; NCBI is the starting point for most searches; Ensembl is best for genome downloads; UniProt for protein information<br>
           &bull; Learn to recognise accession number formats (NM_, ENSG, P#####, SRR) to identify the source database<br>
           &bull; Databases are cross-linked — navigate from gene to transcript to protein to structure to pathway<br>
@@ -3771,7 +3809,7 @@ mamba install -c bioconda entrez-direct</div>
 ATGGATTTATCTGCTCTTCGCGTTGAAGAAGTACAAAATGTCATTAATGCTATGCAGAAA
 ATCTTAGAGTGTCCCATCTGTCTGGAGTTGATCAAGGAACCTGTCTCCACAAAGTGTGAC
 ...</div>
-          <div class="info-box tip"><span>💡</span><div>Useful one-liners: <code>grep -c "^&gt;" file.fa</code> counts the number of sequences. <code>samtools faidx genome.fa</code> creates an index (.fai) needed by many tools. The index file lists each sequence name, length, offset, line bases, and line bytes.</div></div>
+          <div class="info-box tip"><svg class="ico" aria-hidden="true"><use href="#i-tip"></use></svg><div>Useful one-liners: <code>grep -c "^&gt;" file.fa</code> counts the number of sequences. <code>samtools faidx genome.fa</code> creates an index (.fai) needed by many tools. The index file lists each sequence name, length, offset, line bases, and line bytes.</div></div>
 
           <h4 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">FASTQ (.fastq / .fastq.gz)</h4>
           <p class="sub">Raw sequencing reads. Every read is exactly 4 lines. FASTQ files are almost always gzip-compressed (.fastq.gz) to save space.</p>
@@ -3810,7 +3848,7 @@ chr17  ensembl  exon   43124017  43125483  .  -  .  gene_id "ENSG00000012048"; e
 
           <h4 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">BED (.bed)</h4>
           <p class="sub">Simple genomic interval format. Minimum 3 columns: chrom, start (0-based), end. Used for ChIP-seq peaks, exon coordinates, target regions, blacklisted regions.</p>
-          <div class="info-box warn"><span>⚠️</span><div><strong>Coordinate systems matter!</strong> BED uses <strong>0-based, half-open</strong> coordinates (start is 0-indexed, end is exclusive). GTF/GFF and VCF use <strong>1-based, inclusive</strong> coordinates. A region at chr1:100-200 in BED is the same as chr1:101-200 in GTF. Mixing these up is a very common source of off-by-one errors.</div></div>
+          <div class="info-box warn"><svg class="ico" aria-hidden="true"><use href="#i-warn"></use></svg><div><strong>Coordinate systems matter!</strong> BED uses <strong>0-based, half-open</strong> coordinates (start is 0-indexed, end is exclusive). GTF/GFF and VCF use <strong>1-based, inclusive</strong> coordinates. A region at chr1:100-200 in BED is the same as chr1:101-200 in GTF. Mixing these up is a very common source of off-by-one errors.</div></div>
 
           <h4 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">Converting Between Formats</h4>
           <div class="code-block"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button><span class="code-comment"># SAM &lt;-&gt; BAM &lt;-&gt; CRAM</span>
@@ -3830,7 +3868,7 @@ samtools quickcheck sorted.bam &amp;&amp; echo "OK" || echo "CORRUPTED"
 md5sum file.fastq.gz &gt; file.md5                   <span class="code-comment"># Generate checksum</span>
 md5sum -c file.md5                                 <span class="code-comment"># Verify checksum</span></div>
 
-          <div class="info-box note" style="margin-top:14px;"><span>📝</span><div><strong>Key Takeaways:</strong><br>
+          <div class="info-box note" style="margin-top:14px;"><svg class="ico" aria-hidden="true"><use href="#i-note"></use></svg><div><strong>Key Takeaways:</strong><br>
           &bull; FASTA = sequences, FASTQ = sequences + quality, BAM = aligned reads, GTF = gene annotations, VCF = variants, BED = intervals<br>
           &bull; Always store alignments as BAM (or CRAM), never SAM — the space savings are enormous<br>
           &bull; Watch out for coordinate systems: BED is 0-based half-open; GTF and VCF are 1-based inclusive<br>
@@ -3867,7 +3905,7 @@ gzip ./data/raw/SRR1234567*.fastq
 <span class="code-comment"># Batch download from accession list</span>
 cat SRR_Acc_List.txt | parallel -j 4 "fasterq-dump {} --outdir ./data/raw --split-files &amp;&amp; gzip ./data/raw/{}*.fastq"</div>
 
-          <div class="info-box warn"><span>⚠️</span><div><strong>fasterq-dump outputs uncompressed FASTQ!</strong> A single sample can be 20-50 GB uncompressed. Always gzip immediately after download. Also, fasterq-dump uses a cache in <code>~/ncbi/</code> which can fill your home directory — set <code>vdb-config --set /repository/user/cache-disabled=true</code> or use <code>--temp /scratch/tmp</code>.</div></div>
+          <div class="info-box warn"><svg class="ico" aria-hidden="true"><use href="#i-warn"></use></svg><div><strong>fasterq-dump outputs uncompressed FASTQ!</strong> A single sample can be 20-50 GB uncompressed. Always gzip immediately after download. Also, fasterq-dump uses a cache in <code>~/ncbi/</code> which can fill your home directory — set <code>vdb-config --set /repository/user/cache-disabled=true</code> or use <code>--temp /scratch/tmp</code>.</div></div>
 
           <h4 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">Faster Downloads with Aspera and ENA</h4>
           <p class="sub"><strong>Aspera</strong> is a high-speed transfer protocol that can be 10-50x faster than wget/ftp. NCBI and ENA both support it. The <strong>European Nucleotide Archive (ENA)</strong> is an alternative to SRA that is often faster, especially if you are in Europe, and provides pre-compressed FASTQ files directly.</p>
@@ -3896,7 +3934,7 @@ wget https://ftp.ensembl.org/pub/release-111/gtf/mus_musculus/Mus_musculus.GRCm3
 
 <span class="code-comment"># Decompress</span>
 gunzip *.fa.gz *.gtf.gz</div>
-          <div class="info-box tip"><span>💡</span><div><strong>Always use primary_assembly</strong> (not top_level) to avoid alt contigs and patches that can cause ambiguous alignments. And always ensure your genome FASTA and GTF come from the <strong>same Ensembl release</strong> — mismatched versions cause chromosome naming mismatches and counting errors.</div></div>
+          <div class="info-box tip"><svg class="ico" aria-hidden="true"><use href="#i-tip"></use></svg><div><strong>Always use primary_assembly</strong> (not top_level) to avoid alt contigs and patches that can cause ambiguous alignments. And always ensure your genome FASTA and GTF come from the <strong>same Ensembl release</strong> — mismatched versions cause chromosome naming mismatches and counting errors.</div></div>
 
           <h4 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">Verifying Downloaded Data</h4>
           <div class="code-block"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button><span class="code-comment"># Verify file integrity with md5sum</span>
@@ -3923,7 +3961,7 @@ while read srr name; do
     mv data/raw/${srr}_2.fastq.gz data/raw/${name}_R2.fastq.gz
 done &lt; mapping.txt</div>
 
-          <div class="info-box note" style="margin-top:14px;"><span>📝</span><div><strong>Key Takeaways:</strong><br>
+          <div class="info-box note" style="margin-top:14px;"><svg class="ico" aria-hidden="true"><use href="#i-note"></use></svg><div><strong>Key Takeaways:</strong><br>
           &bull; Find SRR accessions via GEO Run Selector (from the paper's Data Availability section)<br>
           &bull; fasterq-dump outputs uncompressed files — always gzip immediately to save disk space<br>
           &bull; ENA (European) often provides faster downloads with pre-compressed FASTQ files<br>
@@ -3967,7 +4005,7 @@ done &lt; mapping.txt</div>
           </div>
 
           <h4 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">Understanding BLAST Output</h4>
-          <div class="info-box warn"><span>⚠️</span><div><strong>E-value is NOT a p-value.</strong> E-value = expected number of hits with this score by random chance in a database of this size. E-value 0.001 = expect this hit once in 1,000 random databases. E-value &lt; 1e-5 is generally significant. <strong>E-value depends on database size</strong> — the same alignment has a different E-value in a small vs large database. Always compare E-values from the same search.</div></div>
+          <div class="info-box warn"><svg class="ico" aria-hidden="true"><use href="#i-warn"></use></svg><div><strong>E-value is NOT a p-value.</strong> E-value = expected number of hits with this score by random chance in a database of this size. E-value 0.001 = expect this hit once in 1,000 random databases. E-value &lt; 1e-5 is generally significant. <strong>E-value depends on database size</strong> — the same alignment has a different E-value in a small vs large database. Always compare E-values from the same search.</div></div>
           <p class="sub">Key output fields in tabular format (-outfmt 6):</p>
           <div class="card-grid card-grid-3" style="gap:8px;margin-top:8px;">
             <div class="card" style="padding:10px;font-size:0.85em;"><strong>pident</strong> — % identity (how similar)</div>
@@ -4004,7 +4042,7 @@ blastx -query unknown_cdna.fa -db blastdb/proteome \
 blastp -query speciesA.fa -db speciesB_db -outfmt 6 -evalue 1e-10 > A_vs_B.tsv
 blastp -query speciesB.fa -db speciesA_db -outfmt 6 -evalue 1e-10 > B_vs_A.tsv</div>
 
-          <div class="info-box tip"><span>💡</span><div><strong>When BLAST isn't enough:</strong> BLAST misses very divergent homologues. For sensitive remote homology detection, use <strong>HMMER</strong> (profile-HMM searches — much more sensitive than PSI-BLAST) or <strong>HHblits</strong> (hidden Markov model vs HMM database). These tools are standard for protein domain annotation.</div></div>
+          <div class="info-box tip"><svg class="ico" aria-hidden="true"><use href="#i-tip"></use></svg><div><strong>When BLAST isn't enough:</strong> BLAST misses very divergent homologues. For sensitive remote homology detection, use <strong>HMMER</strong> (profile-HMM searches — much more sensitive than PSI-BLAST) or <strong>HHblits</strong> (hidden Markov model vs HMM database). These tools are standard for protein domain annotation.</div></div>
 
           <h4 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">Key Takeaways</h4>
           <div class="chips"><span class="chip">E-value &lt; 1e-5 for significance</span><span class="chip">blastp more sensitive than blastn</span><span class="chip">Always check query coverage, not just E-value</span><span class="chip">Use DIAMOND for large-scale searches</span><span class="chip">Reciprocal Best Hit for orthology</span></div>
@@ -4062,7 +4100,7 @@ trimal -in aligned.fa -sident             # Show sequence identity matrix
 <span class="code-comment"># Web: MView (ebi.ac.uk/Tools/msa/mview/) — quick coloured view</span>
 <span class="code-comment"># CLI: AliView — fast lightweight desktop viewer</span></div>
 
-          <div class="info-box warn"><span>⚠️</span><div><strong>Common MSA mistakes:</strong> (1) Including too-divergent sequences — they add noise, not signal. Remove sequences with &lt;20% identity. (2) Not trimming before phylogenetics — gappy regions create artefactual branches. (3) Using ClustalW — it is outdated and less accurate than MAFFT/MUSCLE. Use modern tools.</div></div>
+          <div class="info-box warn"><svg class="ico" aria-hidden="true"><use href="#i-warn"></use></svg><div><strong>Common MSA mistakes:</strong> (1) Including too-divergent sequences — they add noise, not signal. Remove sequences with &lt;20% identity. (2) Not trimming before phylogenetics — gappy regions create artefactual branches. (3) Using ClustalW — it is outdated and less accurate than MAFFT/MUSCLE. Use modern tools.</div></div>
 
           <h4 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">Key Takeaways</h4>
           <div class="chips"><span class="chip">MAFFT --auto for most cases</span><span class="chip">Always trim before tree building</span><span class="chip">L-INS-i for best accuracy (&lt;200 seqs)</span><span class="chip">Visualise with Jalview or AliView</span><span class="chip">Conserved columns = functional importance</span></div>
@@ -4109,7 +4147,7 @@ trimal -in aligned.fa -sident             # Show sequence identity matrix
             <div class="card" style="padding:14px;"><strong>Protein: WAG</strong><p class="sub" style="margin-top:4px;">Empirical amino acid substitution model based on globular protein alignments. Good general-purpose choice for protein trees.</p></div>
             <div class="card" style="padding:14px;"><strong>Protein: LG</strong><p class="sub" style="margin-top:4px;">Newer and generally better-fitting than WAG. Estimated from a larger, more diverse set of protein alignments. Recommended as the default for protein phylogenetics.</p></div>
           </div>
-          <div class="info-box tip"><span>💡</span><div><strong>Model selection:</strong> Use IQ-TREE2's <code>-m TEST</code> flag (ModelFinder) to automatically test all models and select the best one by BIC. Never guess — always let the software choose.</div></div>
+          <div class="info-box tip"><svg class="ico" aria-hidden="true"><use href="#i-tip"></use></svg><div><strong>Model selection:</strong> Use IQ-TREE2's <code>-m TEST</code> flag (ModelFinder) to automatically test all models and select the best one by BIC. Never guess — always let the software choose.</div></div>
 
           <h4 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">Complete IQ-TREE2 Workflow</h4>
           <div class="code-block" style="margin-top:12px;"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button><span class="code-comment"># Install IQ-TREE2</span>
@@ -4152,7 +4190,7 @@ iqtree2 -s protein_alignment.fa -m TEST -B 1000 -T AUTO -st AA</div>
 <span class="code-comment"># tree &lt;- read.tree("my_tree.treefile")</span>
 <span class="code-comment"># ggtree(tree) + geom_tiplab() + geom_nodelab(aes(label=label))</span></div>
 
-          <div class="info-box warn"><span>⚠️</span><div><strong>Common mistake:</strong> Interpreting branch length as time. Branch lengths represent substitutions per site unless you explicitly calibrate a molecular clock (e.g., with BEAST2). Two long branches does not mean two species diverged long ago — it could mean they evolved rapidly.</div></div>
+          <div class="info-box warn"><svg class="ico" aria-hidden="true"><use href="#i-warn"></use></svg><div><strong>Common mistake:</strong> Interpreting branch length as time. Branch lengths represent substitutions per site unless you explicitly calibrate a molecular clock (e.g., with BEAST2). Two long branches does not mean two species diverged long ago — it could mean they evolved rapidly.</div></div>
 
           <div class="chips" style="margin-top:14px;"><span class="chip">Root = common ancestor</span><span class="chip">Branch length = substitutions/site</span><span class="chip">Bootstrap &gt;70 = supported</span><span class="chip">GTR+G = standard DNA model</span><span class="chip">IQ-TREE2 -m TEST = auto model</span><span class="chip">FigTree / iTOL for visualisation</span><span class="chip">Always include an outgroup</span></div>
         </div>
@@ -4198,7 +4236,7 @@ rnapower(depth=20, cv=0.4, effect=0.58, alpha=0.05, power=0.8)
 <span class="code-comment">#   effect = log2 fold change you want to detect</span>
 <span class="code-comment">#   alpha  = significance threshold (0.05)</span>
 <span class="code-comment">#   power  = desired power (0.8 = 80%)</span></div>
-          <div class="info-box tip"><span>💡</span><div><strong>Rule of thumb:</strong> 3 replicates can detect large changes (2-fold). To detect subtle but biologically important changes (1.5-fold), you need 6+ replicates. More replicates always outperform deeper sequencing for differential expression.</div></div>
+          <div class="info-box tip"><svg class="ico" aria-hidden="true"><use href="#i-tip"></use></svg><div><strong>Rule of thumb:</strong> 3 replicates can detect large changes (2-fold). To detect subtle but biologically important changes (1.5-fold), you need 6+ replicates. More replicates always outperform deeper sequencing for differential expression.</div></div>
 
           <h4 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">Biological vs Technical Replicates</h4>
           <div class="card-grid card-grid-2" style="gap:12px;margin-top:0;">
@@ -4208,7 +4246,7 @@ rnapower(depth=20, cv=0.4, effect=0.58, alpha=0.05, power=0.8)
 
           <h4 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">Randomisation and Blocking</h4>
           <p class="sub">Batch effects are systematic non-biological variations caused by processing samples at different times, on different machines, or by different technicians. They can completely confound your results if not properly handled.</p>
-          <div class="info-box warn"><span>⚠️</span><div><strong>Critical mistake:</strong> Never process all treatment samples on Monday and all control samples on Tuesday. If you do, you cannot distinguish the treatment effect from the day-of-processing effect. Instead, <strong>balance conditions across batches</strong>: process 2 treatment + 2 control samples on each day.</div></div>
+          <div class="info-box warn"><svg class="ico" aria-hidden="true"><use href="#i-warn"></use></svg><div><strong>Critical mistake:</strong> Never process all treatment samples on Monday and all control samples on Tuesday. If you do, you cannot distinguish the treatment effect from the day-of-processing effect. Instead, <strong>balance conditions across batches</strong>: process 2 treatment + 2 control samples on each day.</div></div>
           <p class="sub">Use a <strong>randomised block design</strong>: assign samples to batches randomly while ensuring each batch contains samples from every condition. Record all batch information (date, technician, lane, flowcell) in your metadata — you can correct for known batches computationally, but only if you recorded them.</p>
 
           <h4 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">RNA Quality</h4>
@@ -4226,7 +4264,7 @@ rnapower(depth=20, cv=0.4, effect=0.58, alpha=0.05, power=0.8)
             <div class="card" style="padding:16px;border-left:3px solid var(--orange);"><strong>Multiplexing &amp; barcoding</strong><p class="sub" style="margin-top:6px;">Multiple samples pooled on one lane with unique index barcodes. Reduces cost and minimises lane-to-lane batch effects. Ensure all conditions are represented on each lane. Use dual-index barcodes to prevent index hopping on patterned flowcells.</p></div>
           </div>
 
-          <div class="info-box note"><span>📌</span><div><strong>Sequencing depth guidelines:</strong> Differential expression: 20–30M reads/sample. Rare transcripts or lncRNA: 50–100M. Allele-specific expression: 100M+. For most bulk RNA-seq DE experiments, 25M PE 150bp reads is a good target.</div></div>
+          <div class="info-box note"><svg class="ico" aria-hidden="true"><use href="#i-note"></use></svg><div><strong>Sequencing depth guidelines:</strong> Differential expression: 20–30M reads/sample. Rare transcripts or lncRNA: 50–100M. Allele-specific expression: 100M+. For most bulk RNA-seq DE experiments, 25M PE 150bp reads is a good target.</div></div>
 
           <div class="chips" style="margin-top:14px;"><span class="chip">Biological reps &gt; technical reps</span><span class="chip">3 reps minimum, 6 ideal</span><span class="chip">Balance batches across conditions</span><span class="chip">RIN &gt; 7 for poly-A</span><span class="chip">PE for isoform discovery</span><span class="chip">Use RNASeqPower for sample size</span><span class="chip">Record ALL batch metadata</span></div>
         </div>
@@ -4266,7 +4304,7 @@ multiqc qc_reports/ -o qc_reports/multiqc_report
           </div>
 
           <h4 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">Diagnostic Decision Tree</h4>
-          <div class="info-box note"><span>📌</span><div><strong>If Adapter Content FAIL →</strong> Trim with Trim Galore or fastp (mandatory).<br><strong>If Per Base Quality drops below Q20 →</strong> Trim low-quality bases from the 3' end.<br><strong>If GC Content shows bimodal distribution →</strong> Suspect contamination from another organism. Run FastQ Screen.<br><strong>If Overrepresented Sequences shows rRNA →</strong> Your rRNA depletion failed. Check remaining samples. Consider computational rRNA removal with SortMeRNA.<br><strong>If Sequence Duplication WARN →</strong> Normal for RNA-seq. Ignore.<br><strong>If Per Base Content FAIL at positions 1-10 →</strong> Normal for random hexamer priming. Ignore.</div></div>
+          <div class="info-box note"><svg class="ico" aria-hidden="true"><use href="#i-note"></use></svg><div><strong>If Adapter Content FAIL →</strong> Trim with Trim Galore or fastp (mandatory).<br><strong>If Per Base Quality drops below Q20 →</strong> Trim low-quality bases from the 3' end.<br><strong>If GC Content shows bimodal distribution →</strong> Suspect contamination from another organism. Run FastQ Screen.<br><strong>If Overrepresented Sequences shows rRNA →</strong> Your rRNA depletion failed. Check remaining samples. Consider computational rRNA removal with SortMeRNA.<br><strong>If Sequence Duplication WARN →</strong> Normal for RNA-seq. Ignore.<br><strong>If Per Base Content FAIL at positions 1-10 →</strong> Normal for random hexamer priming. Ignore.</div></div>
 
           <h4 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">Trimming Tools Compared</h4>
           <div class="card-grid card-grid-2" style="gap:10px;margin-top:8px;">
@@ -4301,7 +4339,7 @@ fastp -i sample_R1.fastq.gz -I sample_R2.fastq.gz \
 fastqc trimmed/*.fastq.gz -o qc_reports/post_trim/ -t 8
 multiqc qc_reports/post_trim/ -o qc_reports/post_trim_multiqc/</div>
 
-          <div class="info-box warn"><span>⚠️</span><div><strong>Always re-run FastQC after trimming</strong> to confirm that adapter contamination is gone and quality profiles have improved. If adapter content persists, your adapter sequence may not be in the default database — specify it manually with <code>--adapter</code>.</div></div>
+          <div class="info-box warn"><svg class="ico" aria-hidden="true"><use href="#i-warn"></use></svg><div><strong>Always re-run FastQC after trimming</strong> to confirm that adapter contamination is gone and quality profiles have improved. If adapter content persists, your adapter sequence may not be in the default database — specify it manually with <code>--adapter</code>.</div></div>
 
           <div class="chips" style="margin-top:14px;"><span class="chip">FastQC per sample, MultiQC for overview</span><span class="chip">Duplication WARN is normal for RNA-seq</span><span class="chip">Adapter FAIL = must trim</span><span class="chip">fastp = fastest all-in-one</span><span class="chip">No trimming needed for Salmon/kallisto</span><span class="chip">Re-run QC after trimming</span></div>
         </div>
@@ -4367,7 +4405,7 @@ READ001  83  chr1  12345  60  75M200N25M  =  12800  555  ACGT...  FFFF...
             <div class="card" style="padding:14px;"><strong>FLAG 4</strong><p class="sub" style="margin-top:4px;">= unmapped read. These reads did not align to the reference genome. Filter them with <code>samtools view -F 4</code>.</p></div>
             <div class="card" style="padding:14px;"><strong>FLAG 256</strong><p class="sub" style="margin-top:4px;">= secondary alignment. The read mapped to multiple locations. This is the non-primary alignment. Filter with <code>samtools view -F 256</code>.</p></div>
           </div>
-          <div class="info-box tip"><span>💡</span><div><strong>Decode any FLAG value</strong> at <a href="https://broadinstitute.github.io/picard/explain-flags.html" target="_blank" style="color:var(--blue);">broadinstitute.github.io/picard/explain-flags.html</a> — enter a number and it shows exactly which bits are set.</div></div>
+          <div class="info-box tip"><svg class="ico" aria-hidden="true"><use href="#i-tip"></use></svg><div><strong>Decode any FLAG value</strong> at <a href="https://broadinstitute.github.io/picard/explain-flags.html" target="_blank" style="color:var(--blue);">broadinstitute.github.io/picard/explain-flags.html</a> — enter a number and it shows exactly which bits are set.</div></div>
 
           <h4 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">Essential samtools Commands</h4>
           <div class="code-block" style="margin-top:8px;"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button><span class="code-comment"># Alignment statistics (mapped reads, paired, singletons)</span>
@@ -4389,7 +4427,7 @@ samtools markdup sample.bam sample_markdup.bam
 samtools view sample.bam chr1:1000000-1001000 | head</div>
 
           <h4 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">Interpreting Alignment Rates</h4>
-          <div class="info-box tip"><span>💡</span><div><strong>&gt;90% overall alignment rate:</strong> Excellent. Expected for well-prepared libraries aligned to the correct genome.<br><strong>75–90%:</strong> Acceptable. Some unmapped reads are normal (rRNA, adapter dimers, low-quality reads).<br><strong>50–75%:</strong> Investigate. Possible causes: wrong reference genome, cross-species contamination, significant adapter contamination.<br><strong>&lt;50%:</strong> Serious problem. Check: (1) Are you using the correct genome assembly? (2) Run FastQ Screen to check for contamination from other organisms. (3) Check if adapter trimming was performed.</div></div>
+          <div class="info-box tip"><svg class="ico" aria-hidden="true"><use href="#i-tip"></use></svg><div><strong>&gt;90% overall alignment rate:</strong> Excellent. Expected for well-prepared libraries aligned to the correct genome.<br><strong>75–90%:</strong> Acceptable. Some unmapped reads are normal (rRNA, adapter dimers, low-quality reads).<br><strong>50–75%:</strong> Investigate. Possible causes: wrong reference genome, cross-species contamination, significant adapter contamination.<br><strong>&lt;50%:</strong> Serious problem. Check: (1) Are you using the correct genome assembly? (2) Run FastQ Screen to check for contamination from other organisms. (3) Check if adapter trimming was performed.</div></div>
 
           <h4 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">Visual Inspection with IGV</h4>
           <p class="sub">Always visually inspect alignments for a few genes of interest using the <strong>Integrative Genomics Viewer (IGV)</strong>. Load your BAM file and the reference genome, then navigate to specific genes. Look for: even coverage across exons, clean splice junctions, and absence of systematic artefacts.</p>
@@ -4452,7 +4490,7 @@ featureCounts -T 8 \
 <span class="code-comment"># Column 1: gene ID, columns 7+: counts per sample</span>
 <span class="code-comment"># A summary file (counts.txt.summary) shows assignment statistics</span></div>
 
-          <div class="info-box warn"><span>⚠️</span><div><strong>Strandedness matters!</strong> Wrong <code>-s</code> setting can cause ~50% read loss or incorrect counting. Use <code>-s 0</code> (unstranded), <code>-s 1</code> (stranded-forward), or <code>-s 2</code> (stranded-reverse). Check your library preparation kit documentation. Most modern kits (Illumina TruSeq Stranded, NEBNext) are reverse-stranded (<code>-s 2</code>). If unsure, run featureCounts with all three settings on one sample and compare assignment rates — the correct setting will have the highest "Assigned" count.</div></div>
+          <div class="info-box warn"><svg class="ico" aria-hidden="true"><use href="#i-warn"></use></svg><div><strong>Strandedness matters!</strong> Wrong <code>-s</code> setting can cause ~50% read loss or incorrect counting. Use <code>-s 0</code> (unstranded), <code>-s 1</code> (stranded-forward), or <code>-s 2</code> (stranded-reverse). Check your library preparation kit documentation. Most modern kits (Illumina TruSeq Stranded, NEBNext) are reverse-stranded (<code>-s 2</code>). If unsure, run featureCounts with all three settings on one sample and compare assignment rates — the correct setting will have the highest "Assigned" count.</div></div>
 
           <h4 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">featureCounts vs HTSeq-count</h4>
           <div class="card-grid card-grid-2" style="gap:10px;margin-top:8px;">
@@ -4500,7 +4538,7 @@ metadata &lt;- data.frame(condition=c(rep("control",3), rep("treated",3)),
                        row.names=samples)
 dds &lt;- DESeqDataSetFromTximport(txi, metadata, ~condition)</div>
 
-          <div class="info-box tip"><span>💡</span><div><strong>Salmon + tximport + DESeq2</strong> is increasingly the recommended pipeline because: (1) it is much faster than alignment-based counting, (2) it corrects for GC bias and sequence-specific bias, and (3) tximport provides offset matrices that improve DE accuracy at the gene level.</div></div>
+          <div class="info-box tip"><svg class="ico" aria-hidden="true"><use href="#i-tip"></use></svg><div><strong>Salmon + tximport + DESeq2</strong> is increasingly the recommended pipeline because: (1) it is much faster than alignment-based counting, (2) it corrects for GC bias and sequence-specific bias, and (3) tximport provides offset matrices that improve DE accuracy at the gene level.</div></div>
 
           <div class="chips" style="margin-top:14px;"><span class="chip">featureCounts = fast gene counting</span><span class="chip">Strandedness: check -s 0/1/2</span><span class="chip">Salmon = no alignment needed</span><span class="chip">tximport bridges Salmon → DESeq2</span><span class="chip">Gene-level for DE analysis</span><span class="chip">Ambiguous reads are discarded</span></div>
         </div>
@@ -4624,9 +4662,9 @@ write.csv(sig, "DEGs_significant_annotated.csv", row.names=FALSE)
 <span class="code-comment"># Export for pathway analysis (all genes with stats)</span>
 write.csv(res_annotated, "all_genes_DESeq2.csv", row.names=FALSE)</div>
 
-          <div class="info-box note"><span>📌</span><div><strong>Interpreting results:</strong> <code>log2FoldChange</code> = direction and magnitude (+1 = 2x higher in treated, -1 = 2x lower). <code>padj</code> = Benjamini-Hochberg adjusted p-value (FDR). Always use <code>padj &lt; 0.05</code>, never raw <code>pvalue</code>. Combine with a fold-change threshold (<code>|log2FC| &gt; 1</code>) for biological relevance.</div></div>
+          <div class="info-box note"><svg class="ico" aria-hidden="true"><use href="#i-note"></use></svg><div><strong>Interpreting results:</strong> <code>log2FoldChange</code> = direction and magnitude (+1 = 2x higher in treated, -1 = 2x lower). <code>padj</code> = Benjamini-Hochberg adjusted p-value (FDR). Always use <code>padj &lt; 0.05</code>, never raw <code>pvalue</code>. Combine with a fold-change threshold (<code>|log2FC| &gt; 1</code>) for biological relevance.</div></div>
 
-          <div class="info-box warn"><span>⚠️</span><div><strong>Common mistakes:</strong> (1) Using normalised counts (TPM, RPKM) as input — DESeq2 requires raw integer counts. (2) Forgetting to set the reference level — the default alphabetical order may not be what you want. (3) Not filtering low-count genes — this reduces statistical power because of excessive multiple testing correction.</div></div>
+          <div class="info-box warn"><svg class="ico" aria-hidden="true"><use href="#i-warn"></use></svg><div><strong>Common mistakes:</strong> (1) Using normalised counts (TPM, RPKM) as input — DESeq2 requires raw integer counts. (2) Forgetting to set the reference level — the default alphabetical order may not be what you want. (3) Not filtering low-count genes — this reduces statistical power because of excessive multiple testing correction.</div></div>
 
           <div class="chips" style="margin-top:14px;"><span class="chip">Negative binomial model</span><span class="chip">Raw counts as input (never normalised)</span><span class="chip">padj &lt; 0.05 + |log2FC| &gt; 1</span><span class="chip">apeglm for LFC shrinkage</span><span class="chip">~ batch + condition for multi-factor</span><span class="chip">EnhancedVolcano for plots</span><span class="chip">biomaRt for gene annotation</span></div>
         </div>
@@ -4730,7 +4768,7 @@ gatk VariantFiltration -V sample.vcf.gz -O sample_filtered.vcf.gz \
           <h4 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">Visualising Variants in IGV</h4>
           <p class="sub">Always visually inspect candidate variants in the <strong>Integrative Genomics Viewer (IGV)</strong>. Load the BAM file and VCF together, navigate to a variant position, and check: (1) Is there sufficient read depth? (2) Are both strands represented? (3) Are the variant-supporting reads properly mapped (no soft-clipping artefacts)? (4) Is the region not in a repeat or low-complexity sequence?</p>
 
-          <div class="info-box warn"><span>⚠️</span><div><strong>BQSR requires known variant databases</strong> (dbSNP, Mills indels). For non-model organisms without these resources, skip BQSR and use more stringent hard filtering instead.</div></div>
+          <div class="info-box warn"><svg class="ico" aria-hidden="true"><use href="#i-warn"></use></svg><div><strong>BQSR requires known variant databases</strong> (dbSNP, Mills indels). For non-model organisms without these resources, skip BQSR and use more stringent hard filtering instead.</div></div>
 
           <div class="chips" style="margin-top:14px;"><span class="chip">SNP = single base change</span><span class="chip">0/0 = hom ref, 0/1 = het, 1/1 = hom alt</span><span class="chip">Mark duplicates before calling</span><span class="chip">HaplotypeCaller = local assembly</span><span class="chip">Hard filter for small projects</span><span class="chip">VQSR for large cohorts</span><span class="chip">Always inspect in IGV</span></div>
         </div>
@@ -4843,7 +4881,7 @@ cat annotated.vcf | snpSift filter "ANN[*].IMPACT = 'HIGH'" &gt; high_impact.vcf
             <div class="card" style="padding:14px;"><strong>gnomAD</strong><p class="sub" style="margin-top:4px;">Population allele frequencies from &gt;140,000 exomes and &gt;76,000 genomes. A variant with AF &gt; 1% in gnomAD is almost certainly benign. Essential for filtering common polymorphisms.</p></div>
           </div>
 
-          <div class="info-box tip"><span>💡</span><div><strong>Filtering strategy for clinical variants:</strong> Start with ~4 million variants → filter PASS only → remove AF &gt; 0.01 in gnomAD → keep HIGH/MODERATE impact → check ClinVar → manual review in IGV. This typically reduces to a manageable list of 50–200 candidate variants.</div></div>
+          <div class="info-box tip"><svg class="ico" aria-hidden="true"><use href="#i-tip"></use></svg><div><strong>Filtering strategy for clinical variants:</strong> Start with ~4 million variants → filter PASS only → remove AF &gt; 0.01 in gnomAD → keep HIGH/MODERATE impact → check ClinVar → manual review in IGV. This typically reduces to a manageable list of 50–200 candidate variants.</div></div>
 
           <div class="chips" style="margin-top:14px;"><span class="chip">VCF = standard variant format</span><span class="chip">GT:GQ:DP:AD = genotype fields</span><span class="chip">0/1 = heterozygous</span><span class="chip">bcftools for filtering</span><span class="chip">SnpEff for annotation</span><span class="chip">HIGH impact = likely functional</span><span class="chip">gnomAD for population frequency</span><span class="chip">ClinVar for clinical significance</span></div>
         </div>
@@ -4893,7 +4931,7 @@ cat annotated.vcf | snpSift filter "ANN[*].IMPACT = 'HIGH'" &gt; high_impact.vcf
                 Bias: <strong>moderate</strong> &nbsp;·&nbsp;
                 Cost: <strong>medium (~$3k)</strong>
               </div>
-              <div class="info-box tip" style="margin-top:10px;"><span>💡</span><div>Common instruments: Branson SFX, Cole-Parmer. Protocols are flexible and easy to troubleshoot — ideal for teaching labs and pilot experiments.</div></div>
+              <div class="info-box tip" style="margin-top:10px;"><svg class="ico" aria-hidden="true"><use href="#i-tip"></use></svg><div>Common instruments: Branson SFX, Cole-Parmer. Protocols are flexible and easy to troubleshoot — ideal for teaching labs and pilot experiments.</div></div>
             </div>
 
             <div class="card" style="padding:16px;border-top:3px solid var(--blue);">
@@ -4904,7 +4942,7 @@ cat annotated.vcf | snpSift filter "ANN[*].IMPACT = 'HIGH'" &gt; high_impact.vcf
                 Bias: <strong>minimal</strong> &nbsp;·&nbsp;
                 Cost: <strong>high (~$80k+)</strong>
               </div>
-              <div class="info-box note" style="margin-top:10px;"><span>⚠️</span><div>High capital cost but unmatched reproducibility. Required for regulatory-compliance environments (clinical labs, FDA submissions).</div></div>
+              <div class="info-box note" style="margin-top:10px;"><svg class="ico" aria-hidden="true"><use href="#i-note"></use></svg><div>High capital cost but unmatched reproducibility. Required for regulatory-compliance environments (clinical labs, FDA submissions).</div></div>
             </div>
 
             <div class="card" style="padding:16px;border-top:3px solid var(--purple);">
@@ -4915,7 +4953,7 @@ cat annotated.vcf | snpSift filter "ANN[*].IMPACT = 'HIGH'" &gt; high_impact.vcf
                 Bias: <strong>AT/GC bias possible</strong> &nbsp;·&nbsp;
                 Cost: <strong>low</strong>
               </div>
-              <div class="info-box tip" style="margin-top:10px;"><span>💡</span><div>Best for budget labs or high-throughput (96+ samples/day). Can be automated on liquid handling platforms (Hamilton, Tecan) for plate-scale processing.</div></div>
+              <div class="info-box tip" style="margin-top:10px;"><svg class="ico" aria-hidden="true"><use href="#i-tip"></use></svg><div>Best for budget labs or high-throughput (96+ samples/day). Can be automated on liquid handling platforms (Hamilton, Tecan) for plate-scale processing.</div></div>
             </div>
 
             <div class="card" style="padding:16px;border-top:3px solid var(--orange);">
@@ -4926,7 +4964,7 @@ cat annotated.vcf | snpSift filter "ANN[*].IMPACT = 'HIGH'" &gt; high_impact.vcf
                 Bias: <strong>AT-rich preference</strong> &nbsp;·&nbsp;
                 Speed: <strong>very fast (1 step)</strong>
               </div>
-              <div class="info-box note" style="margin-top:10px;"><span>🧬</span><div>Essential for ATAC-seq — the assay is fundamentally built on Tn5 inserting at open chromatin. Also ideal for low DNA input (&lt;10 ng) samples such as rare cell populations.</div></div>
+              <div class="info-box note" style="margin-top:10px;"><svg class="ico" aria-hidden="true"><use href="#i-note"></use></svg><div>Essential for ATAC-seq — the assay is fundamentally built on Tn5 inserting at open chromatin. Also ideal for low DNA input (&lt;10 ng) samples such as rare cell populations.</div></div>
             </div>
 
           </div>
@@ -5054,7 +5092,7 @@ cat annotated.vcf | snpSift filter "ANN[*].IMPACT = 'HIGH'" &gt; high_impact.vcf
         <div class="edu-topic-body">
           <p class="sub">Understanding p-values, multiple testing correction, and the False Discovery Rate (FDR) is arguably the single most important statistical concept in genomics. Misinterpreting these values leads to publishing false discoveries or missing real biology. This section provides the intuition, the mathematics, and the practical application you need to correctly interpret differential expression results.</p>
 
-          <div class="info-box warn"><span>⚠️</span><div><strong>What a p-value IS:</strong> P(data | null hypothesis is true). The probability of observing data as extreme as yours, assuming there is no real effect. <strong>It is NOT:</strong> the probability that your gene is truly differentially expressed. A p-value of 0.03 does NOT mean there is a 97% chance the gene is real.</div></div>
+          <div class="info-box warn"><svg class="ico" aria-hidden="true"><use href="#i-warn"></use></svg><div><strong>What a p-value IS:</strong> P(data | null hypothesis is true). The probability of observing data as extreme as yours, assuming there is no real effect. <strong>It is NOT:</strong> the probability that your gene is truly differentially expressed. A p-value of 0.03 does NOT mean there is a 97% chance the gene is real.</div></div>
 
           <h4 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">The Multiple Testing Problem — A Worked Example</h4>
           <p class="sub">Consider a typical RNA-seq experiment where you test 20,000 genes for differential expression. Suppose 1,000 genes are truly differentially expressed and 19,000 are not.</p>
@@ -5093,12 +5131,12 @@ p.adjust(p_values, method = "BH")
 
           <h4 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">Independent Filtering in DESeq2</h4>
           <p class="sub">DESeq2 automatically performs <strong>independent filtering</strong>: it removes genes with very low mean expression before applying multiple testing correction. Why? Genes with almost zero counts across all samples have no chance of being significant, but they consume part of the multiple testing budget, reducing power for the remaining genes. By filtering them out, DESeq2 increases statistical power for the genes that matter.</p>
-          <div class="info-box note"><span>📌</span><div><strong>NA values in padj:</strong> If you see NA in the padj column, it means DESeq2 filtered that gene out (usually due to very low counts or extreme outlier detection). These genes should not be interpreted as significant or non-significant — they were excluded from testing.</div></div>
+          <div class="info-box note"><svg class="ico" aria-hidden="true"><use href="#i-note"></use></svg><div><strong>NA values in padj:</strong> If you see NA in the padj column, it means DESeq2 filtered that gene out (usually due to very low counts or extreme outlier detection). These genes should not be interpreted as significant or non-significant — they were excluded from testing.</div></div>
 
           <h4 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">Effect Size and Biological Significance</h4>
           <p class="sub">Statistical significance (small padj) does not equal biological significance. With enough replicates, even tiny fold changes become statistically significant. A gene with padj = 0.0001 but log2FC = 0.1 is a 7% expression change — real but unlikely to be biologically meaningful. Always apply <strong>both</strong> a significance threshold (padj &lt; 0.05) and an effect size threshold (|log2FC| &gt; 1, i.e., 2-fold change) when defining your DEG list.</p>
 
-          <div class="info-box tip"><span>💡</span><div><strong>Volcano plot intuition:</strong> X-axis = log2FoldChange (effect size), Y-axis = -log10(padj) (significance). Top-right = significantly upregulated with large effect. Top-left = significantly downregulated. Bottom-centre = not significant. Right side but not high = large fold change but underpowered (add more replicates).</div></div>
+          <div class="info-box tip"><svg class="ico" aria-hidden="true"><use href="#i-tip"></use></svg><div><strong>Volcano plot intuition:</strong> X-axis = log2FoldChange (effect size), Y-axis = -log10(padj) (significance). Top-right = significantly upregulated with large effect. Top-left = significantly downregulated. Bottom-centre = not significant. Right side but not high = large fold change but underpowered (add more replicates).</div></div>
 
           <div class="chips" style="margin-top:14px;"><span class="chip">p-value = P(data | H0 true)</span><span class="chip">Always use padj, never pvalue</span><span class="chip">BH-FDR = standard in genomics</span><span class="chip">Bonferroni = too conservative for RNA-seq</span><span class="chip">padj &lt; 0.05 AND |log2FC| &gt; 1</span><span class="chip">NA in padj = gene was filtered</span><span class="chip">Statistical ≠ biological significance</span></div>
         </div>
@@ -5150,7 +5188,7 @@ dge$samples</div>
             <div class="card" style="padding:14px;"><strong>Reporting expression levels</strong><p class="sub" style="margin-top:4px;">Use <strong>TPM</strong> in publications and supplementary tables. It is the current community standard and is comparable across samples and studies (with caveats).</p></div>
           </div>
 
-          <div class="info-box warn"><span>⚠️</span><div><strong>Common mistakes:</strong> (1) Using RPKM/FPKM for differential expression — these are not appropriate because the variance structure is lost. (2) Using CPM to compare expression between genes of different lengths. (3) Pre-normalising counts before passing to DESeq2 — the tool expects raw integer counts.</div></div>
+          <div class="info-box warn"><svg class="ico" aria-hidden="true"><use href="#i-warn"></use></svg><div><strong>Common mistakes:</strong> (1) Using RPKM/FPKM for differential expression — these are not appropriate because the variance structure is lost. (2) Using CPM to compare expression between genes of different lengths. (3) Pre-normalising counts before passing to DESeq2 — the tool expects raw integer counts.</div></div>
 
           <div class="chips" style="margin-top:14px;"><span class="chip">Raw counts for DE analysis</span><span class="chip">TPM for visualisation</span><span class="chip">RPKM/FPKM is outdated</span><span class="chip">DESeq2 = median-of-ratios</span><span class="chip">edgeR = TMM</span><span class="chip">Library size + composition bias</span><span class="chip">Gene length matters for cross-gene comparison</span></div>
         </div>
@@ -5232,7 +5270,7 @@ adjusted &lt;- removeBatchEffect(
 <span class="code-comment"># For DE analysis: do NOT use corrected data!</span>
 <span class="code-comment"># Instead, include batch in the DESeq2 design formula:</span>
 <span class="code-comment"># design = ~ batch + condition</span></div>
-          <div class="info-box warn"><span>⚠️</span><div><strong>Never use batch-corrected data for differential expression.</strong> ComBat and removeBatchEffect are for visualisation and clustering only. For DE analysis, include the batch variable in the DESeq2 design formula (<code>~ batch + condition</code>). DESeq2 will model and remove the batch effect statistically.</div></div>
+          <div class="info-box warn"><svg class="ico" aria-hidden="true"><use href="#i-warn"></use></svg><div><strong>Never use batch-corrected data for differential expression.</strong> ComBat and removeBatchEffect are for visualisation and clustering only. For DE analysis, include the batch variable in the DESeq2 design formula (<code>~ batch + condition</code>). DESeq2 will model and remove the batch effect statistically.</div></div>
 
           <h4 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">Hierarchical Clustering Methods</h4>
           <div class="card-grid card-grid-2" style="gap:10px;margin-top:8px;">
@@ -5256,7 +5294,7 @@ pheatmap(mat,
   color = colorRampPalette(c("navy","white","firebrick3"))(50),
   main = "Top 50 Differentially Expressed Genes")</div>
 
-          <div class="info-box tip"><span>💡</span><div><strong>What % variance explained means:</strong> If PC1 explains 65% of the variance, it means 65% of all the variation across your 20,000 genes can be captured by a single direction. The remaining 35% is spread across all other PCs. High PC1 variance usually means a strong biological signal (good). Very low PC1 (&lt;15%) may mean high noise or complex multi-factor design.</div></div>
+          <div class="info-box tip"><svg class="ico" aria-hidden="true"><use href="#i-tip"></use></svg><div><strong>What % variance explained means:</strong> If PC1 explains 65% of the variance, it means 65% of all the variation across your 20,000 genes can be captured by a single direction. The remaining 35% is spread across all other PCs. High PC1 variance usually means a strong biological signal (good). Very low PC1 (&lt;15%) may mean high noise or complex multi-factor design.</div></div>
 
           <div class="chips" style="margin-top:14px;"><span class="chip">PCA before DE analysis</span><span class="chip">PC1 = largest variance source</span><span class="chip">Replicates should cluster together</span><span class="chip">ComBat / limma for batch correction</span><span class="chip">~ batch + condition in DESeq2</span><span class="chip">Ward.D2 for clustering</span><span class="chip">Z-score heatmaps for DEGs</span></div>
         </div>
@@ -5351,7 +5389,7 @@ seurat &lt;- ScaleData(seurat, vars.to.regress=c("S.Score","G2M.Score"))</div>
 
           <h4 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">Trajectory Analysis with Monocle3</h4>
           <p class="sub">Trajectory analysis (pseudotime) orders cells along a continuous path representing a biological process (e.g., differentiation, activation). Monocle3 constructs a principal graph through the UMAP embedding and assigns each cell a pseudotime value based on its position along this graph.</p>
-          <div class="info-box tip"><span>💡</span><div><strong>When to use trajectories:</strong> Developmental datasets (stem cell differentiation, embryogenesis), immune activation time courses, or any scenario where cells exist along a continuum rather than in discrete types.</div></div>
+          <div class="info-box tip"><svg class="ico" aria-hidden="true"><use href="#i-tip"></use></svg><div><strong>When to use trajectories:</strong> Developmental datasets (stem cell differentiation, embryogenesis), immune activation time courses, or any scenario where cells exist along a continuum rather than in discrete types.</div></div>
 
           <h4 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">Dataset Integration</h4>
           <p class="sub">When analysing multiple scRNA-seq datasets (different patients, batches, or experiments), batch effects cause identical cell types to cluster separately by dataset rather than by biology. Integration methods align datasets so that shared cell types overlap.</p>
@@ -5360,7 +5398,7 @@ seurat &lt;- ScaleData(seurat, vars.to.regress=c("S.Score","G2M.Score"))</div>
             <div class="card" style="padding:14px;"><strong>Seurat RPCA integration</strong><p class="sub" style="margin-top:4px;">Uses reciprocal PCA to find shared anchors between datasets. More conservative — better at preserving unique cell populations that exist in only one dataset. More computationally expensive.</p></div>
           </div>
 
-          <div class="info-box warn"><span>⚠️</span><div><strong>Integration pitfall:</strong> Over-integration can merge truly different cell types across datasets. Always compare integrated and non-integrated results. If a cell type appears in only one condition, integration may incorrectly merge it with a different cell type.</div></div>
+          <div class="info-box warn"><svg class="ico" aria-hidden="true"><use href="#i-warn"></use></svg><div><strong>Integration pitfall:</strong> Over-integration can merge truly different cell types across datasets. Always compare integrated and non-integrated results. If a cell type appears in only one condition, integration may incorrectly merge it with a different cell type.</div></div>
 
           <div class="chips" style="margin-top:14px;"><span class="chip">10x Chromium = cell barcode + UMI</span><span class="chip">nFeature 200–5000, mt% &lt; 20%</span><span class="chip">SoupX for ambient RNA</span><span class="chip">scDblFinder for doublets</span><span class="chip">FindAllMarkers for cluster identity</span><span class="chip">Harmony for fast integration</span><span class="chip">Monocle3 for trajectories</span></div>
         </div>
@@ -5387,7 +5425,7 @@ seurat &lt;- ScaleData(seurat, vars.to.regress=c("S.Score","G2M.Score"))</div>
           <h4 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">How ORA Works</h4>
           <p class="sub">Over-Representation Analysis uses Fisher's exact test (or hypergeometric test) to ask: <em>Is the overlap between my DEG list and a specific pathway larger than expected by chance?</em></p>
           <p class="sub">Imagine you have 500 DEGs from a universe of 15,000 expressed genes. The "apoptosis" pathway contains 200 genes. If 40 of your 500 DEGs are in the apoptosis pathway, is that more than the ~7 you would expect by chance (200/15,000 &times; 500)? Fisher's exact test gives you a p-value for this overlap.</p>
-          <div class="info-box warn"><span>⚠️</span><div><strong>Background gene set matters:</strong> Always use <strong>all expressed genes</strong> (genes that passed your expression filter) as the background, not all genes in the genome (~20,000). Using the wrong background inflates false positives because unexpressed genes cannot possibly appear in your DEG list but are counted as expected in the pathway.</div></div>
+          <div class="info-box warn"><svg class="ico" aria-hidden="true"><use href="#i-warn"></use></svg><div><strong>Background gene set matters:</strong> Always use <strong>all expressed genes</strong> (genes that passed your expression filter) as the background, not all genes in the genome (~20,000). Using the wrong background inflates false positives because unexpressed genes cannot possibly appear in your DEG list but are counted as expected in the pathway.</div></div>
 
           <h4 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">How GSEA Works — Step by Step</h4>
           <p class="sub">GSEA does not use a DEG list with a cutoff. Instead, it uses the <strong>full ranked gene list</strong> (all genes ranked by fold change):</p>
@@ -5396,7 +5434,7 @@ seurat &lt;- ScaleData(seurat, vars.to.regress=c("S.Score","G2M.Score"))</div>
           <p class="sub">3. The <strong>enrichment score</strong> is the maximum deviation from zero during the walk. A positive ES means the pathway genes are concentrated at the top (upregulated). A negative ES means they are at the bottom (downregulated).</p>
           <p class="sub">4. <strong>Significance</strong> is assessed by permutation: shuffle gene labels 1,000 times and compute ES each time. Compare your real ES to the permutation distribution.</p>
           <p class="sub">5. The <strong>Normalised Enrichment Score (NES)</strong> accounts for gene set size, making scores comparable across pathways.</p>
-          <div class="info-box note"><span>📌</span><div><strong>NES interpretation:</strong> Positive NES = pathway genes are enriched among upregulated genes. Negative NES = enriched among downregulated genes. Larger |NES| = stronger enrichment. Use padj &lt; 0.05 for significance.</div></div>
+          <div class="info-box note"><svg class="ico" aria-hidden="true"><use href="#i-note"></use></svg><div><strong>NES interpretation:</strong> Positive NES = pathway genes are enriched among upregulated genes. Negative NES = enriched among downregulated genes. Larger |NES| = stronger enrichment. Use padj &lt; 0.05 for significance.</div></div>
 
           <h4 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">clusterProfiler Code — ORA and GSEA</h4>
           <div class="code-block" style="margin-top:8px;"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button>library(clusterProfiler); library(org.Hs.eg.db); library(enrichplot)
@@ -5456,9 +5494,9 @@ emapplot(pairwise_termsim(ego_simplified), showCategory=20)</div>
           </div>
 
           <h4 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">Common Pitfalls</h4>
-          <div class="info-box warn"><span>⚠️</span><div><strong>Redundant GO terms:</strong> GO is hierarchical, so related terms often appear together (e.g., "immune response", "innate immune response", "regulation of immune response"). Use <code>simplify()</code> in clusterProfiler or <a href="http://revigo.irb.hr" target="_blank" style="color:var(--blue);">REVIGO</a> to remove redundancy and focus on the most specific or most significant terms.</div></div>
+          <div class="info-box warn"><svg class="ico" aria-hidden="true"><use href="#i-warn"></use></svg><div><strong>Redundant GO terms:</strong> GO is hierarchical, so related terms often appear together (e.g., "immune response", "innate immune response", "regulation of immune response"). Use <code>simplify()</code> in clusterProfiler or <a href="http://revigo.irb.hr" target="_blank" style="color:var(--blue);">REVIGO</a> to remove redundancy and focus on the most specific or most significant terms.</div></div>
 
-          <div class="info-box tip"><span>💡</span><div><strong>ORA vs GSEA:</strong> Use ORA when you have a clear DEG list (padj &lt; 0.05, |log2FC| &gt; 1). Use GSEA when you want to detect subtle, coordinated changes across an entire pathway — especially when few individual genes pass the significance threshold but many show small shifts in the same direction.</div></div>
+          <div class="info-box tip"><svg class="ico" aria-hidden="true"><use href="#i-tip"></use></svg><div><strong>ORA vs GSEA:</strong> Use ORA when you have a clear DEG list (padj &lt; 0.05, |log2FC| &gt; 1). Use GSEA when you want to detect subtle, coordinated changes across an entire pathway — especially when few individual genes pass the significance threshold but many show small shifts in the same direction.</div></div>
 
           <div class="chips" style="margin-top:14px;"><span class="chip">ORA = Fisher's test on DEG list</span><span class="chip">GSEA = full ranked list, no cutoff</span><span class="chip">Positive NES = upregulated pathway</span><span class="chip">Use expressed genes as background</span><span class="chip">simplify() removes GO redundancy</span><span class="chip">MSigDB Hallmark = best starting point</span><span class="chip">clusterProfiler for both ORA and GSEA</span></div>
         </div>
@@ -5488,7 +5526,7 @@ emapplot(pairwise_termsim(ego_simplified), showCategory=20)</div>
             <div class="card" style="padding:14px;"><strong>k-fold cross-validation</strong><p class="sub" style="margin-top:4px;">Split data into k folds (typically k=5 or k=10). Train on k-1 folds, test on the held-out fold. Repeat k times. Average the scores. The standard approach for most genomic ML.</p></div>
             <div class="card" style="padding:14px;"><strong>Leave-One-Out (LOO)</strong><p class="sub" style="margin-top:4px;">Each sample is held out once. Maximises training data but computationally expensive. Useful for very small datasets (&lt;30 samples) where you cannot afford to hold out 20% of data.</p></div>
           </div>
-          <div class="info-box warn"><span>⚠️</span><div><strong>Feature selection MUST happen inside CV:</strong> If you select the top 100 genes using all samples and then split into train/test, information from the test set leaked into feature selection. Always perform feature selection within each CV fold to get unbiased performance estimates.</div></div>
+          <div class="info-box warn"><svg class="ico" aria-hidden="true"><use href="#i-warn"></use></svg><div><strong>Feature selection MUST happen inside CV:</strong> If you select the top 100 genes using all samples and then split into train/test, information from the test set leaked into feature selection. Always perform feature selection within each CV fold to get unbiased performance estimates.</div></div>
 
           <h4 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">Practical Example: Cancer Classification with scikit-learn</h4>
           <div class="code-block" style="margin-top:8px;"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button>import pandas as pd
@@ -5566,7 +5604,7 @@ def one_hot_encode(seq):
     return np.array([mapping.get(base, [0,0,0,0]) for base in seq])</div>
 
           <h4 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">When NOT to Use Machine Learning</h4>
-          <div class="info-box warn"><span>⚠️</span><div><strong>ML is not always the answer:</strong> (1) <strong>Small sample sizes</strong> (n &lt; 30) — models cannot generalise reliably. Use traditional statistics instead. (2) <strong>Confounded data</strong> — if your treatment is perfectly correlated with batch, no ML model can separate them. Fix the experimental design. (3) <strong>Simple questions</strong> — "which genes are differentially expressed?" is better answered by DESeq2 than by a neural network. Use the simplest method that works.</div></div>
+          <div class="info-box warn"><svg class="ico" aria-hidden="true"><use href="#i-warn"></use></svg><div><strong>ML is not always the answer:</strong> (1) <strong>Small sample sizes</strong> (n &lt; 30) — models cannot generalise reliably. Use traditional statistics instead. (2) <strong>Confounded data</strong> — if your treatment is perfectly correlated with batch, no ML model can separate them. Fix the experimental design. (3) <strong>Simple questions</strong> — "which genes are differentially expressed?" is better answered by DESeq2 than by a neural network. Use the simplest method that works.</div></div>
 
           <div class="chips" style="margin-top:14px;"><span class="chip">Supervised = labelled data</span><span class="chip">p &gt;&gt; n = curse of dimensionality</span><span class="chip">Feature selection inside CV</span><span class="chip">AUC 0.5 = random, &gt;0.9 = excellent</span><span class="chip">Random Forest for biomarker genes</span><span class="chip">1D CNN for DNA sequence</span><span class="chip">Never test on training data</span><span class="chip">Simplest method that works</span></div>
         </div>
@@ -5589,7 +5627,7 @@ def one_hot_encode(seq):
             <div class="card" style="padding:14px;"><strong>OTU (Operational Taxonomic Unit)</strong><p class="sub" style="margin-top:4px;">Older approach. Clusters sequences at 97% similarity. Loses resolution (different species with &gt;97% identity are merged). Computationally simple but biologically imprecise. Tools: QIIME1, mothur (legacy).</p></div>
             <div class="card" style="padding:14px;"><strong>ASV (Amplicon Sequence Variant)</strong><p class="sub" style="margin-top:4px;">Modern standard. Resolves sequences to <strong>single-nucleotide precision</strong>. Each unique error-corrected sequence is an ASV. Reproducible across studies (unlike OTUs which depend on clustering parameters). Superior in every way. Tools: DADA2, Deblur.</p></div>
           </div>
-          <div class="info-box tip"><span>💡</span><div><strong>Always use ASVs.</strong> OTUs are a legacy concept from when sequencing error rates made exact sequences unreliable. Modern denoising algorithms (DADA2) correct errors statistically, making ASVs the standard since ~2017.</div></div>
+          <div class="info-box tip"><svg class="ico" aria-hidden="true"><use href="#i-tip"></use></svg><div><strong>Always use ASVs.</strong> OTUs are a legacy concept from when sequencing error rates made exact sequences unreliable. Modern denoising algorithms (DADA2) correct errors statistically, making ASVs the standard since ~2017.</div></div>
 
           <h4 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">QIIME2 Pipeline Overview</h4>
           <div class="code-block" style="margin-top:8px;"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button><span class="code-comment"># Install QIIME2 (in a conda environment)</span>
@@ -5711,9 +5749,9 @@ humann_join_tables -i humann_output/ -o merged_genefamilies.tsv \
 humann_renorm_table -i merged_genefamilies.tsv -o merged_genefamilies_cpm.tsv \
     --units cpm</div>
 
-          <div class="info-box note"><span>📌</span><div><strong>16S vs Shotgun:</strong> Use 16S for cost-effective community profiling when you only need to know "who is there." Use shotgun metagenomics when you also need to know "what are they doing" (functional profiling) or when you need to identify viruses and eukaryotes (which lack the 16S gene).</div></div>
+          <div class="info-box note"><svg class="ico" aria-hidden="true"><use href="#i-note"></use></svg><div><strong>16S vs Shotgun:</strong> Use 16S for cost-effective community profiling when you only need to know "who is there." Use shotgun metagenomics when you also need to know "what are they doing" (functional profiling) or when you need to identify viruses and eukaryotes (which lack the 16S gene).</div></div>
 
-          <div class="info-box warn"><span>⚠️</span><div><strong>Rarefaction:</strong> Before comparing alpha diversity across samples, rarefy (subsample) all samples to the same sequencing depth. Samples with more reads will always show more taxa, creating a false diversity difference. Choose a rarefaction depth that retains most samples while providing sufficient coverage (e.g., the 10th percentile of library sizes).</div></div>
+          <div class="info-box warn"><svg class="ico" aria-hidden="true"><use href="#i-warn"></use></svg><div><strong>Rarefaction:</strong> Before comparing alpha diversity across samples, rarefy (subsample) all samples to the same sequencing depth. Samples with more reads will always show more taxa, creating a false diversity difference. Choose a rarefaction depth that retains most samples while providing sufficient coverage (e.g., the 10th percentile of library sizes).</div></div>
 
           <div class="chips" style="margin-top:14px;"><span class="chip">16S V3-V4 for bacterial profiling</span><span class="chip">ASV &gt; OTU (always)</span><span class="chip">DADA2 for denoising</span><span class="chip">SILVA for taxonomy</span><span class="chip">Shannon = richness + evenness</span><span class="chip">UniFrac = phylogenetic beta diversity</span><span class="chip">PERMANOVA for group testing</span><span class="chip">MetaPhlAn4 + HUMAnN3 for shotgun</span></div>
         </div>
@@ -5757,7 +5795,7 @@ humann_renorm_table -i merged_genefamilies.tsv -o merged_genefamilies_cpm.tsv \
             <div class="card" style="padding:14px;border-left:3px solid var(--green);"><strong>DIA (Data-Independent)</strong><p class="sub" style="margin-top:4px;">Fragments ALL ions in wide m/z windows systematically. No selection bias. More reproducible and comprehensive. Requires spectral libraries or library-free tools (DIA-NN). Now the preferred method.</p><span class="tag tag-green" style="margin-top:6px;">Recommended</span></div>
           </div>
 
-          <div class="info-box tip"><span>💡</span><div><strong>Modern trend:</strong> DIA with tools like <strong>DIA-NN</strong> or <strong>Spectronaut</strong> is rapidly replacing DDA for most applications. DIA-NN can identify 8,000–10,000 proteins from a single human cell line in a 90-minute gradient, with excellent quantitative reproducibility.</div></div>
+          <div class="info-box tip"><svg class="ico" aria-hidden="true"><use href="#i-tip"></use></svg><div><strong>Modern trend:</strong> DIA with tools like <strong>DIA-NN</strong> or <strong>Spectronaut</strong> is rapidly replacing DDA for most applications. DIA-NN can identify 8,000–10,000 proteins from a single human cell line in a 90-minute gradient, with excellent quantitative reproducibility.</div></div>
 
           <div class="chips" style="margin-top:14px;"><span class="chip">LC-MS/MS is standard workflow</span><span class="chip">Trypsin cleaves at K and R</span><span class="chip">Orbitrap = high resolution</span><span class="chip">DIA &gt; DDA for reproducibility</span><span class="chip">DIA-NN for library-free analysis</span></div>
         </div>
@@ -5809,7 +5847,7 @@ diann --f sample1.raw --f sample2.raw --f sample3.raw \
 <span class="code-comment">#   report.tsv — all identified precursors with quantities</span>
 <span class="code-comment">#   report.pg_matrix.tsv — protein group quantities (use this!)</span></div>
 
-          <div class="info-box warn"><span>⚠️</span><div><strong>Target-Decoy FDR:</strong> All search engines use a decoy database (reversed or shuffled sequences) to estimate false discovery rate. At 1% FDR: for every 100 identified proteins, ~1 is expected to be wrong. Always use 1% FDR at both PSM (peptide-spectrum match) and protein level. Never relax this to 5%.</div></div>
+          <div class="info-box warn"><svg class="ico" aria-hidden="true"><use href="#i-warn"></use></svg><div><strong>Target-Decoy FDR:</strong> All search engines use a decoy database (reversed or shuffled sequences) to estimate false discovery rate. At 1% FDR: for every 100 identified proteins, ~1 is expected to be wrong. Always use 1% FDR at both PSM (peptide-spectrum match) and protein level. Never relax this to 5%.</div></div>
 
           <div class="chips" style="margin-top:14px;"><span class="chip">1% FDR is mandatory</span><span class="chip">MaxQuant for DDA</span><span class="chip">DIA-NN for DIA</span><span class="chip">FragPipe = fastest</span><span class="chip">Use reviewed UniProt FASTA</span></div>
         </div>
@@ -5870,7 +5908,7 @@ results &lt;- topTable(fit3, number = Inf, sort.by = "P")
 sig &lt;- results[results$adj.P.Val &lt; 0.05 &amp; abs(results$logFC) &gt; 1, ]
 cat(nrow(sig), "significantly changed proteins (|logFC|>1, FDR<0.05)\n")</div>
 
-          <div class="info-box tip"><span>💡</span><div><strong>Missing values in proteomics:</strong> Unlike RNA-seq, proteomics data has many missing values (10–30% typically). These can be <strong>MCAR</strong> (missing completely at random — stochastic), <strong>MNAR</strong> (missing not at random — protein is below detection limit), or a mixture. Imputation strategy matters: use <strong>MinProb</strong> for MNAR, <strong>kNN</strong> for MCAR. Better yet, use statistical methods that handle missingness directly: <strong>DEqMS</strong>, <strong>msqrob2</strong>, or <strong>proDA</strong>.</div></div>
+          <div class="info-box tip"><svg class="ico" aria-hidden="true"><use href="#i-tip"></use></svg><div><strong>Missing values in proteomics:</strong> Unlike RNA-seq, proteomics data has many missing values (10–30% typically). These can be <strong>MCAR</strong> (missing completely at random — stochastic), <strong>MNAR</strong> (missing not at random — protein is below detection limit), or a mixture. Imputation strategy matters: use <strong>MinProb</strong> for MNAR, <strong>kNN</strong> for MCAR. Better yet, use statistical methods that handle missingness directly: <strong>DEqMS</strong>, <strong>msqrob2</strong>, or <strong>proDA</strong>.</div></div>
 
           <div class="chips" style="margin-top:14px;"><span class="chip">LFQ for most experiments</span><span class="chip">TMT for multiplexing</span><span class="chip">limma works well for proteomics</span><span class="chip">Handle missing values carefully</span><span class="chip">|logFC| &gt; 1 + FDR &lt; 0.05</span></div>
         </div>
@@ -5925,7 +5963,7 @@ wget https://ftp.ebi.ac.uk/pub/databases/alphafold/latest/UP000005640_9606_HUMAN
 mamba install -c conda-forge pymol-open-source
 pymol 1UBQ.pdb</div>
 
-          <div class="info-box note"><span>📌</span><div><strong>Reading pLDDT scores:</strong> AlphaFold provides a per-residue confidence score (pLDDT, 0–100). &gt;90 = very high confidence (core domains). 70–90 = confident. 50–70 = low confidence (may be flexible). &lt;50 = disordered/unstructured regions. Always check pLDDT before interpreting predicted structures.</div></div>
+          <div class="info-box note"><svg class="ico" aria-hidden="true"><use href="#i-note"></use></svg><div><strong>Reading pLDDT scores:</strong> AlphaFold provides a per-residue confidence score (pLDDT, 0–100). &gt;90 = very high confidence (core domains). 70–90 = confident. 50–70 = low confidence (may be flexible). &lt;50 = disordered/unstructured regions. Always check pLDDT before interpreting predicted structures.</div></div>
 
           <div class="chips" style="margin-top:14px;"><span class="chip">PDB for experimental structures</span><span class="chip">AlphaFold for predictions</span><span class="chip">pLDDT &gt; 70 = trustworthy</span><span class="chip">PyMOL or ChimeraX for visualisation</span></div>
         </div>
@@ -5944,7 +5982,7 @@ pymol 1UBQ.pdb</div>
           <p class="sub">(1) <strong>MSA generation</strong> — searches sequence databases to find homologous proteins (evolutionary information). (2) <strong>Template search</strong> — finds known structures of related proteins in PDB. (3) <strong>Evoformer</strong> — a deep neural network processes the MSA and pairwise features through 48 attention-based blocks. (4) <strong>Structure module</strong> — converts learned representations into 3D atomic coordinates. (5) <strong>Recycling</strong> — repeats the prediction 3 times, feeding output back as input, improving accuracy each time.</p>
 
           <h4 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">Running ColabFold</h4>
-          <div class="info-box tip"><span>💡</span><div><strong>Easiest way to predict a structure:</strong> Go to <strong>colab.research.google.com</strong> and search for "ColabFold" notebook. Paste your amino acid sequence, click "Runtime → Run all". The prediction takes 5–30 minutes depending on protein size. Output: PDB file + pLDDT scores + PAE (predicted aligned error) plot.</div></div>
+          <div class="info-box tip"><svg class="ico" aria-hidden="true"><use href="#i-tip"></use></svg><div><strong>Easiest way to predict a structure:</strong> Go to <strong>colab.research.google.com</strong> and search for "ColabFold" notebook. Paste your amino acid sequence, click "Runtime → Run all". The prediction takes 5–30 minutes depending on protein size. Output: PDB file + pLDDT scores + PAE (predicted aligned error) plot.</div></div>
 
           <div class="code-block"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button><span class="code-comment"># ─── Local AlphaFold (requires GPU + ~2 TB databases) ───</span>
 <span class="code-comment"># Use LocalColabFold for easier local installation:</span>
@@ -5963,7 +6001,7 @@ colabfold_batch complex.fasta output_dir/ --model-type alphafold2_multimer_v3
 <span class="code-comment"># Visit alphafoldserver.com — predicts proteins, DNA, RNA, ligands, ions</span>
 <span class="code-comment"># Supports complexes of any type (protein-DNA, protein-drug, etc.)</span></div>
 
-          <div class="info-box warn"><span>⚠️</span><div><strong>Limitations of AlphaFold:</strong> (1) Does not predict conformational changes — gives a single static structure. (2) Disordered regions (low pLDDT) should not be interpreted structurally. (3) Cannot predict effects of mutations reliably. (4) Ligand/cofactor binding sites may not be accurate without the ligand present. (5) AlphaFold2 struggles with protein-protein interfaces — use AlphaFold-Multimer or AlphaFold3 for complexes.</div></div>
+          <div class="info-box warn"><svg class="ico" aria-hidden="true"><use href="#i-warn"></use></svg><div><strong>Limitations of AlphaFold:</strong> (1) Does not predict conformational changes — gives a single static structure. (2) Disordered regions (low pLDDT) should not be interpreted structurally. (3) Cannot predict effects of mutations reliably. (4) Ligand/cofactor binding sites may not be accurate without the ligand present. (5) AlphaFold2 struggles with protein-protein interfaces — use AlphaFold-Multimer or AlphaFold3 for complexes.</div></div>
 
           <div class="chips" style="margin-top:14px;"><span class="chip">ColabFold = easiest way to predict</span><span class="chip">AlphaFold3 for complexes</span><span class="chip">Check pLDDT and PAE</span><span class="chip">Static structure only</span></div>
         </div>
@@ -6008,7 +6046,7 @@ vina --receptor receptor.pdbqt --ligand ligand.pdbqt \
 <span class="code-comment"># More negative = stronger predicted binding</span>
 <span class="code-comment"># Typical drug: -7 to -12 kcal/mol</span></div>
 
-          <div class="info-box warn"><span>⚠️</span><div><strong>Docking limitations:</strong> Docking scoring functions are approximate — they estimate binding affinity with ~2 kcal/mol error. Use docking for <strong>ranking</strong> (which compounds bind better), not absolute binding energy prediction. Always validate top hits experimentally. For more accurate binding free energies, use molecular dynamics with free energy perturbation (FEP) or MM-PBSA methods.</div></div>
+          <div class="info-box warn"><svg class="ico" aria-hidden="true"><use href="#i-warn"></use></svg><div><strong>Docking limitations:</strong> Docking scoring functions are approximate — they estimate binding affinity with ~2 kcal/mol error. Use docking for <strong>ranking</strong> (which compounds bind better), not absolute binding energy prediction. Always validate top hits experimentally. For more accurate binding free energies, use molecular dynamics with free energy perturbation (FEP) or MM-PBSA methods.</div></div>
 
           <div class="chips" style="margin-top:14px;"><span class="chip">AutoDock Vina to start</span><span class="chip">DiffDock for blind docking</span><span class="chip">Use for ranking, not absolute affinity</span><span class="chip">Always validate experimentally</span></div>
         </div>
@@ -6069,9 +6107,9 @@ bamCoverage -b chip_dedup.bam -o chip.bw --normalizeUsing RPGC \
 <span class="code-comment"># 5. Motif analysis (what TF motifs are enriched in peaks?)</span>
 findMotifsGenome.pl peaks/my_tf_peaks.narrowPeak hg38 motif_output/ -size 200</div>
 
-          <div class="info-box warn"><span>⚠️</span><div><strong>Always use an input control.</strong> ChIP-seq without a control (input DNA or IgG pulldown) will produce false peaks at open chromatin regions and repetitive elements. The control captures background signal, enabling the peak caller to distinguish real binding from noise. No control = no publication.</div></div>
+          <div class="info-box warn"><svg class="ico" aria-hidden="true"><use href="#i-warn"></use></svg><div><strong>Always use an input control.</strong> ChIP-seq without a control (input DNA or IgG pulldown) will produce false peaks at open chromatin regions and repetitive elements. The control captures background signal, enabling the peak caller to distinguish real binding from noise. No control = no publication.</div></div>
 
-          <div class="info-box tip"><span>💡</span><div><strong>CUT&amp;RUN / CUT&amp;Tag:</strong> Modern alternatives to ChIP-seq that require far fewer cells (100–1,000 vs millions), have lower background, and are cheaper. CUT&amp;Tag is especially popular — it uses a protein A-Tn5 fusion to cut and tag DNA near the antibody target. Analysis is similar to ChIP-seq but use SEACR instead of MACS2 for peak calling.</div></div>
+          <div class="info-box tip"><svg class="ico" aria-hidden="true"><use href="#i-tip"></use></svg><div><strong>CUT&amp;RUN / CUT&amp;Tag:</strong> Modern alternatives to ChIP-seq that require far fewer cells (100–1,000 vs millions), have lower background, and are cheaper. CUT&amp;Tag is especially popular — it uses a protein A-Tn5 fusion to cut and tag DNA near the antibody target. Analysis is similar to ChIP-seq but use SEACR instead of MACS2 for peak calling.</div></div>
 
           <div class="chips" style="margin-top:14px;"><span class="chip">Bowtie2 for alignment</span><span class="chip">MACS2 for peak calling</span><span class="chip">Always include input control</span><span class="chip">HOMER for motif analysis</span><span class="chip">CUT&amp;Tag is replacing ChIP-seq</span></div>
         </div>
@@ -6117,7 +6155,7 @@ macs2 callpeak -t atac_shifted.bam -f BAMPE -g hs \
 bamCoverage -b atac_shifted.bam -o atac.bw --normalizeUsing RPGC \
     --effectiveGenomeSize 2913022398 --binSize 10 -p 8</div>
 
-          <div class="info-box note"><span>📌</span><div><strong>Fragment size distribution:</strong> A good ATAC-seq library shows a characteristic nucleosomal ladder pattern: a peak at ~200 bp (nucleosome-free), ~400 bp (mono-nucleosome), ~600 bp (di-nucleosome). If you see only the ~200 bp peak, your transposition worked well. If the distribution is broad without clear peaks, the experiment may have had too many or too few Tn5 insertions.</div></div>
+          <div class="info-box note"><svg class="ico" aria-hidden="true"><use href="#i-note"></use></svg><div><strong>Fragment size distribution:</strong> A good ATAC-seq library shows a characteristic nucleosomal ladder pattern: a peak at ~200 bp (nucleosome-free), ~400 bp (mono-nucleosome), ~600 bp (di-nucleosome). If you see only the ~200 bp peak, your transposition worked well. If the distribution is broad without clear peaks, the experiment may have had too many or too few Tn5 insertions.</div></div>
 
           <div class="chips" style="margin-top:14px;"><span class="chip">Remove chrM reads first</span><span class="chip">Tn5 shift correction is essential</span><span class="chip">Nucleosomal ladder = good QC</span><span class="chip">No input control needed</span></div>
         </div>
@@ -6163,7 +6201,7 @@ bismark_methylation_extractor --paired-end --comprehensive \
 <span class="code-comment"># 6. Generate summary report</span>
 bismark2report</div>
 
-          <div class="info-box tip"><span>💡</span><div><strong>Interpreting methylation:</strong> CpG island methylation at promoters = gene silencing. Gene body methylation = correlated with active transcription (paradoxically). Enhancer methylation = generally low at active enhancers. In cancer, look for promoter <strong>hypermethylation</strong> of tumour suppressors and global <strong>hypomethylation</strong> (genomic instability). DMRs (Differentially Methylated Regions) are typically more biologically meaningful than individual CpG changes — use tools like <strong>dmrseq</strong> or <strong>DSS</strong> for DMR calling.</div></div>
+          <div class="info-box tip"><svg class="ico" aria-hidden="true"><use href="#i-tip"></use></svg><div><strong>Interpreting methylation:</strong> CpG island methylation at promoters = gene silencing. Gene body methylation = correlated with active transcription (paradoxically). Enhancer methylation = generally low at active enhancers. In cancer, look for promoter <strong>hypermethylation</strong> of tumour suppressors and global <strong>hypomethylation</strong> (genomic instability). DMRs (Differentially Methylated Regions) are typically more biologically meaningful than individual CpG changes — use tools like <strong>dmrseq</strong> or <strong>DSS</strong> for DMR calling.</div></div>
 
           <div class="chips" style="margin-top:14px;"><span class="chip">WGBS = gold standard</span><span class="chip">Bismark for alignment</span><span class="chip">CpG islands at promoters</span><span class="chip">DMRs &gt; individual CpGs</span><span class="chip">Promoter methylation = silencing</span></div>
         </div>
@@ -6222,7 +6260,7 @@ mamba install -c bioconda pilon
 pilon --genome flye_output/assembly.fasta \
     --frags illumina_aligned.bam --output polished</div>
 
-          <div class="info-box note"><span>📌</span><div><strong>Assembly quality metrics:</strong> <strong>N50</strong> = the contig length such that 50% of the assembly is in contigs of this size or larger. Higher N50 = more contiguous. <strong>L50</strong> = how many contigs make up 50% of the assembly. Lower L50 = better. <strong>BUSCO</strong> = completeness assessment based on universal single-copy orthologs (aim for &gt;95% complete). Always report all three.</div></div>
+          <div class="info-box note"><svg class="ico" aria-hidden="true"><use href="#i-note"></use></svg><div><strong>Assembly quality metrics:</strong> <strong>N50</strong> = the contig length such that 50% of the assembly is in contigs of this size or larger. Higher N50 = more contiguous. <strong>L50</strong> = how many contigs make up 50% of the assembly. Lower L50 = better. <strong>BUSCO</strong> = completeness assessment based on universal single-copy orthologs (aim for &gt;95% complete). Always report all three.</div></div>
 
           <div class="chips" style="margin-top:14px;"><span class="chip">hifiasm for HiFi reads</span><span class="chip">SPAdes for bacteria</span><span class="chip">N50 measures contiguity</span><span class="chip">BUSCO measures completeness</span><span class="chip">Polish Nanopore with Illumina</span></div>
         </div>
@@ -6262,7 +6300,7 @@ busco -i assembly.fa -o busco_output -m genome \
 <span class="code-comment">#   C: &lt;80% = significant genes missing (check lineage choice)</span>
 <span class="code-comment">#   D: &gt;5% = possible contamination or collapsed haplotypes</span></div>
 
-          <div class="info-box tip"><span>💡</span><div><strong>Merqury</strong> is a reference-free assembly evaluation tool that uses k-mer counts from raw reads to assess completeness, accuracy, and phasing of haplotype-resolved assemblies. It is now the gold standard for HiFi assemblies.</div></div>
+          <div class="info-box tip"><svg class="ico" aria-hidden="true"><use href="#i-tip"></use></svg><div><strong>Merqury</strong> is a reference-free assembly evaluation tool that uses k-mer counts from raw reads to assess completeness, accuracy, and phasing of haplotype-resolved assemblies. It is now the gold standard for HiFi assemblies.</div></div>
 
           <div class="chips" style="margin-top:14px;"><span class="chip">BUSCO &gt;95% = excellent</span><span class="chip">QUAST for contiguity stats</span><span class="chip">Merqury for k-mer QC</span><span class="chip">Choose correct BUSCO lineage</span></div>
         </div>
@@ -6308,7 +6346,7 @@ braker.pl --genome=assembly.fa.masked \
 mamba install -c bioconda interproscan
 interproscan.sh -i predicted_proteins.faa -f tsv -dp -goterms -pa</div>
 
-          <div class="info-box warn"><span>⚠️</span><div><strong>Repeat masking is essential:</strong> Eukaryotic genomes can be 40–80% repetitive. Without masking, gene predictors will predict thousands of spurious genes in transposable elements. Always run RepeatMasker before gene prediction. Use soft-masking (lowercase, not N-replacement) so gene predictors can still use the sequence information.</div></div>
+          <div class="info-box warn"><svg class="ico" aria-hidden="true"><use href="#i-warn"></use></svg><div><strong>Repeat masking is essential:</strong> Eukaryotic genomes can be 40–80% repetitive. Without masking, gene predictors will predict thousands of spurious genes in transposable elements. Always run RepeatMasker before gene prediction. Use soft-masking (lowercase, not N-replacement) so gene predictors can still use the sequence information.</div></div>
 
           <div class="chips" style="margin-top:14px;"><span class="chip">Prokka for bacteria</span><span class="chip">BRAKER3 for eukaryotes</span><span class="chip">RepeatMasker before gene prediction</span><span class="chip">RNA-seq evidence improves accuracy</span><span class="chip">InterProScan for functional annotation</span></div>
         </div>
@@ -6368,7 +6406,7 @@ for K in 2 3 4 5; do
     admixture pruned_data.bed $K --cv -j16
 done</div>
 
-          <div class="info-box note"><span>📌</span><div><strong>Population stratification in GWAS:</strong> If cases and controls come from different ancestral backgrounds, allele frequency differences due to ancestry (not disease) will create false associations. This is why GWAS always includes PCA components as covariates — to correct for population structure. Typically the top 10–20 PCs are included.</div></div>
+          <div class="info-box note"><svg class="ico" aria-hidden="true"><use href="#i-note"></use></svg><div><strong>Population stratification in GWAS:</strong> If cases and controls come from different ancestral backgrounds, allele frequency differences due to ancestry (not disease) will create false associations. This is why GWAS always includes PCA components as covariates — to correct for population structure. Typically the top 10–20 PCs are included.</div></div>
 
           <div class="chips" style="margin-top:14px;"><span class="chip">HWE test for QC</span><span class="chip">PCA reveals population structure</span><span class="chip">PLINK2 for genetic analysis</span><span class="chip">FST measures differentiation</span><span class="chip">LD decays with distance</span></div>
         </div>
@@ -6413,9 +6451,9 @@ plink2 --pfile qc_data \
 <span class="code-comment">#   manhattan(gwas, chr="CHROM", bp="POS", p="P", snp="ID")</span></div>
 
           <h4 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">Interpreting GWAS Results</h4>
-          <div class="info-box warn"><span>⚠️</span><div><strong>GWAS finds associations, not causation.</strong> A significant SNP is usually a <strong>tag SNP</strong> in LD with the true causal variant — not the causal variant itself. Fine-mapping (credible set analysis, SuSiE) is needed to narrow down the causal variant. Functional validation (CRISPR, reporter assays) is needed to prove causality. Most GWAS hits are in non-coding regions (enhancers, promoters), not in protein-coding exons.</div></div>
+          <div class="info-box warn"><svg class="ico" aria-hidden="true"><use href="#i-warn"></use></svg><div><strong>GWAS finds associations, not causation.</strong> A significant SNP is usually a <strong>tag SNP</strong> in LD with the true causal variant — not the causal variant itself. Fine-mapping (credible set analysis, SuSiE) is needed to narrow down the causal variant. Functional validation (CRISPR, reporter assays) is needed to prove causality. Most GWAS hits are in non-coding regions (enhancers, promoters), not in protein-coding exons.</div></div>
 
-          <div class="info-box tip"><span>💡</span><div><strong>Post-GWAS analysis:</strong> After finding significant loci, perform: (1) <strong>Fine-mapping</strong> — identify the most likely causal variant. (2) <strong>Colocalization</strong> (coloc, eCAVIAR) — test if a GWAS signal and an eQTL signal share the same causal variant. (3) <strong>Gene mapping</strong> — assign GWAS hits to likely target genes using eQTL data, chromatin interaction (Hi-C), and distance. (4) <strong>Pathway enrichment</strong> — test if GWAS hits are enriched in specific biological pathways. (5) <strong>Polygenic Risk Scores</strong> — combine effects of all variants to predict individual risk.</div></div>
+          <div class="info-box tip"><svg class="ico" aria-hidden="true"><use href="#i-tip"></use></svg><div><strong>Post-GWAS analysis:</strong> After finding significant loci, perform: (1) <strong>Fine-mapping</strong> — identify the most likely causal variant. (2) <strong>Colocalization</strong> (coloc, eCAVIAR) — test if a GWAS signal and an eQTL signal share the same causal variant. (3) <strong>Gene mapping</strong> — assign GWAS hits to likely target genes using eQTL data, chromatin interaction (Hi-C), and distance. (4) <strong>Pathway enrichment</strong> — test if GWAS hits are enriched in specific biological pathways. (5) <strong>Polygenic Risk Scores</strong> — combine effects of all variants to predict individual risk.</div></div>
 
           <div class="chips" style="margin-top:14px;"><span class="chip">p &lt; 5e-8 for genome-wide significance</span><span class="chip">Always correct for population structure</span><span class="chip">GWAS = association, not causation</span><span class="chip">Fine-mapping for causal variants</span><span class="chip">Manhattan plot for visualisation</span></div>
         </div>
@@ -6489,7 +6527,7 @@ from networkx.algorithms.community import louvain_communities
 communities = louvain_communities(G, resolution=1.0)
 print(f"Found {len(communities)} communities")</div>
 
-          <div class="info-box tip"><span>💡</span><div><strong>DEG-PPI integration:</strong> A powerful approach is to overlay your differentially expressed genes onto a PPI network. This reveals which functional modules are disrupted in your condition. Steps: (1) Get DEGs from RNA-seq. (2) Query STRING with DEG list. (3) Import network into Cytoscape. (4) Colour nodes by log2FC (red = up, blue = down). (5) Run MCODE to find activated/repressed modules. (6) Run pathway enrichment on each module separately.</div></div>
+          <div class="info-box tip"><svg class="ico" aria-hidden="true"><use href="#i-tip"></use></svg><div><strong>DEG-PPI integration:</strong> A powerful approach is to overlay your differentially expressed genes onto a PPI network. This reveals which functional modules are disrupted in your condition. Steps: (1) Get DEGs from RNA-seq. (2) Query STRING with DEG list. (3) Import network into Cytoscape. (4) Colour nodes by log2FC (red = up, blue = down). (5) Run MCODE to find activated/repressed modules. (6) Run pathway enrichment on each module separately.</div></div>
 
           <div class="chips" style="margin-top:14px;"><span class="chip">STRING for PPI data</span><span class="chip">Cytoscape for visualisation</span><span class="chip">Hub genes are often essential</span><span class="chip">MCODE for module detection</span><span class="chip">Overlay DEGs on PPI networks</span></div>
         </div>
@@ -6548,7 +6586,7 @@ kME &lt;- signedKME(datExpr, net$MEs)
 hub_genes &lt;- module_genes[order(kME[module_genes, paste0("kME", module_number)],
     decreasing = TRUE)[1:20]]</div>
 
-          <div class="info-box note"><span>📌</span><div><strong>The future is multi-modal single-cell:</strong> Technologies like CITE-seq (RNA + surface protein), Multiome (RNA + ATAC), SHARE-seq, and spatial transcriptomics with paired proteomics are enabling true multi-omics integration at single-cell resolution. Tools like <strong>MOFA+</strong>, <strong>WNN (Seurat v4)</strong>, and <strong>scVI/totalVI</strong> are designed for these integrated analyses.</div></div>
+          <div class="info-box note"><svg class="ico" aria-hidden="true"><use href="#i-note"></use></svg><div><strong>The future is multi-modal single-cell:</strong> Technologies like CITE-seq (RNA + surface protein), Multiome (RNA + ATAC), SHARE-seq, and spatial transcriptomics with paired proteomics are enabling true multi-omics integration at single-cell resolution. Tools like <strong>MOFA+</strong>, <strong>WNN (Seurat v4)</strong>, and <strong>scVI/totalVI</strong> are designed for these integrated analyses.</div></div>
 
           <div class="chips" style="margin-top:14px;"><span class="chip">WGCNA for bulk co-expression</span><span class="chip">SCENIC for scRNA-seq GRNs</span><span class="chip">MOFA+ for multi-omics</span><span class="chip">Always validate key findings</span><span class="chip">Multi-modal single-cell is the future</span></div>
         </div>
