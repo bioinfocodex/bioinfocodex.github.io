@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>BioInfoCodex</title>
+<meta name="robots" content="noindex">
+<script>
+  // GitHub Pages serves this file for any path it does not have on disk, which
+  // is every route the app owns — /tools/rnaflow, /learn/rna-seq and the rest.
+  // There is no server-side rewrite available, so the path is folded into a
+  // query string and index.html unfolds it again before rendering.
+  // Deliberately a replace() so this file never enters the history stack.
+  var l = window.location;
+  l.replace(
+    l.protocol + '//' + l.hostname + (l.port ? ':' + l.port : '') +
+    '/?/' + l.pathname.slice(1).replace(/&/g, '~and~') +
+    (l.search ? '&' + l.search.slice(1).replace(/&/g, '~and~') : '') +
+    l.hash
+  );
+</script>
+</head>
+<body>
+  <p>Redirecting to <a href="/">bioinfocodex.com</a>…</p>
+</body>
+</html>

@@ -3,6 +3,19 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script>
+  // Unfold the path that 404.html folded into a query string, so a cold hit on
+  // /tools/rnaflow ends up back at /tools/rnaflow with the app booting normally.
+  // replaceState keeps the redirect out of the history stack.
+  (function (l) {
+    if (l.search[1] === '/') {
+      var decoded = l.search.slice(1).split('&').map(function (s) {
+        return s.replace(/~and~/g, '&');
+      }).join('?');
+      window.history.replaceState(null, null, l.pathname.slice(0, -1) + decoded + l.hash);
+    }
+  })(window.location);
+</script>
 <title>BioInfoCodex — The Open Bioinformatics Codex</title>
 <meta name="description" content="BioInfoCodex: free bioinformatics tools, step-by-step tutorials, and education for researchers worldwide. RNA-seq, NGS, plasmid analysis and more.">
 <meta name="keywords" content="bioinformatics, RNA-seq, DESeq2, HISAT2, bioinformatics tools, genomics, NGS, bioinformatics education, bioinformatics software">
@@ -7116,16 +7129,8 @@ function showPage(name, skipHash) {
   const tab = document.getElementById('tab-' + navTabName);
   if (tab) tab.classList.add('active');
 
-  // Save state to URL hash so refresh stays on same page
-  if (!skipHash) {
-    const hashParts = [tabId];
-    // Preserve edu module in hash if on edu page
-    if (tabId === 'edu') {
-      const activeMod = document.querySelector('.edu-module.active');
-      if (activeMod) hashParts.push(activeMod.id.replace('edu-',''));
-    }
-    location.hash = hashParts.join('/');
-  }
+  // Real path + per-route title/description, instead of a location.hash write
+  if (!skipHash && typeof updateRoute === 'function') updateRoute(tabId, true);
 
   window.scrollTo({ top: 0, behavior: 'smooth' });
   setTimeout(initReveals, 100);
@@ -7165,14 +7170,14 @@ function toggleTutStep(el) {
 }
 
 // ── EDUCATION MODULE TABS ────────────────────────────────────────────────
-function showEduModule(modId, el) {
+function showEduModule(modId, el, skipRoute) {
   document.querySelectorAll('.edu-module').forEach(m => m.classList.remove('active'));
   document.querySelectorAll('.edu-mod-tab').forEach(t => t.classList.remove('active'));
   const mod = document.getElementById('edu-' + modId);
   if (mod) mod.classList.add('active');
   if (el) el.classList.add('active');
-  // Update hash to preserve module on refresh
-  location.hash = 'edu/' + modId;
+  // Reflect the module in the path, unless replaying one from the URL
+  if (!skipRoute && typeof updateRoute === 'function') updateRoute('edu', true);
 }
 
 function toggleEduTopic(headEl) {
@@ -7378,39 +7383,126 @@ document.addEventListener('DOMContentLoaded', () => setTimeout(initCounters, 300
   };
 })();
 
-// ── RESTORE PAGE STATE FROM URL HASH ON LOAD / BACK-FORWARD ─────────────
-(function() {
-  function restoreFromHash() {
-    const hash = location.hash.replace('#', '');
-    if (!hash) return;
-    const parts = hash.split('/');
-    const pageName = parts[0];
+// ══════════════════════════════════════════════════════════════════════════
+// ROUTING — real paths via history.pushState
+// ══════════════════════════════════════════════════════════════════════════
+// Navigation used to write location.hash. That worked for people — refresh and
+// back/forward both survived — but search engines discard fragments, so all 14
+// modules, 46 topics and every tool page collapsed into a single indexable URL.
+// These are real paths now, each with its own title and description.
+//
+// GitHub Pages has no server-side rewrite, so a cold hit on /tools/rnaflow
+// would 404. 404.html turns that path into /?/tools/rnaflow and redirects;
+// a snippet in <head> converts it back before anything renders.
+const ROUTES = [
+  { path: '/',                 page: 'home',            title: 'BioInfoCodex — The Open Bioinformatics Codex',        desc: 'Free guided bioinformatics tools and education. RNA-seq, NGS, plasmid analysis and more.' },
+  { path: '/tools',            page: 'tools',           title: 'Bioinformatics Tools — BioInfoCodex',                 desc: 'Guided pipelines for every major bioinformatics workflow, each with a complete manual.' },
+  { path: '/tools/rnaflow',    page: 'tool-rnaflow',    title: 'RNAflow — RNA-seq Analysis Pipeline | BioInfoCodex',  desc: 'Complete RNA-seq pipeline from raw FASTQ to publication figures. No command line required.' },
+  { path: '/tools/genenet',    page: 'tool-genenet',    title: 'GeneNet Lab — Lab Management | BioInfoCodex',         desc: 'Lab management with team access control, seat licensing and OneDrive storage.' },
+  { path: '/tools/ngsuite',    page: 'tool-ngsuite',    title: 'NGSuite — NGS Analysis | BioInfoCodex',               desc: 'Next-generation sequencing analysis suite. In development.' },
+  { path: '/tools/plasmidmap', page: 'tool-plasmidmap', title: 'PlasmidMap — Plasmid Visualisation | BioInfoCodex',   desc: 'Plasmid mapping and visualisation. In development.' },
+  { path: '/tools/chipflow',   page: 'tool-chipflow',   title: 'ChIPflow — ChIP-seq Analysis | BioInfoCodex',         desc: 'ChIP-seq and epigenomics analysis pipeline. Expected 2026.' },
+  { path: '/tools/metaflow',   page: 'tool-metaflow',   title: 'MetaFlow — Metagenomics | BioInfoCodex',              desc: 'Metagenomics and microbiome analysis pipeline. Expected 2026.' },
+  { path: '/tools/scrnaflow',  page: 'tool-scrnaflow',  title: 'scRNAflow — Single-cell RNA-seq | BioInfoCodex',      desc: 'Single-cell RNA-seq analysis pipeline. Expected 2026.' },
+  { path: '/tools/proteomics', page: 'tool-proteomics', title: 'ProteomicsLab — Mass Spectrometry | BioInfoCodex',    desc: 'Proteomics and mass spectrometry analysis. Expected 2026.' },
+  { path: '/learn',            page: 'edu',             title: 'Learn Bioinformatics — Free Course | BioInfoCodex',   desc: 'A university-level bioinformatics curriculum: 14 modules from molecular biology to genomic data analysis.' },
+  { path: '/resources',        page: 'resources',       title: 'Bioinformatics Resources — BioInfoCodex',             desc: 'A curated directory of bioinformatics tools, databases and learning resources.' },
+  { path: '/download',         page: 'register',        title: 'Download RNAflow — BioInfoCodex',                     desc: 'Register for access to RNAflow for macOS, Windows and Linux.' },
+  { path: '/contact',          page: 'contact',         title: 'Contact — BioInfoCodex',                              desc: 'Get in touch with the BioInfoCodex team.' }
+];
 
-    // Restore the page
-    if (pageName && document.getElementById('page-' + pageName)) {
-      showPage(pageName, true); // skipHash=true to avoid re-setting hash
-    }
+// Slugs read far better than mod1..mod14, and they are what someone would
+// actually type into a search box.
+const MODULES = {
+  'foundations': 'mod1', 'computing': 'mod2', 'databases': 'mod3',
+  'sequence-analysis': 'mod4', 'rna-seq': 'mod5', 'genomics': 'mod6',
+  'statistics': 'mod7', 'advanced': 'mod8', 'proteomics': 'mod9',
+  'structural-biology': 'mod10', 'epigenomics': 'mod11', 'genome-assembly': 'mod12',
+  'population-genetics': 'mod13', 'systems-biology': 'mod14'
+};
+const MODULE_SLUG = {};
+Object.keys(MODULES).forEach(function (k) { MODULE_SLUG[MODULES[k]] = k; });
+const MODULE_TITLE = {
+  mod1: 'Foundations', mod2: 'Computing', mod3: 'Databases', mod4: 'Sequence Analysis',
+  mod5: 'RNA-seq', mod6: 'Genomics', mod7: 'Statistics', mod8: 'Advanced',
+  mod9: 'Proteomics', mod10: 'Structural Biology', mod11: 'Epigenomics',
+  mod12: 'Genome Assembly', mod13: 'Population Genetics', mod14: 'Systems Biology'
+};
 
-    // Restore edu module if on education page
-    if (pageName === 'edu' && parts[1]) {
-      const modId = parts[1];
-      const mod = document.getElementById('edu-' + modId);
-      const tab = document.querySelector('.edu-mod-tab[data-mod="' + modId + '"]');
-      if (mod) {
-        document.querySelectorAll('.edu-module').forEach(m => m.classList.remove('active'));
-        document.querySelectorAll('.edu-mod-tab').forEach(t => t.classList.remove('active'));
-        mod.classList.add('active');
-        if (tab) tab.classList.add('active');
-      }
+function routeForPage(page) {
+  for (var i = 0; i < ROUTES.length; i++) if (ROUTES[i].page === page) return ROUTES[i];
+  return ROUTES[0];
+}
+
+function setMeta(title, desc, path) {
+  var abs = 'https://bioinfocodex.com' + (path === '/' ? '/' : path);
+  document.title = title;
+  var set = function (sel, attr, val) {
+    var el = document.querySelector(sel);
+    if (el) el.setAttribute(attr, val);
+  };
+  set('meta[name="description"]', 'content', desc);
+  set('meta[property="og:title"]', 'content', title);
+  set('meta[property="og:description"]', 'content', desc);
+  set('meta[name="twitter:title"]', 'content', title);
+  set('meta[name="twitter:description"]', 'content', desc);
+  set('link[rel="canonical"]', 'href', abs);
+  set('meta[property="og:url"]', 'content', abs);
+}
+
+// Called by showPage. push === false replays a route without adding history.
+function updateRoute(page, push) {
+  var r = routeForPage(page);
+  var path = r.path, title = r.title, desc = r.desc;
+  if (page === 'edu') {
+    var active = document.querySelector('.edu-module.active');
+    var mod = active && active.id.replace('edu-', '');
+    if (mod && MODULE_SLUG[mod]) {
+      path = '/learn/' + MODULE_SLUG[mod];
+      title = MODULE_TITLE[mod] + ' — Learn Bioinformatics | BioInfoCodex';
+      desc = 'Module ' + mod.replace('mod', '') + ': ' + MODULE_TITLE[mod] +
+             '. Part of the free BioInfoCodex bioinformatics curriculum.';
     }
   }
+  setMeta(title, desc, path);
+  if (push === false) history.replaceState({ page: page }, '', path);
+  else if (location.pathname !== path) history.pushState({ page: page }, '', path);
+}
 
-  // Restore on initial page load
-  restoreFromHash();
+// Path -> page, tolerating a trailing slash.
+function pageForPath(pathname) {
+  var path = pathname.replace(/\/+$/, '') || '/';
+  var mod = path.match(/^\/learn\/([a-z-]+)$/);
+  if (mod && MODULES[mod[1]]) return { page: 'edu', module: MODULES[mod[1]] };
+  for (var i = 0; i < ROUTES.length; i++) if (ROUTES[i].path === path) return { page: ROUTES[i].page };
+  return null;
+}
 
-  // Restore on browser back/forward navigation
-  window.addEventListener('hashchange', restoreFromHash);
-})();
+function applyRoute() {
+  // Old #tools and #edu/mod5 links keep working; rewrite them to real paths.
+  if (location.hash) {
+    var parts = location.hash.replace('#', '').split('/');
+    var legacy = null;
+    for (var i = 0; i < ROUTES.length; i++) if (ROUTES[i].page === parts[0]) legacy = ROUTES[i];
+    if (legacy) {
+      var to = (parts[1] && MODULE_SLUG[parts[1]]) ? '/learn/' + MODULE_SLUG[parts[1]] : legacy.path;
+      history.replaceState({ page: legacy.page }, '', to);
+    }
+  }
+  var hit = pageForPath(location.pathname);
+  if (!hit) { showPage('home', true); updateRoute('home', false); return; }
+  if (hit.module) {
+    var tab = document.querySelector('.edu-mod-tab[data-mod="' + hit.module + '"]');
+    showEduModule(hit.module, tab, true);
+  }
+  showPage(hit.page, true);
+  updateRoute(hit.page, false);
+}
+
+window.addEventListener('popstate', function () { applyRoute(); });
+
+applyRoute();   // resolve whatever path we landed on
+
 // ── KEYBOARD ACTIVATION FOR role="button" ELEMENTS ──────────────────────
 // 171 controls on this page are divs, spans and li elements with onclick —
 // tool cards, accordion headers, tabs. Marking them role="button" and
