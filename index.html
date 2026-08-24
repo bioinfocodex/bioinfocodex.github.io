@@ -164,6 +164,32 @@ em.p{font-style:normal;color:var(--purple);}
 .orb-1{width:600px;height:600px;background:radial-gradient(circle,#00d4a0,transparent);top:-200px;right:-100px;animation-delay:0s;}
 .orb-2{width:500px;height:500px;background:radial-gradient(circle,#0096ff,transparent);bottom:-100px;left:-150px;animation-delay:-3s;}
 .orb-3{width:400px;height:400px;background:radial-gradient(circle,#7c5ff5,transparent);top:40%;left:40%;animation-delay:-5s;}
+
+/* ─── Contain the ambient orbs ───────────────────────────────────────────
+   The orbs are positioned past the edges on purpose (orb-3 sits at
+   left:40% and is 400px wide, so on a 375px phone it reaches 550px).
+   That horizontal overflow widened the containing block the fixed nav
+   resolves left:0/right:0 against, stretching the nav to 550px and
+   pushing the hamburger off-screen — with body{overflow-x:hidden} there
+   was no way to scroll to it, so phones had no navigation at all.
+   overflow-x:clip crops them without creating a scroll container, so the
+   sticky sidebars (.edu-sidebar, .tool-detail-sidebar) keep working;
+   overflow-x:hidden would break those. */
+.page{overflow-x:clip;}
+
+/* Respect a reduced-motion preference: the site runs 13 keyframe
+   animations, and for some people that means nausea rather than polish.
+   Scroll-reveal opacity is forced on so nothing stays invisible. */
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{
+    animation-duration:0.001ms !important;
+    animation-iteration-count:1 !important;
+    transition-duration:0.001ms !important;
+    scroll-behavior:auto !important;
+  }
+  html{scroll-behavior:auto;}
+  .reveal,.reveal.visible{opacity:1 !important;transform:none !important;}
+}
 @keyframes orbFloat{0%,100%{transform:translateY(0) scale(1);}50%{transform:translateY(-30px) scale(1.05);}}
 
 /* ─── Hero ─── */
