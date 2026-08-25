@@ -1,5 +1,26 @@
 # Making the routes indexable
 
+**Done — the site moved to Netlify on 24 August 2026.** `/tools/rnaflow` and the
+other 27 routes now answer 200 and are in the sitemap. What follows is kept as
+the record of why, and what to check if it ever regresses.
+
+Current shape:
+
+- `bioinfocodex.com` → Netlify (ANAME on the apex to apex-loadbalancer.netlify.com,
+  `www` CNAME to the Netlify site). Rewrites live in `_redirects`.
+- `rnaflow.bioinfocodex.com` → still GitHub Pages, from the `rnaflow` repo.
+  Deliberately untouched; external DNS was chosen over Netlify DNS precisely so
+  moving the apex could not take this subdomain with it.
+- Certificates are issued by Netlify and renew themselves.
+
+The check that matters, if anything ever looks wrong:
+
+```
+curl -sI https://bioinfocodex.com/tools/rnaflow | head -1   # expect 200, not 404
+```
+
+---
+
 The site has real URLs — `/tools/rnaflow`, `/learn/rna-seq`, 28 in all, each
 with its own `<title>`, description and canonical. They work for anyone using
 the site: deep links, refresh, back and forward all behave.
