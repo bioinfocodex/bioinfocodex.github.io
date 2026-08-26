@@ -7,6 +7,19 @@
 # 200 = rewrite (URL stays, content served) — not 301, which would bounce
 # every deep link back to the home page and lose the path.
 
+# ── Keep repository files out of the published site ──────────────────────
+# publish = "." serves the whole repo, so the function source, the build script
+# and the internal docs were all downloadable. None of them contain secrets —
+# those live in environment variables — but the auth source spells out the rate
+# limits, the token format and the exact validation, which is a free head start
+# for anyone attacking the gate.
+#
+# The trailing ! forces these ahead of the static file that would otherwise win.
+/netlify/*    /404.html   404!
+/tools/build-sitemap.py   /404.html   404!
+/HOSTING.md   /404.html   404!
+/README.md    /404.html   404!
+
 /tools/*      /index.html   200
 /learn/*      /index.html   200
 /tools        /index.html   200
