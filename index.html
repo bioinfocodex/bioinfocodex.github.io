@@ -6701,7 +6701,7 @@ hub_genes &lt;- module_genes[order(kME[module_genes, paste0("kME", module_number
       <div style="text-align:center;margin-bottom:20px;">
         <div style="font-size:2.4em;margin-bottom:10px;">🔑</div>
         <h2 class="h2" style="margin-bottom:8px;">Enter Your Access Code</h2>
-        <p class="sub">Thanks for registering, <strong id="bic-sent-email"></strong>. We&#39;ll email your access code shortly — enter it below to unlock the downloads.</p>
+        <p class="sub">Thanks for registering, <strong id="bic-sent-email"></strong>. <span id="bic-code-note">Your access code is on its way by email — enter it below to unlock the downloads.</span></p>
       </div>
       
       <form onsubmit="return bicVerifyCode(event)">
@@ -7629,6 +7629,24 @@ async function bicRegister(e) {
     }
   } catch(err) {}
 
+  // Email the code to the registrant. Deliberately after the Formspree call
+  // and in its own try block: if the mail provider is down, the registration
+  // has still been recorded and the person is told what to do next rather
+  // than seeing a failure they cannot act on.
+  let codeEmailed = false;
+  try {
+    const mail = await fetch('/.netlify/functions/send-code', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        email: fd.get('email'),
+        name: [fd.get('first_name'), fd.get('last_name')].filter(Boolean).join(' '),
+        institution: fd.get('institution')
+      })
+    });
+    codeEmailed = mail.ok;
+  } catch (err) { /* fall through to the manual wording */ }
+
   // Save registration
   localStorage.setItem('bic_reg', JSON.stringify({
     name: fd.get('first_name'), email: fd.get('email'), date: new Date().toISOString()
@@ -7636,6 +7654,14 @@ async function bicRegister(e) {
 
   // Show code entry with the access code revealed and pre-filled
   document.getElementById('bic-sent-email').textContent = fd.get('first_name') || 'Researcher';
+  const note = document.getElementById('bic-code-note');
+  if (note) {
+    note.textContent = codeEmailed
+      ? 'We have emailed your access code to ' + fd.get('email') +
+        '. It should arrive within a minute — check spam if it does not.'
+      : 'We could not send the email automatically, so someone will send your ' +
+        'code by hand shortly. Sorry for the wait.';
+  }
   // Deliberately no longer prints the code. It lives in an environment
   // variable the browser never sees; you send it to approved registrants.
   document.getElementById('bic-reg-form').style.display = 'none';

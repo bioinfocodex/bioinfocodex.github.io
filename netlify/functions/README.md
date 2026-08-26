@@ -49,3 +49,46 @@ release assets, and the standalone files are served at plain URLs. Anyone who
 wants them can find them without a code. Making that genuinely private means
 private releases and streaming the bytes through a function — a larger change,
 and only worth it if the goal is protection rather than capturing registrations.
+
+---
+
+## send-code
+
+Emails the access code to someone who has just registered, replacing the manual
+step where you sent it by hand.
+
+### Additional environment variables
+
+| Variable | Example | Notes |
+|---|---|---|
+| `RESEND_API_KEY` | `re_…` | From resend.com. Free tier covers 3,000 emails/month. |
+| `BIC_FROM_EMAIL` | `BioInfoCodex <access@bioinfocodex.com>` | The domain must be verified in Resend or nothing is delivered. |
+| `BIC_AUTO_CODE` | `RNAFLOW2026` | Optional. Defaults to the first entry in `BIC_ACCESS_CODES`. |
+| `BIC_NOTIFY_EMAIL` | `info@bioinfocodex.com` | Optional copy to you, so registrations stay visible. |
+
+### Setup
+
+1. Create a free account at resend.com.
+2. Add `bioinfocodex.com` as a domain and publish the DNS records it gives you
+   at Name.com. Without this, Resend refuses to send as your domain.
+3. Create an API key and set the variables above, all scopes.
+4. Redeploy — functions only receive variables at deploy time.
+
+### Behaviour
+
+- Malformed address, or one with a comma or angle bracket that could smuggle a
+  second recipient → `400`, nothing sent
+- More than 5 sends per IP per hour, or 3 to the same address → `429`
+- Provider error → `502`, and the page tells the visitor a human will follow up
+- Missing configuration → `500` naming the variables
+
+Formspree is untouched, so your existing registration notifications continue
+either way, and a mail failure never costs you the registration.
+
+### The trade-off you accepted
+
+Automatic sending means anyone with a working email address gets a code. Your
+approval is no longer part of the loop — the gate now proves someone can
+receive email, not that you have vetted them. If you want approval back, unset
+`RESEND_API_KEY` and the page falls back to telling people a human will be in
+touch.
