@@ -61,9 +61,19 @@ export default async (request) => {
   const secret = process.env.BIC_TOKEN_SECRET;
   const codes = (process.env.BIC_ACCESS_CODES || '').split(',').map(s => s.trim()).filter(Boolean);
   if (!secret || codes.length === 0) {
-    // Misconfiguration should be loud in the logs and vague to the visitor.
-    console.error('verify-code: BIC_TOKEN_SECRET or BIC_ACCESS_CODES is not set');
-    return json(500, { error: 'not_configured' });
+    // Names, never values. Knowing which variable is missing turns a silent
+    // 500 into a two-minute fix, and leaks nothing: the names are in the repo
+    // already. A common cause is setting the variable but leaving its scope
+    // as Builds only, so Functions never receive it.
+    const missing = [];
+    if (!secret) missing.push('BIC_TOKEN_SECRET');
+    if (codes.length === 0) missing.push('BIC_ACCESS_CODES');
+    console.error('verify-code: missing environment variables:', missing.join(', '));
+    return json(500, {
+      error: 'not_configured',
+      missing,
+      hint: 'Set these in Netlify with their scope including Functions, then redeploy.'
+    });
   }
 
   const expiry = process.env.BIC_EXPIRY ? new Date(process.env.BIC_EXPIRY) : null;
