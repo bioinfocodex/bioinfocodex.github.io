@@ -69,9 +69,22 @@
 :root{
   --bg:#ffffff; --bg2:#f6f8fa; --bg3:#eef1f6; --surf:#ffffff;
   --border:rgba(0,0,0,0.08); --border2:rgba(0,0,0,0.14);
-  --text:#0d1117; --text2:#4a5568; --text3:#8a96a8;
+  --text:#0d1117; --text2:#4a5568; --text3:#646d7c;
   --green:#00c896; --blue:#0969da; --purple:#7c3aed;
   --orange:#f0883e; --red:#f85149;
+
+  /* Text-safe variants. --green and --orange stay as they are: they are the
+     brand colours and they are correct on fills, borders and dark surfaces.
+     But as *text* on the light surfaces they only reach 2.2:1 and 2.5:1, and
+     --text3 reaches 3.0:1, all short of the 4.5:1 WCAG AA needs. These three
+     are darkened just enough to clear it on #ffffff, #f6f8fa and #eef1f6 --
+     and on the tinted pill fills (#e6faf5, #d9f7ef, #fef7f1) too, which sit
+     lighter still. The dark surfaces override them back below. */
+  --green-text:#017a5a;
+  --orange-text:#a85206;
+  --blue-text:#0860c4;
+  --purple-text:#7c3aed;
+  --cta-ghost-text:#0a6b50;
   --fh:'Inter',sans-serif; --fb:'Inter',sans-serif; --fm:'DM Mono',monospace;
   --r:12px; --r2:18px;
 }
@@ -111,11 +124,11 @@ nav.nav-dark .nav-tab.active{color:#00c896;background:rgba(0,200,150,0.15);borde
 nav.nav-dark .nav-burger{color:#fff;}
 nav.nav-dark .nav-logo span,
 nav.nav-dark .nav-logo div span{color:#fff;}
-nav.nav-dark .nav-logo div span:last-child{color:var(--green);-webkit-text-fill-color:var(--green);}
+nav.nav-dark .nav-logo div span:last-child{color:var(--green-text);-webkit-text-fill-color:var(--green);}
 .nav-logo{display:flex;align-items:center;gap:10px;margin-right:40px;flex-shrink:0;}
 .nav-logo svg{width:34px;height:34px;}
 .nav-logo-text{font-family:var(--fh);font-weight:800;font-size:1.3em;letter-spacing:-0.5px;}
-.nav-logo-text span{color:var(--green);}
+.nav-logo-text span{color:var(--green-text);}
 /* Space Grotesk used for logo and hero sub-text */
 .nav-tabs{display:flex;gap:2px;flex:1;}
 .nav-tab{
@@ -124,7 +137,7 @@ nav.nav-dark .nav-logo div span:last-child{color:var(--green);-webkit-text-fill-
   border:1px solid transparent;
 }
 .nav-tab:hover{color:var(--text);background:rgba(255,255,255,0.04);}
-.nav-tab.active{color:var(--green);background:rgba(0,200,150,0.08);border-color:rgba(0,200,150,0.2);}
+.nav-tab.active{color:var(--green-text);background:rgba(0,200,150,0.08);border-color:rgba(0,200,150,0.2);}
 .nav-spacer{flex:1;}
 .nav-dl{
   padding:8px 20px;border-radius:8px;
@@ -156,7 +169,7 @@ nav.nav-dark .nav-logo div span:last-child{color:var(--green);-webkit-text-fill-
 ══════════════════════════════════════════ */
 .section{padding:72px 6vw;}
 .section-sm{padding:48px 6vw;}
-.label{font-size:0.7em;font-weight:600;letter-spacing:2.5px;text-transform:uppercase;color:var(--green);margin-bottom:10px;}
+.label{font-size:0.7em;font-weight:600;letter-spacing:2.5px;text-transform:uppercase;color:var(--green-text);margin-bottom:10px;}
 .h1{font-family:var(--fh);font-weight:800;font-size:clamp(2.2em,5vw,4em);letter-spacing:-1.5px;line-height:1.08;margin-bottom:18px;}
 .h2{font-family:var(--fh);font-weight:700;font-size:clamp(1.6em,3vw,2.4em);letter-spacing:-0.8px;line-height:1.15;margin-bottom:14px;}
 .h3{font-family:var(--fh);font-weight:700;font-size:1.2em;margin-bottom:8px;}
@@ -164,9 +177,9 @@ nav.nav-dark .nav-logo div span:last-child{color:var(--green);-webkit-text-fill-
 .sub{font-size:0.9em;color:var(--text2);line-height:1.65;font-weight:300;}
 .center{text-align:center;}
 .center .lead{margin:0 auto;}
-em.g{font-style:normal;color:var(--green);}
-em.b{font-style:normal;color:var(--blue);}
-em.p{font-style:normal;color:var(--purple);}
+em.g{font-style:normal;color:var(--green-text);}
+em.b{font-style:normal;color:var(--blue-text);}
+em.p{font-style:normal;color:var(--purple-text);}
 
 /* Cards */
 .card{background:var(--surf);border:1px solid var(--border);border-radius:var(--r2);padding:26px;transition:all 0.2s;}
@@ -178,10 +191,10 @@ em.p{font-style:normal;color:var(--purple);}
 
 /* Tags */
 .tag{display:inline-flex;align-items:center;gap:5px;padding:3px 10px;border-radius:20px;font-size:0.7em;font-weight:600;letter-spacing:0.4px;text-transform:uppercase;}
-.tag-green{background:rgba(0,200,150,0.10);color:var(--green);border:1px solid rgba(0,200,150,0.25);}
-.tag-blue {background:rgba(9,105,218,0.10);color:var(--blue); border:1px solid rgba(9,105,218,0.22);}
-.tag-purple{background:rgba(124,58,237,0.10);color:var(--purple);border:1px solid rgba(124,58,237,0.22);}
-.tag-orange{background:rgba(240,136,62,0.12);color:var(--orange);border:1px solid rgba(240,136,62,0.25);}
+.tag-green{background:rgba(0,200,150,0.10);color:var(--green-text);border:1px solid rgba(0,200,150,0.25);}
+.tag-blue {background:rgba(9,105,218,0.10);color:var(--blue-text); border:1px solid rgba(9,105,218,0.22);}
+.tag-purple{background:rgba(124,58,237,0.10);color:var(--purple-text);border:1px solid rgba(124,58,237,0.22);}
+.tag-orange{background:rgba(240,136,62,0.12);color:var(--orange-text);border:1px solid rgba(240,136,62,0.25);}
 .tag-dim{background:rgba(255,255,255,0.05);color:var(--text3);border:1px solid var(--border);}
 
 /* Buttons */
@@ -189,7 +202,7 @@ em.p{font-style:normal;color:var(--purple);}
 .btn-green{background:linear-gradient(135deg,#00c896 0%,#0969da 55%,#7c3aed 100%);color:white;}
 .btn-green:hover{opacity:0.9;transform:translateY(-1px);box-shadow:0 8px 28px rgba(9,105,218,0.3);}
 .btn-outline{background:transparent;border:1px solid var(--border2);color:var(--text2);}
-.btn-outline:hover{border-color:var(--green);color:var(--green);}
+.btn-outline:hover{border-color:var(--green);color:var(--green-text);}
 .btn-ghost{background:rgba(255,255,255,0.04);color:var(--text2);}
 .btn-ghost:hover{background:rgba(255,255,255,0.08);color:var(--text);}
 
@@ -236,9 +249,9 @@ em.p{font-style:normal;color:var(--purple);}
 .ico{width:1.05em;height:1.05em;display:inline-block;vertical-align:-0.16em;
      flex-shrink:0;stroke:currentColor;fill:none;}
 .info-box > .ico{width:1.15em;height:1.15em;margin-top:0.1em;}
-.info-box.tip  > .ico{color:var(--green);}
-.info-box.warn > .ico{color:#f0883e;}
-.info-box.note > .ico{color:var(--blue);}
+.info-box.tip  > .ico{color:var(--green-text);}
+.info-box.warn > .ico{color:var(--orange-text);}
+.info-box.note > .ico{color:var(--blue-text);}
 .nav-tab .ico{margin-right:7px;}
 
 
@@ -246,6 +259,25 @@ em.p{font-style:normal;color:var(--purple);}
    The site had no focus styling at all, so a keyboard user could not see
    where they were even once elements became focusable. :focus-visible keeps
    it off for mouse clicks. */
+/* ─── Dark surfaces ───────────────────────────────────────────────────────
+   The site is light, with dark islands: the heroes, the dark nav, the hero
+   visual cards, and the whole Learn page (#page-edu repaints its sections and
+   cards dark with !important). On those, the darkened text colours above
+   invert the problem -- #646d7c on #0d1117 is 3.6:1 -- so the scope hands the
+   bright originals back. Redefining the custom properties means every rule
+   inside these containers follows automatically. */
+.hero, .tools-hero, .edu-hero,
+nav.nav-dark, .fv-card, .edu-topic-num, #page-edu{
+  --text:#c9d1d9;
+  --text2:#8b949e;
+  --text3:#8a96a8;
+  --green-text:#00c896;
+  --orange-text:#f0883e;
+  --blue-text:#58a6ff;
+  --purple-text:#a78bfa;
+  --cta-ghost-text:rgba(200,255,230,0.95);
+}
+
 :focus-visible{
   outline:3px solid var(--green);
   outline-offset:2px;
@@ -342,7 +374,7 @@ em.p{font-style:normal;color:var(--purple);}
 .hero-cta-primary:hover{transform:scale(1.05) translateY(-2px);box-shadow:0 8px 30px rgba(0,200,150,0.35);}
 .hero-cta-secondary{
   padding:16px 32px;border-radius:50px;background:rgba(0,200,150,0.1);
-  color:rgba(200,255,230,0.95);font-weight:600;font-size:1em;cursor:pointer;
+  color:var(--cta-ghost-text);font-weight:600;font-size:1em;cursor:pointer;
   border:1px solid rgba(0,200,150,0.3);font-family:var(--fb);transition:all 0.3s;
   display:inline-flex;align-items:center;gap:8px;backdrop-filter:blur(8px);
 }
@@ -370,14 +402,14 @@ em.p{font-style:normal;color:var(--purple);}
 }
 .hvc-dot{width:11px;height:11px;border-radius:50%;}
 .hvc-title{font-size:0.76em;color:var(--text3);font-family:var(--fm);margin-left:6px;}
-.hvc-badge{margin-left:auto;padding:2px 10px;background:rgba(9,105,218,0.12);border:1px solid rgba(9,105,218,0.25);border-radius:20px;font-size:0.68em;color:var(--blue);font-weight:600;}
+.hvc-badge{margin-left:auto;padding:2px 10px;background:rgba(9,105,218,0.12);border:1px solid rgba(9,105,218,0.25);border-radius:20px;font-size:0.68em;color:var(--blue-text);font-weight:600;}
 .hvc-steps{padding:16px 18px;display:flex;flex-direction:column;gap:6px;}
 .hvc-step{
   display:flex;align-items:center;gap:12px;padding:9px 12px;
   border-radius:9px;font-size:0.82em;transition:background 0.15s;
 }
 .hvc-step.done{color:var(--text3);}
-.hvc-step.done .hvc-snum{background:rgba(63,185,80,0.15);color:var(--green);border-color:rgba(63,185,80,0.3);}
+.hvc-step.done .hvc-snum{background:rgba(63,185,80,0.15);color:var(--green-text);border-color:rgba(63,185,80,0.3);}
 .hvc-step.running{background:rgba(0,200,150,0.06);border:1px solid rgba(0,200,150,0.15);color:var(--text);}
 .hvc-step.running .hvc-snum{background:var(--green);color:#03080f;border-color:transparent;}
 .hvc-step.pending{color:var(--text3);}
@@ -388,14 +420,14 @@ em.p{font-style:normal;color:var(--purple);}
 }
 .hvc-sname{flex:1;}
 .hvc-sbadge{font-size:0.68em;padding:2px 8px;border-radius:10px;font-weight:600;
-  background:rgba(0,200,150,0.12);color:var(--green);border:1px solid rgba(0,200,150,0.2);
+  background:rgba(0,200,150,0.12);color:var(--green-text);border:1px solid rgba(0,200,150,0.2);
   animation:hpulse 2s ease-in-out infinite;}
 .hvc-terminal{
   margin:0 14px 14px;background:#060d14;border:1px solid rgba(255,255,255,0.05);
   border-radius:10px;padding:12px 14px;font-family:var(--fm);font-size:0.75em;
   color:#7ee8c8;line-height:1.7;
 }
-.hvc-terminal .cc{color:#4a6080;font-style:italic;}
+.hvc-terminal .cc{color:#7a93bd;font-style:italic;}
 .hvc-progress{
   margin:0 14px 14px;background:rgba(255,255,255,0.03);
   border:1px solid rgba(255,255,255,0.05);border-radius:10px;padding:12px 14px;
@@ -494,14 +526,14 @@ em.p{font-style:normal;color:var(--purple);}
   border-radius:8px;font-size:0.8em;margin-bottom:4px;color:var(--text3);
 }
 .fv-step.done{color:var(--text2);}
-.fv-step.done .fv-step-num{color:var(--green);font-weight:700;}
+.fv-step.done .fv-step-num{color:var(--green-text);font-weight:700;}
 .fv-step.active{background:rgba(0,200,150,0.06);color:var(--text);border:1px solid rgba(0,200,150,0.12);}
-.fv-step.active .fv-step-num{color:var(--green);font-weight:700;}
+.fv-step.active .fv-step-num{color:var(--green-text);font-weight:700;}
 .fv-step-num{width:22px;flex-shrink:0;font-family:var(--fm);font-size:0.9em;}
 .fv-step-label{flex:1;}
 .fv-step-badge{
   font-size:0.65em;padding:2px 7px;border-radius:8px;font-weight:600;
-  background:rgba(0,200,150,0.12);color:var(--green);border:1px solid rgba(0,200,150,0.2);
+  background:rgba(0,200,150,0.12);color:var(--green-text);border:1px solid rgba(0,200,150,0.2);
   animation:hpulse 2s ease-in-out infinite;
 }
 .fv-code{
@@ -509,7 +541,7 @@ em.p{font-style:normal;color:var(--purple);}
   padding:12px 14px;font-family:var(--fm);font-size:0.76em;color:#7ee8c8;
   line-height:1.7;margin-top:10px;
 }
-.fv-code .cc{color:#4a6080;font-style:italic;}
+.fv-code .cc{color:#7a93bd;font-style:italic;}
 
 /* ─── Pipeline visual ─── */
 .pipeline-section{
@@ -625,7 +657,7 @@ em.p{font-style:normal;color:var(--purple);}
   position:relative;overflow:hidden;
   min-height:400px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;
 }
-.tools-hero .label{color:var(--green);position:relative;z-index:2;}
+.tools-hero .label{color:var(--green-text);position:relative;z-index:2;}
 .tools-hero .h1{color:#fff;position:relative;z-index:2;}
 .tools-hero .lead{color:rgba(200,220,255,0.75);position:relative;z-index:2;}
 #tools-dots-canvas{
@@ -670,7 +702,7 @@ em.p{font-style:normal;color:var(--purple);}
 .tool-btn.dl{background:linear-gradient(135deg,#00c896 0%,#0969da 55%,#7c3aed 100%);color:white;}
 .tool-btn.dl:hover{opacity:0.9;}
 .tool-btn.doc{background:rgba(255,255,255,0.06);color:var(--text2);border:1px solid var(--border);}
-.tool-btn.doc:hover{border-color:var(--green);color:var(--green);}
+.tool-btn.doc:hover{border-color:var(--green);color:var(--green-text);}
 .tool-btn.notify{background:rgba(255,255,255,0.05);color:var(--text3);border:1px solid var(--border);}
 
 /* Filter bar */
@@ -681,7 +713,7 @@ em.p{font-style:normal;color:var(--purple);}
   cursor:pointer;transition:all 0.15s;font-family:var(--fb);
 }
 .filter-btn:hover{border-color:var(--border2);color:var(--text);}
-.filter-btn.active{background:rgba(0,200,150,0.1);border-color:rgba(0,200,150,0.3);color:var(--green);}
+.filter-btn.active{background:rgba(0,200,150,0.1);border-color:rgba(0,200,150,0.3);color:var(--green-text);}
 
 /* ══════════════════════════════════════════
    EDUCATION PAGE
@@ -691,7 +723,7 @@ em.p{font-style:normal;color:var(--purple);}
   background:#0d1117 !important;color:#c9d1d9 !important;
   --bg:#0d1117;--bg2:#161b22;--bg3:#1c2128;--surf:#161b22;
   --border:rgba(255,255,255,0.08);--border2:rgba(255,255,255,0.14);
-  --text:#c9d1d9;--text2:#8b949e;--text3:#6e7681;
+  --text:#c9d1d9;--text2:#8b949e;--text3:#8a96a8;
 }
 #page-edu .section{background:#0d1117 !important;}
 #page-edu .edu-topic-card{background:#161b22 !important;border-color:rgba(255,255,255,0.08) !important;}
@@ -702,9 +734,9 @@ em.p{font-style:normal;color:var(--purple);}
 #page-edu .edu-topic-card.open .edu-topic-head{border-bottom-color:rgba(255,255,255,0.08) !important;}
 #page-edu .edu-mod-tab:hover{background:rgba(0,200,150,0.06) !important;color:#c9d1d9 !important;}
 #page-edu .edu-mod-tab{color:#8b949e !important;}
-#page-edu .edu-mod-tab.active{color:var(--green) !important;}
-#page-edu .edu-mod-sub{color:#6e7681 !important;}
-#page-edu .edu-mod-tab.active .edu-mod-sub{color:var(--green) !important;}
+#page-edu .edu-mod-tab.active{color:var(--green-text) !important;}
+#page-edu .edu-mod-sub{color:#8a96a8 !important;}
+#page-edu .edu-mod-tab.active .edu-mod-sub{color:var(--green-text) !important;}
 #page-edu .h2, #page-edu .edu-topic-title{color:#e6edf3 !important;}
 #page-edu .sub, #page-edu p{color:#8b949e !important;}
 #page-edu .edu-topic-body p{color:#c9d1d9 !important;}
@@ -718,7 +750,7 @@ em.p{font-style:normal;color:var(--purple);}
 #page-edu .res-card{background:#161b22 !important;border-color:rgba(255,255,255,0.08) !important;}
 #page-edu .res-card:hover{background:#1c2128 !important;border-color:rgba(255,255,255,0.14) !important;}
 #page-edu strong{color:#e6edf3 !important;}
-#page-edu a{color:var(--green) !important;}
+#page-edu a{color:var(--green-text) !important;}
 #page-edu .comparison-card{background:#161b22 !important;border-color:rgba(255,255,255,0.08) !important;}
 #page-edu .key-takeaway{background:rgba(0,200,150,0.06) !important;border-color:rgba(0,200,150,0.15) !important;color:#c9d1d9 !important;}
 #page-edu .edu-mod-header p{color:#8b949e !important;}
@@ -726,7 +758,7 @@ em.p{font-style:normal;color:var(--purple);}
 #page-edu table{border-color:rgba(255,255,255,0.08) !important;}
 #page-edu th{background:#1c2128 !important;color:#e6edf3 !important;border-color:rgba(255,255,255,0.08) !important;}
 #page-edu td{border-color:rgba(255,255,255,0.08) !important;color:#c9d1d9 !important;}
-#page-edu .label{color:rgba(124,58,237,0.9) !important;}
+#page-edu .label{color:var(--purple-text) !important;}
 
 .edu-hero{
   padding:100px 6vw 72px;
@@ -735,7 +767,7 @@ em.p{font-style:normal;color:var(--purple);}
   position:relative;overflow:hidden;
   min-height:420px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;
 }
-.edu-hero .label{color:rgba(124,58,237,0.9);}
+.edu-hero .label{color:var(--purple-text);}
 .edu-hero .h1{color:#fff;position:relative;z-index:2;}
 .edu-hero .lead{color:rgba(200,210,230,0.8);position:relative;z-index:2;}
 .edu-hero .tag{position:relative;z-index:2;backdrop-filter:blur(8px);}
@@ -790,7 +822,7 @@ em.p{font-style:normal;color:var(--purple);}
   display:flex;align-items:center;gap:8px;
 }
 .edu-nav-item:hover{background:rgba(255,255,255,0.04);color:var(--text);}
-.edu-nav-item.active{background:rgba(124,58,237,0.1);color:var(--purple);}
+.edu-nav-item.active{background:rgba(124,58,237,0.1);color:var(--purple-text);}
 .edu-nav-group{margin-top:16px;}
 .edu-nav-group-title{font-size:0.68em;text-transform:uppercase;letter-spacing:1px;color:var(--text3);padding:0 14px;margin-bottom:6px;}
 
@@ -836,8 +868,8 @@ em.p{font-style:normal;color:var(--purple);}
   border-radius:5px;font-size:0.72em;color:var(--text3);cursor:pointer;
   font-family:var(--fb);transition:all 0.12s;
 }
-.copy-code-btn:hover{background:rgba(124,58,237,0.15);color:var(--purple);border-color:var(--purple);}
-.copy-code-btn.ok{background:rgba(0,200,150,0.15);color:var(--green);border-color:var(--green);}
+.copy-code-btn:hover{background:rgba(124,58,237,0.15);color:var(--purple-text);border-color:var(--purple);}
+.copy-code-btn.ok{background:rgba(0,200,150,0.15);color:var(--green-text);border-color:var(--green);}
 .info-box{
   border-radius:10px;padding:12px 16px;margin:12px 0;
   font-size:0.85em;line-height:1.6;display:flex;gap:10px;align-items:flex-start;
@@ -857,7 +889,7 @@ em.p{font-style:normal;color:var(--purple);}
 .res-icon{font-size:1.4em;flex-shrink:0;}
 .res-title{font-weight:600;font-size:0.9em;margin-bottom:4px;}
 .res-desc{font-size:0.8em;color:var(--text2);line-height:1.55;}
-.res-url{font-size:0.75em;color:var(--purple);font-family:var(--fm);margin-top:5px;}
+.res-url{font-size:0.75em;color:var(--purple-text);font-family:var(--fm);margin-top:5px;}
 
 /* ─── Education module tabs ─── */
 .edu-mod-tab{
@@ -867,9 +899,9 @@ em.p{font-style:normal;color:var(--purple);}
   font-family:var(--fb);
 }
 .edu-mod-tab:hover{color:var(--text);background:rgba(0,200,150,0.04);}
-.edu-mod-tab.active{color:var(--green);border-bottom-color:var(--green);}
+.edu-mod-tab.active{color:var(--green-text);border-bottom-color:var(--green);}
 .edu-mod-sub{font-size:0.72em;font-weight:400;color:var(--text3);margin-top:1px;}
-.edu-mod-tab.active .edu-mod-sub{color:var(--green);opacity:0.7;}
+.edu-mod-tab.active .edu-mod-sub{color:var(--green-text);opacity:0.7;}
 
 /* ─── Education module panels ─── */
 .edu-module{display:none;}
@@ -893,7 +925,7 @@ em.p{font-style:normal;color:var(--purple);}
   width:32px;height:32px;border-radius:50%;background:var(--bg2);
   border:1px solid var(--border);font-size:0.75em;font-weight:700;
   display:flex;align-items:center;justify-content:center;flex-shrink:0;
-  font-family:var(--fm);color:var(--green);
+  font-family:var(--fm);color:var(--green-text);
 }
 .edu-topic-title{flex:1;font-weight:600;font-size:0.93em;}
 .edu-topic-chev{color:var(--text3);font-size:0.8em;transition:transform 0.2s;}
@@ -935,8 +967,8 @@ em.p{font-style:normal;color:var(--purple);}
 }
 .contact-item-label{font-size:0.72em;color:var(--text3);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:3px;}
 .contact-item-val{font-size:0.9em;color:var(--text);}
-.contact-item-val a{color:var(--blue);transition:color 0.15s;}
-.contact-item-val a:hover{color:var(--green);}
+.contact-item-val a{color:var(--blue-text);transition:color 0.15s;}
+.contact-item-val a:hover{color:var(--green-text);}
 
 /* Form */
 .form-field{margin-bottom:18px;}
@@ -958,7 +990,7 @@ em.p{font-style:normal;color:var(--purple);}
 .form-submit:hover{background:#2ba3ff;transform:translateY(-1px);}
 .form-success{
   display:none;text-align:center;padding:20px;background:rgba(0,200,150,0.07);
-  border:1px solid rgba(0,200,150,0.2);border-radius:10px;color:var(--green);font-size:0.9em;
+  border:1px solid rgba(0,200,150,0.2);border-radius:10px;color:var(--green-text);font-size:0.9em;
 }
 
 /* Social links */
@@ -1001,7 +1033,7 @@ em.p{font-style:normal;color:var(--purple);}
   padding:16px 0;display:flex;justify-content:space-between;align-items:center;
   cursor:pointer;font-weight:500;font-size:0.92em;
 }
-.faq-q:hover{color:var(--green);}
+.faq-q:hover{color:var(--green-text);}
 .faq-chev{color:var(--text3);transition:transform 0.2s;flex-shrink:0;margin-left:16px;}
 .faq-item.open .faq-chev{transform:rotate(180deg);}
 .faq-a{max-height:0;overflow:hidden;transition:max-height 0.3s ease;}
@@ -1017,12 +1049,12 @@ footer{
 }
 .footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:40px;margin-bottom:40px;}
 .footer-brand-name{font-family:var(--fh);font-weight:800;font-size:1.3em;margin-bottom:10px;}
-.footer-brand-name span{color:var(--green);}
+.footer-brand-name span{color:var(--green-text);}
 .footer-brand-desc{font-size:0.83em;color:var(--text3);line-height:1.6;max-width:280px;font-weight:300;}
 .footer-col h4{font-size:0.75em;text-transform:uppercase;letter-spacing:1px;color:var(--text3);margin-bottom:14px;}
 .footer-col ul{list-style:none;display:flex;flex-direction:column;gap:9px;}
 .footer-col ul li{font-size:0.84em;color:var(--text2);cursor:pointer;transition:color 0.12s;}
-.footer-col ul li:hover{color:var(--green);}
+.footer-col ul li:hover{color:var(--green-text);}
 .footer-bottom{
   border-top:1px solid var(--border);padding-top:20px;
   display:flex;justify-content:space-between;align-items:center;
@@ -1122,7 +1154,7 @@ footer{
   cursor:pointer;transition:all 0.12s;margin-bottom:2px;display:flex;align-items:center;gap:8px;
 }
 .tool-nav-item:hover{background:rgba(255,255,255,0.04);color:var(--text);}
-.tool-nav-item.active{background:rgba(0,200,150,0.1);color:var(--green);}
+.tool-nav-item.active{background:rgba(0,200,150,0.1);color:var(--green-text);}
 .tool-nav-group{margin-top:14px;}
 .tool-nav-group-title{font-size:0.68em;text-transform:uppercase;letter-spacing:1px;color:var(--text3);padding:0 14px;margin-bottom:6px;}
 .tool-section{display:none;}
@@ -1174,7 +1206,7 @@ footer{
   background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);
   padding:12px 16px;flex:1;min-width:140px;
 }
-.stat-box-val{font-family:var(--fh);font-size:1.4em;font-weight:800;color:var(--green);}
+.stat-box-val{font-family:var(--fh);font-size:1.4em;font-weight:800;color:var(--green-text);}
 .stat-box-lbl{font-size:0.72em;color:var(--text3);margin-top:2px;}
 /* Breadcrumb */
 .breadcrumb{
@@ -1182,7 +1214,7 @@ footer{
   margin-bottom:20px;
 }
 .breadcrumb span{cursor:pointer;transition:color 0.12s;}
-.breadcrumb span:hover{color:var(--green);}
+.breadcrumb span:hover{color:var(--green-text);}
 .breadcrumb-sep{color:var(--border2);}
 /* Download box in manual */
 .dl-banner{
@@ -1211,7 +1243,7 @@ footer{
   position:absolute;bottom:22px;right:22px;
   width:36px;height:36px;border-radius:50%;background:rgba(0,200,150,0.1);
   border:1px solid rgba(0,200,150,0.2);display:flex;align-items:center;
-  justify-content:center;color:var(--green);font-size:1em;transition:all 0.15s;
+  justify-content:center;color:var(--green-text);font-size:1em;transition:all 0.15s;
 }
 .tool-hub-card:hover .tool-hub-arrow{background:var(--green);color:#03080f;}
 @media(max-width:900px){
@@ -1781,7 +1813,7 @@ nav.nav-scrolled { box-shadow: 0 4px 28px rgba(0,0,0,0.1); border-bottom-color: 
             <span style="font-size:0.78em;color:var(--text3);">🍎 macOS</span>
             <span style="font-size:0.78em;color:var(--text3);">🐧 Linux</span>
             <span style="font-size:0.78em;color:var(--text3);">🪟 Windows WSL2</span>
-            <span style="font-size:0.78em;color:var(--green);margin-left:auto;font-weight:600;">Full manual →</span>
+            <span style="font-size:0.78em;color:var(--green-text);margin-left:auto;font-weight:600;">Full manual →</span>
           </div>
         </div>
 
@@ -1814,7 +1846,7 @@ nav.nav-scrolled { box-shadow: 0 4px 28px rgba(0,0,0,0.1); border-bottom-color: 
             <span style="font-size:0.78em;color:var(--text3);">🍎 macOS</span>
             <span style="font-size:0.78em;color:var(--text3);">🐧 Linux</span>
             <span style="font-size:0.78em;color:var(--text3);">🪟 Windows</span>
-            <span style="font-size:0.78em;color:var(--green);margin-left:auto;font-weight:600;">Full details →</span>
+            <span style="font-size:0.78em;color:var(--green-text);margin-left:auto;font-weight:600;">Full details →</span>
           </div>
         </div>
 
@@ -1935,7 +1967,7 @@ nav.nav-scrolled { box-shadow: 0 4px 28px rgba(0,0,0,0.1); border-bottom-color: 
     <div style="display:flex;align-items:flex-start;gap:20px;flex-wrap:wrap;">
       <div style="flex:1;">
         <div class="label">RNA-seq Analysis Software</div>
-        <h1 class="h1" style="font-size:clamp(1.8em,4vw,3em);">RNAflow <span style="color:var(--green);font-size:0.6em;vertical-align:middle;">v3.0</span></h1>
+        <h1 class="h1" style="font-size:clamp(1.8em,4vw,3em);">RNAflow <span style="color:var(--green-text);font-size:0.6em;vertical-align:middle;">v3.0</span></h1>
         <p class="lead">Complete RNA-seq analysis pipeline — from raw sequencing files to publication-ready figures. Works on 15+ organisms with a full manual explaining every step and every result.</p>
       </div>
       <div style="display:flex;flex-direction:column;gap:8px;padding:20px;background:var(--surf);border:1px solid rgba(0,200,150,0.2);border-radius:var(--r2);min-width:200px;">
@@ -2009,7 +2041,7 @@ nav.nav-scrolled { box-shadow: 0 4px 28px rgba(0,0,0,0.1); border-bottom-color: 
         <h2 class="h3" style="margin-top:24px;">The complete RNAflow pipeline</h2>
         <div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--r2);padding:20px;margin-top:8px;">
           <div style="display:flex;align-items:center;gap:0;flex-wrap:wrap;row-gap:8px;">
-            <div style="text-align:center;padding:8px 14px;background:rgba(0,200,150,0.1);border:1px solid rgba(0,200,150,0.2);border-radius:8px;font-size:0.8em;font-weight:600;color:var(--green);">Raw FASTQ</div>
+            <div style="text-align:center;padding:8px 14px;background:rgba(0,200,150,0.1);border:1px solid rgba(0,200,150,0.2);border-radius:8px;font-size:0.8em;font-weight:600;color:var(--green-text);">Raw FASTQ</div>
             <div style="color:var(--text3);padding:0 6px;font-size:0.8em;">→</div>
             <div style="text-align:center;padding:8px 14px;background:var(--bg3);border:1px solid var(--border);border-radius:8px;font-size:0.8em;color:var(--text2);">FastQC / QC</div>
             <div style="color:var(--text3);padding:0 6px;font-size:0.8em;">→</div>
@@ -2021,7 +2053,7 @@ nav.nav-scrolled { box-shadow: 0 4px 28px rgba(0,0,0,0.1); border-bottom-color: 
             <div style="color:var(--text3);padding:0 6px;font-size:0.8em;">→</div>
             <div style="text-align:center;padding:8px 14px;background:var(--bg3);border:1px solid var(--border);border-radius:8px;font-size:0.8em;color:var(--text2);">DESeq2</div>
             <div style="color:var(--text3);padding:0 6px;font-size:0.8em;">→</div>
-            <div style="text-align:center;padding:8px 14px;background:rgba(9,105,218,0.1);border:1px solid rgba(9,105,218,0.2);border-radius:8px;font-size:0.8em;font-weight:600;color:var(--blue);">Figures + Results</div>
+            <div style="text-align:center;padding:8px 14px;background:rgba(9,105,218,0.1);border:1px solid rgba(9,105,218,0.2);border-radius:8px;font-size:0.8em;font-weight:600;color:var(--blue-text);">Figures + Results</div>
           </div>
         </div>
       </div>
@@ -2598,7 +2630,7 @@ generated using ggplot2 (Wickham, 2016) and pheatmap (Kolde, 2019).</div>
     <h1 class="h1" style="font-size:2.5em;">GeneNet Lab <span style="font-size:0.4em;vertical-align:middle;color:var(--text3);">in development</span></h1>
     <p class="lead" style="max-width:680px;margin:0 auto;">A full-featured lab management platform with team access control, seat-based licensing, OneDrive storage, and a desktop app for macOS and Linux.</p>
     <div style="display:inline-flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:14px;">
-      <div style="background:rgba(88,166,255,0.1);border:1px solid rgba(88,166,255,0.3);border-radius:20px;padding:4px 14px;font-size:0.8em;color:#58a6ff;font-weight:600;">In development</div>
+      <div style="background:rgba(88,166,255,0.1);border:1px solid rgba(88,166,255,0.3);border-radius:20px;padding:4px 14px;font-size:0.8em;color:var(--blue-text);font-weight:600;">In development</div>
     </div>
   </div>
 
@@ -2686,13 +2718,13 @@ generated using ggplot2 (Wickham, 2016) and pheatmap (Kolde, 2019).</div>
     <div class="card-grid" style="grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;margin-bottom:32px;">
       <div class="card" style="padding:24px;text-align:center;">
         <div style="font-weight:800;font-size:1.1em;margin-bottom:6px;">Starter</div>
-        <div style="font-size:2em;font-weight:800;color:var(--green);margin-bottom:4px;">Free</div>
+        <div style="font-size:2em;font-weight:800;color:var(--green-text);margin-bottom:4px;">Free</div>
         <div class="sub" style="margin-bottom:14px;">Up to 5 team members</div>
         <div class="sub">Full feature access · No expiry</div>
       </div>
       <div class="card" style="padding:24px;text-align:center;border-color:rgba(88,166,255,0.4);background:rgba(88,166,255,0.05);">
-        <div style="font-weight:800;font-size:1.1em;margin-bottom:6px;color:#58a6ff;">Pro</div>
-        <div style="font-size:2em;font-weight:800;color:#58a6ff;margin-bottom:4px;">—</div>
+        <div style="font-weight:800;font-size:1.1em;margin-bottom:6px;color:var(--blue-text);">Pro</div>
+        <div style="font-size:2em;font-weight:800;color:var(--blue-text);margin-bottom:4px;">—</div>
         <div class="sub" style="margin-bottom:14px;">Up to 20 team members</div>
         <div class="sub">Contact us to upgrade</div>
       </div>
@@ -2709,23 +2741,23 @@ generated using ggplot2 (Wickham, 2016) and pheatmap (Kolde, 2019).</div>
     <div class="card" style="padding:28px;margin-bottom:32px;">
       <div style="display:flex;flex-direction:column;gap:14px;">
         <div style="display:flex;gap:14px;align-items:flex-start;">
-          <div style="min-width:28px;height:28px;border-radius:50%;background:rgba(88,166,255,0.15);border:1px solid rgba(88,166,255,0.3);color:#58a6ff;display:flex;align-items:center;justify-content:center;font-size:0.75em;font-weight:800;">1</div>
+          <div style="min-width:28px;height:28px;border-radius:50%;background:rgba(88,166,255,0.15);border:1px solid rgba(88,166,255,0.3);color:var(--blue-text);display:flex;align-items:center;justify-content:center;font-size:0.75em;font-weight:800;">1</div>
           <div><strong>Install the app</strong> for your operating system. On first run, the admin completes a one-time setup wizard.</div>
         </div>
         <div style="display:flex;gap:14px;align-items:flex-start;">
-          <div style="min-width:28px;height:28px;border-radius:50%;background:rgba(88,166,255,0.15);border:1px solid rgba(88,166,255,0.3);color:#58a6ff;display:flex;align-items:center;justify-content:center;font-size:0.75em;font-weight:800;">2</div>
+          <div style="min-width:28px;height:28px;border-radius:50%;background:rgba(88,166,255,0.15);border:1px solid rgba(88,166,255,0.3);color:var(--blue-text);display:flex;align-items:center;justify-content:center;font-size:0.75em;font-weight:800;">2</div>
           <div><strong>Admin invites team members</strong> by email from the Team &amp; Seats panel. Each invite generates a unique registration link.</div>
         </div>
         <div style="display:flex;gap:14px;align-items:flex-start;">
-          <div style="min-width:28px;height:28px;border-radius:50%;background:rgba(88,166,255,0.15);border:1px solid rgba(88,166,255,0.3);color:#58a6ff;display:flex;align-items:center;justify-content:center;font-size:0.75em;font-weight:800;">3</div>
+          <div style="min-width:28px;height:28px;border-radius:50%;background:rgba(88,166,255,0.15);border:1px solid rgba(88,166,255,0.3);color:var(--blue-text);display:flex;align-items:center;justify-content:center;font-size:0.75em;font-weight:800;">3</div>
           <div><strong>Members connect</strong> using the LAB-XXXXX connection code (e.g. <code style="font-family:monospace;background:rgba(88,166,255,0.1);padding:2px 8px;border-radius:4px;">LAB-84921</code>) and register with their invite code.</div>
         </div>
         <div style="display:flex;gap:14px;align-items:flex-start;">
-          <div style="min-width:28px;height:28px;border-radius:50%;background:rgba(88,166,255,0.15);border:1px solid rgba(88,166,255,0.3);color:#58a6ff;display:flex;align-items:center;justify-content:center;font-size:0.75em;font-weight:800;">4</div>
+          <div style="min-width:28px;height:28px;border-radius:50%;background:rgba(88,166,255,0.15);border:1px solid rgba(88,166,255,0.3);color:var(--blue-text);display:flex;align-items:center;justify-content:center;font-size:0.75em;font-weight:800;">4</div>
           <div><strong>Admin manages access</strong> from the Admin Panel — block, remove, restore, or promote any user at any time.</div>
         </div>
         <div style="display:flex;gap:14px;align-items:flex-start;">
-          <div style="min-width:28px;height:28px;border-radius:50%;background:rgba(88,166,255,0.15);border:1px solid rgba(88,166,255,0.3);color:#58a6ff;display:flex;align-items:center;justify-content:center;font-size:0.75em;font-weight:800;">5</div>
+          <div style="min-width:28px;height:28px;border-radius:50%;background:rgba(88,166,255,0.15);border:1px solid rgba(88,166,255,0.3);color:var(--blue-text);display:flex;align-items:center;justify-content:center;font-size:0.75em;font-weight:800;">5</div>
           <div><strong>Scale up</strong> by upgrading the seat plan directly from the app when you hit the member limit.</div>
         </div>
       </div>
@@ -2743,11 +2775,11 @@ generated using ggplot2 (Wickham, 2016) and pheatmap (Kolde, 2019).</div>
   <div class="tool-detail-hero">
     <div class="breadcrumb"><span onclick="showPage('page-tools')" role="button" tabindex="0">🧬 Bioinfo Tools</span><span class="breadcrumb-sep">›</span><span style="color:var(--text);">NGSuite</span></div>
     <div class="label">Whole-genome sequencing pipeline</div>
-    <h1 class="h1" style="font-size:2.5em;">NGSuite <span style="color:var(--orange);font-size:0.5em;vertical-align:middle;">In development</span></h1>
+    <h1 class="h1" style="font-size:2.5em;">NGSuite <span style="color:var(--orange-text);font-size:0.5em;vertical-align:middle;">In development</span></h1>
     <p class="lead">Variant calling, SNP/INDEL annotation, structural variant detection, population genetics. Powered by GATK4, BWA-MEM2, and VEP.</p>
     <div style="margin-top:28px;padding:20px 24px;background:rgba(240,136,62,0.07);border:1px solid rgba(240,136,62,0.2);border-radius:var(--r2);display:inline-block;">
-      <strong style="color:var(--orange);">🔔 Get notified when NGSuite launches</strong><br>
-      <span style="font-size:0.85em;color:var(--text2);">Email <a href="mailto:info@bioinfocodex.com" style="color:var(--blue);">info@bioinfocodex.com</a> with subject: "Notify me — NGSuite"</span>
+      <strong style="color:var(--orange-text);">🔔 Get notified when NGSuite launches</strong><br>
+      <span style="font-size:0.85em;color:var(--text2);">Email <a href="mailto:info@bioinfocodex.com" style="color:var(--blue-text);">info@bioinfocodex.com</a> with subject: "Notify me — NGSuite"</span>
     </div>
   </div>
 </div>
@@ -2755,11 +2787,11 @@ generated using ggplot2 (Wickham, 2016) and pheatmap (Kolde, 2019).</div>
   <div class="tool-detail-hero">
     <div class="breadcrumb"><span onclick="showPage('page-tools')" role="button" tabindex="0">🧬 Bioinfo Tools</span><span class="breadcrumb-sep">›</span><span style="color:var(--text);">PlasmidMap</span></div>
     <div class="label">Plasmid design and annotation</div>
-    <h1 class="h1" style="font-size:2.5em;">PlasmidMap <span style="color:var(--orange);font-size:0.5em;vertical-align:middle;">In development</span></h1>
+    <h1 class="h1" style="font-size:2.5em;">PlasmidMap <span style="color:var(--orange-text);font-size:0.5em;vertical-align:middle;">In development</span></h1>
     <p class="lead">Design plasmids, find restriction sites, annotate features, and export publication-ready circular maps. Import from GenBank.</p>
     <div style="margin-top:28px;padding:20px 24px;background:rgba(240,136,62,0.07);border:1px solid rgba(240,136,62,0.2);border-radius:var(--r2);display:inline-block;">
-      <strong style="color:var(--orange);">🔔 Get notified when PlasmidMap launches</strong><br>
-      <span style="font-size:0.85em;color:var(--text2);">Email <a href="mailto:info@bioinfocodex.com" style="color:var(--blue);">info@bioinfocodex.com</a> with subject: "Notify me — PlasmidMap"</span>
+      <strong style="color:var(--orange-text);">🔔 Get notified when PlasmidMap launches</strong><br>
+      <span style="font-size:0.85em;color:var(--text2);">Email <a href="mailto:info@bioinfocodex.com" style="color:var(--blue-text);">info@bioinfocodex.com</a> with subject: "Notify me — PlasmidMap"</span>
     </div>
   </div>
 </div>
@@ -2767,11 +2799,11 @@ generated using ggplot2 (Wickham, 2016) and pheatmap (Kolde, 2019).</div>
   <div class="tool-detail-hero">
     <div class="breadcrumb"><span onclick="showPage('page-tools')" role="button" tabindex="0">🧬 Bioinfo Tools</span><span class="breadcrumb-sep">›</span><span style="color:var(--text);">ChIPflow</span></div>
     <div class="label">ChIP-seq and ATAC-seq pipeline</div>
-    <h1 class="h1" style="font-size:2.5em;">ChIPflow <span style="color:var(--orange);font-size:0.5em;vertical-align:middle;">Coming 2026</span></h1>
+    <h1 class="h1" style="font-size:2.5em;">ChIPflow <span style="color:var(--orange-text);font-size:0.5em;vertical-align:middle;">Coming 2026</span></h1>
     <p class="lead">Peak calling with MACS2, motif analysis with HOMER, differential chromatin accessibility, BigWig tracks for genome browsers.</p>
     <div style="margin-top:28px;padding:20px 24px;background:rgba(240,136,62,0.07);border:1px solid rgba(240,136,62,0.2);border-radius:var(--r2);display:inline-block;">
-      <strong style="color:var(--orange);">🔔 Get notified when ChIPflow launches</strong><br>
-      <span style="font-size:0.85em;color:var(--text2);">Email <a href="mailto:info@bioinfocodex.com" style="color:var(--blue);">info@bioinfocodex.com</a> with subject: "Notify me — ChIPflow"</span>
+      <strong style="color:var(--orange-text);">🔔 Get notified when ChIPflow launches</strong><br>
+      <span style="font-size:0.85em;color:var(--text2);">Email <a href="mailto:info@bioinfocodex.com" style="color:var(--blue-text);">info@bioinfocodex.com</a> with subject: "Notify me — ChIPflow"</span>
     </div>
   </div>
 </div>
@@ -2779,11 +2811,11 @@ generated using ggplot2 (Wickham, 2016) and pheatmap (Kolde, 2019).</div>
   <div class="tool-detail-hero">
     <div class="breadcrumb"><span onclick="showPage('page-tools')" role="button" tabindex="0">🧬 Bioinfo Tools</span><span class="breadcrumb-sep">›</span><span style="color:var(--text);">MetaFlow</span></div>
     <div class="label">Metagenomics and microbiome pipeline</div>
-    <h1 class="h1" style="font-size:2.5em;">MetaFlow <span style="color:var(--orange);font-size:0.5em;vertical-align:middle;">Coming 2026</span></h1>
+    <h1 class="h1" style="font-size:2.5em;">MetaFlow <span style="color:var(--orange-text);font-size:0.5em;vertical-align:middle;">Coming 2026</span></h1>
     <p class="lead">16S rRNA and whole-metagenome shotgun analysis. Taxonomic classification, alpha/beta diversity, differential abundance with QIIME2 and Kraken2.</p>
     <div style="margin-top:28px;padding:20px 24px;background:rgba(240,136,62,0.07);border:1px solid rgba(240,136,62,0.2);border-radius:var(--r2);display:inline-block;">
-      <strong style="color:var(--orange);">🔔 Get notified when MetaFlow launches</strong><br>
-      <span style="font-size:0.85em;color:var(--text2);">Email <a href="mailto:info@bioinfocodex.com" style="color:var(--blue);">info@bioinfocodex.com</a> with subject: "Notify me — MetaFlow"</span>
+      <strong style="color:var(--orange-text);">🔔 Get notified when MetaFlow launches</strong><br>
+      <span style="font-size:0.85em;color:var(--text2);">Email <a href="mailto:info@bioinfocodex.com" style="color:var(--blue-text);">info@bioinfocodex.com</a> with subject: "Notify me — MetaFlow"</span>
     </div>
   </div>
 </div>
@@ -2791,11 +2823,11 @@ generated using ggplot2 (Wickham, 2016) and pheatmap (Kolde, 2019).</div>
   <div class="tool-detail-hero">
     <div class="breadcrumb"><span onclick="showPage('page-tools')" role="button" tabindex="0">🧬 Bioinfo Tools</span><span class="breadcrumb-sep">›</span><span style="color:var(--text);">scRNAflow</span></div>
     <div class="label">Single-cell RNA-seq pipeline</div>
-    <h1 class="h1" style="font-size:2.5em;">scRNAflow <span style="color:var(--orange);font-size:0.5em;vertical-align:middle;">Coming 2026</span></h1>
+    <h1 class="h1" style="font-size:2.5em;">scRNAflow <span style="color:var(--orange-text);font-size:0.5em;vertical-align:middle;">Coming 2026</span></h1>
     <p class="lead">Single-cell RNA-seq analysis using Seurat. Cell clustering, UMAP visualisation, marker gene identification, trajectory analysis.</p>
     <div style="margin-top:28px;padding:20px 24px;background:rgba(240,136,62,0.07);border:1px solid rgba(240,136,62,0.2);border-radius:var(--r2);display:inline-block;">
-      <strong style="color:var(--orange);">🔔 Get notified when scRNAflow launches</strong><br>
-      <span style="font-size:0.85em;color:var(--text2);">Email <a href="mailto:info@bioinfocodex.com" style="color:var(--blue);">info@bioinfocodex.com</a> with subject: "Notify me — scRNAflow"</span>
+      <strong style="color:var(--orange-text);">🔔 Get notified when scRNAflow launches</strong><br>
+      <span style="font-size:0.85em;color:var(--text2);">Email <a href="mailto:info@bioinfocodex.com" style="color:var(--blue-text);">info@bioinfocodex.com</a> with subject: "Notify me — scRNAflow"</span>
     </div>
   </div>
 </div>
@@ -2803,11 +2835,11 @@ generated using ggplot2 (Wickham, 2016) and pheatmap (Kolde, 2019).</div>
   <div class="tool-detail-hero">
     <div class="breadcrumb"><span onclick="showPage('page-tools')" role="button" tabindex="0">🧬 Bioinfo Tools</span><span class="breadcrumb-sep">›</span><span style="color:var(--text);">ProteomicsLab</span></div>
     <div class="label">Mass spectrometry proteomics pipeline</div>
-    <h1 class="h1" style="font-size:2.5em;">ProteomicsLab <span style="color:var(--orange);font-size:0.5em;vertical-align:middle;">Coming 2026</span></h1>
+    <h1 class="h1" style="font-size:2.5em;">ProteomicsLab <span style="color:var(--orange-text);font-size:0.5em;vertical-align:middle;">Coming 2026</span></h1>
     <p class="lead">Label-free quantification, TMT/iTRAQ, post-translational modification analysis, pathway enrichment. Powered by MaxQuant.</p>
     <div style="margin-top:28px;padding:20px 24px;background:rgba(240,136,62,0.07);border:1px solid rgba(240,136,62,0.2);border-radius:var(--r2);display:inline-block;">
-      <strong style="color:var(--orange);">🔔 Get notified when ProteomicsLab launches</strong><br>
-      <span style="font-size:0.85em;color:var(--text2);">Email <a href="mailto:info@bioinfocodex.com" style="color:var(--blue);">info@bioinfocodex.com</a> with subject: "Notify me — ProteomicsLab"</span>
+      <strong style="color:var(--orange-text);">🔔 Get notified when ProteomicsLab launches</strong><br>
+      <span style="font-size:0.85em;color:var(--text2);">Email <a href="mailto:info@bioinfocodex.com" style="color:var(--blue-text);">info@bioinfocodex.com</a> with subject: "Notify me — ProteomicsLab"</span>
     </div>
   </div>
 </div>
@@ -2963,9 +2995,9 @@ generated using ggplot2 (Wickham, 2016) and pheatmap (Kolde, 2019).</div>
           <div style="background:linear-gradient(135deg,rgba(0,200,150,0.06),rgba(9,105,218,0.06));border:1px solid rgba(0,200,150,0.2);border-radius:12px;padding:20px;margin:14px 0;text-align:center;">
             <div style="display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap;font-size:0.9em;font-weight:600;">
               <span style="background:rgba(0,200,150,0.15);border:1px solid rgba(0,200,150,0.3);padding:8px 16px;border-radius:8px;">DNA<br><small style="font-weight:400;color:var(--text3);">Double-stranded<br>A, T, G, C</small></span>
-              <span style="font-size:1.4em;color:var(--green);">&rarr;</span>
+              <span style="font-size:1.4em;color:var(--green-text);">&rarr;</span>
               <span style="background:rgba(9,105,218,0.1);border:1px solid rgba(9,105,218,0.2);padding:8px 16px;border-radius:8px;">mRNA<br><small style="font-weight:400;color:var(--text3);">Transcription<br>A, U, G, C</small></span>
-              <span style="font-size:1.4em;color:var(--blue);">&rarr;</span>
+              <span style="font-size:1.4em;color:var(--blue-text);">&rarr;</span>
               <span style="background:rgba(124,58,237,0.1);border:1px solid rgba(124,58,237,0.2);padding:8px 16px;border-radius:8px;">Protein<br><small style="font-weight:400;color:var(--text3);">Translation<br>20 amino acids</small></span>
             </div>
           </div>
@@ -3066,8 +3098,8 @@ generated using ggplot2 (Wickham, 2016) and pheatmap (Kolde, 2019).</div>
           <p class="sub">Consider the human <strong>BRCA1</strong> gene (associated with breast cancer risk). It spans about 81 kb on chromosome 17, contains <strong>23 exons</strong>, and produces a protein of 1,863 amino acids. The coding sequence itself is only about 5,592 bp — just 7% of the gene's genomic span. The rest consists of introns, UTRs, and regulatory regions.</p>
           <div style="background:var(--bg2);border-radius:10px;padding:16px;margin:10px 0;font-family:var(--fm);font-size:0.78em;overflow-x:auto;">
             <strong>BRCA1 gene structure (simplified):</strong><br><br>
-            5'---[Promoter/CpG island]---[5'UTR]---<span style="color:var(--green);">[Exon 1]</span>---intron 1 (34 kb)---<span style="color:var(--green);">[Exon 2]</span>---intron 2---...---<span style="color:var(--green);">[Exon 23]</span>---[3'UTR]---[polyA signal]---3'<br><br>
-            <span style="color:var(--green);">Green = exons (coding)</span> | Grey = introns (removed by splicing) | Total span: ~81 kb
+            5'---[Promoter/CpG island]---[5'UTR]---<span style="color:var(--green-text);">[Exon 1]</span>---intron 1 (34 kb)---<span style="color:var(--green-text);">[Exon 2]</span>---intron 2---...---<span style="color:var(--green-text);">[Exon 23]</span>---[3'UTR]---[polyA signal]---3'<br><br>
+            <span style="color:var(--green-text);">Green = exons (coding)</span> | Grey = introns (removed by splicing) | Total span: ~81 kb
           </div>
 
           <h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">Alternative Splicing</h3>
@@ -4468,7 +4500,7 @@ READ001  83  chr1  12345  60  75M200N25M  =  12800  555  ACGT...  FFFF...
             <div class="card" style="padding:14px;"><strong>FLAG 4</strong><p class="sub" style="margin-top:4px;">= unmapped read. These reads did not align to the reference genome. Filter them with <code>samtools view -F 4</code>.</p></div>
             <div class="card" style="padding:14px;"><strong>FLAG 256</strong><p class="sub" style="margin-top:4px;">= secondary alignment. The read mapped to multiple locations. This is the non-primary alignment. Filter with <code>samtools view -F 256</code>.</p></div>
           </div>
-          <div class="info-box tip"><svg class="ico" aria-hidden="true"><use href="#i-tip"></use></svg><div><strong>Decode any FLAG value</strong> at <a href="https://broadinstitute.github.io/picard/explain-flags.html" target="_blank" style="color:var(--blue);">broadinstitute.github.io/picard/explain-flags.html</a> — enter a number and it shows exactly which bits are set.</div></div>
+          <div class="info-box tip"><svg class="ico" aria-hidden="true"><use href="#i-tip"></use></svg><div><strong>Decode any FLAG value</strong> at <a href="https://broadinstitute.github.io/picard/explain-flags.html" target="_blank" style="color:var(--blue-text);">broadinstitute.github.io/picard/explain-flags.html</a> — enter a number and it shows exactly which bits are set.</div></div>
 
           <h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">Essential samtools Commands</h3>
           <div class="code-block" style="margin-top:8px;"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button><span class="code-comment"># Alignment statistics (mapped reads, paired, singletons)</span>
@@ -4987,7 +5019,7 @@ cat annotated.vcf | snpSift filter "ANN[*].IMPACT = 'HIGH'" &gt; high_impact.vcf
           <div class="card-grid card-grid-2" style="gap:10px;margin-bottom:14px;">
 
             <div class="card" style="padding:16px;border-top:3px solid var(--green);">
-              <strong style="color:var(--green);">1 — Probe Sonication</strong>
+              <strong style="color:var(--green-text);">1 — Probe Sonication</strong>
               <p class="sub" style="margin-top:6px;">A metal probe is submerged directly in the DNA sample and vibrates at ultrasonic frequency (~20 kHz). The vibration creates <strong>cavitation</strong> — microscopic bubbles that collapse violently, generating shear forces that break phosphodiester bonds. Fragment size is controlled by adjusting pulse duration, amplitude, and number of cycles.</p>
               <div style="margin-top:10px;font-size:0.78em;color:var(--text3);">
                 Fragment size: <strong>100 bp – 1 kb</strong> &nbsp;·&nbsp;
@@ -4998,7 +5030,7 @@ cat annotated.vcf | snpSift filter "ANN[*].IMPACT = 'HIGH'" &gt; high_impact.vcf
             </div>
 
             <div class="card" style="padding:16px;border-top:3px solid var(--blue);">
-              <strong style="color:var(--blue);">2 — Covaris AFA (Acoustic Focused Acoustics)</strong>
+              <strong style="color:var(--blue-text);">2 — Covaris AFA (Acoustic Focused Acoustics)</strong>
               <p class="sub" style="margin-top:6px;">Covaris instruments use a precisely focused acoustic transducer to deliver energy through the tube wall — the probe never touches the sample. This eliminates cross-contamination and heat, and produces extremely reproducible fragment size distributions. The gold standard for clinical genomics and large-scale sequencing projects.</p>
               <div style="margin-top:10px;font-size:0.78em;color:var(--text3);">
                 Fragment size: <strong>150–500 bp</strong> &nbsp;·&nbsp;
@@ -5009,7 +5041,7 @@ cat annotated.vcf | snpSift filter "ANN[*].IMPACT = 'HIGH'" &gt; high_impact.vcf
             </div>
 
             <div class="card" style="padding:16px;border-top:3px solid var(--purple);">
-              <strong style="color:var(--purple);">3 — Enzymatic Fragmentation</strong>
+              <strong style="color:var(--purple-text);">3 — Enzymatic Fragmentation</strong>
               <p class="sub" style="margin-top:6px;">Nucleases (typically DNase I or a proprietary enzyme cocktail) are used to randomly cleave dsDNA. Reaction conditions (enzyme concentration, temperature, time) control fragment size. Requires only a thermocycler — no specialised equipment. Commercial kits include NEBNext Ultra II FS and Kapa HyperPlus.</p>
               <div style="margin-top:10px;font-size:0.78em;color:var(--text3);">
                 Fragment size: <strong>200–700 bp</strong> &nbsp;·&nbsp;
@@ -5020,7 +5052,7 @@ cat annotated.vcf | snpSift filter "ANN[*].IMPACT = 'HIGH'" &gt; high_impact.vcf
             </div>
 
             <div class="card" style="padding:16px;border-top:3px solid var(--orange);">
-              <strong style="color:var(--orange);">4 — Tagmentation (Tn5 Transposase)</strong>
+              <strong style="color:var(--orange-text);">4 — Tagmentation (Tn5 Transposase)</strong>
               <p class="sub" style="margin-top:6px;">The Tn5 transposase enzyme simultaneously fragments DNA and inserts sequencing adapters in a single reaction — dramatically simplifying library preparation. Tn5 preferentially inserts at AT-rich, accessible regions of chromatin. This is both a bias (for WGS) and a feature (for ATAC-seq, where open chromatin is precisely what you want to measure).</p>
               <div style="margin-top:10px;font-size:0.78em;color:var(--text3);">
                 Fragment size: <strong>150–500 bp</strong> &nbsp;·&nbsp;
@@ -5099,7 +5131,7 @@ cat annotated.vcf | snpSift filter "ANN[*].IMPACT = 'HIGH'" &gt; high_impact.vcf
           <h4 style="margin:18px 0 10px;font-size:0.92em;font-weight:600;">Where fragmentation sits in the full library preparation workflow</h4>
           <div style="display:flex;flex-direction:column;gap:4px;margin-bottom:14px;">
             <div class="card" style="padding:12px 16px;border-left:3px solid var(--green);background:rgba(0,212,160,0.05);">
-              <strong style="color:var(--green);">① Fragmentation ← You are here</strong>
+              <strong style="color:var(--green-text);">① Fragmentation ← You are here</strong>
               <p class="sub" style="margin-top:2px;">DNA broken to 150–500 bp target size by sonication, enzymes, or Tn5 transposase.</p>
             </div>
             <div class="card" style="padding:12px 16px;"><strong>② End repair</strong><p class="sub" style="margin-top:2px;">Ragged 3′/5′ ends polished to blunt ends using polymerase and exonuclease activity.</p></div>
@@ -5557,7 +5589,7 @@ emapplot(pairwise_termsim(ego_simplified), showCategory=20)</div>
           </div>
 
           <h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">Common Pitfalls</h3>
-          <div class="info-box warn"><svg class="ico" aria-hidden="true"><use href="#i-warn"></use></svg><div><strong>Redundant GO terms:</strong> GO is hierarchical, so related terms often appear together (e.g., "immune response", "innate immune response", "regulation of immune response"). Use <code>simplify()</code> in clusterProfiler or <a href="http://revigo.irb.hr" target="_blank" style="color:var(--blue);">REVIGO</a> to remove redundancy and focus on the most specific or most significant terms.</div></div>
+          <div class="info-box warn"><svg class="ico" aria-hidden="true"><use href="#i-warn"></use></svg><div><strong>Redundant GO terms:</strong> GO is hierarchical, so related terms often appear together (e.g., "immune response", "innate immune response", "regulation of immune response"). Use <code>simplify()</code> in clusterProfiler or <a href="http://revigo.irb.hr" target="_blank" style="color:var(--blue-text);">REVIGO</a> to remove redundancy and focus on the most specific or most significant terms.</div></div>
 
           <div class="info-box tip"><svg class="ico" aria-hidden="true"><use href="#i-tip"></use></svg><div><strong>ORA vs GSEA:</strong> Use ORA when you have a clear DEG list (padj &lt; 0.05, |log2FC| &gt; 1). Use GSEA when you want to detect subtle, coordinated changes across an entire pathway — especially when few individual genes pass the significance threshold but many show small shifts in the same direction.</div></div>
 
@@ -6672,7 +6704,7 @@ hub_genes &lt;- module_genes[order(kME[module_genes, paste0("kME", module_number
       <div style="font-size:3em;margin-bottom:16px;">⏰</div>
       <h2 class="h2">Access Period Has Ended</h2>
       <p class="lead" style="max-width:440px;margin:12px auto 20px;">The current access period for RNAflow has concluded. Thank you for your interest.</p>
-      <p class="sub">For future access or licensing inquiries, contact:<br><a href="mailto:info@bioinfocodex.com" style="color:var(--green);font-weight:600;">info@bioinfocodex.com</a></p>
+      <p class="sub">For future access or licensing inquiries, contact:<br><a href="mailto:info@bioinfocodex.com" style="color:var(--green-text);font-weight:600;">info@bioinfocodex.com</a></p>
     </div>
 
     <!-- STEP 1: Registration Form -->
@@ -6944,8 +6976,8 @@ hub_genes &lt;- module_genes[order(kME[module_genes, paste0("kME", module_number
     #page-resources .res-card:hover { transform:translateY(-3px); border-color:var(--green); box-shadow:0 10px 28px rgba(0,0,0,0.22); }
     #page-resources .res-name { font-weight:700; color:var(--text); font-size:0.98em; display:flex; align-items:center; justify-content:space-between; gap:8px; }
     #page-resources .res-name .ext { color:var(--text3); font-size:0.9em; transition:color .18s; }
-    #page-resources .res-card:hover .res-name .ext { color:var(--green); }
-    #page-resources .res-domain { font-family:var(--fm); font-size:0.72em; color:var(--green); margin:4px 0 9px; word-break:break-all; }
+    #page-resources .res-card:hover .res-name .ext { color:var(--green-text); }
+    #page-resources .res-domain { font-family:var(--fm); font-size:0.72em; color:var(--green-text); margin:4px 0 9px; word-break:break-all; }
     #page-resources .res-desc { font-size:0.83em; color:var(--text2); line-height:1.55; }
     #page-resources #res-net-canvas { position:absolute; inset:0; width:100%; height:100%; z-index:0; pointer-events:none; }
   </style>
@@ -7083,7 +7115,7 @@ hub_genes &lt;- module_genes[order(kME[module_genes, paste0("kME", module_number
       </div>
     </div>
 
-    <p style="text-align:center;color:var(--text3);font-size:0.8em;margin-top:8px;">Know a resource we should add? <span class="suggest-link" style="color:var(--green);cursor:pointer;" onclick="showPage('contact')" role="button" tabindex="0">Suggest it →</span></p>
+    <p style="text-align:center;color:var(--text3);font-size:0.8em;margin-top:8px;">Know a resource we should add? <span class="suggest-link" style="color:var(--green-text);cursor:pointer;" onclick="showPage('contact')" role="button" tabindex="0">Suggest it →</span></p>
 
   </div>
 
