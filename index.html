@@ -1040,11 +1040,70 @@ footer{
 }
 @media(max-width:640px){
   .nav-tabs{display:none;}
-  .nav-burger{display:block;}
+  .nav-burger{display:flex;align-items:center;justify-content:center;}
   .nav-dl{display:none;}
   .hero{padding:60px 5vw 40px;}
   .footer-grid{grid-template-columns:1fr;}
   .section{padding:52px 5vw;}
+}
+
+/* ══ TOUCH TARGETS ══
+   Sizes tuned for a mouse leave a lot of controls in the 27-43px range, which
+   is fine to click and awkward to tap. On a touch pointer everything
+   interactive gets at least 44x44 (WCAG 2.5.5). min-height rather than height
+   so nothing that is already comfortable shrinks, and padding stays in charge
+   of the horizontal size. Links inside a sentence are deliberately untouched —
+   WCAG exempts inline targets, and padding them out would wreck the leading.
+   (max-width) keeps a narrow desktop window honest even without a touchscreen. */
+@media (pointer: coarse), (max-width: 640px) {
+  .nav-burger{min-width:44px;min-height:44px;padding:0;}
+  .nav-logo{min-height:44px;}
+
+  /* Ends a centred one-line sentence, so the taller line box costs nothing. */
+  .suggest-link{
+    display:inline-flex;align-items:center;min-height:44px;padding:0 6px;
+  }
+
+  .btn,
+  .tool-btn,
+  .filter-btn,
+  .tool-nav-item,
+  .form-submit,
+  .copy-code-btn{min-height:44px;}
+
+  /* inline-flex/flex already centre their text; the rest need telling */
+  .filter-btn{display:inline-flex;align-items:center;justify-content:center;}
+  .form-submit{display:flex;align-items:center;justify-content:center;}
+
+  .form-input,.form-select,
+  #page-register input:not([type="checkbox"]),
+  #page-register select,
+  #page-register button{min-height:44px;}
+
+  /* Footer link columns: the 9px gap becomes padding inside each row, so the
+     tap area grows without the column getting much taller. */
+  .footer-col ul{gap:0;}
+  .footer-col ul li{display:flex;align-items:center;min-height:44px;}
+
+  /* A 22px checkbox can't reach 44 without looking absurd. Its <label> is a
+     44px target that toggles it, which is the "equivalent control" WCAG 2.5.5
+     allows. */
+  label[for="bic-updates"]{display:flex;align-items:center;min-height:44px;}
+
+  .breadcrumb [role="button"]{display:inline-flex;align-items:center;min-height:44px;}
+
+  /* Contact details are standalone links on their own line, not prose, so they
+     can just be made taller. */
+  .contact-item-val a{display:inline-flex;align-items:center;min-height:44px;}
+
+  /* Address links sit mid-sentence, where padding would blow out the leading.
+     An invisible ::after grows the hit area to 44px instead — WCAG measures
+     the target, not the ink. */
+  a[href^="mailto:"]{position:relative;display:inline-block;}
+  a[href^="mailto:"]::after{
+    content:"";position:absolute;left:0;right:0;top:50%;
+    transform:translateY(-50%);height:44px;
+  }
 }
 
 /* ══ TOOL DETAIL PAGE ══ */
@@ -6672,7 +6731,7 @@ hub_genes &lt;- module_genes[order(kME[module_genes, paste0("kME", module_number
           <textarea name="purpose" rows="3" placeholder="Brief description of your project..."></textarea>
         </div>
         <div style="display:flex;align-items:center;gap:10px;margin-bottom:18px;">
-          <input type="checkbox" name="updates" checked id="bic-updates" style="width:auto;margin:0;">
+          <input type="checkbox" name="updates" checked id="bic-updates" style="width:22px;height:22px;flex-shrink:0;margin:0;">
           <label for="bic-updates" style="margin:0;font-size:0.82em;color:var(--text2);cursor:pointer;">Keep me updated about new features, tutorials, and releases</label>
         </div>
         <button type="submit" id="bic-submit" style="width:100%;padding:14px;border:none;border-radius:12px;background:linear-gradient(135deg,var(--green),#0969da);color:white;font-size:1em;font-weight:700;font-family:var(--fh);cursor:pointer;transition:all 0.2s;letter-spacing:0.3px;">
@@ -7024,7 +7083,7 @@ hub_genes &lt;- module_genes[order(kME[module_genes, paste0("kME", module_number
       </div>
     </div>
 
-    <p style="text-align:center;color:var(--text3);font-size:0.8em;margin-top:8px;">Know a resource we should add? <span style="color:var(--green);cursor:pointer;" onclick="showPage('contact')" role="button" tabindex="0">Suggest it →</span></p>
+    <p style="text-align:center;color:var(--text3);font-size:0.8em;margin-top:8px;">Know a resource we should add? <span class="suggest-link" style="color:var(--green);cursor:pointer;" onclick="showPage('contact')" role="button" tabindex="0">Suggest it →</span></p>
 
   </div>
 
