@@ -6700,12 +6700,10 @@ hub_genes &lt;- module_genes[order(kME[module_genes, paste0("kME", module_number
     <div id="bic-code-entry" class="bic-reg-card" style="display:none;max-width:500px;margin:0 auto;">
       <div style="text-align:center;margin-bottom:20px;">
         <div style="font-size:2.4em;margin-bottom:10px;">🔑</div>
-        <h2 class="h2" style="margin-bottom:8px;">Your Access Code</h2>
-        <p class="sub">Thanks for registering, <strong id="bic-sent-email"></strong>! Here is your 50-day access code — it's already filled in below, just click <strong>Unlock Downloads</strong>.</p>
+        <h2 class="h2" style="margin-bottom:8px;">Enter Your Access Code</h2>
+        <p class="sub">Thanks for registering, <strong id="bic-sent-email"></strong>. We&#39;ll email your access code shortly — enter it below to unlock the downloads.</p>
       </div>
-      <div style="text-align:center;margin-bottom:18px;">
-        <div id="bic-code-display" style="display:inline-block;background:rgba(0,200,150,0.08);border:1.5px dashed rgba(0,200,150,0.5);border-radius:12px;padding:14px 30px;font-family:'DM Mono',monospace;font-size:1.5em;font-weight:700;letter-spacing:4px;color:var(--green);"></div>
-      </div>
+      
       <form onsubmit="return bicVerifyCode(event)">
         <div class="bic-field">
           <label>Access Code <span style="color:#dc2626;">*</span></label>
@@ -7563,7 +7561,11 @@ document.addEventListener('keydown', function (e) {
 const BIC_FORMSPREE_ID = 'mlgoenbv';
 
 // CONFIG: Valid access codes (you email these to approved registrants)
-const BIC_CODES = ['RNAFLOW2025', 'BIOINFO2025', 'RNA-ACCESS-001'];
+// Access codes used to sit here in plain sight — anyone could read them with
+// View Source. They now live in the BIC_ACCESS_CODES environment variable and
+// are checked by netlify/functions/verify-code.mjs, which never sends them to
+// the browser. The expiry moved there too, since a client-side date comparison
+// is trivial to skip.
 
 // CONFIG: Expiration date — extended to Dec 30, 2026
 const BIC_EXPIRY = new Date('2026-12-30T23:59:59');
@@ -7592,7 +7594,8 @@ let bicUserName = '';
     try {
       const a = JSON.parse(access);
       const r = JSON.parse(reg);
-      if (BIC_CODES.map(c=>c.toUpperCase()).includes(a.code.toUpperCase())) {
+      // A signed token issued by the function, not a code we compare locally.
+      if (a.token && a.expires && Date.now() < a.expires) {
         document.getElementById('bic-reg-form').style.display = 'none';
         document.getElementById('bic-downloads').style.display = 'block';
         document.getElementById('bic-welcome').textContent = r.name || 'Researcher';
@@ -7633,8 +7636,8 @@ async function bicRegister(e) {
 
   // Show code entry with the access code revealed and pre-filled
   document.getElementById('bic-sent-email').textContent = fd.get('first_name') || 'Researcher';
-  document.getElementById('bic-code-display').textContent = BIC_CODES[0];
-  document.getElementById('bic-code-input').value = BIC_CODES[0];
+  // Deliberately no longer prints the code. It lives in an environment
+  // variable the browser never sees; you send it to approved registrants.
   document.getElementById('bic-reg-form').style.display = 'none';
   document.getElementById('bic-code-entry').style.display = 'block';
 
@@ -7642,26 +7645,52 @@ async function bicRegister(e) {
   return false;
 }
 
-function bicVerifyCode(e) {
+async function bicVerifyCode(e) {
   e.preventDefault();
-  if (new Date() > BIC_EXPIRY) { alert('Access period has ended.'); return false; }
 
-  const code = document.getElementById('bic-code-input').value.trim().toUpperCase();
-  const err = document.getElementById('bic-code-err');
+  const input = document.getElementById('bic-code-input');
+  const err   = document.getElementById('bic-code-err');
+  const code  = input.value.trim();
+  if (!code) return false;
 
-  if (BIC_CODES.map(c=>c.toUpperCase()).includes(code)) {
+  const showError = (msg) => {
+    err.textContent = msg;
+    err.style.display = 'block';
+    input.style.borderColor = '#dc2626';
+    setTimeout(() => { input.style.borderColor = ''; }, 2000);
+  };
+
+  input.disabled = true;
+  try {
+    // The code is checked on the server. Nothing here can tell a valid code
+    // from an invalid one on its own, which is the point.
+    const res = await fetch('/.netlify/functions/verify-code', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ code })
+    });
+    const data = await res.json().catch(() => ({}));
+
+    if (!res.ok) {
+      showError(data.message ||
+        (res.status === 429 ? 'Too many attempts. Try again shortly.'
+                            : 'That code was not recognised.'));
+      return false;
+    }
+
     err.style.display = 'none';
     document.getElementById('bic-code-entry').style.display = 'none';
     document.getElementById('bic-downloads').style.display = 'block';
     document.getElementById('bic-welcome').textContent = bicUserName || 'Researcher';
 
+    // Store the signed token rather than the code itself.
     localStorage.setItem('bic_access', JSON.stringify({
-      code: code, granted: new Date().toISOString()
+      token: data.token, expires: data.expires, granted: new Date().toISOString()
     }));
-  } else {
-    err.style.display = 'block';
-    document.getElementById('bic-code-input').style.borderColor = '#dc2626';
-    setTimeout(() => { document.getElementById('bic-code-input').style.borderColor = ''; }, 2000);
+  } catch (_) {
+    showError('Could not reach the server. Check your connection and try again.');
+  } finally {
+    input.disabled = false;
   }
   return false;
 }
