@@ -1,9 +1,9 @@
 # Netlify configuration for bioinfocodex.com
 #
-# This repo currently deploys via GitHub Pages (.github/workflows/deploy-site.yml).
-# Pages cannot rewrite, so app routes are answered by 404.html with a 404 status
-# and never get indexed. Pointing the domain at Netlify instead fixes that; the
-# rules live in _redirects.
+# The site is one static HTML file with no build step -- deploys are uploads.
+# Netlify (rather than GitHub Pages) is what makes the app routes indexable:
+# Pages cannot rewrite, so /tools/rnaflow had to be answered by 404.html with a
+# 404 status. The rewrite rules live in _redirects.
 
 [build]
   publish = "."
@@ -31,3 +31,29 @@
   for = "/*.png"
   [headers.values]
     Cache-Control = "public, max-age=31536000, immutable"
+
+# The SVG favicon belongs with the PNGs above -- it was falling through to the
+# default and being revalidated on every visit.
+[[headers]]
+  for = "/favicon.svg"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+# The manifest changes only when the icon set or app name does.
+[[headers]]
+  for = "/site.webmanifest"
+  [headers.values]
+    Cache-Control = "public, max-age=86400"
+
+# Crawlers refetch these two constantly. An hour is short enough that a routing
+# change still reaches search engines the same day, and long enough to collapse
+# a burst of bots into one request each.
+[[headers]]
+  for = "/robots.txt"
+  [headers.values]
+    Cache-Control = "public, max-age=3600"
+
+[[headers]]
+  for = "/sitemap.xml"
+  [headers.values]
+    Cache-Control = "public, max-age=3600"

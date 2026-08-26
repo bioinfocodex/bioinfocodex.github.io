@@ -14,4 +14,89 @@ Disallow: /rnaflow_server.py
 # rnaflow.bioinfocodex.com is the canonical home for RNAflow. Both files stay
 # downloadable — robots.txt affects crawlers, not people.
 
+
+# ─── SEO backlink scrapers ────────────────────────────────────────────────
+# These crawl continuously to resell link graphs. They send no readers and are
+# routinely the largest source of requests on a small site. Nothing is lost by
+# turning them away.
+User-agent: AhrefsBot
+Disallow: /
+
+User-agent: SemrushBot
+Disallow: /
+
+User-agent: MJ12bot
+Disallow: /
+
+User-agent: DotBot
+Disallow: /
+
+User-agent: dataforseobot
+Disallow: /
+
+User-agent: BLEXBot
+Disallow: /
+
+
+# ─── Bulk and training-data crawlers ──────────────────────────────────────
+# These collect pages for model training or bulk archives. They do not surface
+# the site to anyone, so they cost requests and return nothing.
+#
+# Google-Extended and Applebot-Extended are training-only controls: blocking
+# them does NOT affect Google Search ranking or Applebot's normal indexing,
+# which are governed by the Googlebot and Applebot groups (both still allowed).
+User-agent: GPTBot
+Disallow: /
+
+User-agent: ClaudeBot
+Disallow: /
+
+User-agent: anthropic-ai
+Disallow: /
+
+User-agent: Claude-Web
+Disallow: /
+
+User-agent: Google-Extended
+Disallow: /
+
+User-agent: Applebot-Extended
+Disallow: /
+
+User-agent: CCBot
+Disallow: /
+
+User-agent: Bytespider
+Disallow: /
+
+User-agent: Amazonbot
+Disallow: /
+
+User-agent: meta-externalagent
+Disallow: /
+
+User-agent: FacebookBot
+Disallow: /
+
+User-agent: Omgilibot
+Disallow: /
+
+User-agent: ImagesiftBot
+Disallow: /
+
+User-agent: PerplexityBot
+Disallow: /
+
+
+# ─── Deliberately still allowed ───────────────────────────────────────────
+# Googlebot, Bingbot, DuckDuckBot and Applebot are how people find the
+# tutorials, so they are not listed above and fall under User-agent: *.
+#
+# OAI-SearchBot and ChatGPT-User are also left alone on purpose. They are not
+# training crawlers: the first indexes for ChatGPT's search results and the
+# second fetches a page only when someone actually asks about it. Both send
+# real readers here. PerplexityBot is blocked instead — it crawls far more
+# heavily than the referrals justify. Move any of these between the groups if
+# the trade looks different to you.
+
 Sitemap: https://bioinfocodex.com/sitemap.xml
