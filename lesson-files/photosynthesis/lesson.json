@@ -1,0 +1,140 @@
+{
+ "slug": "photosynthesis",
+ "title": "Photosynthesis: Energy from Light",
+ "subject": "Foundations",
+ "summary": "How plants turn light, water and carbon dioxide into sugar and oxygen, and why almost every food chain depends on it. A short sample lesson generated with OpenMAIC.",
+ "module": "foundations",
+ "scenes": [
+  {
+   "title": "What is Photosynthesis?",
+   "type": "slide",
+   "narration": [
+    "Good morning, everyone, and welcome to our module on Photosynthesis. I'm Dr. Vance, and I'm looking forward to exploring this foundational topic with all of you. Over the next few sessions, we will move from defining the basic processes to looking at the intricate mechanisms within the chloroplast, and finally, understanding how these processes link to global ecology.",
+    "Today, we start with the absolute core question: What exactly is photosynthesis? Simply put, it is the process that makes life on Earth possible as we know it.",
+    "At its definition, photosynthesis is the critical conversion of light energy—which comes from the sun—into stored chemical energy. This process allows organisms, primarily plants and certain bacteria, to create their own food using simple inorganic materials.",
+    "To visualize this, let's look at the overall chemical equation. We need Carbon Dioxide, which is the atmospheric gas, combined with Water, powered by light energy. This reaction results in Glucose, which is the stored chemical fuel, and thankfully, a crucial byproduct: Oxygen.",
+    "This chemical reaction, while foundational, brings us to the even more profound questions of its significance. Let's examine the importance.",
+    "The importance is manifold. Firstly, photosynthesis is the basis of nearly all biological food chains. Without it, the energy source that drives almost all life on the planet would simply disappear. Secondly, and critically, it is responsible for maintaining the oxygen levels in our atmosphere, allowing aerobic life to flourish."
+   ]
+  },
+  {
+   "title": "The Photosynthesis Factory",
+   "type": "interactive",
+   "narration": [
+    "Let's observe how light, carbon dioxide, and water interact within the chloroplast to produce oxygen and glucose.",
+    "Try adjusting the CO₂ slider to see how it influences glucose production rates."
+   ],
+   "simulation": "sim-01.html"
+  },
+  {
+   "title": "The Two Stages of Energy Conversion",
+   "type": "slide",
+   "narration": [
+    "Building on our discussion about photosynthesis as a factory, let's now examine its two distinct energy conversion stages",
+    "First, the light-dependent reactions occur in the thylakoid membranes, capturing light energy to produce ATP and NADPH",
+    "Then, the light-independent Calvin Cycle uses these energy carriers to convert CO₂ into glucose, as we saw on page 2 when adjusting the CO₂ slider",
+    "Notice how this diagram visually separates the two stages - the light-dependent reactions here and the Calvin Cycle there",
+    "These ATP and NADPH molecules act as energy carriers, transporting chemical energy to the next stage"
+   ]
+  },
+  {
+   "title": "Understanding Photosynthesis",
+   "type": "quiz",
+   "narration": [
+    "Now let's check what we've learned so far. Take your time with each question — I'll review your responses and clarify anything that needs more attention after you submit."
+   ]
+  },
+  {
+   "title": "Ecology and Life: The End Result",
+   "type": "slide",
+   "narration": [
+    "To conclude our exploration of photosynthesis, let's revisit its far-reaching ecological implications.",
+    "As the primary energy source for trophic levels, photosynthesis sustains entire ecosystems by converting solar energy into chemical energy.",
+    "This process also regulates Earth's climate by removing vast quantities of atmospheric carbon dioxide.",
+    "Through the interconnected carbon and oxygen cycles, photosynthesis forms the biochemical foundation of life as we know it.",
+    "From the microscopic scale of chloroplasts to global climate patterns, this elegant reaction defines the relationship between life and its environment.",
+    "As we've seen throughout this course, understanding photosynthesis reveals the profound connections between cellular processes and planetary systems.",
+    "I'll review your submitted questions shortly, but for now, let's take a moment to appreciate the transformative power of this fundamental biological process."
+   ]
+  }
+ ],
+ "quiz": [
+  {
+   "id": "q1",
+   "type": "single",
+   "question": "Which of the following is a required reactant for photosynthesis?",
+   "options": [
+    {
+     "value": "A",
+     "label": "Carbon Dioxide"
+    },
+    {
+     "value": "B",
+     "label": "Oxygen"
+    },
+    {
+     "value": "C",
+     "label": "Glucose"
+    },
+    {
+     "value": "D",
+     "label": "ATP"
+    }
+   ],
+   "answer": [
+    "A"
+   ],
+   "explanation": "Carbon dioxide is a necessary reactant for photosynthesis. Oxygen is a product, not a reactant. Glucose is synthesized during photosynthesis, and ATP is produced during the light-dependent reactions but not a primary reactant.",
+   "points": 10
+  },
+  {
+   "id": "q2",
+   "type": "multiple",
+   "question": "Select all products generated by photosynthesis.",
+   "options": [
+    {
+     "value": "A",
+     "label": "Oxygen"
+    },
+    {
+     "value": "B",
+     "label": "Carbon Dioxide"
+    },
+    {
+     "value": "C",
+     "label": "Glucose"
+    },
+    {
+     "value": "D",
+     "label": "Water"
+    }
+   ],
+   "answer": [
+    "A",
+    "C"
+   ],
+   "explanation": "Oxygen is released as a byproduct during the light-dependent reactions, and glucose is produced during the Calvin Cycle. Carbon dioxide and water are reactants, not products of photosynthesis.",
+   "points": 15
+  },
+  {
+   "id": "q3",
+   "type": "short_answer",
+   "question": "Briefly explain the primary function of the light-dependent reactions and the Calvin Cycle in photosynthesis.",
+   "options": [],
+   "answer": [],
+   "explanation": "The light-dependent reactions occur in the thylakoid membrane and capture light energy to produce ATP and NADPH. The Calvin Cycle (dark reactions) takes place in the stroma and uses ATP and NADPH to fix carbon dioxide into glucose.",
+   "points": 20
+  }
+ ],
+ "simulations": [
+  {
+   "title": "The Photosynthesis Factory",
+   "file": "sim-01.html"
+  }
+ ],
+ "video": "video.mp4",
+ "poster": "poster.jpg",
+ "captions": "captions.vtt",
+ "duration": 132,
+ "generator": "OpenMAIC"
+}

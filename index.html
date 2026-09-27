@@ -1251,6 +1251,65 @@ footer{
   .tool-detail-sidebar{position:static;}
 }
 
+/* ══════════════════════════════════════════
+   LESSONS — OpenMAIC lessons served as static files from lesson-files/
+══════════════════════════════════════════ */
+/* Seven tabs no longer fit at full padding between the burger breakpoint and a wide screen */
+@media(max-width:1180px){ .nav-tab{padding:8px 12px;} .nav-logo{margin-right:20px;} }
+@media(max-width:980px){ .nav-tab .ico{display:none;} }
+/* auto-fill, not auto-fit: a subject with one lesson keeps a normal-width card */
+.lesson-grid{grid-template-columns:repeat(auto-fill,minmax(280px,1fr));}
+.lesson-card{
+  background:var(--surf);border:1px solid var(--border);border-radius:var(--r2);
+  overflow:hidden;cursor:pointer;transition:all 0.2s;display:flex;flex-direction:column;
+}
+.lesson-card:hover{transform:translateY(-4px);box-shadow:0 20px 60px rgba(0,0,0,0.18);border-color:rgba(0,200,150,0.3);}
+.lesson-thumb{aspect-ratio:16/9;background:var(--bg3) center/cover no-repeat;position:relative;}
+.lesson-thumb::after{
+  content:'';position:absolute;inset:auto 12px 12px auto;width:40px;height:40px;border-radius:50%;
+  background:rgba(3,5,16,0.72) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3E%3Cpath d='M8 5v14l11-7z'/%3E%3C/svg%3E") center/18px no-repeat;
+}
+.lesson-card-body{padding:20px 22px 22px;display:flex;flex-direction:column;gap:8px;flex:1;}
+.lesson-card-title{font-weight:700;font-size:1.05em;color:var(--text);}
+.lesson-card-sum{font-size:0.88em;color:var(--text2);line-height:1.6;}
+.lesson-meta{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:0.78em;color:var(--text3);margin-top:auto;padding-top:6px;}
+.lesson-empty{padding:40px;text-align:center;color:var(--text3);border:1px dashed var(--border2);border-radius:var(--r2);}
+.lesson-subject{margin:40px 0 14px;font-size:0.72em;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--text3);}
+.lesson-subject:first-child{margin-top:0;}
+
+.lesson-wrap{max-width:980px;margin:0 auto;padding:40px 6vw 80px;}
+.lesson-back{display:inline-flex;align-items:center;gap:6px;font-size:0.86em;color:var(--text2);cursor:pointer;margin-bottom:22px;min-height:44px;}
+.lesson-back:hover{color:var(--green-text);}
+.lesson-title{font-weight:800;font-size:clamp(1.7em,4vw,2.6em);letter-spacing:-1px;line-height:1.1;margin:8px 0 12px;color:var(--text);}
+.lesson-video{width:100%;aspect-ratio:16/9;background:#000;border-radius:var(--r);display:block;margin:24px 0 10px;}
+.lesson-ai-note{font-size:0.78em;color:var(--text3);margin-bottom:36px;}
+.lesson-block{background:var(--surf);border:1px solid var(--border);border-radius:var(--r2);padding:26px 28px;margin-bottom:22px;}
+.lesson-block h2{font-size:1.15em;font-weight:700;margin-bottom:14px;color:var(--text);}
+.lesson-outline{list-style:none;counter-reset:scene;display:flex;flex-direction:column;gap:8px;}
+.lesson-outline li{counter-increment:scene;display:flex;align-items:center;gap:12px;font-size:0.92em;color:var(--text2);}
+.lesson-outline li::before{content:counter(scene);width:26px;height:26px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:0.8em;font-weight:600;background:var(--bg3);color:var(--text2);}
+.lesson-sim-frame{width:100%;height:min(75vh,640px);border:1px solid var(--border);border-radius:var(--r);background:#fff;margin-top:14px;}
+.quiz-q{padding:18px 0;border-top:1px solid var(--border);}
+.quiz-q:first-of-type{border-top:none;padding-top:4px;}
+.quiz-q-text{font-weight:600;margin-bottom:12px;color:var(--text);line-height:1.5;}
+.quiz-q-kind{font-size:0.75em;color:var(--text3);font-weight:500;margin-left:6px;}
+.quiz-opt{display:flex;align-items:center;gap:10px;padding:10px 14px;min-height:44px;border:1px solid var(--border);border-radius:10px;margin-bottom:8px;cursor:pointer;font-size:0.92em;color:var(--text2);}
+.quiz-opt:hover{border-color:var(--border2);}
+.quiz-opt input{accent-color:var(--green);width:18px;height:18px;flex-shrink:0;}
+.quiz-opt.right{border-color:rgba(0,200,150,0.5);background:rgba(0,200,150,0.08);color:var(--text);}
+.quiz-opt.wrong{border-color:rgba(248,81,73,0.5);background:rgba(248,81,73,0.07);}
+.quiz-q textarea{width:100%;min-height:96px;padding:12px 14px;border:1px solid var(--border2);border-radius:10px;font:inherit;font-size:0.92em;background:var(--bg);color:var(--text);resize:vertical;}
+.quiz-feedback{display:none;margin-top:10px;padding:12px 14px;border-radius:10px;background:var(--bg2);font-size:0.88em;color:var(--text2);line-height:1.6;}
+.quiz-feedback.show{display:block;}
+.quiz-feedback strong{color:var(--text);}
+.quiz-score{font-weight:700;color:var(--green-text);margin-left:12px;}
+.lesson-transcript h3{font-size:0.95em;font-weight:600;margin:18px 0 6px;color:var(--text);}
+.lesson-transcript h3:first-child{margin-top:0;}
+.lesson-transcript p{font-size:0.9em;color:var(--text2);line-height:1.7;margin-bottom:8px;}
+details.lesson-block summary{cursor:pointer;font-weight:700;font-size:1.15em;color:var(--text);min-height:32px;}
+details.lesson-block[open] summary{margin-bottom:14px;}
+@media(max-width:640px){ .lesson-block{padding:20px 18px;} }
+
 </style>
 
 <!-- ══════════════════════════════════════════
@@ -1399,6 +1458,8 @@ nav.nav-scrolled { box-shadow: 0 4px 28px rgba(0,0,0,0.1); border-bottom-color: 
 <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5M12 15V3"/></symbol>
 <symbol id="i-mail" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
 <rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></symbol>
+<symbol id="i-play" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+<rect x="2" y="4" width="20" height="16" rx="2"/><path d="m10 9 5 3-5 3Z"/></symbol>
 </defs></svg>
 
 
@@ -1453,6 +1514,7 @@ nav.nav-scrolled { box-shadow: 0 4px 28px rgba(0,0,0,0.1); border-bottom-color: 
     <div class="nav-tab active" id="tab-home"     onclick="showPage('home')" role="button" tabindex="0"><svg class="ico" aria-hidden="true"><use href="#i-home"></use></svg>Home</div>
     <div class="nav-tab"        id="tab-tools"    onclick="showPage('tools')" role="button" tabindex="0"><svg class="ico" aria-hidden="true"><use href="#i-tools"></use></svg>Bioinfo Tools</div>
     <div class="nav-tab"        id="tab-edu"      onclick="showPage('edu')" role="button" tabindex="0"><svg class="ico" aria-hidden="true"><use href="#i-learn"></use></svg>Education</div>
+    <div class="nav-tab"        id="tab-lessons"  onclick="showPage('lessons')" role="button" tabindex="0"><svg class="ico" aria-hidden="true"><use href="#i-play"></use></svg>Lessons</div>
     <div class="nav-tab"        id="tab-resources" onclick="showPage('resources')" role="button" tabindex="0"><svg class="ico" aria-hidden="true"><use href="#i-link"></use></svg>Resources</div>
     <div class="nav-tab"        id="tab-register" onclick="showPage('register')" role="button" tabindex="0"><svg class="ico" aria-hidden="true"><use href="#i-download"></use></svg>Register & Download</div>
     <div class="nav-tab"        id="tab-contact"  onclick="showPage('contact')" role="button" tabindex="0"><svg class="ico" aria-hidden="true"><use href="#i-mail"></use></svg>Contact</div>
@@ -1467,6 +1529,7 @@ nav.nav-scrolled { box-shadow: 0 4px 28px rgba(0,0,0,0.1); border-bottom-color: 
   <div class="nav-tab" onclick="showPage('home');toggleMobile()" role="button" tabindex="0"><svg class="ico" aria-hidden="true"><use href="#i-home"></use></svg>Home</div>
   <div class="nav-tab" onclick="showPage('tools');toggleMobile()" role="button" tabindex="0"><svg class="ico" aria-hidden="true"><use href="#i-tools"></use></svg>Bioinfo Tools</div>
   <div class="nav-tab" onclick="showPage('edu');toggleMobile()" role="button" tabindex="0"><svg class="ico" aria-hidden="true"><use href="#i-learn"></use></svg>Education</div>
+  <div class="nav-tab" onclick="showPage('lessons');toggleMobile()" role="button" tabindex="0"><svg class="ico" aria-hidden="true"><use href="#i-play"></use></svg>Lessons</div>
   <div class="nav-tab" onclick="showPage('resources');toggleMobile()" role="button" tabindex="0"><svg class="ico" aria-hidden="true"><use href="#i-link"></use></svg>Resources</div>
   <div class="nav-tab" onclick="showPage('register');toggleMobile()" role="button" tabindex="0"><svg class="ico" aria-hidden="true"><use href="#i-download"></use></svg>Register & Download</div>
   <div class="nav-tab" onclick="showPage('contact');toggleMobile()" role="button" tabindex="0"><svg class="ico" aria-hidden="true"><use href="#i-mail"></use></svg>Contact</div>
@@ -6687,6 +6750,26 @@ hub_genes &lt;- module_genes[order(kME[module_genes, paste0("kME", module_number
 </div><!-- end page-edu -->
 
 <!-- ══════════════════════════════════════════
+     LESSONS — library and single-lesson view.
+     Both are filled from lesson-files/ by the LESSONS script below;
+     tools/build-lesson.py writes those files from an OpenMAIC export.
+══════════════════════════════════════════ -->
+<div class="page" id="page-lessons">
+  <div class="tools-hero" style="min-height:320px;">
+    <div class="label">Watch · Explore · Test yourself</div>
+    <h1 class="h1">Lessons</h1>
+    <p class="lead">Short video lessons, each with an interactive simulation and a quiz that checks your answers as you go.</p>
+  </div>
+  <div class="section">
+    <div id="lesson-library"><div class="lesson-empty">Loading lessons…</div></div>
+  </div>
+</div>
+
+<div class="page" id="page-lesson">
+  <div class="lesson-wrap" id="lesson-view"></div>
+</div>
+
+<!-- ══════════════════════════════════════════
      REGISTER & DOWNLOAD PAGE
 ══════════════════════════════════════════ -->
 <div class="page" id="page-register">
@@ -7209,9 +7292,10 @@ function showPage(name, skipHash) {
 
   // Highlight the correct nav tab
   // Tool sub-pages highlight the "tools" tab
-  const navTabName = tabId.startsWith('tool-') ? 'tools' : tabId;
+  const navTabName = tabId.startsWith('tool-') ? 'tools' : tabId === 'lesson' ? 'lessons' : tabId;
   const tab = document.getElementById('tab-' + navTabName);
   if (tab) tab.classList.add('active');
+  if (tabId === 'lessons' && typeof loadLessonLibrary === 'function') loadLessonLibrary();
 
   // Real path + per-route title/description, instead of a location.hash write
   if (!skipHash && typeof updateRoute === 'function') updateRoute(tabId, true);
@@ -7468,6 +7552,234 @@ document.addEventListener('DOMContentLoaded', () => setTimeout(initCounters, 300
 })();
 
 // ══════════════════════════════════════════════════════════════════════════
+// LESSONS — OpenMAIC lessons from lesson-files/
+// ══════════════════════════════════════════════════════════════════════════
+// tools/build-lesson.py unpacks each OpenMAIC export into lesson-files/<slug>/
+// and keeps lesson-files/index.json as the catalogue. Everything here is built
+// with textContent, never innerHTML: the lesson text is model-generated, and a
+// stray "<" in a quiz option should print, not parse.
+//
+// Simulations are model-written HTML with their own scripts. They run in an
+// iframe loaded through srcdoc with sandbox="allow-scripts" and no
+// allow-same-origin, so they get an opaque origin and cannot reach this page,
+// its storage or the RNAflow access code. srcdoc also sidesteps the site-wide
+// X-Frame-Options: DENY, which would block a same-origin src= frame.
+const LESSON_DIR = '/lesson-files/';
+let lessonCatalogue = null;
+let currentLesson = null;
+
+function lessonEl(tag, attrs, children) {
+  const node = document.createElement(tag);
+  if (attrs) Object.keys(attrs).forEach(function (k) {
+    if (k === 'text') node.textContent = attrs[k];
+    else if (k === 'on') Object.keys(attrs.on).forEach(function (ev) { node.addEventListener(ev, attrs.on[ev]); });
+    else node.setAttribute(k, attrs[k]);
+  });
+  (children || []).forEach(function (c) { if (c) node.appendChild(c); });
+  return node;
+}
+
+function lessonMinutes(seconds) {
+  return seconds ? Math.max(1, Math.round(seconds / 60)) + ' min' : null;
+}
+
+function fetchJSON(url) {
+  return fetch(url, { cache: 'no-cache' }).then(function (r) {
+    if (!r.ok) throw new Error(url + ' answered ' + r.status);
+    return r.json();
+  });
+}
+
+function loadLessonLibrary() {
+  const box = document.getElementById('lesson-library');
+  if (!box || lessonCatalogue) return;
+  fetchJSON(LESSON_DIR + 'index.json').then(function (cards) {
+    lessonCatalogue = cards;
+    box.textContent = '';
+    if (!cards.length) { box.appendChild(lessonEl('div', { class: 'lesson-empty', text: 'No lessons yet — check back soon.' })); return; }
+    const bySubject = {};
+    cards.forEach(function (c) { (bySubject[c.subject || 'General'] = bySubject[c.subject || 'General'] || []).push(c); });
+    Object.keys(bySubject).forEach(function (subject) {
+      box.appendChild(lessonEl('div', { class: 'lesson-subject', text: subject }));
+      box.appendChild(lessonEl('div', { class: 'card-grid lesson-grid' }, bySubject[subject].map(lessonCard)));
+    });
+  }).catch(function () {
+    box.textContent = '';
+    box.appendChild(lessonEl('div', { class: 'lesson-empty', text: 'Lessons could not be loaded. Please refresh the page.' }));
+  });
+}
+
+function lessonCard(c) {
+  const thumb = lessonEl('div', { class: 'lesson-thumb' });
+  if (c.poster) thumb.style.backgroundImage = 'url("' + LESSON_DIR + c.slug + '/' + c.poster + '")';
+  const meta = [lessonMinutes(c.duration), c.scenes + ' parts',
+                c.simulations ? c.simulations + ' simulation' + (c.simulations > 1 ? 's' : '') : null,
+                c.questions ? c.questions + ' quiz questions' : null].filter(Boolean);
+  return lessonEl('div', { class: 'lesson-card', role: 'button', tabindex: '0', 'aria-label': c.title,
+                     on: { click: function () { openLesson(c.slug); } } }, [
+    thumb,
+    lessonEl('div', { class: 'lesson-card-body' }, [
+      lessonEl('div', { class: 'lesson-card-title', text: c.title }),
+      c.summary ? lessonEl('div', { class: 'lesson-card-sum', text: c.summary }) : null,
+      lessonEl('div', { class: 'lesson-meta' }, meta.map(function (m) { return lessonEl('span', { text: m }); }))
+    ])
+  ]);
+}
+
+// push === false: we got here from the URL (first load, back/forward), so the
+// router already owns history; just render.
+function openLesson(slug, push) {
+  const view = document.getElementById('lesson-view');
+  view.textContent = '';
+  view.appendChild(lessonEl('div', { class: 'lesson-empty', text: 'Loading lesson…' }));
+  currentLesson = { slug: slug, title: null, summary: '' };
+  showPage('lesson', true);
+  if (push !== false) updateRoute('lesson', true);
+  fetchJSON(LESSON_DIR + slug + '/lesson.json').then(function (lesson) {
+    currentLesson = lesson;
+    updateRoute('lesson', false);
+    renderLesson(view, lesson);
+  }).catch(function () {
+    view.textContent = '';
+    view.appendChild(lessonBack());
+    view.appendChild(lessonEl('div', { class: 'lesson-empty', text: 'That lesson could not be found.' }));
+  });
+}
+
+function lessonBack() {
+  return lessonEl('div', { class: 'lesson-back', role: 'button', tabindex: '0', text: '← All lessons',
+                     on: { click: function () { showPage('lessons'); } } });
+}
+
+function renderLesson(view, L) {
+  const base = LESSON_DIR + L.slug + '/';
+  view.textContent = '';
+  view.appendChild(lessonBack());
+  view.appendChild(lessonEl('div', { class: 'label', text: L.subject || 'Lesson' }));
+  view.appendChild(lessonEl('h1', { class: 'lesson-title', text: L.title }));
+  if (L.summary) view.appendChild(lessonEl('p', { class: 'lead', text: L.summary }));
+
+  if (L.video) {
+    const v = lessonEl('video', { class: 'lesson-video', controls: '', preload: 'metadata', playsinline: '' });
+    if (L.poster) v.setAttribute('poster', base + L.poster);
+    v.appendChild(lessonEl('source', { src: base + L.video, type: 'video/mp4' }));
+    if (L.captions) v.appendChild(lessonEl('track', { kind: 'captions', src: base + L.captions, srclang: 'en', label: 'English', default: '' }));
+    view.appendChild(v);
+  }
+  view.appendChild(lessonEl('p', { class: 'lesson-ai-note',
+    text: 'This lesson was generated with AI (' + (L.generator || 'OpenMAIC') + '). Spotted a mistake? Let us know on the Contact page.' }));
+
+  view.appendChild(lessonEl('section', { class: 'lesson-block' }, [
+    lessonEl('h2', { text: 'In this lesson' }),
+    lessonEl('ol', { class: 'lesson-outline' }, L.scenes.map(function (s) { return lessonEl('li', { text: s.title }); }))
+  ]));
+
+  L.simulations.forEach(function (sim) { view.appendChild(simulationBlock(base, sim)); });
+  if (L.quiz.length) view.appendChild(quizBlock(L.quiz));
+
+  const spoken = L.scenes.filter(function (s) { return s.narration && s.narration.length; });
+  if (spoken.length) {
+    view.appendChild(lessonEl('details', { class: 'lesson-block lesson-transcript' }, [
+      lessonEl('summary', { text: 'Transcript' })
+    ].concat(spoken.reduce(function (acc, s) {
+      acc.push(lessonEl('h3', { text: s.title }));
+      s.narration.forEach(function (line) { acc.push(lessonEl('p', { text: line })); });
+      return acc;
+    }, []))));
+  }
+
+  if (L.module && typeof MODULES !== 'undefined' && MODULES[L.module]) {
+    view.appendChild(lessonEl('div', { class: 'lesson-back', role: 'button', tabindex: '0',
+      text: 'Go deeper: ' + MODULE_TITLE[MODULES[L.module]] + ' module in the Education course →',
+      on: { click: function () { history.pushState({}, '', '/learn/' + L.module); applyRoute(); } } }));
+  }
+}
+
+function simulationBlock(base, sim) {
+  const box = lessonEl('section', { class: 'lesson-block' }, [
+    lessonEl('h2', { text: 'Try it: ' + sim.title }),
+    lessonEl('p', { class: 'lesson-card-sum', text: 'An interactive simulation. Change the controls and watch what happens.' })
+  ]);
+  const btn = lessonEl('button', { class: 'btn btn-green', type: 'button', text: 'Launch simulation', style: 'margin-top:14px;' });
+  btn.addEventListener('click', function () {
+    btn.disabled = true; btn.textContent = 'Loading…';
+    fetch(base + sim.file).then(function (r) { return r.text(); }).then(function (html) {
+      const frame = lessonEl('iframe', { class: 'lesson-sim-frame', sandbox: 'allow-scripts', title: sim.title, loading: 'lazy' });
+      frame.srcdoc = html;
+      btn.replaceWith(frame);
+    }).catch(function () { btn.disabled = false; btn.textContent = 'Could not load — try again'; });
+  });
+  box.appendChild(btn);
+  return box;
+}
+
+function quizBlock(questions) {
+  const kinds = { single: 'choose one', multiple: 'choose all that apply', short_answer: 'self-check, not scored' };
+  const form = lessonEl('form', { class: 'lesson-block' }, [lessonEl('h2', { text: 'Check your understanding' })]);
+  questions.forEach(function (q, i) {
+    const wrap = lessonEl('div', { class: 'quiz-q' }, [
+      lessonEl('div', { class: 'quiz-q-text' }, [
+        document.createTextNode((i + 1) + '. ' + q.question),
+        lessonEl('span', { class: 'quiz-q-kind', text: '(' + (kinds[q.type] || q.type) + ')' })
+      ])
+    ]);
+    if (q.type === 'short_answer') {
+      wrap.appendChild(lessonEl('textarea', { name: q.id, 'aria-label': 'Your answer', placeholder: 'Write your answer, then check it against the model answer.' }));
+    } else {
+      q.options.forEach(function (o) {
+        wrap.appendChild(lessonEl('label', { class: 'quiz-opt', 'data-value': o.value }, [
+          lessonEl('input', { type: q.type === 'multiple' ? 'checkbox' : 'radio', name: q.id, value: o.value }),
+          lessonEl('span', { text: o.label })
+        ]));
+      });
+    }
+    wrap.appendChild(lessonEl('div', { class: 'quiz-feedback' }));
+    form.appendChild(wrap);
+  });
+  const score = lessonEl('span', { class: 'quiz-score', 'aria-live': 'polite' });
+  const reset = lessonEl('button', { class: 'btn btn-outline', type: 'button', text: 'Try again', style: 'display:none;margin-left:8px;' });
+  form.appendChild(lessonEl('div', { style: 'margin-top:18px;display:flex;align-items:center;flex-wrap:wrap;gap:8px;' }, [
+    lessonEl('button', { class: 'btn btn-green', type: 'submit', text: 'Check answers' }), reset, score
+  ]));
+
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    let got = 0, total = 0;
+    questions.forEach(function (q, i) {
+      const wrap = form.querySelectorAll('.quiz-q')[i];
+      const fb = wrap.querySelector('.quiz-feedback');
+      fb.textContent = '';
+      if (q.type === 'short_answer') {
+        fb.appendChild(lessonEl('strong', { text: 'Model answer: ' }));
+        fb.appendChild(document.createTextNode(q.explanation));
+      } else {
+        total += q.points;
+        const picked = Array.prototype.map.call(wrap.querySelectorAll('input:checked'), function (x) { return x.value; });
+        const right = picked.length === q.answer.length && q.answer.every(function (a) { return picked.indexOf(a) !== -1; });
+        if (right) got += q.points;
+        wrap.querySelectorAll('.quiz-opt').forEach(function (opt) {
+          const v = opt.getAttribute('data-value');
+          opt.classList.toggle('right', q.answer.indexOf(v) !== -1);
+          opt.classList.toggle('wrong', picked.indexOf(v) !== -1 && q.answer.indexOf(v) === -1);
+        });
+        fb.appendChild(lessonEl('strong', { text: right ? 'Correct. ' : 'Not quite. ' }));
+        fb.appendChild(document.createTextNode(q.explanation));
+      }
+      fb.classList.add('show');
+    });
+    score.textContent = total ? 'Score: ' + got + ' / ' + total : '';
+    reset.style.display = '';
+  });
+  reset.addEventListener('click', function () {
+    form.reset();
+    form.querySelectorAll('.quiz-opt').forEach(function (o) { o.classList.remove('right', 'wrong'); });
+    form.querySelectorAll('.quiz-feedback').forEach(function (f) { f.classList.remove('show'); });
+    score.textContent = ''; reset.style.display = 'none';
+  });
+  return form;
+}
+
+// ══════════════════════════════════════════════════════════════════════════
 // ROUTING — real paths via history.pushState
 // ══════════════════════════════════════════════════════════════════════════
 // Navigation used to write location.hash. That worked for people — refresh and
@@ -7490,6 +7802,7 @@ const ROUTES = [
   { path: '/tools/scrnaflow',  page: 'tool-scrnaflow',  title: 'scRNAflow — Single-cell RNA-seq | BioInfoCodex',      desc: 'Single-cell RNA-seq analysis pipeline. Expected 2026.' },
   { path: '/tools/proteomics', page: 'tool-proteomics', title: 'ProteomicsLab — Mass Spectrometry | BioInfoCodex',    desc: 'Proteomics and mass spectrometry analysis. Expected 2026.' },
   { path: '/learn',            page: 'edu',             title: 'Learn Bioinformatics — Free Course | BioInfoCodex',   desc: 'A university-level bioinformatics curriculum: 14 modules from molecular biology to genomic data analysis.' },
+  { path: '/lessons',          page: 'lessons',         title: 'Video Lessons — BioInfoCodex',                        desc: 'Short video lessons with interactive simulations and self-check quizzes.' },
   { path: '/resources',        page: 'resources',       title: 'Bioinformatics Resources — BioInfoCodex',             desc: 'A curated directory of bioinformatics tools, databases and learning resources.' },
   { path: '/download',         page: 'register',        title: 'Download RNAflow — BioInfoCodex',                     desc: 'Register for access to RNAflow for macOS, Windows and Linux.' },
   { path: '/contact',          page: 'contact',         title: 'Contact — BioInfoCodex',                              desc: 'Get in touch with the BioInfoCodex team.' }
@@ -7538,6 +7851,12 @@ function setMeta(title, desc, path) {
 function updateRoute(page, push) {
   var r = routeForPage(page);
   var path = r.path, title = r.title, desc = r.desc;
+  // A single lesson isn't in ROUTES: its path and title come from the lesson itself.
+  if (page === 'lesson' && currentLesson) {
+    path = '/lessons/' + currentLesson.slug;
+    title = (currentLesson.title || 'Lesson') + ' — Lessons | BioInfoCodex';
+    desc = currentLesson.summary || routeForPage('lessons').desc;
+  }
   if (page === 'edu') {
     var active = document.querySelector('.edu-module.active');
     var mod = active && active.id.replace('edu-', '');
@@ -7558,6 +7877,8 @@ function pageForPath(pathname) {
   var path = pathname.replace(/\/+$/, '') || '/';
   var mod = path.match(/^\/learn\/([a-z-]+)$/);
   if (mod && MODULES[mod[1]]) return { page: 'edu', module: MODULES[mod[1]] };
+  var lesson = path.match(/^\/lessons\/([a-z0-9]+(?:-[a-z0-9]+)*)$/);
+  if (lesson) return { page: 'lesson', lesson: lesson[1] };
   for (var i = 0; i < ROUTES.length; i++) if (ROUTES[i].path === path) return { page: ROUTES[i].page };
   return null;
 }
@@ -7579,6 +7900,7 @@ function applyRoute() {
     var tab = document.querySelector('.edu-mod-tab[data-mod="' + hit.module + '"]');
     showEduModule(hit.module, tab, true);
   }
+  if (hit.lesson) { openLesson(hit.lesson, false); return; }
   showPage(hit.page, true);
   updateRoute(hit.page, false);
 }

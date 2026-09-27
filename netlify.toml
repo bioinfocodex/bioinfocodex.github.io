@@ -57,3 +57,32 @@
   for = "/sitemap.xml"
   [headers.values]
     Cache-Control = "public, max-age=3600"
+
+# Lessons. The catalogue and each lesson.json change whenever a lesson is added
+# or rebuilt under the same name, so they always revalidate. The media files
+# keep their names across rebuilds too, so a day is as long as they can cache
+# before a corrected video would be missed.
+[[headers]]
+  for = "/lesson-files/*.json"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
+
+[[headers]]
+  for = "/lesson-files/*/*.mp4"
+  [headers.values]
+    Cache-Control = "public, max-age=86400"
+
+[[headers]]
+  for = "/lesson-files/*/*.jpg"
+  [headers.values]
+    Cache-Control = "public, max-age=86400"
+
+[[headers]]
+  for = "/lesson-files/*/*.vtt"
+  [headers.values]
+    Cache-Control = "public, max-age=86400"
+
+[[headers]]
+  for = "/lesson-files/*/*.html"
+  [headers.values]
+    Cache-Control = "public, max-age=86400"

@@ -23,6 +23,7 @@ WEIGHT = {
     "/":                 ("1.0", "weekly"),
     "/tools":            ("0.9", "weekly"),
     "/learn":            ("0.9", "weekly"),
+    "/lessons":          ("0.8", "weekly"),
     "/tools/rnaflow":    ("0.9", "monthly"),
     "/tools/genenet":    ("0.8", "monthly"),
     "/download":         ("0.8", "monthly"),
@@ -38,7 +39,15 @@ def routes_from_page(html: str):
         sys.exit("No ROUTES found in index.html — has the router changed shape?")
     block = re.search(r"const MODULES = \{(.*?)\};", html, re.S)
     slugs = re.findall(r"'([a-z-]+)'\s*:\s*'mod\d+'", block.group(1)) if block else []
-    return paths + [f"/learn/{s}" for s in slugs]
+    return paths + [f"/learn/{s}" for s in slugs] + lesson_routes()
+
+
+def lesson_routes():
+    # Single lessons aren't in ROUTES; tools/build-lesson.py lists them here.
+    cat = ROOT / "lesson-files" / "index.json"
+    if not cat.exists():
+        return []
+    return [f"/lessons/{c['slug']}" for c in json.loads(cat.read_text(encoding="utf-8"))]
 
 
 def main():

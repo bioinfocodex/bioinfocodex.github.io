@@ -17,6 +17,7 @@
 # The trailing ! forces these ahead of the static file that would otherwise win.
 /netlify/*    /404.html   404!
 /tools/build-sitemap.py   /404.html   404!
+/tools/build-lesson.py    /404.html   404!
 /HOSTING.md   /404.html   404!
 /README.md    /404.html   404!
 
@@ -24,6 +25,8 @@
 /learn/*      /index.html   200
 /tools        /index.html   200
 /learn        /index.html   200
+/lessons/*    /index.html   200
+/lessons      /index.html   200
 /download     /index.html   200
 /resources    /index.html   200
 /contact      /index.html   200
