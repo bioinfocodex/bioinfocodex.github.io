@@ -1,18 +1,5 @@
 [
  {
-  "slug": "photosynthesis",
-  "title": "Photosynthesis: Energy from Light",
-  "subject": "Foundations",
-  "summary": "How plants turn light, water and carbon dioxide into sugar and oxygen, and why almost every food chain depends on it. A short sample lesson generated with OpenMAIC.",
-  "module": "foundations",
-  "poster": "poster.jpg",
-  "duration": 132,
-  "scenes": 5,
-  "questions": 3,
-  "simulations": 1,
-  "video": true
- },
- {
   "slug": "what-is-rna-seq",
   "title": "What is RNA-seq?",
   "subject": "RNA-seq",

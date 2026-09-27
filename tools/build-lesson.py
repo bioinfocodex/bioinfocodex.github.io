@@ -17,6 +17,7 @@ Inputs come from OpenMAIC's export menu:
         --subject "Foundations" --summary "One or two sentences for the card."
 
     python3 tools/build-lesson.py --list      # show the catalogue, write nothing
+    python3 tools/build-lesson.py --remove photosynthesis   # delete a lesson
 
 Re-running with the same slug replaces that lesson. The catalogue,
 lesson-files/index.json, is rebuilt from the lesson folders on every run.
@@ -199,11 +200,20 @@ def main():
     p.add_argument("--summary", default="", help="one or two sentences for the lesson card")
     p.add_argument("--module", default=None, help="related /learn/<module> slug, if any")
     p.add_argument("--list", action="store_true", help="print the catalogue and exit")
+    p.add_argument("--remove", metavar="SLUG", help="delete lesson-files/SLUG and rebuild the catalogue")
     args = p.parse_args()
 
     if args.list:
         for c in catalogue() if OUT.exists() else []:
             print(f"  /lessons/{c['slug']:<24} {c['title']}")
+        return
+    if args.remove:
+        dest = OUT / args.remove
+        if not SLUG_RE.match(args.remove) or not (dest / "lesson.json").exists():
+            sys.exit(f"no lesson called {args.remove!r} in lesson-files/")
+        shutil.rmtree(dest)
+        write_catalogue()
+        print(f"  removed lesson-files/{args.remove}/")
         return
     if not args.maic or not args.slug:
         p.error("a .maic.zip and --slug are required")
