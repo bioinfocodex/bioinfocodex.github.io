@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Differential Expression: Volcano Plot</title>
+<style>
+  :root { --up:#d1495b; --down:#2e86ab; --ns:#b8bec7; --ink:#1f2933; --muted:#5f6b7a; --line:#e4e7eb; }
+  * { box-sizing:border-box; }
+  body { margin:0; font-family:-apple-system, "Segoe UI", Inter, Roboto, sans-serif; color:var(--ink); background:#fff; }
+  #experiment { display:flex; flex-direction:column; gap:14px; padding:16px; min-height:100vh; }
+  #controls { display:grid; grid-template-columns:repeat(auto-fit, minmax(210px, 1fr)); gap:14px 20px; }
+  .slider-group label { display:flex; justify-content:space-between; font-size:13px; font-weight:600; margin-bottom:4px; }
+  .slider-group label span { font-weight:500; color:var(--muted); font-variant-numeric:tabular-nums; }
+  .slider-group input { width:100%; accent-color:#0b7a75; }
+  .hint { font-size:11.5px; color:var(--muted); margin-top:2px; }
+  .preset-buttons { display:flex; flex-wrap:wrap; gap:8px; }
+  .preset-button { font:inherit; font-size:13px; padding:7px 12px; min-height:36px; border:1px solid #cbd2d9; border-radius:8px; background:#f5f7fa; cursor:pointer; }
+  .preset-button:hover { background:#e9edf2; }
+  #canvas-container { position:relative; width:100%; height:min(62vh, 460px); border:1px solid var(--line); border-radius:10px; }
+  #canvas { width:100%; height:100%; display:block; }
+  #counts { display:flex; flex-wrap:wrap; gap:8px 18px; font-size:13.5px; }
+  #counts b { font-variant-numeric:tabular-nums; }
+  .dot { display:inline-block; width:10px; height:10px; border-radius:50%; margin-right:6px; vertical-align:-1px; }
+  #info { font-size:13px; color:var(--muted); line-height:1.5; background:#f5f7fa; border-radius:8px; padding:10px 12px; }
+</style>
+</head>
+<body>
+<div id="experiment">
+  <div id="controls">
+    <div class="slider-group">
+      <label for="foldChange-slider">Fold-change threshold (log2) <span id="foldChange-display"></span></label>
+      <input type="range" id="foldChange-slider" min="0" max="4" step="0.1" value="1">
+      <div class="hint">1 means the gene at least doubled or halved.</div>
+    </div>
+    <div class="slider-group">
+      <label for="pValue-slider">p-value threshold <span id="pValue-display"></span></label>
+      <input type="range" id="pValue-slider" min="1" max="6" step="0.1" value="1.3">
+      <div class="hint">Slide right for a stricter (smaller) threshold.</div>
+    </div>
+    <div class="slider-group">
+      <label for="readDepth-slider">Sequencing depth <span id="readDepth-display"></span></label>
+      <input type="range" id="readDepth-slider" min="5" max="100" step="5" value="20">
+      <div class="hint">Million reads per sample. More reads, more power.</div>
+    </div>
+  </div>
+
+  <div class="preset-buttons">
+    <button class="preset-button" data-vars='{"foldChange":1,"pValue":0.05,"readDepth":20}'>Default</button>
+    <button class="preset-button" data-vars='{"foldChange":2,"pValue":0.01,"readDepth":20}'>Strict</button>
+    <button class="preset-button" data-vars='{"foldChange":0.5,"pValue":0.1,"readDepth":20}'>Lenient</button>
+    <button class="preset-button" data-vars='{"foldChange":1,"pValue":0.05,"readDepth":80}'>Deeper sequencing</button>
+  </div>
+
+  <div id="canvas-container"><canvas id="canvas" aria-label="Volcano plot of simulated genes"></canvas></div>
+
+  <div id="counts" aria-live="polite"></div>
+  <div id="info">Each dot is one gene. Stricter thresholds flag fewer genes and fewer false positives; looser thresholds catch more real changes but let more noise through. Deeper sequencing gives every gene more reads: real changes rise higher, and the wild fold changes of barely expressed genes settle down.</div>
+</div>
+
+<script>
+// Simulated experiment: 2000 genes, 3 replicates per group. 10% truly change.
+// Everything random is drawn once from a fixed seed, so moving a slider only
+// moves thresholds and power; it never reshuffles the genes.
+const N = 2000;
+function mulberry32(a) { return function () { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+const rand = mulberry32(20260927);
+function gauss() { let u = 0; while (!u) u = rand(); return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * rand()); }
+
+const genes = [];
+for (let i = 0; i < N; i++) {
+  const de = rand() < 0.10;
+  genes.push({
+    truth: de ? (rand() < 0.5 ? -1 : 1) * (1 + Math.abs(gauss()) * 0.9) : 0,
+    mean: Math.exp(-1.2 + gauss() * 1.5), // reads per million sequenced: most genes are lowly expressed
+    noise: gauss()
+  });
+}
+
+// erfc (Abramowitz & Stegun 7.1.26); good to ~1e-7, then capped below.
+function erfc(x) { const t = 1 / (1 + 0.3275911 * x); return t * (0.254829592 + t * (-0.284496736 + t * (1.421413741 + t * (-1.453152027 + t * 1.061405429)))) * Math.exp(-x * x); }
+const Y_MAX = 12;
+
+function model(depth) {
+  // Standard error of the log2 fold change: biological spread plus a Poisson
+  // term that shrinks as a gene gets more reads, over 3 replicates.
+  return genes.map(g => {
+    const reads = g.mean * depth;
+    const se = Math.sqrt(0.08 + 2.1 / reads) / Math.sqrt(3) * Math.SQRT2;
+    const lfc = g.truth + se * g.noise;
+    const z = Math.abs(lfc / se);
+    const p = z > 8 ? 0 : erfc(z / Math.SQRT2);
+    return { lfc, y: p <= 0 ? Y_MAX : Math.min(Y_MAX, -Math.log10(p)), truth: g.truth };
+  });
+}
+
+const el = id => document.getElementById(id);
+const canvas = el('canvas'), ctx = canvas.getContext('2d');
+
+function read() {
+  return { fc: +el('foldChange-slider').value, py: +el('pValue-slider').value, depth: +el('readDepth-slider').value };
+}
+
+function draw() {
+  const { fc, py, depth } = read();
+  const p = Math.pow(10, -py);
+  el('foldChange-display').textContent = fc.toFixed(1) + '  (' + Math.pow(2, fc).toFixed(1) + '×)';
+  el('pValue-display').textContent = p >= 0.001 ? p.toFixed(3).replace(/0+$/, '').replace(/\.$/, '') : p.toExponential(0);
+  el('readDepth-display').textContent = depth + ' M';
+
+  const dpr = window.devicePixelRatio || 1;
+  const W = canvas.clientWidth, H = canvas.clientHeight;
+  canvas.width = W * dpr; canvas.height = H * dpr; ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  const m = { l: 48, r: 14, t: 12, b: 40 };
+  const X = v => m.l + (v + 6) / 12 * (W - m.l - m.r);
+  const Y = v => H - m.b - v / Y_MAX * (H - m.t - m.b);
+  ctx.clearRect(0, 0, W, H);
+
+  // grid and ticks
+  ctx.font = '11px -apple-system, Segoe UI, sans-serif'; ctx.fillStyle = '#5f6b7a'; ctx.strokeStyle = '#eef0f3'; ctx.lineWidth = 1;
+  for (let v = -6; v <= 6; v += 2) { ctx.beginPath(); ctx.moveTo(X(v), m.t); ctx.lineTo(X(v), H - m.b); ctx.stroke(); ctx.textAlign = 'center'; ctx.fillText(v, X(v), H - m.b + 14); }
+  for (let v = 0; v <= Y_MAX; v += 2) { ctx.beginPath(); ctx.moveTo(m.l, Y(v)); ctx.lineTo(W - m.r, Y(v)); ctx.stroke(); ctx.textAlign = 'right'; ctx.fillText(v, m.l - 6, Y(v) + 4); }
+  ctx.fillStyle = '#1f2933'; ctx.textAlign = 'center'; ctx.font = '12px -apple-system, Segoe UI, sans-serif';
+  ctx.fillText('log2 fold change  (left: down, right: up)', m.l + (W - m.l - m.r) / 2, H - 8);
+  ctx.save(); ctx.translate(13, m.t + (H - m.t - m.b) / 2); ctx.rotate(-Math.PI / 2); ctx.fillText('−log10 p-value  (higher = more significant)', 0, 0); ctx.restore();
+
+  // genes
+  let up = 0, down = 0, fp = 0, missed = 0;
+  const pts = model(depth);
+  for (const g of pts) {
+    const sig = Math.abs(g.lfc) >= fc && g.y >= py;
+    if (sig) { g.lfc > 0 ? up++ : down++; if (g.truth === 0) fp++; } else if (g.truth !== 0) missed++;
+    g.color = sig ? (g.lfc > 0 ? '#d1495b' : '#2e86ab') : '#b8bec7';
+  }
+  for (const pass of [false, true]) {          // grey first, coloured on top
+    for (const g of pts) {
+      if ((g.color !== '#b8bec7') !== pass) continue;
+      ctx.fillStyle = g.color; ctx.globalAlpha = pass ? 0.9 : 0.55;
+      ctx.beginPath(); ctx.arc(X(Math.max(-6, Math.min(6, g.lfc))), Y(g.y), pass ? 2.6 : 2, 0, 7); ctx.fill();
+    }
+  }
+  ctx.globalAlpha = 1;
+
+  // threshold lines
+  ctx.setLineDash([5, 4]); ctx.strokeStyle = '#1f2933'; ctx.lineWidth = 1;
+  for (const v of [-fc, fc]) { ctx.beginPath(); ctx.moveTo(X(v), m.t); ctx.lineTo(X(v), H - m.b); ctx.stroke(); }
+  ctx.beginPath(); ctx.moveTo(m.l, Y(py)); ctx.lineTo(W - m.r, Y(py)); ctx.stroke(); ctx.setLineDash([]);
+
+  const sig = up + down;
+  el('counts').innerHTML =
+    '<span><i class="dot" style="background:#d1495b"></i>Up: <b>' + up + '</b></span>' +
+    '<span><i class="dot" style="background:#2e86ab"></i>Down: <b>' + down + '</b></span>' +
+    '<span><i class="dot" style="background:#b8bec7"></i>Not significant: <b>' + (N - sig) + '</b></span>' +
+    '<span>False positives among flagged genes: <b>' + fp + '</b></span>' +
+    '<span>Real changes missed: <b>' + missed + '</b> of ' + genes.filter(g => g.truth !== 0).length + '</span>';
+  publishState();
+}
+
+document.querySelectorAll('#controls input').forEach(s => s.addEventListener('input', draw));
+document.querySelectorAll('.preset-button').forEach(b => b.addEventListener('click', () => applyState(JSON.parse(b.dataset.vars))));
+window.addEventListener('resize', draw);
+
+// State arrives in lesson units (p as a probability, depth in million reads);
+// the p slider works on the -log10 scale so small thresholds are reachable.
+function applyState(state) {
+  if ('foldChange' in state) el('foldChange-slider').value = Math.max(0, Math.min(4, +state.foldChange));
+  if ('pValue' in state && +state.pValue > 0) el('pValue-slider').value = Math.max(1, Math.min(6, -Math.log10(+state.pValue)));
+  if ('readDepth' in state && +state.readDepth >= 5 && +state.readDepth <= 100) el('readDepth-slider').value = +state.readDepth;
+  draw();
+}
+
+// OpenMAIC teacher actions (highlight a control, set a state, annotate, reveal).
+window.addEventListener('message', e => {
+  const { type, target, state, content } = e.data || {};
+  const node = target ? document.querySelector(target) : null;
+  if (type === 'SET_WIDGET_STATE' && state) applyState(state);
+  if (type === 'HIGHLIGHT_ELEMENT' && node) {
+    node.style.outline = '3px solid rgba(139,92,246,.8)'; node.style.outlineOffset = '4px';
+    setTimeout(() => { node.style.outline = ''; }, 3000);
+  }
+  if (type === 'ANNOTATE_ELEMENT' && node && content) {
+    const r = node.getBoundingClientRect(), tip = document.createElement('div');
+    tip.textContent = content;
+    tip.style.cssText = 'position:fixed;z-index:9;max-width:280px;background:#1f2933;color:#fff;font-size:12px;padding:6px 9px;border-radius:6px;top:' + Math.max(4, r.top - 36) + 'px;left:' + r.left + 'px;';
+    document.body.appendChild(tip); setTimeout(() => tip.remove(), 4000);
+  }
+  if (type === 'REVEAL_ELEMENT' && node) { node.style.display = ''; node.style.opacity = '1'; }
+});
+
+// OpenMAIC reads the widget's current state from this node.
+function publishState() {
+  const { fc, py, depth } = read();
+  let node = document.querySelector('script[data-maic-observation]');
+  if (!node) { node = document.createElement('script'); node.type = 'application/json'; node.setAttribute('data-maic-observation', ''); el('experiment').appendChild(node); }
+  node.textContent = JSON.stringify({ summary: 'Thresholds: |log2FC| ≥ ' + fc.toFixed(1) + ', p ≤ ' + Math.pow(10, -py).toPrecision(2) + ', depth ' + depth + ' M reads',
+    state: { foldChange: fc, pValue: Math.pow(10, -py), readDepth: depth } });
+}
+
+draw();
+</script>
+</body>
+</html>

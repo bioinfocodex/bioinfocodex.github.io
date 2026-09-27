@@ -1,0 +1,136 @@
+{
+ "slug": "what-is-rna-seq",
+ "title": "What is RNA-seq?",
+ "subject": "RNA-seq",
+ "summary": "How RNA-seq measures gene expression: from RNA extraction and library preparation to read alignment, counting and a first look at differential expression, with a volcano plot you can explore.",
+ "module": "rna-seq",
+ "scenes": [
+  {
+   "title": "Why Measure Gene Expression?",
+   "type": "slide",
+   "narration": [
+    "Welcome to our course on gene expression analysis! Today, we'll explore why measuring gene expression is crucial for understanding biological processes and how modern techniques like RNA-seq are transforming biological research.",
+    "First, let's look at the key reasons we measure gene expression. Gene expression patterns tell us exactly which genes are active in different cells, revealing how cells function and respond to changes.",
+    "This information is vital for studying diseases, as abnormal gene activity can signal cancer or genetic disorders. It also helps us understand development, like how a single fertilized egg becomes a complete organism.",
+    "RNA-seq technology lets us analyze all the genes in a cell at once, providing a comprehensive view of the transcriptome. This has revolutionized fields like personalized medicine and evolutionary biology.",
+    "Over the next few pages, we'll walk through the RNA-seq workflow, from sample preparation to interpreting results. Let's begin with the first step in this process."
+   ]
+  },
+  {
+   "title": "RNA-seq Workflow Overview",
+   "type": "slide",
+   "narration": [
+    "Let's start with the first step in this process: extracting RNA from biological samples. This is crucial because the quality of RNA directly affects the accuracy of our results.",
+    "Here we see the detailed steps for RNA extraction. We begin by isolating RNA from cells or tissues using chemical methods that preserve the integrity of the RNA molecules.",
+    "Next, messenger RNA is enriched, broken into short fragments and copied into complementary DNA, or cDNA, by reverse transcription. Adapters are then added so the fragments can be read on a short-read sequencer such as Illumina.",
+    "Finally, the sequenced data is stored in FASTQ files. These files contain both the sequence data and quality scores for each read, which we'll use for quality control analysis later in the workflow."
+   ]
+  },
+  {
+   "title": "Alignment and Read Counting",
+   "type": "slide",
+   "narration": [
+    "Now we'll explore two critical steps in RNA-seq: aligning sequencing reads to a reference genome and quantifying how many reads map to each gene. This helps us measure gene expression levels accurately.",
+    "First, we map each read to the reference genome. Reads can span the junction between two exons, so RNA-seq uses splice-aware aligners such as HISAT2 or STAR. Think of this as matching puzzle pieces to a complete picture - each read is compared to the genome to find where it belongs.",
+    "Next, we count how many reads map to each gene using annotation databases. These databases act like a map, showing exactly which regions of the genome belong to specific genes.",
+    "Accurate quantification here is essential because even small errors can lead to incorrect conclusions about gene activity in downstream analyses like differential expression studies."
+   ]
+  },
+  {
+   "title": "Differential Expression Simulation",
+   "type": "interactive",
+   "narration": [
+    "Let's see how adjusting these parameters affects our results. First, notice the sliders for fold change and p-value thresholds.",
+    "Now try lowering the p-value threshold further. What happens to the number of significant genes?"
+   ],
+   "simulation": "sim-01.html"
+  },
+  {
+   "title": "Interpreting Results",
+   "type": "slide",
+   "narration": [
+    "As we saw on the previous page, adjusting the p-value threshold changes how many genes we flag as significant. Now let's explore how to interpret these findings effectively.",
+    "A volcano plot shows two things at once. The x-axis is the log2 fold change, how much a gene's expression changes. The y-axis is minus log10 of the p-value, so the more significant a gene is, the higher it sits. Significant genes appear in the upper right, upregulated, and the upper left, downregulated.",
+    "When identifying candidate genes, look for those with both large fold changes and very low p-values. However, always check for potential pitfalls like overemphasizing statistically significant but biologically irrelevant changes."
+   ]
+  },
+  {
+   "title": "Knowledge Check",
+   "type": "quiz",
+   "narration": [
+    "Now let's check what we've learned about RNA-seq workflows and differential expression. Take your time with each question — I'll review your responses and clarify any tricky points after you submit."
+   ]
+  }
+ ],
+ "quiz": [
+  {
+   "id": "q1",
+   "type": "single",
+   "question": "In RNA-seq workflow, which step ensures RNA fragments are matched to reference genome sequences?",
+   "options": [
+    {
+     "value": "A",
+     "label": "Quality control of raw reads"
+    },
+    {
+     "value": "B",
+     "label": "Library preparation"
+    },
+    {
+     "value": "C",
+     "label": "Read alignment to reference genome"
+    },
+    {
+     "value": "D",
+     "label": "Gene count normalization"
+    }
+   ],
+   "answer": [
+    "C"
+   ],
+   "explanation": "Read alignment (C) is required to map sequencing data to genomic positions. Quality control (A) checks data integrity before analysis. Library preparation (B) creates sequencing-ready samples. Normalization (D) occurs after alignment for comparative analysis.",
+   "points": 10
+  },
+  {
+   "id": "q2",
+   "type": "multiple",
+   "question": "Which factors most influence detection of differentially expressed genes?",
+   "options": [
+    {
+     "value": "A",
+     "label": "Number of biological replicates"
+    },
+    {
+     "value": "B",
+     "label": "The names given to the sample files"
+    },
+    {
+     "value": "C",
+     "label": "Sequencing depth (total reads)"
+    },
+    {
+     "value": "D",
+     "label": "Choice of normalization method"
+    }
+   ],
+   "answer": [
+    "A",
+    "C",
+    "D"
+   ],
+   "explanation": "Biological replicates (A) let the statistics separate real changes from natural variation. Sequencing depth (C) sets how many reads each gene gets, which drives detection power. Normalization (D) corrects technical differences such as library size. File names (B) have no effect on the analysis.",
+   "points": 15
+  }
+ ],
+ "simulations": [
+  {
+   "title": "Differential Expression Simulation",
+   "file": "sim-01.html"
+  }
+ ],
+ "video": "video.mp4",
+ "poster": "poster.jpg",
+ "captions": "captions.vtt",
+ "duration": 143,
+ "generator": "OpenMAIC"
+}

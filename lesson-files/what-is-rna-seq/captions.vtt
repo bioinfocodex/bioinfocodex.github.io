@@ -1,0 +1,175 @@
+WEBVTT
+
+00:00:00.000 --> 00:00:01.841
+Welcome to our course on gene expression analysis! Today,
+
+00:00:01.841 --> 00:00:04.472
+we'll explore why measuring gene expression is crucial for understanding biologi
+
+00:00:04.472 --> 00:00:07.440
+cal processes and how modern techniques like RNA-seq are transforming biological  research.
+
+00:00:07.440 --> 00:00:09.880
+First, let's look at the key reasons we measure gene expression.
+
+00:00:09.880 --> 00:00:13.087
+Gene expression patterns tell us exactly which genes are active in different cells,
+
+00:00:13.087 --> 00:00:15.120
+revealing how cells function and respond to changes.
+
+00:00:15.120 --> 00:00:16.918
+This information is vital for studying diseases,
+
+00:00:16.918 --> 00:00:19.315
+as abnormal gene activity can signal cancer or genetic disorders.
+
+00:00:19.315 --> 00:00:20.814
+It also helps us understand development,
+
+00:00:20.814 --> 00:00:23.040
+like how a single fertilized egg becomes a complete organism.
+
+00:00:23.040 --> 00:00:25.303
+RNA-seq technology lets us analyze all the genes in a cell at once,
+
+00:00:25.303 --> 00:00:27.195
+providing a comprehensive view of the transcriptome.
+
+00:00:27.195 --> 00:00:30.240
+This has revolutionized fields like personalized medicine and evolutionary biology.
+
+00:00:30.240 --> 00:00:32.727
+Over the next few pages, we'll walk through the RNA-seq workflow,
+
+00:00:32.727 --> 00:00:34.671
+from sample preparation to interpreting results.
+
+00:00:34.671 --> 00:00:36.480
+Let's begin with the first step in this process.
+
+00:00:36.480 --> 00:00:38.348
+Let's start with the first step in this process:
+
+00:00:38.348 --> 00:00:39.983
+extracting RNA from biological samples.
+
+00:00:39.983 --> 00:00:43.440
+This is crucial because the quality of RNA directly affects the accuracy of our  results.
+
+00:00:43.440 --> 00:00:45.484
+Here we see the detailed steps for RNA extraction.
+
+00:00:45.484 --> 00:00:48.745
+We begin by isolating RNA from cells or tissues using chemical methods that pres
+
+00:00:48.745 --> 00:00:50.400
+erve the integrity of the RNA molecules.
+
+00:00:50.400 --> 00:00:51.660
+Next, messenger RNA is enriched,
+
+00:00:51.660 --> 00:00:55.440
+broken into short fragments and copied into complementary DNA, or cDNA, by reverse transcription.
+
+00:00:55.440 --> 00:00:59.040
+Adapters are then added so the fragments can be read on a short-read sequencer such as Illumina.
+
+00:00:59.040 --> 00:01:01.187
+Finally, the sequenced data is stored in FASTQ files.
+
+00:01:01.187 --> 00:01:04.240
+These files contain both the sequence data and quality scores for each read,
+
+00:01:04.240 --> 00:01:06.960
+which we'll use for quality control analysis later in the workflow.
+
+00:01:06.960 --> 00:01:08.801
+Now we'll explore two critical steps in RNA-seq:
+
+00:01:08.801 --> 00:01:12.439
+aligning sequencing reads to a reference genome and quantifying how many reads map to each gene.
+
+00:01:12.439 --> 00:01:14.640
+This helps us measure gene expression levels accurately.
+
+00:01:14.640 --> 00:01:16.741
+First, we map each read to the reference genome.
+
+00:01:16.741 --> 00:01:18.790
+Reads can span the junction between two exons,
+
+00:01:18.790 --> 00:01:21.522
+so RNA-seq uses splice-aware aligners such as HISAT2 or STAR.
+
+00:01:21.522 --> 00:01:24.936
+Think of this as matching puzzle pieces to a complete picture - each read is com
+
+00:01:24.936 --> 00:01:26.880
+pared to the genome to find where it belongs.
+
+00:01:26.880 --> 00:01:29.917
+Next, we count how many reads map to each gene using annotation databases.
+
+00:01:29.917 --> 00:01:31.190
+These databases act like a map,
+
+00:01:31.190 --> 00:01:34.080
+showing exactly which regions of the genome belong to specific genes.
+
+00:01:34.080 --> 00:01:36.543
+Accurate quantification here is essential because even small errors can lead to
+
+00:01:36.543 --> 00:01:39.840
+incorrect conclusions about gene activity in downstream analyses like differential expression studies.
+
+00:01:39.840 --> 00:01:42.057
+Let's see how adjusting these parameters affects our results.
+
+00:01:42.057 --> 00:01:44.400
+First, notice the sliders for fold change and p-value thresholds.
+
+00:01:45.300 --> 00:01:47.100
+Now try lowering the p-value threshold further.
+
+00:01:47.100 --> 00:01:48.900
+What happens to the number of significant genes?
+
+00:01:49.200 --> 00:01:53.435
+As we saw on the previous page, adjusting the p-value threshold changes how many genes we flag as significant.
+
+00:01:53.435 --> 00:01:55.920
+Now let's explore how to interpret these findings effectively.
+
+00:01:55.920 --> 00:01:57.586
+A volcano plot shows two things at once.
+
+00:01:57.586 --> 00:02:00.665
+The x-axis is the log2 fold change, how much a gene's expression changes.
+
+00:02:00.665 --> 00:02:02.381
+The y-axis is minus log10 of the p-value,
+
+00:02:02.381 --> 00:02:04.602
+so the more significant a gene is, the higher it sits.
+
+00:02:04.602 --> 00:02:08.640
+Significant genes appear in the upper right, upregulated, and the upper left, downregulated.
+
+00:02:08.640 --> 00:02:11.988
+When identifying candidate genes, look for those with both large fold changes and very low p-values. However,
+
+00:02:11.988 --> 00:02:14.580
+always check for potential pitfalls like overemphasizing statistically significa
+
+00:02:14.580 --> 00:02:15.840
+nt but biologically irrelevant changes.
+
+00:02:15.840 --> 00:02:19.206
+Now let's check what we've learned about RNA-seq workflows and differential expression.
+
+00:02:19.206 --> 00:02:20.490
+Take your time with each question —
+
+00:02:20.490 --> 00:02:23.280
+I'll review your responses and clarify any tricky points after you submit.

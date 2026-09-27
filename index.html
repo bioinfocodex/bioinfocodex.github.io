@@ -1256,7 +1256,12 @@ footer{
 ══════════════════════════════════════════ */
 /* Seven tabs no longer fit at full padding between the burger breakpoint and a wide screen */
 @media(max-width:1180px){ .nav-tab{padding:8px 12px;} .nav-logo{margin-right:20px;} }
-@media(max-width:980px){ .nav-tab .ico{display:none;} }
+@media(max-width:1080px){ .nav-tab .ico{display:none;} }
+/* Below this even the compact tabs run off the edge, so hand over to the burger menu early */
+@media(max-width:920px){
+  .nav-tabs{display:none;}
+  .nav-burger{display:flex;align-items:center;justify-content:center;min-width:44px;min-height:44px;padding:0;}
+}
 /* auto-fill, not auto-fit: a subject with one lesson keeps a normal-width card */
 .lesson-grid{grid-template-columns:repeat(auto-fill,minmax(280px,1fr));}
 .lesson-card{

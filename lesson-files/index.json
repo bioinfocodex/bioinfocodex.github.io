@@ -11,5 +11,18 @@
   "questions": 3,
   "simulations": 1,
   "video": true
+ },
+ {
+  "slug": "what-is-rna-seq",
+  "title": "What is RNA-seq?",
+  "subject": "RNA-seq",
+  "summary": "How RNA-seq measures gene expression: from RNA extraction and library preparation to read alignment, counting and a first look at differential expression, with a volcano plot you can explore.",
+  "module": "rna-seq",
+  "poster": "poster.jpg",
+  "duration": 143,
+  "scenes": 6,
+  "questions": 2,
+  "simulations": 1,
+  "video": true
  }
 ]
