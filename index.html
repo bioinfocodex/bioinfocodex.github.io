@@ -6854,6 +6854,10 @@ hub_genes &lt;- module_genes[order(kME[module_genes, paste0("kME", module_number
         </button>
         <p style="text-align:center;font-size:0.78em;color:var(--text3);margin-top:14px;">🔒 Your information is private. We will never share your data with third parties.</p>
       </form>
+      <!-- RNAflow is MIT-licensed: registering is a way to hear about updates, not a condition of use -->
+      <p style="text-align:center;font-size:0.88em;margin-top:18px;padding-top:16px;border-top:1px solid var(--border);">
+        Registering is optional. <a href="#" onclick="return bicSkip()" style="color:var(--green-text);font-weight:600;">Download without registering →</a>
+      </p>
     </div>
 
     <!-- STEP 2: Code Entry -->
@@ -6880,9 +6884,9 @@ hub_genes &lt;- module_genes[order(kME[module_genes, paste0("kME", module_number
       <div style="text-align:center;margin-bottom:32px;">
         <div style="display:inline-flex;align-items:center;gap:10px;background:rgba(0,200,150,0.1);border:1.5px solid rgba(0,200,150,0.3);border-radius:14px;padding:14px 28px;">
           <span style="font-size:1.4em;">✅</span>
-          <span style="font-weight:700;color:var(--text);font-size:1em;">Access granted — welcome, <span id="bic-welcome"></span>!</span>
+          <span id="bic-dl-title" style="font-weight:700;color:var(--text);font-size:1em;">Access granted — welcome, <span id="bic-welcome"></span>!</span>
         </div>
-        <p class="sub" style="margin-top:12px;">Your 50-day access is now active. Download RNAflow for your platform below.</p>
+        <p class="sub" id="bic-dl-sub" style="margin-top:12px;">Your 50-day access is now active. Download RNAflow for your platform below.</p>
       </div>
 
       <!-- Gatekeeper warning -->
@@ -6898,22 +6902,22 @@ hub_genes &lt;- module_genes[order(kME[module_genes, paste0("kME", module_number
           <div style="font-size:1.4em;margin-bottom:8px;">🍎</div>
           <h3 class="h3">macOS</h3>
           <p class="sub" style="margin-bottom:14px;">Apple Silicon (M1/M2/M3) &amp; Intel</p>
-          <a href="https://github.com/bioinfocodex/rnaflow/releases/latest/download/RNAflow-3.0.0-arm64.dmg" class="btn btn-green" style="width:100%;justify-content:center;text-decoration:none;margin-bottom:6px;">⬇ Apple Silicon .dmg</a>
-          <a href="https://github.com/bioinfocodex/rnaflow/releases/latest/download/RNAflow-3.0.0.dmg" class="btn btn-outline" style="width:100%;justify-content:center;text-decoration:none;">Intel .dmg</a>
+          <a href="https://github.com/bioinfocodex/rnaflow/releases/download/v3.0.0/RNAflow-3.0.0-arm64.dmg" class="btn btn-green" style="width:100%;justify-content:center;text-decoration:none;margin-bottom:6px;">⬇ Apple Silicon .dmg</a>
+          <a href="https://github.com/bioinfocodex/rnaflow/releases/download/v3.0.0/RNAflow-3.0.0.dmg" class="btn btn-outline" style="width:100%;justify-content:center;text-decoration:none;">Intel .dmg</a>
         </div>
         <div class="card" style="padding:22px;">
           <div style="font-size:1.4em;margin-bottom:8px;">🪟</div>
           <h3 class="h3">Windows</h3>
           <p class="sub" style="margin-bottom:14px;">64-bit (Windows 10+)</p>
-          <a href="https://github.com/bioinfocodex/rnaflow/releases/latest/download/RNAflow-Setup-3.0.0.exe" class="btn btn-green" style="width:100%;justify-content:center;text-decoration:none;margin-bottom:6px;">⬇ Installer .exe</a>
-          <a href="https://github.com/bioinfocodex/rnaflow/releases/latest/download/RNAflow-3.0.0.exe" class="btn btn-outline" style="width:100%;justify-content:center;text-decoration:none;">Portable .exe</a>
+          <a href="https://github.com/bioinfocodex/rnaflow/releases/download/v3.0.0/RNAflow-Setup-3.0.0.exe" class="btn btn-green" style="width:100%;justify-content:center;text-decoration:none;margin-bottom:6px;">⬇ Installer .exe</a>
+          <a href="https://github.com/bioinfocodex/rnaflow/releases/download/v3.0.0/RNAflow-3.0.0.exe" class="btn btn-outline" style="width:100%;justify-content:center;text-decoration:none;">Portable .exe</a>
         </div>
         <div class="card" style="padding:22px;">
           <div style="font-size:1.4em;margin-bottom:8px;">🐧</div>
           <h3 class="h3">Linux</h3>
           <p class="sub" style="margin-bottom:14px;">Ubuntu 20.04+ / Fedora 36+</p>
-          <a href="https://github.com/bioinfocodex/rnaflow/releases/latest/download/RNAflow-3.0.0.AppImage" class="btn btn-green" style="width:100%;justify-content:center;text-decoration:none;margin-bottom:6px;">⬇ AppImage</a>
-          <a href="https://github.com/bioinfocodex/rnaflow/releases/latest/download/rnaflow_3.0.0_amd64.deb" class="btn btn-outline" style="width:100%;justify-content:center;text-decoration:none;">Debian .deb</a>
+          <a href="https://github.com/bioinfocodex/rnaflow/releases/download/v3.0.0/RNAflow-3.0.0.AppImage" class="btn btn-green" style="width:100%;justify-content:center;text-decoration:none;margin-bottom:6px;">⬇ AppImage</a>
+          <a href="https://github.com/bioinfocodex/rnaflow/releases/download/v3.0.0/rnaflow_3.0.0_amd64.deb" class="btn btn-outline" style="width:100%;justify-content:center;text-decoration:none;">Debian .deb</a>
         </div>
         <div class="card" style="padding:22px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;">
           <div style="font-size:1.4em;margin-bottom:8px;">📖</div>
@@ -8003,6 +8007,18 @@ let bicUserName = '';
     } catch(e) {}
   }
 })();
+
+// Straight to the downloads, no form: RNAflow is free and open source (MIT)
+function bicSkip() {
+  document.getElementById('bic-reg-form').style.display = 'none';
+  document.getElementById('bic-code-entry').style.display = 'none';
+  document.getElementById('bic-downloads').style.display = 'block';
+  document.getElementById('bic-dl-title').textContent = 'Download RNAflow';
+  document.getElementById('bic-dl-sub').textContent =
+    'Free and open source under the MIT licence. Registering only signs you up for update emails.';
+  document.getElementById('bic-downloads').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  return false;
+}
 
 async function bicRegister(e) {
   e.preventDefault();
