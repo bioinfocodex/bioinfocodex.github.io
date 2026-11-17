@@ -63,6 +63,55 @@ title: Molecular Biology &amp; Bioinformatics Fundamentals
 
 <h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">The Tools Ecosystem</h3>
 <p class="sub">Bioinformatics relies on an ecosystem of mostly open-source tools. You will use a combination of command-line tools on Linux, scripting languages (Python, R, Bash), and specialised software for specific analyses.</p>
+
+<div class="deep">
+<h3>What the work actually looks like</h3>
+<p class="sub">Very little of a bioinformatician's time is spent on the clever algorithm. A realistic split for a typical project:</p>
+<table class="ref-table">
+  <tr><th>Activity</th><th>Share of the time</th><th>What it involves</th></tr>
+  <tr><td><strong>Getting and understanding the data</strong></td><td>20 to 30%</td><td>Downloading, checking the metadata, working out which sample is which</td></tr>
+  <tr><td><strong>Quality control and cleaning</strong></td><td>20 to 30%</td><td>Finding the failed sample, the swapped label, the contaminated library</td></tr>
+  <tr><td><strong>Running the analysis</strong></td><td>10 to 20%</td><td>Often a standard pipeline, once the data are trustworthy</td></tr>
+  <tr><td><strong>Interpreting and communicating</strong></td><td>30 to 40%</td><td>Figures, writing, meetings with the biologist who asked the question</td></tr>
+</table>
+<p class="sub">The practical consequence is that the skills which decide whether you are good at this are not the ones people expect. Being careful with file provenance, noticing when a result is too clean, and being able to explain a statistical caveat to someone who does not want to hear it matter more than knowing another aligner.</p>
+
+<h3>The branches of the field</h3>
+<ul>
+  <li><strong>Genomics:</strong> assembling genomes, finding variants, comparing species.</li>
+  <li><strong>Transcriptomics:</strong> what is expressed, where, and how it changes. The most common entry point.</li>
+  <li><strong>Proteomics and metabolomics:</strong> proteins and small molecules, usually via mass spectrometry.</li>
+  <li><strong>Structural bioinformatics:</strong> protein shape, interactions, and how molecules bind.</li>
+  <li><strong>Systems biology:</strong> networks and models rather than lists of genes.</li>
+  <li><strong>Clinical and translational:</strong> variant interpretation, diagnostics, pharmacogenomics, where the output affects a patient.</li>
+</ul>
+<p class="sub">A related distinction is worth keeping straight. <strong>Bioinformatics</strong> builds and applies tools to biological data. <strong>Computational biology</strong> builds models of biological systems. <strong>Biostatistics</strong> designs studies and makes inferences from them. The boundaries blur, and most working scientists do some of all three, but they come from different traditions and value different things.</p>
+
+<h3>The scale of the data</h3>
+<table class="ref-table">
+  <tr><th>Experiment</th><th>Raw data size</th><th>Runs on</th></tr>
+  <tr><td>Bacterial genome</td><td>0.2 to 1 GB</td><td>A laptop</td></tr>
+  <tr><td>One human RNA-seq sample</td><td>2 to 6 GB</td><td>A good desktop</td></tr>
+  <tr><td>One human genome at 30×</td><td>50 to 100 GB</td><td>A server or cluster</td></tr>
+  <tr><td>A single-cell experiment</td><td>50 to 200 GB</td><td>A server; analysis needs plenty of memory</td></tr>
+  <tr><td>A population study of 1,000 genomes</td><td>50 to 100 TB</td><td>A cluster or cloud, with a storage plan</td></tr>
+</table>
+<p class="sub">This is why the command line is not optional. Files of this size cannot be opened in a spreadsheet, moved by hand, or processed one at a time by clicking.</p>
+
+<h3>Reproducibility is part of the method</h3>
+<p class="sub">An analysis that cannot be repeated is not a result. Four habits cover most of it, and they cost little if adopted at the start:</p>
+<ol>
+  <li><strong>Write the commands down</strong> in a script, rather than typing them. A script is the record of what you did.</li>
+  <li><strong>Record versions</strong> of every tool and reference, and the exact accession of every input.</li>
+  <li><strong>Use version control</strong> (git) for code and for the small text files that describe the analysis.</li>
+  <li><strong>Keep raw data read-only</strong> and never edit it in place. Every output should be regenerable from raw data plus code.</li>
+</ol>
+<div class="info-box tip"><svg class="ico" aria-hidden="true"><use href="#i-tip"></use></svg><div><strong>A test worth applying:</strong> if your computer died tonight, could you reproduce today's figure tomorrow on a new machine, from the raw data and what is in version control? If the answer is no, the gap is where the reproducibility work belongs.</div></div>
+
+<h3>How to read a bioinformatics paper</h3>
+<p class="sub">When a paper reports a computational result, four questions usually decide how much weight it deserves: how many biological replicates were used; whether the code and data are available; which versions of the reference genome and annotation were used; and whether the multiple-testing correction is stated. A paper that answers all four is not necessarily right, but a paper that answers none of them cannot be checked.</p>
+</div>
+
 <div class="chips">
   <span class="chip">Linux/Bash</span>
   <span class="chip">Python</span>
@@ -147,6 +196,26 @@ title: Molecular Biology &amp; Bioinformatics Fundamentals
 &bull; The genetic code is degenerate (64 codons for 20 amino acids + 3 stops); reading frame is critical<br>
 &bull; RNA instability (2'-OH, RNases) has direct practical implications for sample handling and sequencing quality</div></div>
 
+
+<div class="deep">
+<h3>Reading frames: how a sequence is searched for genes</h3>
+<p class="sub">A stretch of DNA can be read in six ways: three forward frames, each starting one base later, and three more on the reverse strand. Software has to consider all six, because nothing in the sequence itself says where reading begins.</p>
+<div class="code-block"><span class="code-comment"># The six reading frames of one short sequence (forward three shown)</span>
+Sequence:   ATGGCCTGGTAA
+Frame +1:   ATG GCC TGG TAA   →  Met-Ala-Trp-STOP   ← an open reading frame
+Frame +2:    TGG CCT GGT AA   →  Trp-Pro-Gly
+Frame +3:     GGC CTG GTA A   →  Gly-Leu-Val</div>
+<p class="sub">Finding genes in an unannotated sequence starts with searching all six frames for a long stretch with no stop codon. This is also why an insertion or deletion that is not a multiple of three is so damaging: it shifts the frame, and everything downstream is translated as nonsense until a stop codon appears.</p>
+
+<h3>Splicing, and why one gene makes many transcripts</h3>
+<ul>
+  <li><strong>Splicing:</strong> the spliceosome removes introns. Splice sites are recognised by short sequences, almost always GT at the start of the intron and AG at its end (the GT-AG rule).</li>
+  <li><strong>Polyadenylation:</strong> the transcript is cut and a tail of roughly 200 adenines is added, which is what poly-A selection captures in RNA-seq.</li>
+</ul>
+<p class="sub"><strong>Alternative splicing</strong> means one gene can produce many transcripts: human genes average several isoforms each. This is why expression analysis distinguishes gene level from transcript level, and why a gene can be unchanged overall while the isoform mix shifts completely.</p>
+
+</div>
+
 <!--topic 1.3: Genome Organisation &amp; Gene Structure-->
 <p class="sub">Understanding how genes are organised in the genome is essential for interpreting any bioinformatics result. When you load a BAM file in a genome browser, annotate variants, or run differential expression analysis, you are navigating genome structure. This section covers the physical and functional organisation of genomes, from the chromosome level down to individual regulatory elements.</p>
 
@@ -158,6 +227,42 @@ title: Molecular Biology &amp; Bioinformatics Fundamentals
 </div>
 
 <h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">Genome Size and the C-Value Paradox</h3>
+
+<div class="deep">
+<h3>What genomes are made of</h3>
+<table class="ref-table">
+  <tr><th>Organism</th><th>Genome size</th><th>Protein-coding genes</th><th>Coding fraction</th></tr>
+  <tr><td><em>E. coli</em></td><td>4.6 Mb</td><td>~4,400</td><td>About 88%</td></tr>
+  <tr><td>Baker's yeast</td><td>12 Mb</td><td>~6,000</td><td>About 70%</td></tr>
+  <tr><td><em>Arabidopsis</em></td><td>135 Mb</td><td>~27,000</td><td>About 25%</td></tr>
+  <tr><td>Human</td><td>3.1 Gb</td><td>~20,000</td><td>About 1.5%</td></tr>
+</table>
+<p class="sub">Genome size has little to do with complexity: some amphibians and plants have genomes ten times larger than ours. The difference is mostly repetitive DNA. In the human genome roughly half is transposable elements and other repeats, and only about 1.5% codes for protein.</p>
+
+<h3>Repeats, and why they cause trouble</h3>
+<ul>
+  <li><strong>Transposable elements</strong> (LINEs, SINEs such as Alu, LTR elements) make up around 45% of the human genome.</li>
+  <li><strong>Tandem repeats:</strong> satellites at centromeres, minisatellites, and microsatellites (short tandem repeats) used in genotyping and expanded in several diseases.</li>
+  <li><strong>Segmental duplications:</strong> large near-identical blocks, often the sites of structural variation and gene family expansion.</li>
+</ul>
+<p class="sub">Every repeat class is a problem for short reads. A read from inside a repeat cannot be placed uniquely, so aligners assign it a mapping quality of zero and most pipelines discard it. This is why coverage dips over repeats, why structural variants are hard to call, and why long reads changed assembly so completely.</p>
+
+<h3>The parts of a gene, and the parts near it</h3>
+<table class="ref-table">
+  <tr><th>Element</th><th>Where</th><th>What it does</th></tr>
+  <tr><td><strong>Core promoter</strong></td><td>At the transcription start site</td><td>Where polymerase assembles</td></tr>
+  <tr><td><strong>Enhancer</strong></td><td>Up to a megabase away, in any orientation</td><td>Increases transcription of its target gene, by looping to the promoter</td></tr>
+  <tr><td><strong>Silencer</strong></td><td>Variable</td><td>Decreases transcription</td></tr>
+  <tr><td><strong>Insulator</strong></td><td>Between regulatory domains</td><td>Blocks an enhancer from acting on the wrong promoter; CTCF binds many of them</td></tr>
+  <tr><td><strong>5' and 3' UTR</strong></td><td>Within the mRNA, outside the coding sequence</td><td>Control translation, stability and localisation; microRNAs bind the 3' UTR</td></tr>
+</table>
+<p class="sub">Because enhancers act at a distance and skip over genes, the nearest gene to a regulatory variant is often not its target. This single fact is responsible for a large fraction of over-interpreted GWAS results.</p>
+
+<h3>Genomes are organised in three dimensions</h3>
+<p class="sub">Two metres of DNA fit into a nucleus a few micrometres across, and the packing is not random. DNA wraps around histones to form nucleosomes; nucleosomes fold into fibres; and the fibre is organised into loops and <strong>topologically associating domains (TADs)</strong>, regions that contact themselves far more than their neighbours. Regulatory elements mostly act within their own TAD, and disrupting a TAD boundary can let an enhancer reach a gene it should never touch, which is a known mechanism in developmental disease and cancer.</p>
+<div class="info-box tip"><svg class="ico" aria-hidden="true"><use href="#i-tip"></use></svg><div><strong>What this means in practice:</strong> when you find an interesting non-coding variant, do not simply report the closest gene. Check which TAD it sits in, whether it overlaps a known enhancer in a relevant tissue, and whether any chromatin contact data link it to a promoter.</div></div>
+</div>
+
 <div class="chips" style="margin:8px 0;">
   <span class="chip">E. coli: 4.6 Mb, ~4,300 genes</span>
   <span class="chip">Yeast: 12 Mb, ~6,000 genes</span>
@@ -296,3 +401,38 @@ title: Molecular Biology &amp; Bioinformatics Fundamentals
 &bull; Quality degrades at read ends; Illumina errors are substitutions, while long-read errors are typically indels<br>
 &bull; Choose the platform based on your application: Illumina for most quantitative assays, long-read for assembly and structural analysis<br>
 &bull; Hybrid approaches combining short and long reads often give the best results for genome projects</div></div>
+
+<div class="deep">
+<h3>Error profiles differ, and so do their consequences</h3>
+<table class="ref-table">
+  <tr><th>Platform</th><th>Raw accuracy</th><th>Dominant error</th><th>What it breaks</th></tr>
+  <tr><td><strong>Illumina</strong></td><td>99.9%+</td><td>Substitutions, rising at read ends; errors in homopolymers and GC-rich regions</td><td>Little, for counting; coverage gaps in extreme GC</td></tr>
+  <tr><td><strong>PacBio HiFi</strong></td><td>99.9%+ (after consensus)</td><td>Few; occasional indels in homopolymers</td><td>Very little: this is why HiFi changed assembly</td></tr>
+  <tr><td><strong>Oxford Nanopore</strong></td><td>About 99% (recent chemistry)</td><td>Indels, especially in homopolymers</td><td>Small variant calling needs care; structural variants are excellent</td></tr>
+</table>
+<p class="sub">The pattern matters more than the rate. Substitution errors are random and average out with depth; systematic indel errors in homopolymers do not, which is why nanopore assemblies are polished and why a homopolymer indel in nanopore data deserves scepticism.</p>
+
+<h3>How much sequencing do you need?</h3>
+<div class="code-block">Coverage (depth) = (number of reads × read length) / genome size
+
+<span class="code-comment"># 400 million reads of 150 bp on a 3.1 Gb human genome</span>
+(400,000,000 × 150) / 3,100,000,000 ≈ 19×</div>
+<table class="ref-table">
+  <tr><th>Application</th><th>Target</th><th>Why</th></tr>
+  <tr><td>Bacterial genome assembly</td><td>50 to 100×</td><td>Assembly needs more depth than mapping</td></tr>
+  <tr><td>Human whole genome, germline variants</td><td>30×</td><td>Enough to see both alleles at nearly every position</td></tr>
+  <tr><td>Whole exome</td><td>100× over targets</td><td>Capture is uneven, so the mean must be high to lift the worst regions</td></tr>
+  <tr><td>Somatic variants in a tumour</td><td>100× or more, often far more</td><td>Variants may be present in a small fraction of cells</td></tr>
+  <tr><td>RNA-seq, differential expression</td><td>20 to 30 million reads per sample</td><td>More replicates beat more depth</td></tr>
+</table>
+
+<h3>Artefacts worth knowing by name</h3>
+<ul>
+  <li><strong>Index hopping:</strong> on patterned flow cells, free adapters can mis-assign a read to the wrong sample. Unique dual indexes effectively solve it; use them whenever samples are pooled.</li>
+  <li><strong>Optical and PCR duplicates:</strong> copies of the same original molecule. They inflate apparent depth and must be marked before variant calling.</li>
+  <li><strong>Adapter read-through:</strong> when the fragment is shorter than the read, the sequencer reads into the adapter. Trimming removes it.</li>
+  <li><strong>Low-diversity libraries:</strong> amplicon runs can confuse cluster detection, which is why PhiX is spiked in as a balanced control.</li>
+</ul>
+<div class="info-box note"><svg class="ico" aria-hidden="true"><use href="#i-note"></use></svg><div><strong>Choosing a platform in one line each.</strong> Illumina for anything that counts molecules or needs the lowest cost per base. PacBio HiFi for assembly, phasing and full-length transcripts. Nanopore for very long reads, structural variants, direct methylation calling, and portable or real-time sequencing. Many projects now combine two of them.</div></div>
+</div>
+

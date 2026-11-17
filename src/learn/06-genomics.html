@@ -89,7 +89,70 @@ gatk VariantFiltration -V sample.vcf.gz -O sample_filtered.vcf.gz \
 
           <div class="info-box warn"><svg class="ico" aria-hidden="true"><use href="#i-warn"></use></svg><div><strong>BQSR requires known variant databases</strong> (dbSNP, Mills indels). For non-model organisms without these resources, skip BQSR and use more stringent hard filtering instead.</div></div>
 
-          <div class="chips" style="margin-top:14px;"><span class="chip">SNP = single base change</span><span class="chip">0/0 = hom ref, 0/1 = het, 1/1 = hom alt</span><span class="chip">Mark duplicates before calling</span><span class="chip">HaplotypeCaller = local assembly</span><span class="chip">Hard filter for small projects</span><span class="chip">VQSR for large cohorts</span><span class="chip">Always inspect in IGV</span></div>
+          
+<div class="deep">
+<h3>Why each step exists</h3>
+<table class="ref-table">
+  <tr><th>Step</th><th>What it corrects</th><th>Skip it and you get</th></tr>
+  <tr><td><strong>Alignment (BWA-MEM)</strong></td><td>Places reads on the genome, soft-clipping what does not fit</td><td>—</td></tr>
+  <tr><td><strong>Mark duplicates</strong></td><td>PCR and optical copies of one original molecule</td><td>False confidence: five copies of one error look like five independent observations</td></tr>
+  <tr><td><strong>Base quality recalibration</strong></td><td>Systematic bias in the sequencer's own quality scores</td><td>Slightly worse calibration; now often skipped for high-quality data</td></tr>
+  <tr><td><strong>HaplotypeCaller</strong></td><td>Reassembles reads locally before calling</td><td>Missed indels, and false SNPs around real indels</td></tr>
+  <tr><td><strong>Joint genotyping</strong></td><td>Uses all samples to decide each site</td><td>Weak evidence in one sample discarded, instead of being supported by the cohort</td></tr>
+  <tr><td><strong>Filtering (VQSR or hard)</strong></td><td>Separates likely-real from likely-artefact calls</td><td>A VCF full of noise</td></tr>
+</table>
+<p class="sub">The key idea in HaplotypeCaller is <strong>local reassembly</strong>. Rather than reading each position column by column, it finds regions that look variable, assembles the reads there into candidate haplotypes, and realigns every read against them. This is why it handles indels so much better than older callers: an indel misaligned by a conventional aligner produces a cluster of false mismatches, and reassembly dissolves them.</p>
+
+<h3>The GVCF idea</h3>
+<p class="sub">Calling each sample straight to a VCF creates the "N+1 problem": adding one sample means recalling everything, because a site is only in the file if that sample varied there. A <strong>GVCF</strong> instead records every position, including a confidence that the sample matches the reference. Joint genotyping then combines GVCFs across the cohort. Adding sample 101 means producing one more GVCF and redoing only the joint step.</p>
+<div class="code-block"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button><span class="code-comment"># Per sample: align, mark duplicates, call to a GVCF</span>
+bwa mem -t 16 -R '@RG\tID:S1\tSM:S1\tPL:ILLUMINA\tLB:lib1' ref.fa S1_R1.fq.gz S1_R2.fq.gz \
+  | samtools sort -@ 4 -o S1.bam -
+gatk MarkDuplicates -I S1.bam -O S1.md.bam -M S1.metrics.txt
+samtools index S1.md.bam
+
+gatk HaplotypeCaller -R ref.fa -I S1.md.bam -O S1.g.vcf.gz -ERC GVCF
+
+<span class="code-comment"># All samples together</span>
+gatk GenomicsDBImport --genomicsdb-workspace-path db -L chr20 \
+     -V S1.g.vcf.gz -V S2.g.vcf.gz -V S3.g.vcf.gz
+gatk GenotypeGVCFs -R ref.fa -V gendb://db -O cohort.vcf.gz</div>
+<div class="info-box warn"><svg class="ico" aria-hidden="true"><use href="#i-warn"></use></svg><div><strong>The read group (<code>-R</code>) is not optional.</strong> GATK refuses to run without it, and for good reason: SM identifies the sample, LB identifies the library (so duplicates are marked within the right library), and ID identifies the run. Getting SM wrong merges two samples into one, silently.</div></div>
+
+<h3>Filtering when you cannot use VQSR</h3>
+<p class="sub">VQSR learns the difference between true and false variants from known sites, but it needs thousands of samples' worth of variants to train on. For a handful of exomes, or a non-model organism with no truth set, use hard filters instead. GATK's recommended starting points:</p>
+<div class="code-block"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button><span class="code-comment"># SNPs</span>
+gatk VariantFiltration -V snps.vcf.gz -O snps.filtered.vcf.gz \
+  --filter-name "QD2"      --filter-expression "QD &lt; 2.0" \
+  --filter-name "QUAL30"   --filter-expression "QUAL &lt; 30.0" \
+  --filter-name "FS60"     --filter-expression "FS &gt; 60.0" \
+  --filter-name "MQ40"     --filter-expression "MQ &lt; 40.0" \
+  --filter-name "MQRS-12.5" --filter-expression "MQRankSum &lt; -12.5" \
+  --filter-name "RPRS-8"    --filter-expression "ReadPosRankSum &lt; -8.0"
+
+<span class="code-comment"># Indels are noisier, so the thresholds differ: QD &lt; 2, FS &gt; 200, ReadPosRankSum &lt; -20</span></div>
+<p class="sub">Each annotation detects a specific artefact. <strong>FS</strong> and <strong>SOR</strong> measure strand bias: a real variant appears on both strands, a sequencing artefact often on one. <strong>MQ</strong> and <strong>MQRankSum</strong> catch variants supported only by poorly mapped reads, typical of repeats. <strong>ReadPosRankSum</strong> catches variants that only ever appear near the ends of reads, which is where errors concentrate.</p>
+
+<h3>Germline and somatic are different problems</h3>
+<table class="ref-table">
+  <tr><th></th><th>Germline (HaplotypeCaller)</th><th>Somatic (Mutect2)</th></tr>
+  <tr><td>Expected allele fraction</td><td>0.5 or 1.0</td><td>Anything from 0.02 upward</td></tr>
+  <tr><td>Depth needed</td><td>30×</td><td>100× and often far more</td></tr>
+  <tr><td>Control used</td><td>The cohort</td><td>A matched normal sample, plus a panel of normals</td></tr>
+  <tr><td>Main difficulty</td><td>Repeats and indels</td><td>Separating a real subclone from sequencing error and contamination</td></tr>
+</table>
+<p class="sub">Calling somatic variants with a germline caller is a common and serious mistake: the caller assumes diploid genotypes and will discard exactly the low-fraction variants a tumour study is looking for.</p>
+
+<h3>Checking a callset</h3>
+<ul>
+  <li><strong>Ti/Tv ratio:</strong> transitions over transversions. About 2.0 to 2.1 for whole genomes, 2.8 to 3.0 for exomes. A value near 0.5 means your calls are mostly noise.</li>
+  <li><strong>Number of variants:</strong> roughly 4 to 5 million per human genome, 20,000 to 25,000 per exome. An order of magnitude off means a problem.</li>
+  <li><strong>Concordance with a truth set</strong> (GIAB samples such as NA12878) if you are validating a pipeline, scored with hap.py or RTG vcfeval.</li>
+  <li><strong>Mendelian errors</strong> in a trio: a useful, assumption-free check on accuracy.</li>
+</ul>
+</div>
+
+<div class="chips" style="margin-top:14px;"><span class="chip">SNP = single base change</span><span class="chip">0/0 = hom ref, 0/1 = het, 1/1 = hom alt</span><span class="chip">Mark duplicates before calling</span><span class="chip">HaplotypeCaller = local assembly</span><span class="chip">Hard filter for small projects</span><span class="chip">VQSR for large cohorts</span><span class="chip">Always inspect in IGV</span></div>
 
 <!--topic 6.2: Understanding VCF Files &amp; Variant Annotation-->
           <p class="sub">The Variant Call Format (VCF) is the standard file format for storing genetic variants discovered by variant calling pipelines. Understanding the VCF format in detail is essential for filtering, annotating, and interpreting variant data. A VCF file consists of header lines (metadata) followed by data lines (one variant per line), and can contain genotype information for one or many samples.</p>
@@ -194,7 +257,57 @@ cat annotated.vcf | snpSift filter "ANN[*].IMPACT = 'HIGH'" &gt; high_impact.vcf
 
           <div class="info-box tip"><svg class="ico" aria-hidden="true"><use href="#i-tip"></use></svg><div><strong>Filtering strategy for clinical variants:</strong> Start with ~4 million variants → filter PASS only → remove AF &gt; 0.01 in gnomAD → keep HIGH/MODERATE impact → check ClinVar → manual review in IGV. This typically reduces to a manageable list of 50–200 candidate variants.</div></div>
 
-          <div class="chips" style="margin-top:14px;"><span class="chip">VCF = standard variant format</span><span class="chip">GT:GQ:DP:AD = genotype fields</span><span class="chip">0/1 = heterozygous</span><span class="chip">bcftools for filtering</span><span class="chip">SnpEff for annotation</span><span class="chip">HIGH impact = likely functional</span><span class="chip">gnomAD for population frequency</span><span class="chip">ClinVar for clinical significance</span></div>
+          
+<div class="deep">
+<h3>The header is part of the data</h3>
+<p class="sub">Every VCF begins with header lines that define what the abbreviations in the file mean. They are not decoration: a tool that reads the file uses them to know the type and arity of each field, and a VCF whose header does not match its body will be rejected or silently misread.</p>
+<div class="code-block">##fileformat=VCFv4.3
+##reference=file:///ref/GRCh38.fa
+##contig=&lt;ID=chr7,length=159345973&gt;
+##INFO=&lt;ID=DP,Number=1,Type=Integer,Description="Total read depth"&gt;
+##INFO=&lt;ID=AF,Number=A,Type=Float,Description="Allele frequency"&gt;
+##FORMAT=&lt;ID=GT,Number=1,Type=String,Description="Genotype"&gt;
+##FORMAT=&lt;ID=AD,Number=R,Type=Integer,Description="Allelic depths"&gt;
+##FILTER=&lt;ID=LowQual,Description="Low quality"&gt;
+#CHROM POS ID REF ALT QUAL FILTER INFO FORMAT SAMPLE1</div>
+
+<h3>Indels, multi-allelic sites, and why normalisation matters</h3>
+<div class="code-block"><span class="code-comment"># SNV: one base replaced</span>
+chr7  140753336  .  A  T
+
+<span class="code-comment"># Deletion: REF carries the anchor base plus what is removed</span>
+chr1  100  .  GTTA  G      <span class="code-comment"># three bases deleted after position 100</span>
+
+<span class="code-comment"># Insertion: the reverse</span>
+chr1  100  .  G  GTTA      <span class="code-comment"># three bases inserted after position 100</span>
+
+<span class="code-comment"># Multi-allelic: two alternates at one site</span>
+chr2  500  .  C  T,G       <span class="code-comment"># genotype 1/2 means one T and one G, no reference allele</span></div>
+<p class="sub">Indels have an <strong>anchor base</strong> because the format cannot represent an empty allele. They also have a <strong>left-alignment</strong> problem: in a repeat, the same deletion can be written at several positions, so two files can disagree about an identical variant. Normalising with <code>bcftools norm -f ref.fa -m -any</code> left-aligns indels and splits multi-allelic sites, and should be done before comparing or annotating any callset.</p>
+
+<h3>Annotation: from coordinates to consequences</h3>
+<p class="sub">A variant's position means nothing on its own. Annotation tools add what gene it hits, what it does to the protein, how common it is in the population, and what is known about it.</p>
+<table class="ref-table">
+  <tr><th>Source</th><th>Adds</th></tr>
+  <tr><td><strong>VEP</strong> or <strong>SnpEff</strong></td><td>Gene, transcript, consequence (missense, frameshift, splice site), protein change</td></tr>
+  <tr><td><strong>gnomAD</strong></td><td>Population allele frequency: the single most powerful filter for rare-disease work</td></tr>
+  <tr><td><strong>ClinVar</strong></td><td>Clinical interpretations submitted by laboratories, with review status</td></tr>
+  <tr><td><strong>CADD, REVEL, SpliceAI, AlphaMissense</strong></td><td>Predicted deleteriousness; SpliceAI in particular catches splice effects far from the exon boundary</td></tr>
+</table>
+<p class="sub">A variant has one consequence per transcript, and genes have many transcripts, so one variant can be "missense" and "intronic" and "upstream" at once. Decide in advance whether you report the <strong>canonical</strong> transcript, the MANE Select transcript, or the worst consequence, and apply it consistently.</p>
+
+<h3>Narrowing a rare-disease search</h3>
+<ol>
+  <li>Keep PASS variants with adequate depth and genotype quality.</li>
+  <li>Remove anything common in gnomAD: a frequency above 0.1% rules out most severe recessive disease, and above 0.01% most dominant.</li>
+  <li>Keep variants predicted to affect protein or splicing.</li>
+  <li>Apply the inheritance model: de novo in a trio, compound heterozygous, homozygous recessive, X-linked.</li>
+  <li>Intersect with a gene list for the phenotype, while keeping the unfiltered list for a second look.</li>
+</ol>
+<div class="info-box note"><svg class="ico" aria-hidden="true"><use href="#i-note"></use></svg><div><strong>Clinical interpretation follows published rules.</strong> The ACMG/AMP guidelines define evidence codes (PVS1 for a null variant in a gene where loss of function causes disease, PM2 for absence from population databases, and so on) that combine into five classes from benign to pathogenic. Prediction scores contribute one line of supporting evidence; they never establish pathogenicity on their own.</div></div>
+</div>
+
+<div class="chips" style="margin-top:14px;"><span class="chip">VCF = standard variant format</span><span class="chip">GT:GQ:DP:AD = genotype fields</span><span class="chip">0/1 = heterozygous</span><span class="chip">bcftools for filtering</span><span class="chip">SnpEff for annotation</span><span class="chip">HIGH impact = likely functional</span><span class="chip">gnomAD for population frequency</span><span class="chip">ClinVar for clinical significance</span></div>
 
 <!--topic 6.3: NGS Library Preparation — DNA Fragmentation Methods-->
 <p class="sub">Next-generation sequencers read DNA in short stretches of 50–300 bp. Human genomic DNA is ~3 billion bp long — a molecule millions of times too large to sequence directly. Before any library can be prepared, the DNA must be broken into sequenceable fragments. The fragmentation method you choose affects coverage uniformity, sequence bias, DNA input requirements, and the cost of your experiment.</p>
@@ -358,6 +471,53 @@ cat annotated.vcf | snpSift filter "ANN[*].IMPACT = 'HIGH'" &gt; high_impact.vcf
   <div class="card" style="padding:12px;"><strong>SPRI beads</strong><p class="sub" style="margin-top:3px;">Solid-Phase Reversible Immobilisation — magnetic beads used to selectively bind DNA fragments by size during cleanup steps.</p></div>
   <div class="card" style="padding:12px;"><strong>Sequence bias</strong><p class="sub" style="margin-top:3px;">Tendency of a fragmentation method to over- or under-represent certain nucleotide sequences, affecting coverage uniformity.</p></div>
   <div class="card" style="padding:12px;"><strong>ATAC-seq</strong><p class="sub" style="margin-top:3px;">Assay for Transposase-Accessible Chromatin — uses Tn5 tagmentation to map open chromatin regions genome-wide.</p></div>
+</div>
+
+
+<div class="deep">
+<h3>Fragmentation methods compared</h3>
+<p class="sub">Every short-read library starts by breaking DNA into pieces of a chosen size. How you break it changes what you can see.</p>
+<table class="ref-table">
+  <tr><th>Method</th><th>How</th><th>Bias</th><th>Input needed</th></tr>
+  <tr><td><strong>Sonication</strong> (Covaris)</td><td>Focused acoustic energy</td><td>Lowest of all methods; very even</td><td>50 ng to 1 µg</td></tr>
+  <tr><td><strong>Enzymatic</strong></td><td>A nuclease cocktail cuts the DNA</td><td>Mild sequence preference</td><td>1 to 100 ng</td></tr>
+  <tr><td><strong>Tagmentation</strong> (Tn5)</td><td>Cuts and adds adapters in one step</td><td>Clear insertion-site preference; GC-dependent</td><td>1 ng or less</td></tr>
+  <tr><td><strong>Mechanical (needle, nebuliser)</strong></td><td>Shear force</td><td>Broad size distribution</td><td>Micrograms; largely historical</td></tr>
+</table>
+<p class="sub">Tagmentation is fast, cheap and works from tiny inputs, which is why it dominates single-cell and ATAC-seq. Its insertion bias is acceptable when you are counting regions, and problematic when you need even coverage for variant calling in difficult regions. Sonication remains the choice when uniform coverage matters most.</p>
+
+<h3>Insert size is a design decision</h3>
+<p class="sub">The <strong>insert</strong> is the DNA between the adapters. Its size relative to the read length decides what you get:</p>
+<ul>
+  <li><strong>Insert shorter than 2 × read length:</strong> the pairs overlap, and the sequencer reads into the adapter. Useful for merging pairs into longer, more accurate reads (amplicons); wasteful otherwise.</li>
+  <li><strong>Insert around 300 to 500 bp with 2 × 150 reads:</strong> the usual choice. Pairs do not overlap, and the gap between them helps span repeats.</li>
+  <li><strong>Insert much longer:</strong> better for spanning repeats and detecting structural variants, but harder to cluster efficiently.</li>
+</ul>
+<p class="sub">The observed insert-size distribution, reported by Picard's <code>CollectInsertSizeMetrics</code>, is a quality check in itself: a sharp peak is a well-made library, and a long tail or a second peak indicates chimeric molecules or contamination.</p>
+
+<h3>PCR, and why people try to avoid it</h3>
+<p class="sub">Amplification introduces three problems: <strong>duplicates</strong>, which inflate apparent depth; <strong>GC bias</strong>, because extreme GC fragments amplify poorly and coverage drops over them; and <strong>errors</strong> introduced early that are then copied into many reads. PCR-free libraries avoid all three but need much more input DNA (typically 500 ng to 1 µg), which is why they are standard for high-quality whole-genome sequencing and impossible for single cells.</p>
+<div class="code-block"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button><span class="code-comment"># Library quality metrics worth collecting on every run</span>
+gatk CollectInsertSizeMetrics -I sample.bam -O insert.txt -H insert.pdf
+gatk CollectGcBiasMetrics -I sample.bam -R ref.fa -O gc.txt -CHART gc.pdf -S summary.txt
+gatk EstimateLibraryComplexity -I sample.bam -O complexity.txt
+
+<span class="code-comment"># Duplicate rate, from the MarkDuplicates metrics file</span>
+grep -A2 "LIBRARY" sample.metrics.txt | cut -f9</div>
+
+<h3>UMIs: counting molecules instead of reads</h3>
+<p class="sub">A <strong>unique molecular identifier</strong> is a short random barcode attached to each original fragment before amplification. Reads sharing a UMI and a position came from one molecule, so they can be collapsed into a single consensus observation. This turns duplicate removal from a heuristic (same start position) into a measurement, and it is essential wherever a rare variant must be distinguished from a PCR error: liquid biopsy, deep somatic sequencing, and single-cell counting.</p>
+
+<h3>Targeted libraries: capture or amplicon</h3>
+<table class="ref-table">
+  <tr><th></th><th>Hybrid capture (exome, panels)</th><th>Amplicon (PCR panels)</th></tr>
+  <tr><td><strong>How</strong></td><td>Biotinylated probes pull out the regions of interest</td><td>Primers amplify each target directly</td></tr>
+  <tr><td><strong>Uniformity</strong></td><td>Good, but variable across targets</td><td>Poorer; some amplicons dominate</td></tr>
+  <tr><td><strong>Input</strong></td><td>10 to 100 ng</td><td>Can work from a few nanograms of degraded DNA</td></tr>
+  <tr><td><strong>Best for</strong></td><td>Exomes and large panels</td><td>Small panels, clinical hotspots, FFPE samples</td></tr>
+  <tr><td><strong>Limitation</strong></td><td>Off-target reads; probe gaps in GC-rich exons</td><td>Primer sites cannot be genotyped; duplicates cannot be detected by position</td></tr>
+</table>
+<div class="info-box tip"><svg class="ico" aria-hidden="true"><use href="#i-tip"></use></svg><div><strong>The commonest exome disappointment</strong> is a gene of interest sitting in a probe gap. Before designing a study around a panel, check the manufacturer's target BED file for your genes, and after sequencing report the fraction of each gene covered at 20× rather than only the mean depth.</div></div>
 </div>
 
 <div class="chips" style="margin-top:14px;">

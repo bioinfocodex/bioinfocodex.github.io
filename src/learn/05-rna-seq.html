@@ -59,7 +59,44 @@ rnapower(depth=20, cv=0.4, effect=0.58, alpha=0.05, power=0.8)
 
           <div class="info-box note"><svg class="ico" aria-hidden="true"><use href="#i-note"></use></svg><div><strong>Sequencing depth guidelines:</strong> Differential expression: 20–30M reads/sample. Rare transcripts or lncRNA: 50–100M. Allele-specific expression: 100M+. For most bulk RNA-seq DE experiments, 25M PE 150bp reads is a good target.</div></div>
 
-          <div class="chips" style="margin-top:14px;"><span class="chip">Biological reps &gt; technical reps</span><span class="chip">3 reps minimum, 6 ideal</span><span class="chip">Balance batches across conditions</span><span class="chip">RIN &gt; 7 for poly-A</span><span class="chip">PE for isoform discovery</span><span class="chip">Use RNASeqPower for sample size</span><span class="chip">Record ALL batch metadata</span></div>
+          
+<div class="deep">
+<h3>Write the model before you collect the data</h3>
+<p class="sub">The design decides which comparisons are possible. Writing the eventual statistical model first makes gaps obvious while they can still be fixed:</p>
+<div class="code-block"><span class="code-comment"># Simple two-group comparison</span>
+~ condition
+
+<span class="code-comment"># Paired samples: the same patient before and after treatment</span>
+~ patient + condition
+
+<span class="code-comment"># A known batch to adjust for</span>
+~ batch + condition
+
+<span class="code-comment"># Two factors and their interaction: does the drug effect differ by genotype?</span>
+~ genotype + treatment + genotype:treatment</div>
+<p class="sub">The term of interest goes last, because that is the comparison the software reports by default. If a factor you care about cannot be written in such a formula without being perfectly aligned with another one, the experiment is confounded and no analysis will separate them.</p>
+
+<h3>Pooling, and when it is acceptable</h3>
+<p class="sub">Pooling means mixing several biological samples into one library. It reduces biological variance by averaging, which sounds attractive, but it also destroys the information needed to estimate that variance, so the usual statistical tests no longer apply. It is reasonable when material is genuinely insufficient from one animal, and when you make several independent pools per group, so that pools become the replicates. It is not a way to save money on sequencing.</p>
+
+<h3>Controls that pay for themselves</h3>
+<ul>
+  <li><strong>Spike-ins</strong> (ERCC or SIRV) are synthetic RNAs added in known amounts. They give an external check on sensitivity, dynamic range and whether normalisation behaved, and they are necessary if global expression really changes between conditions, which breaks the usual assumption.</li>
+  <li><strong>A technical replicate or two</strong> across batches costs little and makes batch effects measurable rather than theoretical.</li>
+  <li><strong>Sample identity checks:</strong> genotype concordance from the RNA-seq itself, or simply checking XIST and Y-chromosome genes against recorded sex, catches sample swaps. In large studies, swaps are not rare.</li>
+</ul>
+
+<h3>Record the metadata as you go</h3>
+<div class="code-block">sample    group    patient  batch      rin  date        library
+ctrl_1    control  P01      batch_A    8.9  2026-03-14  polyA
+ctrl_2    control  P02      batch_A    9.1  2026-03-14  polyA
+treat_1   treated  P01      batch_A    8.7  2026-03-14  polyA
+treat_2   treated  P02      batch_B    8.4  2026-03-21  polyA</div>
+<p class="sub">One tidy table, one row per sample, written at the bench rather than reconstructed afterwards. Every column you record is a variable you can test or adjust for later; every column you did not record is a confounder you can only speculate about.</p>
+<div class="info-box warn"><svg class="ico" aria-hidden="true"><use href="#i-warn"></use></svg><div><strong>Batch correction is not a rescue.</strong> Tools such as ComBat-seq, or a batch term in the model, can adjust for a batch effect that is balanced across conditions. Nothing can separate batch from treatment when they coincide exactly. The correction happens at the bench, by balancing, not at the computer.</div></div>
+</div>
+
+<div class="chips" style="margin-top:14px;"><span class="chip">Biological reps &gt; technical reps</span><span class="chip">3 reps minimum, 6 ideal</span><span class="chip">Balance batches across conditions</span><span class="chip">RIN &gt; 7 for poly-A</span><span class="chip">PE for isoform discovery</span><span class="chip">Use RNASeqPower for sample size</span><span class="chip">Record ALL batch metadata</span></div>
 
 <!--topic 5.2: Quality Control — FastQC &amp; Trimming-->
           <p class="sub">Quality control is the first analytical step in any sequencing project. Before aligning reads, you must assess their quality to identify problems such as adapter contamination, low-quality bases, and library preparation artefacts. FastQC generates a per-sample report, MultiQC aggregates all reports for easy comparison, and trimming tools remove problematic sequences. Skipping QC risks propagating errors through the entire downstream analysis.</p>
@@ -126,7 +163,50 @@ multiqc qc_reports/post_trim/ -o qc_reports/post_trim_multiqc/</div>
 
           <div class="info-box warn"><svg class="ico" aria-hidden="true"><use href="#i-warn"></use></svg><div><strong>Always re-run FastQC after trimming</strong> to confirm that adapter contamination is gone and quality profiles have improved. If adapter content persists, your adapter sequence may not be in the default database — specify it manually with <code>--adapter</code>.</div></div>
 
-          <div class="chips" style="margin-top:14px;"><span class="chip">FastQC per sample, MultiQC for overview</span><span class="chip">Duplication WARN is normal for RNA-seq</span><span class="chip">Adapter FAIL = must trim</span><span class="chip">fastp = fastest all-in-one</span><span class="chip">No trimming needed for Salmon/kallisto</span><span class="chip">Re-run QC after trimming</span></div>
+          
+<div class="deep">
+<h3>Reading a FastQC report module by module</h3>
+<table class="ref-table">
+  <tr><th>Module</th><th>What it shows</th><th>Act when</th></tr>
+  <tr><td><strong>Per base sequence quality</strong></td><td>Quality along the read</td><td>Median drops below Q20 near the end: trim</td></tr>
+  <tr><td><strong>Per sequence quality scores</strong></td><td>Distribution of whole-read quality</td><td>A second peak at low quality: a subset of reads failed</td></tr>
+  <tr><td><strong>Per base sequence content</strong></td><td>A, C, G, T proportions by position</td><td>Bias in the first 10 to 12 bases is normal for random priming; a bias further along suggests adapter or contamination</td></tr>
+  <tr><td><strong>Per sequence GC content</strong></td><td>GC distribution against the expected curve</td><td>A second peak means contamination from another organism</td></tr>
+  <tr><td><strong>Sequence duplication levels</strong></td><td>How often reads repeat</td><td>High duplication is expected in RNA-seq (highly expressed genes); worrying in DNA-seq</td></tr>
+  <tr><td><strong>Overrepresented sequences</strong></td><td>The most common exact reads</td><td>Adapters, rRNA, or a dominant transcript. The report names the ones it recognises</td></tr>
+  <tr><td><strong>Adapter content</strong></td><td>Adapter sequence accumulating along the read</td><td>Anything above a few per cent: trim</td></tr>
+</table>
+<div class="info-box note"><svg class="ico" aria-hidden="true"><use href="#i-note"></use></svg><div><strong>Red crosses are not failures.</strong> FastQC's thresholds assume a whole-genome DNA library. For RNA-seq, "per base sequence content", "sequence duplication" and "overrepresented sequences" routinely fail on perfectly good data. Judge the plots, not the icons, and use MultiQC to compare samples: the outlier matters far more than the absolute value.</div></div>
+
+<h3>How much to trim, and how much not to</h3>
+<p class="sub">Trimming removes adapters and genuinely bad bases, but aggressive quality trimming is now known to cost more than it gains for most RNA-seq. Modern aligners soft-clip poor ends themselves, and heavy trimming shortens reads, biases coverage and can change expression estimates. A sensible default is: always remove adapters; trim quality lightly (Q15 to Q20); drop reads that become too short; leave everything else alone.</p>
+<div class="code-block"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button><span class="code-comment"># fastp: adapter detection, light quality trimming and a report in one pass</span>
+fastp -i raw/S1_R1.fastq.gz -I raw/S1_R2.fastq.gz \
+      -o trim/S1_R1.fastq.gz -O trim/S1_R2.fastq.gz \
+      --detect_adapter_for_pe \
+      --qualified_quality_phred 15 \
+      --length_required 36 \
+      --thread 8 \
+      --html qc/S1_fastp.html --json qc/S1_fastp.json
+
+<span class="code-comment"># Then aggregate every report, including fastp's JSON, into one page</span>
+multiqc qc/ -o qc/multiqc</div>
+
+<h3>Problems QC catches, and what causes them</h3>
+<table class="ref-table">
+  <tr><th>What you see</th><th>Likely cause</th><th>What to do</th></tr>
+  <tr><td>Quality collapses mid-run in every sample</td><td>A sequencing run problem</td><td>Talk to the facility; the run may need repeating</td></tr>
+  <tr><td>One sample with a shifted GC curve</td><td>Contamination, or a mislabelled species</td><td>Screen a subset against other genomes (FastQ Screen, Kraken2)</td></tr>
+  <tr><td>Very high adapter content</td><td>Insert shorter than the read length</td><td>Trim; consider shorter reads next time</td></tr>
+  <tr><td>Low complexity, few distinct reads</td><td>Too little input material, over-amplified</td><td>More input RNA; fewer PCR cycles</td></tr>
+  <tr><td>High rRNA in a poly-A library</td><td>Degraded RNA, or failed selection</td><td>Check RIN; consider rRNA depletion instead</td></tr>
+</table>
+
+<h3>Mapping rate is the real quality check</h3>
+<p class="sub">FastQC describes the reads; it cannot tell you whether they came from the right organism or the right molecule. The first alignment does. Expect 85 to 95% of reads to map for a good human RNA-seq sample, with most in exons. A rate of 40% means something is wrong upstream, and the answer is usually visible in where the reads do go: rRNA, adapter dimers, genomic DNA, or a different species altogether.</p>
+</div>
+
+<div class="chips" style="margin-top:14px;"><span class="chip">FastQC per sample, MultiQC for overview</span><span class="chip">Duplication WARN is normal for RNA-seq</span><span class="chip">Adapter FAIL = must trim</span><span class="chip">fastp = fastest all-in-one</span><span class="chip">No trimming needed for Salmon/kallisto</span><span class="chip">Re-run QC after trimming</span></div>
 
 <!--topic 5.3: Alignment with HISAT2 &amp; STAR-->
           <p class="sub">Alignment (or mapping) is the process of determining where each sequencing read originated in the reference genome. For RNA-seq, this is complicated by splicing — a single read may span an exon-exon junction, so standard DNA aligners will fail. <strong>Splice-aware aligners</strong> like HISAT2 and STAR can split a read across introns to find the correct genomic position. The output is a BAM file containing the coordinates and quality of each alignment.</p>
@@ -221,7 +301,58 @@ bamCoverage -b sample.bam \
 <span class="code-comment"># Output: sample.bw (bigWig format)</span>
 <span class="code-comment"># Load in IGV or UCSC Genome Browser for visualisation</span></div>
 
-          <div class="chips" style="margin-top:14px;"><span class="chip">HISAT2 = low RAM, STAR = higher accuracy</span><span class="chip">CIGAR string shows splicing (N = intron)</span><span class="chip">MAPQ 60 = uniquely mapped</span><span class="chip">samtools flagstat for QC</span><span class="chip">&gt;90% alignment = good</span><span class="chip">IGV for visual inspection</span><span class="chip">bamCoverage for bigWig tracks</span></div>
+          
+<div class="deep">
+<h3>Why RNA reads need a different aligner</h3>
+<p class="sub">A read from a mature mRNA can span an exon-exon junction. On the genome, its two halves sit tens of thousands of bases apart, so an aligner designed for DNA either fails to place it or clips it. A <strong>splice-aware</strong> aligner looks for such split alignments, scoring them against known splice-site signals and, when provided, an annotation.</p>
+<p class="sub">An alternative is to avoid the genome entirely: <strong>pseudoalignment</strong> tools (salmon, kallisto) ask only which transcripts a read is compatible with, which is enough for quantification and is roughly an order of magnitude faster. The trade-off is that you get no alignments to look at, and anything not in the transcriptome is invisible.</p>
+
+<h3>Choosing between the main options</h3>
+<table class="ref-table">
+  <tr><th>Tool</th><th>Approach</th><th>Memory (human)</th><th>Best for</th></tr>
+  <tr><td><strong>STAR</strong></td><td>Splice-aware alignment</td><td>~32 GB</td><td>Speed, novel junctions, fusion detection, anything needing a BAM</td></tr>
+  <tr><td><strong>HISAT2</strong></td><td>Splice-aware alignment</td><td>~8 GB</td><td>Same jobs on modest hardware; much smaller index</td></tr>
+  <tr><td><strong>salmon</strong> / <strong>kallisto</strong></td><td>Quantification against transcripts</td><td>~4 GB</td><td>Differential expression at speed; isoform-level estimates</td></tr>
+</table>
+<div class="code-block"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button><span class="code-comment"># STAR: build the index once, giving it the annotation</span>
+STAR --runMode genomeGenerate --genomeDir star_index \
+     --genomeFastaFiles GRCh38.primary_assembly.fa \
+     --sjdbGTFfile gencode.v45.annotation.gtf --sjdbOverhang 149 \
+     --runThreadN 16
+
+<span class="code-comment"># Align, sort and index in one step</span>
+STAR --genomeDir star_index --readFilesIn S1_R1.fq.gz S1_R2.fq.gz \
+     --readFilesCommand zcat --runThreadN 16 \
+     --outSAMtype BAM SortedByCoordinate \
+     --quantMode GeneCounts \
+     --outFileNamePrefix bam/S1_
+samtools index bam/S1_Aligned.sortedByCoord.out.bam
+
+<span class="code-comment"># HISAT2: same job, far less memory</span>
+hisat2 -x grch38_index -1 S1_R1.fq.gz -2 S1_R2.fq.gz -p 16 \
+       --summary-file logs/S1.summary.txt \
+  | samtools sort -@ 4 -o bam/S1.bam -
+samtools index bam/S1.bam</div>
+
+<h3>Reading the alignment summary</h3>
+<ul>
+  <li><strong>Uniquely mapped:</strong> 75 to 90% is healthy for human RNA-seq.</li>
+  <li><strong>Multi-mapped:</strong> 5 to 20% is normal (gene families, repeats). Above 30% suggests rRNA or repeat contamination.</li>
+  <li><strong>Too short:</strong> STAR's commonest "unmapped" category. A large value usually means adapter contamination or the wrong reference.</li>
+  <li><strong>Mismatch rate per base:</strong> should be well under 1%. Higher means poor data, or the wrong genome build.</li>
+</ul>
+
+<h3>MAPQ, duplicates and strandedness</h3>
+<p class="sub">Three details decide whether downstream counts are right:</p>
+<ul>
+  <li><strong>MAPQ</strong> is the aligner's confidence that a read is in the right place. The scale is not shared between tools: in STAR, MAPQ 255 means unique, while in HISAT2 and BWA unique reads score around 60. Filtering with <code>-q 30</code> means different things to each.</li>
+  <li><strong>Do not remove duplicates in standard RNA-seq.</strong> A highly expressed gene genuinely produces identical fragments, and removing them discards signal. The exception is libraries with UMIs, where duplicates can be collapsed correctly.</li>
+  <li><strong>Strandedness</strong> must match between library and counting. Getting it wrong typically halves your counts or fills them with antisense noise. Determine it from the data rather than from memory, with <code>infer_experiment.py</code> (RSeQC) or salmon's automatic detection.</li>
+</ul>
+<div class="info-box tip"><svg class="ico" aria-hidden="true"><use href="#i-tip"></use></svg><div><strong>Look at one gene in a browser.</strong> Load a BAM into IGV and look at a gene you know is expressed. Reads stacked on exons with clean gaps over introns means the alignment worked; reads smeared over introns means genomic DNA contamination; reads only at the 3' end means degraded RNA.</div></div>
+</div>
+
+<div class="chips" style="margin-top:14px;"><span class="chip">HISAT2 = low RAM, STAR = higher accuracy</span><span class="chip">CIGAR string shows splicing (N = intron)</span><span class="chip">MAPQ 60 = uniquely mapped</span><span class="chip">samtools flagstat for QC</span><span class="chip">&gt;90% alignment = good</span><span class="chip">IGV for visual inspection</span><span class="chip">bamCoverage for bigWig tracks</span></div>
 
 <!--topic 5.4: Gene Counting with featureCounts-->
           <p class="sub">Gene counting is the process of assigning each aligned read to a gene based on its overlap with annotated gene coordinates in a GTF/GFF file. The result is a <strong>count matrix</strong> — a table where rows are genes, columns are samples, and values are integer read counts. This matrix is the fundamental input for differential expression analysis with DESeq2 or edgeR. Getting the counting step right is critical because errors here propagate to every downstream result.</p>
@@ -309,7 +440,57 @@ dds &lt;- DESeqDataSetFromTximport(txi, metadata, ~condition)</div>
 
           <div class="info-box tip"><svg class="ico" aria-hidden="true"><use href="#i-tip"></use></svg><div><strong>Salmon + tximport + DESeq2</strong> is increasingly the recommended pipeline because: (1) it is much faster than alignment-based counting, (2) it corrects for GC bias and sequence-specific bias, and (3) tximport provides offset matrices that improve DE accuracy at the gene level.</div></div>
 
-          <div class="chips" style="margin-top:14px;"><span class="chip">featureCounts = fast gene counting</span><span class="chip">Strandedness: check -s 0/1/2</span><span class="chip">Salmon = no alignment needed</span><span class="chip">tximport bridges Salmon → DESeq2</span><span class="chip">Gene-level for DE analysis</span><span class="chip">Ambiguous reads are discarded</span></div>
+          
+<div class="deep">
+<h3>Counting is a set of decisions, not a single answer</h3>
+<p class="sub">Every counting tool must decide what to do with reads that are ambiguous, and the defaults differ. Understanding the three main choices explains most discrepancies between tools:</p>
+<table class="ref-table">
+  <tr><th>Decision</th><th>featureCounts default</th><th>HTSeq default</th></tr>
+  <tr><td>Read overlapping two genes</td><td>Not counted (ambiguous)</td><td>Not counted (ambiguous)</td></tr>
+  <tr><td>Read overlapping a feature partly</td><td>Counted if it overlaps at least 1 bp</td><td>Union mode: counted</td></tr>
+  <tr><td>Multi-mapping read</td><td>Not counted</td><td>Not counted</td></tr>
+  <tr><td>Paired reads</td><td>Counted once as a fragment (with <code>-p</code>)</td><td>Counted once as a pair</td></tr>
+</table>
+<div class="code-block"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button><span class="code-comment"># featureCounts: all samples at once, into one matrix</span>
+featureCounts -a gencode.v45.annotation.gtf -o counts/raw_counts.txt \
+  -p --countReadPairs \   <span class="code-comment"># paired-end: count fragments, not reads</span>
+  -s 2 \                  <span class="code-comment"># strandedness: 0 unstranded, 1 forward, 2 reverse</span>
+  -t exon -g gene_id \    <span class="code-comment"># count exons, group by gene</span>
+  -T 8 \
+  bam/*.bam
+
+<span class="code-comment"># The .summary file is the one to read first</span>
+cat counts/raw_counts.txt.summary</div>
+
+<h3>The summary file tells you what went wrong</h3>
+<table class="ref-table">
+  <tr><th>Category</th><th>Healthy</th><th>If it is high</th></tr>
+  <tr><td><strong>Assigned</strong></td><td>60 to 80% of alignments</td><td>—</td></tr>
+  <tr><td><strong>Unassigned_NoFeatures</strong></td><td>Under 20%</td><td>Wrong strandedness, intronic signal (pre-mRNA), or wrong annotation</td></tr>
+  <tr><td><strong>Unassigned_Ambiguity</strong></td><td>Under 10%</td><td>Overlapping gene models; common in dense genomes</td></tr>
+  <tr><td><strong>Unassigned_MultiMapping</strong></td><td>Under 20%</td><td>rRNA or repeats</td></tr>
+</table>
+<p class="sub">A classic failure is an assigned rate near 5% with almost everything in NoFeatures. Nine times out of ten this is the strand setting (<code>-s 2</code> instead of <code>-s 0</code> or the reverse), and the fix takes seconds once you recognise the pattern. The other common cause is a chromosome-naming mismatch between the BAM and the GTF, which gives an assigned rate of essentially zero.</p>
+
+<h3>Which annotation, and which feature</h3>
+<p class="sub">Counts are only defined relative to an annotation, so the choice matters. GENCODE's comprehensive set includes every annotated transcript, including many non-coding and predicted ones; the basic set is smaller and cleaner. Counting <code>exon</code> grouped by <code>gene_id</code> is the standard for gene-level differential expression. Counting by <code>transcript_id</code> is not a reliable way to get isoform-level numbers, because reads shared between isoforms are discarded as ambiguous; use salmon or RSEM, which model that sharing, instead.</p>
+
+<h3>From counts to a matrix ready for analysis</h3>
+<div class="code-block"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button><span class="code-comment"># In R: tidy featureCounts output into a clean matrix</span>
+fc &lt;- read.delim("counts/raw_counts.txt", comment.char = "#")
+counts &lt;- as.matrix(fc[, 7:ncol(fc)])
+rownames(counts) &lt;- fc$Geneid
+colnames(counts) &lt;- sub("^bam\\.|\\.bam$", "", colnames(counts))
+
+<span class="code-comment"># Sanity checks worth running every time</span>
+dim(counts)                       <span class="code-comment"># genes x samples</span>
+colSums(counts) / 1e6             <span class="code-comment"># library sizes in millions: should be comparable</span>
+sum(rowSums(counts) == 0)         <span class="code-comment"># genes with no reads anywhere</span>
+head(sort(rowSums(counts), decreasing = TRUE), 10)   <span class="code-comment"># what dominates?</span></div>
+<div class="info-box warn"><svg class="ico" aria-hidden="true"><use href="#i-warn"></use></svg><div><strong>Give DESeq2 and edgeR raw counts.</strong> Not TPM, not FPKM, not anything normalised or log-transformed. These tools model counting noise directly and do their own normalisation; feeding them transformed values invalidates the statistics. TPM is for comparing genes within a sample, or for a heatmap, not for input to a differential test.</div></div>
+</div>
+
+<div class="chips" style="margin-top:14px;"><span class="chip">featureCounts = fast gene counting</span><span class="chip">Strandedness: check -s 0/1/2</span><span class="chip">Salmon = no alignment needed</span><span class="chip">tximport bridges Salmon → DESeq2</span><span class="chip">Gene-level for DE analysis</span><span class="chip">Ambiguous reads are discarded</span></div>
 
 <!--topic 5.5: Differential Expression with DESeq2-->
           <p class="sub">DESeq2 is the gold-standard R package for identifying genes that are significantly more or less expressed between experimental conditions. It models RNA-seq count data using the <strong>negative binomial distribution</strong>, which accounts for both the mean expression level and the biological variability (dispersion) between replicates. Unlike simpler models (Poisson), the negative binomial captures the overdispersion that is characteristic of real biological data — where variance exceeds the mean.</p>
@@ -427,4 +608,55 @@ write.csv(res_annotated, "all_genes_DESeq2.csv", row.names=FALSE)</div>
 
           <div class="info-box warn"><svg class="ico" aria-hidden="true"><use href="#i-warn"></use></svg><div><strong>Common mistakes:</strong> (1) Using normalised counts (TPM, RPKM) as input — DESeq2 requires raw integer counts. (2) Forgetting to set the reference level — the default alphabetical order may not be what you want. (3) Not filtering low-count genes — this reduces statistical power because of excessive multiple testing correction.</div></div>
 
-          <div class="chips" style="margin-top:14px;"><span class="chip">Negative binomial model</span><span class="chip">Raw counts as input (never normalised)</span><span class="chip">padj &lt; 0.05 + |log2FC| &gt; 1</span><span class="chip">apeglm for LFC shrinkage</span><span class="chip">~ batch + condition for multi-factor</span><span class="chip">EnhancedVolcano for plots</span><span class="chip">biomaRt for gene annotation</span></div>
+          
+<div class="deep">
+<h3>Why counts need their own statistics</h3>
+<p class="sub">Read counts are not normally distributed. They are non-negative integers, their variance grows with their mean, and in RNA-seq the variance is larger than a Poisson process would give, because of biological variability between samples. DESeq2 and edgeR therefore model counts with the <strong>negative binomial</strong> distribution, which is a Poisson with an extra dispersion parameter capturing that biological variation.</p>
+<p class="sub">The difficulty is that dispersion cannot be estimated well from three samples. The central trick of both packages is <strong>information sharing</strong>: estimate a trend of dispersion against expression across all genes, then shrink each gene's noisy estimate towards that trend. This is what makes reliable testing possible with small replicate numbers, and it is why these tools outperform a simple t-test on transformed counts.</p>
+
+<h3>A complete DESeq2 analysis</h3>
+<div class="code-block"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button>library(DESeq2)
+
+dds &lt;- DESeqDataSetFromMatrix(countData = counts,
+                              colData   = meta,
+                              design    = ~ batch + condition)
+
+<span class="code-comment"># Set the reference level explicitly: this decides the direction of the fold change</span>
+dds$condition &lt;- relevel(dds$condition, ref = "control")
+
+<span class="code-comment"># Light pre-filter: speeds things up, and helps the FDR step</span>
+keep &lt;- rowSums(counts(dds) &gt;= 10) &gt;= 3
+dds  &lt;- dds[keep, ]
+
+dds &lt;- DESeq(dds)
+res &lt;- results(dds, contrast = c("condition", "treated", "control"), alpha = 0.05)
+
+<span class="code-comment"># Shrink fold changes: large, noisy estimates from low-count genes are pulled in</span>
+resLFC &lt;- lfcShrink(dds, coef = "condition_treated_vs_control", type = "apeglm")
+
+summary(res)
+sig &lt;- subset(as.data.frame(resLFC), padj &lt; 0.05 &amp; abs(log2FoldChange) &gt; 1)
+write.csv(sig[order(sig$padj), ], "results/significant_genes.csv")</div>
+
+<h3>What each column of the result means</h3>
+<table class="ref-table">
+  <tr><th>Column</th><th>Meaning</th><th>Watch for</th></tr>
+  <tr><td><code>baseMean</code></td><td>Mean normalised count across all samples</td><td>Very low values: the gene is barely expressed, so treat the result cautiously</td></tr>
+  <tr><td><code>log2FoldChange</code></td><td>Effect size; 1 means doubled</td><td>Use the shrunken values for ranking and plotting</td></tr>
+  <tr><td><code>lfcSE</code></td><td>Uncertainty in that estimate</td><td>Large SE with a large fold change means an unreliable gene</td></tr>
+  <tr><td><code>pvalue</code></td><td>Raw p-value</td><td>Never filter on this across thousands of genes</td></tr>
+  <tr><td><code>padj</code></td><td>Benjamini-Hochberg adjusted p-value</td><td><code>NA</code> is meaningful: the gene was filtered out, not tested</td></tr>
+</table>
+<p class="sub"><code>padj = NA</code> happens for two reasons: the gene had an extreme outlier count (flagged by Cook's distance), or it was removed by independent filtering because its expression was too low for the test to have power. Both are deliberate, and both improve the overall false-discovery rate.</p>
+
+<h3>Checks before you believe the list</h3>
+<ol>
+  <li><strong>Dispersion plot</strong> (<code>plotDispEsts(dds)</code>): black points should scatter around a smooth red trend, with blue shrunken values following it. A plot with no trend suggests a design problem.</li>
+  <li><strong>PCA on transformed counts</strong> (<code>plotPCA(vst(dds))</code>): replicates together, conditions apart. If samples separate by batch instead, add batch to the design, or correct it.</li>
+  <li><strong>p-value histogram</strong>: flat with a peak near zero. A hill in the middle or a peak at 1 means the model is misspecified.</li>
+  <li><strong>Count plot for a top gene</strong> (<code>plotCounts</code>): the difference should be visible in the raw numbers, not just the statistics, and not driven by one sample.</li>
+</ol>
+<div class="info-box note"><svg class="ico" aria-hidden="true"><use href="#i-note"></use></svg><div><strong>DESeq2 or edgeR?</strong> Both are excellent and usually agree closely. DESeq2 shrinks fold changes by default and handles outliers automatically; edgeR (particularly <code>glmQLFit</code>) controls the false-discovery rate slightly more conservatively and is faster on very large designs. limma-voom is the third option and is the fastest of all for experiments with many samples. Choose one, state it, and do not run all three and report whichever gives the longest list.</div></div>
+</div>
+
+<div class="chips" style="margin-top:14px;"><span class="chip">Negative binomial model</span><span class="chip">Raw counts as input (never normalised)</span><span class="chip">padj &lt; 0.05 + |log2FC| &gt; 1</span><span class="chip">apeglm for LFC shrinkage</span><span class="chip">~ batch + condition for multi-factor</span><span class="chip">EnhancedVolcano for plots</span><span class="chip">biomaRt for gene annotation</span></div>

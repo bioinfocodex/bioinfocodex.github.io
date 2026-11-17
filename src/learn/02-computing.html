@@ -160,6 +160,45 @@ join -t$'\t' -1 1 -2 1 &lt;(sort file1.txt) &lt;(sort file2.txt)</div>
           &bull; Use screen/tmux for persistent sessions when working over SSH<br>
           &bull; GNU parallel and xargs enable efficient batch processing of many files</div></div>
 
+
+<div class="deep">
+<h3>The text tools that do the real work</h3>
+<table class="ref-table">
+  <tr><th>Tool</th><th>Use it for</th><th>Example</th></tr>
+  <tr><td><code>grep</code></td><td>Finding lines that match</td><td><code>grep -c "^&gt;" seqs.fa</code> counts sequences in a FASTA</td></tr>
+  <tr><td><code>cut</code></td><td>Picking columns</td><td><code>cut -f1,4,5 genes.bed</code></td></tr>
+  <tr><td><code>sort</code> / <code>uniq</code></td><td>Ordering and counting</td><td><code>cut -f1 x.bed | sort | uniq -c</code> counts features per chromosome</td></tr>
+  <tr><td><code>awk</code></td><td>Filtering and arithmetic on columns</td><td><code>awk '$5 &gt; 30' variants.vcf</code></td></tr>
+  <tr><td><code>sed</code></td><td>Substituting text</td><td><code>sed 's/^chr//' ucsc.bed</code> converts chr1 to 1</td></tr>
+</table>
+<div class="code-block"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button><span class="code-comment"># awk patterns that come up constantly</span>
+awk '$3 == "exon"' annotation.gtf                 <span class="code-comment"># keep exon lines</span>
+awk 'BEGIN{OFS="\t"} {print $1, $4-1, $5}' a.gtf  <span class="code-comment"># GTF (1-based) to BED (0-based)</span>
+awk '{sum += $3} END {print sum/NR}' coverage.txt <span class="code-comment"># mean of column 3</span>
+awk 'NR % 4 == 2' reads.fastq | head              <span class="code-comment"># the sequence lines only</span></div>
+
+<h3>Moving data, and working on a cluster</h3>
+<p class="sub"><code>rsync</code> is worth learning in place of <code>scp</code>, because it resumes and skips files that are already there, which matters for 100 GB transfers that fail halfway:</p>
+<div class="code-block"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button>rsync -avP --partial data/ user@server:/scratch/project/data/
+
+<span class="code-comment"># On an HPC cluster, work is submitted rather than run directly (SLURM)</span>
+sbatch --cpus-per-task=8 --mem=32G --time=12:00:00 \
+       --job-name=align --output=logs/align_%j.log run_align.sh
+
+squeue -u $USER          <span class="code-comment"># what is queued or running</span>
+scancel 12345678         <span class="code-comment"># stop a job</span>
+seff 12345678            <span class="code-comment"># after it finishes: did you ask for the right resources?</span></div>
+<div class="info-box warn"><svg class="ico" aria-hidden="true"><use href="#i-warn"></use></svg><div><strong>Never run a heavy job on the login node.</strong> It is shared by everyone, and a single alignment can make the cluster unusable for the whole group. Submit it, or request an interactive session first (<code>srun --pty bash</code>).</div></div>
+
+<h3>Habits that prevent lost work</h3>
+<ul>
+  <li><strong>Make raw data read-only:</strong> <code>chmod -R a-w raw_data/</code>. You cannot accidentally overwrite what cannot be written.</li>
+  <li><strong>Use tab completion</strong> for file names. Most "file not found" errors are typing errors.</li>
+  <li><strong>Beware of spaces in names.</strong> Quote variables (<code>"$file"</code>) always; a single unquoted space can turn one file into two arguments.</li>
+  <li><strong>Test on a subset first:</strong> <code>head -400000 big.fastq &gt; test.fastq</code> gives 100,000 reads to debug a pipeline in seconds instead of hours.</li>
+</ul>
+</div>
+
 <!--topic 2.2: Setting Up Your Environment (Conda)-->
           <p class="sub">Conda is the standard package manager for bioinformatics. It installs tools and manages dependencies so they don't conflict with each other. Proper environment management is one of the most important skills for reproducible research — if you cannot recreate your exact software environment, your results cannot be reproduced.</p>
 
@@ -265,6 +304,59 @@ module purge                  <span class="code-comment"># Unload all modules</s
           &bull; Containers (Docker/Singularity) provide the highest level of reproducibility<br>
           &bull; Maintain a consistent project directory structure and track scripts with git<br>
           &bull; On HPC clusters, use the module system or Singularity containers</div></div>
+
+
+<div class="deep">
+<h3>What conda is really doing</h3>
+<p class="sub">Installing a bioinformatics tool rarely means copying one program. It means satisfying a graph of dependencies, each with its own version constraints, where two tools may need incompatible versions of the same library. Conda solves that graph and installs a consistent set into an isolated directory. An environment is just a folder with its own <code>bin</code>, and activating it puts that folder at the front of your <code>PATH</code>.</p>
+<p class="sub">This is also why solving can be slow: it is a genuine constraint-satisfaction problem. <strong>Mamba</strong> (now the default solver in recent conda, as libmamba) rewrote that step in C++ and made it dramatically faster. If you still see conda think for ten minutes, switch:</p>
+<div class="code-block"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button>conda config --set solver libmamba      <span class="code-comment"># use the fast solver</span>
+<span class="code-comment"># or install Miniforge, which ships mamba and conda-forge by default</span></div>
+
+<h3>Channels and why order matters</h3>
+<div class="code-block"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button><span class="code-comment"># Set this once. The order is the recommended one for bioconda.</span>
+conda config --add channels defaults
+conda config --add channels bioconda
+conda config --add channels conda-forge
+conda config --set channel_priority strict</div>
+<p class="sub">The last channel added has the highest priority, so this leaves conda-forge first, then bioconda. <strong>strict</strong> priority means a package is taken from the highest-priority channel that has it, instead of mixing channels by version. Mixing is the most common cause of environments that install cleanly and then fail at runtime with a missing library.</p>
+
+<h3>Environments per project, written down</h3>
+<div class="code-block"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button><span class="code-comment"># Create from a file, so the environment is part of the project</span>
+cat &gt; environment.yml &lt;&lt;'YML'
+name: rnaseq
+channels: [conda-forge, bioconda, defaults]
+dependencies:
+  - python=3.11
+  - fastqc=0.12.1
+  - fastp=0.23.4
+  - hisat2=2.2.1
+  - samtools=1.19
+  - subread=2.0.6
+  - multiqc=1.21
+YML
+
+conda env create -f environment.yml
+conda activate rnaseq
+
+<span class="code-comment"># Record exactly what was installed, for the methods section</span>
+conda env export --no-builds &gt; environment.lock.yml</div>
+<p class="sub">Pinning versions is the difference between an environment that can be rebuilt next year and one that cannot. Keep <code>environment.yml</code> (what you asked for) in version control alongside <code>environment.lock.yml</code> (what you got).</p>
+
+<h3>Common failures and their causes</h3>
+<table class="ref-table">
+  <tr><th>Symptom</th><th>Usual cause</th><th>Fix</th></tr>
+  <tr><td>Solving takes forever or fails</td><td>Loose constraints, or mixed channels</td><td>Use libmamba, set strict priority, pin the Python version</td></tr>
+  <tr><td>Tool installs but will not run</td><td>Libraries mixed between channels</td><td>Rebuild the environment with strict priority</td></tr>
+  <tr><td><code>conda activate</code> not found</td><td>The shell was never initialised</td><td><code>conda init bash</code>, then open a new shell</td></tr>
+  <tr><td>Package not available</td><td>Wrong architecture (notably Apple Silicon)</td><td>Check bioconda for an osx-arm64 build, or run under Rosetta with <code>CONDA_SUBDIR=osx-64</code></td></tr>
+  <tr><td>Home directory full</td><td>Package cache growing without limit</td><td><code>conda clean --all</code>; move the cache and env directories to scratch</td></tr>
+</table>
+
+<h3>When to move past conda</h3>
+<p class="sub">Conda isolates packages but still uses the host operating system. For work that must run identically anywhere, or be rerun in five years, a <strong>container</strong> goes further by packaging the operating system too. Docker is the general standard; on HPC clusters, where users cannot have root, <strong>Apptainer</strong> (formerly Singularity) is the usual choice and can run Docker images directly.</p>
+<div class="info-box tip"><svg class="ico" aria-hidden="true"><use href="#i-tip"></use></svg><div><strong>You rarely need to build one.</strong> The BioContainers project publishes a container for essentially every bioconda package, and workflow managers such as Nextflow and Snakemake can pull them automatically per process. The practical path is conda for daily work, containers when the pipeline is finished and must be portable.</div></div>
+</div>
 
 <!--topic 2.3: Bash Scripting for Automation-->
           <p class="sub">When you have 20 samples, you don't run commands one by one. Bash scripts automate repetitive tasks — this is the single most time-saving skill in bioinformatics. A well-written script ensures every sample is processed identically, provides a record of exactly what was done, and can be re-run when parameters need to change.</p>
@@ -433,6 +525,56 @@ bash scripts/pipeline.sh
           &bull; Test on one sample before running on all; check outputs at each step<br>
           &bull; On HPC, use SLURM (#SBATCH directives) to request resources and submit jobs</div></div>
 
+
+<div class="deep">
+<h3>Quoting, which is where most bugs live</h3>
+<div class="code-block">"$file"     <span class="code-comment"># correct: one argument, even with spaces</span>
+$file       <span class="code-comment"># wrong: split on spaces, globs expanded</span>
+"${sample}_R1.fastq.gz"   <span class="code-comment"># braces when the variable touches other text</span>
+"$(dirname "$0")"         <span class="code-comment"># quote inside command substitution too</span></div>
+
+<h3>Writing a script that can be safely rerun</h3>
+<div class="code-block"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button>#!/usr/bin/env bash
+set -euo pipefail
+
+<span class="code-comment"># Usage: ./align.sh &lt;samples.txt&gt; &lt;genome_index&gt; &lt;outdir&gt;</span>
+samples=${1:?need a sample list}
+index=${2:?need a genome index}
+outdir=${3:-results}
+
+command -v hisat2 &gt;/dev/null || { echo "hisat2 not found; activate the environment" &gt;&amp;2; exit 1; }
+mkdir -p "$outdir/bam" "$outdir/logs"
+
+while read -r sample; do
+  [[ -z "$sample" || "$sample" == \#* ]] &amp;&amp; continue     <span class="code-comment"># skip blanks and comments</span>
+  out="$outdir/bam/${sample}.bam"
+  if [[ -s "$out" ]]; then
+    echo "[skip] $sample already done"; continue           <span class="code-comment"># makes the script restartable</span>
+  fi
+  echo "[run ] $sample  $(date +%H:%M:%S)"
+  hisat2 -x "$index" -1 "fastq/${sample}_R1.fastq.gz" -2 "fastq/${sample}_R2.fastq.gz" \
+         -p 8 2&gt; "$outdir/logs/${sample}.hisat2.log" \
+    | samtools sort -@ 4 -o "$out" -
+  samtools index "$out"
+done &lt; "$samples"
+
+echo "Done: $(wc -l &lt; "$samples") samples"</div>
+<p class="sub">Two details in that script matter more than they look. The <strong>skip-if-done</strong> check means a job that dies after sample 30 of 40 can simply be rerun. And writing each tool's messages to its own <strong>log file</strong> means that when something fails, the evidence still exists.</p>
+
+<h3>Running things in parallel</h3>
+<div class="code-block"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button><span class="code-comment"># Four samples at a time, each tool using 4 threads</span>
+cat samples.txt | xargs -P 4 -I{} bash -c 'fastqc -t 4 fastq/{}_R1.fastq.gz -o qc/'
+
+<span class="code-comment"># GNU parallel, which gives nicer control and logging</span>
+parallel -j 4 --joblog parallel.log \
+  'fastp -i fastq/{}_R1.fastq.gz -o trimmed/{}_R1.fastq.gz' :::: samples.txt</div>
+<p class="sub">Watch total resource use, not just the job count: four jobs each asking for eight threads needs 32 cores, and four alignments each needing 16 GB needs 64 GB of memory. Oversubscribing a machine makes everything slower, and on a cluster it gets jobs killed.</p>
+
+<h3>When a shell script is no longer the right tool</h3>
+<p class="sub">Bash is excellent up to a point. Once a pipeline has branching steps, needs to resume cleanly from the middle, must run on both a laptop and a cluster, or is to be published, move to a workflow manager: <strong>Nextflow</strong> or <strong>Snakemake</strong>. They handle dependency between steps, parallelism, resumption after failure, container integration and cluster submission, all of which are painful to hand-roll. The <strong>nf-core</strong> project publishes audited Nextflow pipelines for most standard analyses, and starting from one of those is usually better than writing your own.</p>
+<div class="info-box tip"><svg class="ico" aria-hidden="true"><use href="#i-tip"></use></svg><div><strong>Check your scripts automatically.</strong> <a href="https://www.shellcheck.net/" target="_blank" rel="noopener">ShellCheck</a> reads a bash script and points out quoting bugs, unused variables and unsafe patterns. Running it on a script you already trust is an education in itself.</div></div>
+</div>
+
 <!--topic 2.4: R for Bioinformatics — Getting Started-->
           <p class="sub">R is the language of choice for statistical analysis, visualisation, and Bioconductor packages (DESeq2, edgeR, limma). You don't need to be a software engineer — a working knowledge of R is enough to run the statistical analyses and produce publication-quality plots that make up the second half of most bioinformatics projects.</p>
 
@@ -543,3 +685,57 @@ summary(res)
           &bull; ggplot2 builds plots in layers — master aes(), geom_*, and theme() for publication figures<br>
           &bull; Use R Markdown to combine code, results, and narrative in reproducible reports<br>
           &bull; Save R objects with saveRDS() so you can reload them without re-running slow computations</div></div>
+
+<div class="deep">
+<h3>The data structures you will actually meet</h3>
+<table class="ref-table">
+  <tr><th>Structure</th><th>Holds</th><th>Used for</th></tr>
+  <tr><td><strong>vector</strong></td><td>One type, one dimension</td><td>A column of values; the basic unit of R</td></tr>
+  <tr><td><strong>factor</strong></td><td>A categorical variable with fixed levels</td><td>Experimental groups. The order of levels sets the reference in a model</td></tr>
+  <tr><td><strong>matrix</strong></td><td>One type, two dimensions</td><td>Count matrices, expression matrices</td></tr>
+  <tr><td><strong>data.frame</strong> / <strong>tibble</strong></td><td>Columns of different types</td><td>Sample metadata, results tables</td></tr>
+  <tr><td><strong>list</strong></td><td>Anything, including other lists</td><td>What most model objects really are</td></tr>
+  <tr><td><strong>SummarizedExperiment</strong></td><td>Counts plus row and column metadata together</td><td>The standard Bioconductor container; keeps samples and annotation aligned</td></tr>
+</table>
+<p class="sub">That last one is the key idea in Bioconductor. Instead of carrying a count matrix and a sample table separately and hoping the order matches, they travel in one object, and subsetting it subsets both. DESeq2, edgeR and most Bioconductor packages are built on it.</p>
+
+<h3>The mistakes that catch everyone once</h3>
+<ul>
+  <li><strong>R indexes from 1</strong>, and <code>x[1:3]</code> includes element 3. Python users lose an hour to this.</li>
+  <li><strong>Factor levels decide the comparison.</strong> In a model, the first level is the reference. If "treated" sorts before "control" alphabetically, your fold changes are inverted. Set it explicitly: <code>relevel(group, ref = "control")</code>.</li>
+  <li><strong>Silent recycling:</strong> comparing vectors of different lengths may recycle the shorter one instead of failing.</li>
+  <li><strong>Row name alignment:</strong> <code>DESeqDataSetFromMatrix</code> will refuse if sample names do not match; many other functions will not, and will quietly compare the wrong samples. Check with <code>all(colnames(counts) == rownames(meta))</code> before every analysis.</li>
+  <li><strong>Partial matching</strong> on <code>$</code> means <code>df$sam</code> may silently return <code>df$sample</code>. Use <code>[[ ]]</code> in scripts.</li>
+</ul>
+
+<h3>A short, complete example</h3>
+<div class="code-block"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button>library(tidyverse)
+
+counts &lt;- read_tsv("counts.tsv") |&gt; column_to_rownames("gene_id") |&gt; as.matrix()
+meta   &lt;- read_tsv("samples.tsv")
+
+<span class="code-comment"># Check before you trust: same samples, same order</span>
+stopifnot(all(colnames(counts) == meta$sample))
+
+meta$group &lt;- factor(meta$group, levels = c("control", "treated"))
+
+<span class="code-comment"># Tidy summary: mean expression per group for a few genes</span>
+as_tibble(counts, rownames = "gene") |&gt;
+  pivot_longer(-gene, names_to = "sample", values_to = "count") |&gt;
+  left_join(meta, by = "sample") |&gt;
+  group_by(gene, group) |&gt;
+  summarise(mean_count = mean(count), .groups = "drop") |&gt;
+  slice_head(n = 10)</div>
+<p class="sub">The <strong>tidyverse</strong> style (pipes, long-format data, <code>ggplot2</code>) suits metadata, results tables and plotting. <strong>Base R and matrices</strong> suit the numeric heavy lifting, and Bioconductor assumes them. Most working scripts use both, converting at the boundary, and that is fine.</p>
+
+<h3>Getting help, and keeping it reproducible</h3>
+<div class="code-block"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button>?DESeq                      <span class="code-comment"># help for a function</span>
+vignette("DESeq2")          <span class="code-comment"># the package's own worked tutorial: start here</span>
+browseVignettes("limma")    <span class="code-comment"># list everything a package ships</span>
+sessionInfo()               <span class="code-comment"># every package version: put this in your methods</span>
+
+<span class="code-comment"># Pin a project's packages so it can be rebuilt later</span>
+install.packages("renv"); renv::init(); renv::snapshot()</div>
+<div class="info-box note"><svg class="ico" aria-hidden="true"><use href="#i-note"></use></svg><div><strong>Bioconductor vignettes are the best documentation in the field.</strong> They are worked examples written by the package authors and tested on every release. Before searching the web for how to use a Bioconductor package, read its vignette: it usually answers the question, with code that runs.</div></div>
+</div>
+

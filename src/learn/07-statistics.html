@@ -56,7 +56,64 @@ p.adjust(p_values, method = "BH")
 
           <div class="info-box tip"><svg class="ico" aria-hidden="true"><use href="#i-tip"></use></svg><div><strong>Volcano plot intuition:</strong> X-axis = log2FoldChange (effect size), Y-axis = -log10(padj) (significance). Top-right = significantly upregulated with large effect. Top-left = significantly downregulated. Bottom-centre = not significant. Right side but not high = large fold change but underpowered (add more replicates).</div></div>
 
-          <div class="chips" style="margin-top:14px;"><span class="chip">p-value = P(data | H0 true)</span><span class="chip">Always use padj, never pvalue</span><span class="chip">BH-FDR = standard in genomics</span><span class="chip">Bonferroni = too conservative for RNA-seq</span><span class="chip">padj &lt; 0.05 AND |log2FC| &gt; 1</span><span class="chip">NA in padj = gene was filtered</span><span class="chip">Statistical ≠ biological significance</span></div>
+          
+<div class="deep">
+<h3>What a p-value is, and what it is not</h3>
+<p class="sub">A p-value is the probability of seeing data at least as extreme as yours, <em>if the null hypothesis were true</em>. Everything that goes wrong with p-values comes from forgetting that conditional clause.</p>
+<table class="ref-table">
+  <tr><th>It is not</th><th>Why not</th></tr>
+  <tr><td>The probability that the null hypothesis is true</td><td>That requires the prior probability of the hypothesis, which the p-value does not use</td></tr>
+  <tr><td>The probability your result is a fluke</td><td>Same reason; this is the most common misstatement in papers</td></tr>
+  <tr><td>A measure of effect size</td><td>A tiny, meaningless difference gives a tiny p-value with enough samples</td></tr>
+  <tr><td>Evidence of no effect when large</td><td>p = 0.3 means the data are consistent with the null, not that the null is true</td></tr>
+</table>
+<p class="sub">Always report the effect size alongside the p-value. "Expression was 1.04-fold higher (p = 0.002)" is a very different claim from "expression doubled (p = 0.002)", and the p-value alone cannot tell them apart.</p>
+
+<h3>Why testing 20,000 genes breaks the usual threshold</h3>
+<div class="code-block"><span class="code-comment"># With no real effects at all, testing at p &lt; 0.05:</span>
+20,000 genes × 0.05 = 1,000 genes expected to be "significant" by chance
+
+<span class="code-comment"># Probability of at least one false positive across 20,000 independent tests:</span>
+1 − (0.95)^20000  ≈  1.0        <span class="code-comment"># a certainty</span></div>
+
+<h3>Family-wise error rate against false-discovery rate</h3>
+<table class="ref-table">
+  <tr><th></th><th>Bonferroni (FWER)</th><th>Benjamini-Hochberg (FDR)</th></tr>
+  <tr><td><strong>Controls</strong></td><td>The chance of <em>any</em> false positive</td><td>The expected <em>proportion</em> of false positives among the hits</td></tr>
+  <tr><td><strong>Threshold</strong></td><td>α / n</td><td>Rank p-values; keep those below (rank / n) × α</td></tr>
+  <tr><td><strong>Use for</strong></td><td>A handful of tests; GWAS, where a false positive is very costly</td><td>Genome-wide screens, where some false positives are acceptable</td></tr>
+  <tr><td><strong>Cost</strong></td><td>Very conservative: real effects are lost</td><td>Some of your list is wrong, by design</td></tr>
+</table>
+<p class="sub">An FDR of 0.05 means that about 5% of the genes you call significant are expected to be false. With 200 significant genes, roughly 10 are not real, and you cannot tell which. That is a reasonable trade for a screen whose hits will be validated; it is not reasonable for a single clinical decision.</p>
+<div class="code-block"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button><span class="code-comment"># In R</span>
+padj &lt;- p.adjust(pvals, method = "BH")     <span class="code-comment"># Benjamini-Hochberg</span>
+padj &lt;- p.adjust(pvals, method = "bonferroni")
+
+<span class="code-comment"># q-values: estimate the proportion of true nulls first, giving more power</span>
+library(qvalue)
+q &lt;- qvalue(pvals)
+q$pi0            <span class="code-comment"># estimated fraction of genes with no real effect</span></div>
+
+<h3>Diagnosing a run from its p-value histogram</h3>
+<ul>
+  <li><strong>Flat with a spike near zero:</strong> healthy. The flat part is the null, the spike is real signal.</li>
+  <li><strong>Completely flat:</strong> no detectable signal. Honest, if disappointing.</li>
+  <li><strong>A hill in the middle:</strong> the model is wrong, or the test is too conservative. Check the design and the variance assumption.</li>
+  <li><strong>A spike near one:</strong> usually discreteness in low counts, or over-filtering.</li>
+  <li><strong>Peaks at both ends:</strong> often unmodelled structure, such as a batch effect.</li>
+</ul>
+
+<h3>The practices that actually protect a result</h3>
+<ol>
+  <li><strong>Decide the comparison before looking.</strong> Testing many contrasts and reporting the best one is multiple testing by another name, uncorrected.</li>
+  <li><strong>Correct across the whole family of tests</strong> you performed, not just the ones you chose to report.</li>
+  <li><strong>Use independent filtering</strong> (removing genes with no power before testing) rather than filtering on the outcome. DESeq2 does this automatically.</li>
+  <li><strong>Validate a subset</strong> independently, by a different method or in a different cohort. This is the only real answer to "which of my hits are the false ones?"</li>
+</ol>
+<div class="info-box warn"><svg class="ico" aria-hidden="true"><use href="#i-warn"></use></svg><div><strong>Never filter on raw p-values across thousands of tests</strong>, and never report "nominally significant" results as findings. If an analysis yields nothing after correction, that is the result. Reporting the uncorrected list as suggestive, without saying how many tests were run, is how irreproducible literature is produced.</div></div>
+</div>
+
+<div class="chips" style="margin-top:14px;"><span class="chip">p-value = P(data | H0 true)</span><span class="chip">Always use padj, never pvalue</span><span class="chip">BH-FDR = standard in genomics</span><span class="chip">Bonferroni = too conservative for RNA-seq</span><span class="chip">padj &lt; 0.05 AND |log2FC| &gt; 1</span><span class="chip">NA in padj = gene was filtered</span><span class="chip">Statistical ≠ biological significance</span></div>
 
 <!--topic 7.2: Normalisation Methods-->
           <p class="sub">Raw read counts cannot be compared directly across samples or genes because they are confounded by two major technical factors: <strong>library size</strong> (total number of reads sequenced) and <strong>gene length</strong> (longer genes capture more reads). Normalisation removes these technical biases so that observed differences reflect true biological variation. Choosing the wrong normalisation method for your analysis is one of the most common errors in bioinformatics.</p>
@@ -100,7 +157,61 @@ dge$samples</div>
 
           <div class="info-box warn"><svg class="ico" aria-hidden="true"><use href="#i-warn"></use></svg><div><strong>Common mistakes:</strong> (1) Using RPKM/FPKM for differential expression — these are not appropriate because the variance structure is lost. (2) Using CPM to compare expression between genes of different lengths. (3) Pre-normalising counts before passing to DESeq2 — the tool expects raw integer counts.</div></div>
 
-          <div class="chips" style="margin-top:14px;"><span class="chip">Raw counts for DE analysis</span><span class="chip">TPM for visualisation</span><span class="chip">RPKM/FPKM is outdated</span><span class="chip">DESeq2 = median-of-ratios</span><span class="chip">edgeR = TMM</span><span class="chip">Library size + composition bias</span><span class="chip">Gene length matters for cross-gene comparison</span></div>
+          
+<div class="deep">
+<h3>Three different problems, often confused</h3>
+<table class="ref-table">
+  <tr><th>Problem</th><th>Why it matters</th><th>Handled by</th></tr>
+  <tr><td><strong>Sequencing depth</strong></td><td>A sample with twice the reads has twice the counts for every gene</td><td>Size factors (DESeq2), TMM (edgeR), CPM</td></tr>
+  <tr><td><strong>Gene length</strong></td><td>A long transcript yields more fragments at the same molar concentration</td><td>TPM, FPKM. Not needed when comparing one gene across samples</td></tr>
+  <tr><td><strong>Composition</strong></td><td>A few extremely expressed genes take reads away from everything else</td><td>Median-of-ratios, TMM. Simple CPM does not handle this</td></tr>
+</table>
+<p class="sub">That third problem is the subtle one. If one gene takes 40% of the library in treated samples and 5% in controls, every other gene appears to fall in the treated samples, even when nothing changed. Robust methods assume most genes do not change and estimate a single scaling factor from the bulk of them, which is why they survive this and naive scaling does not.</p>
+
+<h3>How the main methods work</h3>
+<div class="code-block"><span class="code-comment"># CPM: counts per million. Depth only.</span>
+CPM = count / total_counts × 1e6
+
+<span class="code-comment"># TPM: length first, then depth. Columns sum to the same total.</span>
+rate = count / effective_length
+TPM  = rate / sum(all rates) × 1e6
+
+<span class="code-comment"># FPKM: depth first, then length. Columns do NOT sum to a constant,</span>
+<span class="code-comment"># which is why TPM is preferred for comparing samples.</span>
+FPKM = count / (effective_length/1000 × total_counts/1e6)
+
+<span class="code-comment"># DESeq2 median-of-ratios, per sample:</span>
+<span class="code-comment">#   1. geometric mean of each gene across all samples (a reference)</span>
+<span class="code-comment">#   2. ratio of each gene's count to that reference</span>
+<span class="code-comment">#   3. the sample's size factor is the MEDIAN of those ratios</span>
+<span class="code-comment">#   the median ignores the few extreme genes, which is the point</span></div>
+
+<h3>Which to use for what</h3>
+<table class="ref-table">
+  <tr><th>Task</th><th>Use</th><th>Not</th></tr>
+  <tr><td>Differential expression</td><td>Raw counts into DESeq2 or edgeR</td><td>TPM or FPKM as input: it invalidates the model</td></tr>
+  <tr><td>Comparing two genes in one sample</td><td>TPM</td><td>CPM: it ignores length</td></tr>
+  <tr><td>Heatmaps and PCA</td><td>vst() or rlog() transformed counts</td><td>Raw counts: the most expressed genes dominate everything</td></tr>
+  <tr><td>Showing one gene across samples</td><td>Normalised counts, or CPM</td><td>Raw counts: depth differences show up as biology</td></tr>
+  <tr><td>Single-cell data</td><td>Scran pooling or SCTransform</td><td>Bulk methods: too many zeros, and library sizes vary enormously</td></tr>
+</table>
+
+<h3>The variance-stabilising transformation</h3>
+<p class="sub">Log-transforming counts creates a different problem: a gene with 2 counts against 4 looks like the same change as 2,000 against 4,000, but the first is noise and the second is real. <code>vst()</code> and <code>rlog()</code> solve this by shrinking the differences between low-count genes more than high-count ones, producing values whose variance is roughly constant across the expression range. These are what belongs in a PCA or a heatmap.</p>
+<div class="code-block"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button>library(DESeq2)
+dds  &lt;- estimateSizeFactors(dds)
+sizeFactors(dds)                          <span class="code-comment"># near 1 means comparable libraries</span>
+norm &lt;- counts(dds, normalized = TRUE)    <span class="code-comment"># for plotting one gene</span>
+
+vsd &lt;- vst(dds, blind = FALSE)            <span class="code-comment"># for PCA, clustering, heatmaps</span>
+plotPCA(vsd, intgroup = "condition")</div>
+
+<h3>When the standard assumption fails</h3>
+<p class="sub">Every method above assumes most genes do not change between conditions. Occasionally that is false: global transcriptional amplification by MYC, a drug that shuts down transcription, or comparing very different tissues. In those cases the normalisation will quietly cancel the real global shift. The only reliable fix is an external reference: spike-in controls added in known amounts per cell, normalised with a method that uses them.</p>
+<div class="info-box tip"><svg class="ico" aria-hidden="true"><use href="#i-tip"></use></svg><div><strong>Check your size factors.</strong> They should sit within roughly 0.5 to 2 of each other. A sample with a size factor of 5 had a much larger library or is dominated by a handful of genes, and it is worth investigating rather than normalising away.</div></div>
+</div>
+
+<div class="chips" style="margin-top:14px;"><span class="chip">Raw counts for DE analysis</span><span class="chip">TPM for visualisation</span><span class="chip">RPKM/FPKM is outdated</span><span class="chip">DESeq2 = median-of-ratios</span><span class="chip">edgeR = TMM</span><span class="chip">Library size + composition bias</span><span class="chip">Gene length matters for cross-gene comparison</span></div>
 
 <!--topic 7.3: PCA &amp; Clustering for Quality Control-->
           <p class="sub">Before running differential expression, you should always visualise your samples using dimensionality reduction (PCA) and clustering. These exploratory analyses reveal sample outliers, batch effects, sample mix-ups, and whether your biological conditions are the dominant source of variation. Skipping this step means you may not discover critical problems until after you have wasted time on downstream analysis.</p>
@@ -198,4 +309,22 @@ pheatmap(mat,
 
           <div class="info-box tip"><svg class="ico" aria-hidden="true"><use href="#i-tip"></use></svg><div><strong>What % variance explained means:</strong> If PC1 explains 65% of the variance, it means 65% of all the variation across your 20,000 genes can be captured by a single direction. The remaining 35% is spread across all other PCs. High PC1 variance usually means a strong biological signal (good). Very low PC1 (&lt;15%) may mean high noise or complex multi-factor design.</div></div>
 
-          <div class="chips" style="margin-top:14px;"><span class="chip">PCA before DE analysis</span><span class="chip">PC1 = largest variance source</span><span class="chip">Replicates should cluster together</span><span class="chip">ComBat / limma for batch correction</span><span class="chip">~ batch + condition in DESeq2</span><span class="chip">Ward.D2 for clustering</span><span class="chip">Z-score heatmaps for DEGs</span></div>
+          
+<div class="deep">
+<h3>A diagnostic table for PCA plots</h3>
+<table class="ref-table">
+  <tr><th>Pattern</th><th>Interpretation</th><th>What to do</th></tr>
+  <tr><td>Groups separate on PC1, replicates tight</td><td>A strong treatment effect</td><td>Proceed</td></tr>
+  <tr><td>Samples separate by batch, not condition</td><td>The batch effect is larger than the biology</td><td>Add batch to the design; do not correct and then ignore it</td></tr>
+  <tr><td>One sample far from its group</td><td>An outlier: failed library, swapped label, or genuine biology</td><td>Check its QC metrics and library size before deciding</td></tr>
+  <tr><td>No structure at all</td><td>Weak effect, or heavy technical noise</td><td>Check normalisation and the transformation used</td></tr>
+  <tr><td>A gradient rather than clusters</td><td>A continuous variable is driving things: time, RIN, age, cell proportion</td><td>Colour the plot by candidate variables to find it</td></tr>
+</table>
+<p class="sub">The most useful habit with this plot is to redraw it coloured by every metadata column in turn: condition, batch, date, RIN, sex, age. Whichever variable explains the separation is the one driving your data, and it belongs in the design formula.</p>
+
+<h3>t-SNE and UMAP, and why they are not PCA</h3>
+<p class="sub">In single-cell work you will meet t-SNE and UMAP. They are non-linear methods designed to put similar cells near each other in two dimensions, and they are excellent at showing clusters. But unlike PCA, the distances between clusters carry little meaning, cluster sizes are not meaningful, and the layout changes with the random seed and with parameters such as perplexity or n_neighbors. Use them to display structure you have established by other means, not to measure it, and always report the parameters used.</p>
+<div class="info-box note"><svg class="ico" aria-hidden="true"><use href="#i-note"></use></svg><div><strong>An outlier is a question, not a verdict.</strong> Before removing a sample, look for a mechanical explanation: a low mapping rate, a small library, a degraded RIN, an unusual duplication rate. If one exists, document it and exclude the sample with that reason stated. If none exists, keeping it is usually the more honest choice, and a sensitivity analysis with and without it is better than a silent deletion.</div></div>
+</div>
+
+<div class="chips" style="margin-top:14px;"><span class="chip">PCA before DE analysis</span><span class="chip">PC1 = largest variance source</span><span class="chip">Replicates should cluster together</span><span class="chip">ComBat / limma for batch correction</span><span class="chip">~ batch + condition in DESeq2</span><span class="chip">Ward.D2 for clustering</span><span class="chip">Z-score heatmaps for DEGs</span></div>

@@ -89,7 +89,17 @@ seurat &lt;- ScaleData(seurat, vars.to.regress=c("S.Score","G2M.Score"))</div>
 
           <div class="info-box warn"><svg class="ico" aria-hidden="true"><use href="#i-warn"></use></svg><div><strong>Integration pitfall:</strong> Over-integration can merge truly different cell types across datasets. Always compare integrated and non-integrated results. If a cell type appears in only one condition, integration may incorrectly merge it with a different cell type.</div></div>
 
-          <div class="chips" style="margin-top:14px;"><span class="chip">10x Chromium = cell barcode + UMI</span><span class="chip">nFeature 200–5000, mt% &lt; 20%</span><span class="chip">SoupX for ambient RNA</span><span class="chip">scDblFinder for doublets</span><span class="chip">FindAllMarkers for cluster identity</span><span class="chip">Harmony for fast integration</span><span class="chip">Monocle3 for trajectories</span></div>
+          
+<div class="deep">
+<h3>Setting QC thresholds from your own data</h3>
+<p class="sub">Set thresholds from your own distributions, not from a tutorial. Hard-coded cut-offs discard real biology: plasma cells have very few genes detected, cardiomyocytes are naturally high in mitochondrial transcripts, and a filter tuned on PBMCs will delete both.</p>
+
+<h3>Comparing conditions: use pseudobulk</h3>
+<p class="sub">Clusters are not cell types until you name them. Do it from markers (<code>FindAllMarkers</code>) checked against literature or a reference atlas, or by automated label transfer (SingleR, Azimuth) followed by manual review. When several samples are combined, batch differences usually dominate, so integration (Harmony, Seurat's anchors, or scVI) aligns shared cell types across samples.</p>
+<div class="info-box warn"><svg class="ico" aria-hidden="true"><use href="#i-warn"></use></svg><div><strong>Do not use per-cell differential expression to compare conditions.</strong> Cells from one individual are not independent replicates, so treating 5,000 cells as 5,000 samples produces vanishingly small p-values for almost every gene. The correct approach is <strong>pseudobulk</strong>: sum counts per cell type per sample, then run DESeq2 or edgeR on those sums with the samples as replicates.</div></div>
+</div>
+
+<div class="chips" style="margin-top:14px;"><span class="chip">10x Chromium = cell barcode + UMI</span><span class="chip">nFeature 200–5000, mt% &lt; 20%</span><span class="chip">SoupX for ambient RNA</span><span class="chip">scDblFinder for doublets</span><span class="chip">FindAllMarkers for cluster identity</span><span class="chip">Harmony for fast integration</span><span class="chip">Monocle3 for trajectories</span></div>
 
 <!--topic 8.2: Gene Ontology &amp; Pathway Enrichment Analysis-->
           <p class="sub">After identifying differentially expressed genes, the natural next question is: <em>what biological processes, pathways, or functions are affected?</em> Pathway enrichment analysis moves from individual genes to biological interpretation. Rather than examining 500 DEGs one by one, you ask whether genes belonging to a specific pathway (e.g., "apoptosis" or "cell cycle") appear more often in your results than expected by chance. Two main approaches exist: Over-Representation Analysis (ORA) and Gene Set Enrichment Analysis (GSEA).</p>
@@ -179,7 +189,60 @@ emapplot(pairwise_termsim(ego_simplified), showCategory=20)</div>
 
           <div class="info-box tip"><svg class="ico" aria-hidden="true"><use href="#i-tip"></use></svg><div><strong>ORA vs GSEA:</strong> Use ORA when you have a clear DEG list (padj &lt; 0.05, |log2FC| &gt; 1). Use GSEA when you want to detect subtle, coordinated changes across an entire pathway — especially when few individual genes pass the significance threshold but many show small shifts in the same direction.</div></div>
 
-          <div class="chips" style="margin-top:14px;"><span class="chip">ORA = Fisher's test on DEG list</span><span class="chip">GSEA = full ranked list, no cutoff</span><span class="chip">Positive NES = upregulated pathway</span><span class="chip">Use expressed genes as background</span><span class="chip">simplify() removes GO redundancy</span><span class="chip">MSigDB Hallmark = best starting point</span><span class="chip">clusterProfiler for both ORA and GSEA</span></div>
+          
+<div class="deep">
+<h3>Two different questions, two different methods</h3>
+<table class="ref-table">
+  <tr><th></th><th>Over-representation (ORA)</th><th>Gene set enrichment (GSEA)</th></tr>
+  <tr><td><strong>Input</strong></td><td>A list of significant genes, plus a background</td><td>Every gene, ranked by a statistic</td></tr>
+  <tr><td><strong>Asks</strong></td><td>Is this pathway over-represented in my list?</td><td>Do this pathway's genes sit towards one end of the ranking?</td></tr>
+  <tr><td><strong>Test</strong></td><td>Fisher's exact / hypergeometric</td><td>Running enrichment score, assessed by permutation</td></tr>
+  <tr><td><strong>Strength</strong></td><td>Simple, easy to explain</td><td>Detects coordinated small changes that never pass a per-gene cut-off</td></tr>
+  <tr><td><strong>Weakness</strong></td><td>Throws away effect sizes; sensitive to the cut-off used</td><td>Needs a sensible ranking; harder to explain</td></tr>
+</table>
+<p class="sub">If your differential expression yielded 15 genes, ORA will tell you very little. GSEA is designed for exactly that case, because a pathway whose 80 members all shifted slightly in the same direction is detectable even when no single gene is significant.</p>
+
+<h3>The background set is not a detail</h3>
+<p class="sub">ORA compares your list against a background, and the default background is often "all genes in the annotation". That is wrong for most experiments: a gene not expressed in your tissue could never have appeared in your list. Using the full genome as background inflates enrichment for anything tissue-specific, and it is one of the most common errors in published pathway analysis. The correct background is <strong>the set of genes that were actually tested</strong>, after filtering.</p>
+
+<h3>Knowing which database you are using</h3>
+<table class="ref-table">
+  <tr><th>Resource</th><th>Contains</th><th>Note</th></tr>
+  <tr><td><strong>GO</strong></td><td>Biological process, molecular function, cellular component</td><td>Hierarchical, so parent and child terms are not independent; many annotations are themselves computational (evidence code IEA)</td></tr>
+  <tr><td><strong>KEGG</strong></td><td>Curated metabolic and signalling pathways</td><td>Compact and well curated; academic use of the API has licence conditions</td></tr>
+  <tr><td><strong>Reactome</strong></td><td>Detailed, peer-reviewed human pathways</td><td>Free, hierarchical, excellent diagrams</td></tr>
+  <tr><td><strong>MSigDB hallmarks</strong></td><td>50 refined, non-redundant biological states</td><td>The best starting point for GSEA: far less redundancy than GO</td></tr>
+</table>
+<div class="code-block"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button>library(clusterProfiler); library(org.Hs.eg.db)
+
+<span class="code-comment"># ORA, with the tested genes as background</span>
+ora &lt;- enrichGO(gene          = sig_genes,
+                universe      = tested_genes,      <span class="code-comment"># NOT all genes in the genome</span>
+                OrgDb         = org.Hs.eg.db,
+                keyType       = "ENSEMBL",
+                ont           = "BP",
+                pAdjustMethod = "BH",
+                qvalueCutoff  = 0.05)
+dotplot(ora, showCategory = 20)
+
+<span class="code-comment"># GSEA on a ranked list (every gene, no cut-off)</span>
+ranks &lt;- res$log2FoldChange * -log10(res$pvalue)   <span class="code-comment"># one common ranking</span>
+names(ranks) &lt;- rownames(res)
+ranks &lt;- sort(ranks, decreasing = TRUE)
+
+gse &lt;- gseGO(ranks, OrgDb = org.Hs.eg.db, keyType = "ENSEMBL", ont = "BP")</div>
+
+<h3>Reading the output honestly</h3>
+<ul>
+  <li><strong>GeneRatio and Count:</strong> a term supported by 3 genes out of 300 is weak, whatever its p-value.</li>
+  <li><strong>NES</strong> (normalised enrichment score, in GSEA): sign gives direction, magnitude gives strength. Above about 1.5 in absolute value is usually worth attention.</li>
+  <li><strong>Leading edge:</strong> the genes driving a GSEA result. Always look at them; sometimes one family of genes drives twenty "different" pathways.</li>
+  <li><strong>Redundancy:</strong> GO terms overlap heavily, so twenty significant terms may describe one thing. Collapse them with <code>simplify()</code>, or present them with an enrichment map that groups terms sharing genes.</li>
+</ul>
+<div class="info-box note"><svg class="ico" aria-hidden="true"><use href="#i-note"></use></svg><div><strong>Pathway analysis inherits every bias in the databases.</strong> Well-studied genes have far more annotations than obscure ones, so "immune response" and "cell cycle" surface in almost every analysis. A result is more convincing when the pathway is specific, the leading-edge genes make biological sense, and the finding survives in an independent dataset.</div></div>
+</div>
+
+<div class="chips" style="margin-top:14px;"><span class="chip">ORA = Fisher's test on DEG list</span><span class="chip">GSEA = full ranked list, no cutoff</span><span class="chip">Positive NES = upregulated pathway</span><span class="chip">Use expressed genes as background</span><span class="chip">simplify() removes GO redundancy</span><span class="chip">MSigDB Hallmark = best starting point</span><span class="chip">clusterProfiler for both ORA and GSEA</span></div>
 
 <!--topic 8.3: Machine Learning in Bioinformatics-->
           <p class="sub">Machine learning (ML) is now embedded across bioinformatics — from protein structure prediction (AlphaFold) to variant pathogenicity scoring, cell type classification, and biomarker discovery. This section covers the key ML concepts that bioinformaticians need, including the unique challenges posed by genomic data (many features, few samples), practical workflows in Python with scikit-learn, and when ML is appropriate versus when simpler statistical methods suffice.</p>
@@ -279,7 +342,61 @@ def one_hot_encode(seq):
           <h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">When NOT to Use Machine Learning</h3>
           <div class="info-box warn"><svg class="ico" aria-hidden="true"><use href="#i-warn"></use></svg><div><strong>ML is not always the answer:</strong> (1) <strong>Small sample sizes</strong> (n &lt; 30) — models cannot generalise reliably. Use traditional statistics instead. (2) <strong>Confounded data</strong> — if your treatment is perfectly correlated with batch, no ML model can separate them. Fix the experimental design. (3) <strong>Simple questions</strong> — "which genes are differentially expressed?" is better answered by DESeq2 than by a neural network. Use the simplest method that works.</div></div>
 
-          <div class="chips" style="margin-top:14px;"><span class="chip">Supervised = labelled data</span><span class="chip">p &gt;&gt; n = curse of dimensionality</span><span class="chip">Feature selection inside CV</span><span class="chip">AUC 0.5 = random, &gt;0.9 = excellent</span><span class="chip">Random Forest for biomarker genes</span><span class="chip">1D CNN for DNA sequence</span><span class="chip">Never test on training data</span><span class="chip">Simplest method that works</span></div>
+          
+<div class="deep">
+<h3>Framing a biological question as a learning problem</h3>
+<table class="ref-table">
+  <tr><th>Type</th><th>Question</th><th>Biological example</th></tr>
+  <tr><td><strong>Classification</strong></td><td>Which category?</td><td>Tumour subtype from expression; is this variant pathogenic?</td></tr>
+  <tr><td><strong>Regression</strong></td><td>How much?</td><td>Predicted drug response; age from methylation</td></tr>
+  <tr><td><strong>Clustering</strong></td><td>What groups exist?</td><td>Cell types from single-cell data; patient subtypes</td></tr>
+  <tr><td><strong>Dimensionality reduction</strong></td><td>What are the main axes of variation?</td><td>PCA for QC; latent factors in multi-omics</td></tr>
+</table>
+<p class="sub">The defining difficulty in biology is <strong>p ≫ n</strong>: tens of thousands of features and perhaps a few hundred samples. A model with more parameters than observations can always fit the training data perfectly and learn nothing generalisable. This is why feature selection, regularisation and honest validation matter more here than model choice.</p>
+
+<h3>Validation, and the ways it goes wrong</h3>
+<p class="sub">Cross-validation only estimates performance honestly if nothing about the test fold influenced the model. Three leaks are common and each inflates accuracy dramatically:</p>
+<ul>
+  <li><strong>Selecting features on all the data</strong> before splitting. Choosing the 100 genes that best separate the classes, then cross-validating, tests a model that has already seen the answers. Feature selection belongs <em>inside</em> each fold.</li>
+  <li><strong>Normalising or imputing before splitting</strong>, which leaks the test set's distribution into training.</li>
+  <li><strong>Splitting correlated samples apart.</strong> Two samples from one patient, or cells from one donor, must not straddle the split. Group the split by patient.</li>
+</ul>
+<div class="code-block"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button>from sklearn.pipeline import Pipeline
+from sklearn.preprocessing import StandardScaler
+from sklearn.feature_selection import SelectKBest, f_classif
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.model_selection import GroupKFold, cross_val_score
+
+<span class="code-comment"># Everything inside the pipeline is refitted on each training fold only</span>
+pipe = Pipeline([
+    ("scale",  StandardScaler()),
+    ("select", SelectKBest(f_classif, k=100)),
+    ("clf",    RandomForestClassifier(n_estimators=500, random_state=0)),
+])
+
+<span class="code-comment"># Group by patient so no patient appears in both train and test</span>
+cv = GroupKFold(n_splits=5)
+scores = cross_val_score(pipe, X, y, groups=patient_id, cv=cv, scoring="roc_auc")
+print(scores.mean(), scores.std())</div>
+
+<h3>Choosing a metric that matches the problem</h3>
+<p class="sub">Accuracy is misleading whenever classes are unbalanced, which in biology is nearly always. A test that calls every sample healthy is 99% accurate in a cohort with 1% disease.</p>
+<table class="ref-table">
+  <tr><th>Metric</th><th>Answers</th><th>Use when</th></tr>
+  <tr><td><strong>Sensitivity (recall)</strong></td><td>Of the true positives, how many did we find?</td><td>Missing a case is costly: screening, diagnosis</td></tr>
+  <tr><td><strong>Precision</strong></td><td>Of our positive calls, how many were right?</td><td>Follow-up is expensive: candidate validation</td></tr>
+  <tr><td><strong>ROC AUC</strong></td><td>Ranking quality across all thresholds</td><td>Balanced classes</td></tr>
+  <tr><td><strong>Precision-recall AUC</strong></td><td>Same, focused on the positive class</td><td>Rare positives: usually the better choice in biology</td></tr>
+  <tr><td><strong>Calibration</strong></td><td>Does a predicted 0.8 happen 80% of the time?</td><td>Any model whose probability will inform a decision</td></tr>
+</table>
+
+<h3>Which model, and interpreting it</h3>
+<p class="sub">For tabular biological data, regularised regression and tree ensembles remain the sensible defaults. <strong>Lasso or elastic net</strong> give sparse, directly interpretable models and handle p ≫ n well. <strong>Random forests and gradient boosting</strong> (XGBoost, LightGBM) capture interactions and usually win on accuracy. Deep learning earns its place where structure exists to exploit: sequence (convolutional and transformer models), images, and protein structure. It rarely beats a well-tuned boosted tree on a few hundred samples of expression data.</p>
+<p class="sub">Interpretation deserves care. Feature importance from a random forest is biased towards high-cardinality features, and correlated genes share importance arbitrarily, so a gene's absence from the list does not mean it is irrelevant. SHAP values give per-prediction attributions and are more trustworthy, but they explain the model, not the biology. A gene the model relies on is a hypothesis, not a mechanism.</p>
+<div class="info-box warn"><svg class="ico" aria-hidden="true"><use href="#i-warn"></use></svg><div><strong>The external test set is the only convincing evidence.</strong> A model that performs well in cross-validation and then fails on an independent cohort is the normal outcome, usually because it learned a batch signature. Before publishing a predictor, test it on data generated elsewhere, and report that number rather than the cross-validated one.</div></div>
+</div>
+
+<div class="chips" style="margin-top:14px;"><span class="chip">Supervised = labelled data</span><span class="chip">p &gt;&gt; n = curse of dimensionality</span><span class="chip">Feature selection inside CV</span><span class="chip">AUC 0.5 = random, &gt;0.9 = excellent</span><span class="chip">Random Forest for biomarker genes</span><span class="chip">1D CNN for DNA sequence</span><span class="chip">Never test on training data</span><span class="chip">Simplest method that works</span></div>
 
 <!--topic 8.4: Metagenomics &amp; Microbiome Analysis-->
           <p class="sub">Metagenomics is the study of genetic material recovered directly from environmental or clinical samples — soil, ocean water, the human gut — without the need to culture individual organisms. It reveals the composition and functional potential of entire microbial communities. Two main approaches exist: 16S rRNA amplicon sequencing (which bacteria are present?) and shotgun metagenomics (what are they doing?). This section covers both workflows in detail.</p>
@@ -418,4 +535,50 @@ humann_renorm_table -i merged_genefamilies.tsv -o merged_genefamilies_cpm.tsv \
 
           <div class="info-box warn"><svg class="ico" aria-hidden="true"><use href="#i-warn"></use></svg><div><strong>Rarefaction:</strong> Before comparing alpha diversity across samples, rarefy (subsample) all samples to the same sequencing depth. Samples with more reads will always show more taxa, creating a false diversity difference. Choose a rarefaction depth that retains most samples while providing sufficient coverage (e.g., the 10th percentile of library sizes).</div></div>
 
-          <div class="chips" style="margin-top:14px;"><span class="chip">16S V3-V4 for bacterial profiling</span><span class="chip">ASV &gt; OTU (always)</span><span class="chip">DADA2 for denoising</span><span class="chip">SILVA for taxonomy</span><span class="chip">Shannon = richness + evenness</span><span class="chip">UniFrac = phylogenetic beta diversity</span><span class="chip">PERMANOVA for group testing</span><span class="chip">MetaPhlAn4 + HUMAnN3 for shotgun</span></div>
+          
+<div class="deep">
+<h3>Choosing the approach before the sample is taken</h3>
+<table class="ref-table">
+  <tr><th></th><th>16S / ITS amplicon</th><th>Shotgun metagenomics</th></tr>
+  <tr><td><strong>What is sequenced</strong></td><td>One marker gene, amplified</td><td>All DNA in the sample</td></tr>
+  <tr><td><strong>Resolution</strong></td><td>Genus, sometimes species</td><td>Species and strain</td></tr>
+  <tr><td><strong>Function</strong></td><td>Only predicted, indirectly</td><td>Measured directly: genes and pathways</td></tr>
+  <tr><td><strong>Host DNA</strong></td><td>Largely excluded by the primers</td><td>Can dominate: often 90%+ in tissue or biopsy samples</td></tr>
+  <tr><td><strong>Cost per sample</strong></td><td>Low</td><td>5 to 20 times higher</td></tr>
+  <tr><td><strong>Catches</strong></td><td>Bacteria and archaea only (or fungi, with ITS)</td><td>Bacteria, archaea, fungi, viruses, everything present</td></tr>
+</table>
+<p class="sub">Amplicon work has a specific weakness worth knowing: the result depends on which hypervariable region (V3-V4, V4, V1-V2) was amplified and which primers were used, so two studies of the same samples can disagree. Report the region and primers, and be cautious comparing published studies that used different ones.</p>
+
+<h3>ASVs replaced OTUs, and why it matters</h3>
+<p class="sub">Older pipelines clustered similar sequences into <strong>operational taxonomic units</strong> at 97% identity, which merges genuinely different organisms and produces clusters that cannot be compared between studies. Modern tools (DADA2, Deblur) instead model the sequencing error process and infer the exact <strong>amplicon sequence variants</strong> present. ASVs are exact sequences, so they are reproducible and directly comparable across studies and labs. Use them unless you have a specific reason not to.</p>
+<div class="code-block"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button><span class="code-comment"># Amplicon: QIIME 2 with DADA2</span>
+qiime dada2 denoise-paired --i-demultiplexed-seqs demux.qza \
+  --p-trunc-len-f 240 --p-trunc-len-r 200 \
+  --o-table table.qza --o-representative-sequences rep-seqs.qza \
+  --o-denoising-stats stats.qza
+
+<span class="code-comment"># Shotgun: remove host reads FIRST, then profile</span>
+bowtie2 -x human_index -1 R1.fq.gz -2 R2.fq.gz --un-conc-gz clean_R%.fq.gz &gt; /dev/null
+metaphlan clean_R1.fq.gz,clean_R2.fq.gz --input_type fastq \
+          --bowtie2out sample.bt2.bz2 -o sample_profile.txt
+humann --input clean_R1.fq.gz --output humann_out   <span class="code-comment"># gene families and pathways</span></div>
+
+<h3>The statistics are different, and the reason matters</h3>
+<p class="sub">Sequencing gives <strong>relative</strong> abundances: the proportions in a sample sum to one, regardless of how many microbes were present. This has a hard consequence. If one taxon genuinely doubles, every other taxon's proportion falls, even though nothing happened to them. Treating such compositional data with ordinary statistics produces spurious negative correlations and false differential abundance.</p>
+<ul>
+  <li><strong>Use compositional methods:</strong> ALDEx2, ANCOM-BC and similar tools work on log-ratios rather than proportions.</li>
+  <li><strong>Rarefying</strong> (subsampling every sample to the same depth) remains common for diversity metrics but discards data; depth is better handled in the model for differential abundance.</li>
+  <li><strong>Absolute quantification</strong>, by spiking in a known cell count or measuring total microbial load, is the only way to recover real abundances, and it changes conclusions in studies where total load differs between groups.</li>
+</ul>
+
+<h3>Diversity, in two senses</h3>
+<table class="ref-table">
+  <tr><th>Measure</th><th>Question</th><th>Common metrics</th></tr>
+  <tr><td><strong>Alpha diversity</strong></td><td>How varied is one sample?</td><td>Observed ASVs (richness), Shannon (richness and evenness), Faith's PD (phylogenetic)</td></tr>
+  <tr><td><strong>Beta diversity</strong></td><td>How different are two samples?</td><td>Bray-Curtis (abundance), Jaccard (presence), UniFrac (phylogeny-aware)</td></tr>
+</table>
+<p class="sub">Beta diversity is visualised with PCoA and tested with <strong>PERMANOVA</strong> (<code>adonis2</code> in vegan). One caveat is frequently missed: PERMANOVA can be significant because groups differ in <em>dispersion</em> rather than in location, so run <code>betadisper</code> alongside it and report both.</p>
+<div class="info-box warn"><svg class="ico" aria-hidden="true"><use href="#i-warn"></use></svg><div><strong>Contamination is the field's chronic problem.</strong> Extraction kits and reagents carry their own bacterial DNA, which dominates low-biomass samples such as skin swabs, lung washes and tissue. Always sequence negative controls (blank extractions and blank PCRs) alongside real samples, and remove contaminants statistically with <code>decontam</code>. A low-biomass study without negative controls cannot distinguish its findings from its reagents.</div></div>
+</div>
+
+<div class="chips" style="margin-top:14px;"><span class="chip">16S V3-V4 for bacterial profiling</span><span class="chip">ASV &gt; OTU (always)</span><span class="chip">DADA2 for denoising</span><span class="chip">SILVA for taxonomy</span><span class="chip">Shannon = richness + evenness</span><span class="chip">UniFrac = phylogenetic beta diversity</span><span class="chip">PERMANOVA for group testing</span><span class="chip">MetaPhlAn4 + HUMAnN3 for shotgun</span></div>
