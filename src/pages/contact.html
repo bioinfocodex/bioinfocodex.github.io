@@ -1,0 +1,103 @@
+<!--
+path: /contact
+id: contact
+nav: contact
+kind: Contact
+title: Contact BioInfoCodex
+description: Report a bug in RNAflow, suggest a course topic, or ask a question. Email, GitHub issues or the contact form.
+-->
+<div class="contact-hero">
+  <div class="label">Contact</div>
+  <h1 class="h1">Get in touch</h1>
+  <p class="lead">Bug reports, corrections to the course, feature requests and collaboration ideas are all welcome.</p>
+</div>
+
+<div class="contact-layout">
+
+  <div>
+    <div class="contact-card contact-card-gap">
+      <h2 class="h3">Where to reach us</h2>
+      <div class="contact-item">
+        <div class="contact-item-icon"><svg class="ico" aria-hidden="true"><use href="#i-mail"></use></svg></div>
+        <div><div class="contact-item-label">Email</div><div class="contact-item-val"><a href="mailto:%%EMAIL%%">%%EMAIL%%</a></div></div>
+      </div>
+      <div class="contact-item">
+        <div class="contact-item-icon"><svg class="ico" aria-hidden="true"><use href="#i-code"></use></svg></div>
+        <div><div class="contact-item-label">Bugs and feature requests</div><div class="contact-item-val"><a href="%%RNAFLOW_REPO%%/issues" rel="noopener">RNAflow issues on GitHub</a></div></div>
+      </div>
+      <div class="contact-item">
+        <div class="contact-item-icon"><svg class="ico" aria-hidden="true"><use href="#i-link"></use></svg></div>
+        <div><div class="contact-item-label">Source code</div><div class="contact-item-val"><a href="%%GITHUB%%" rel="noopener">github.com/bioinfocodex</a></div></div>
+      </div>
+    </div>
+
+    <div class="contact-card">
+      <h2 class="h3">Frequently asked questions</h2>
+      <p class="sub">Quick answers before you send a message.</p>
+      <div class="faq-list">
+        <div class="faq-item" onclick="toggleFAQ(this)" role="button" tabindex="0" aria-expanded="false">
+          <div class="faq-q">Is RNAflow really free? <span class="faq-chev">▼</span></div>
+          <div class="faq-a"><div class="faq-a-inner">Yes. RNAflow is open source under the MIT licence, so you can use, copy and modify it, including for commercial work. There is no subscription, no licence key and no registration. The course on this site is free to read.</div></div>
+        </div>
+        <div class="faq-item" onclick="toggleFAQ(this)" role="button" tabindex="0" aria-expanded="false">
+          <div class="faq-q">Does my data get uploaded anywhere? <span class="faq-chev">▼</span></div>
+          <div class="faq-a"><div class="faq-a-inner">No. Analyses run on your own computer and your reads are never uploaded. The app and its small local server talk to each other over localhost only. The only requests that leave your machine are public lookups, such as fetching a GEO accession or a genome from Ensembl.</div></div>
+        </div>
+        <div class="faq-item" onclick="toggleFAQ(this)" role="button" tabindex="0" aria-expanded="false">
+          <div class="faq-q">I found a bug. How do I report it? <span class="faq-chev">▼</span></div>
+          <div class="faq-a"><div class="faq-a-inner">Open an issue on GitHub and say what you did, what you expected and what happened, with any error message. The contact form works too if you do not have a GitHub account.</div></div>
+        </div>
+        <div class="faq-item" onclick="toggleFAQ(this)" role="button" tabindex="0" aria-expanded="false">
+          <div class="faq-q">Can I contribute? <span class="faq-chev">▼</span></div>
+          <div class="faq-a"><div class="faq-a-inner">Yes. Pull requests are welcome; the repository's CONTRIBUTING file explains how the app is built and tested. Corrections to the course are just as useful: tell us the page and what is wrong.</div></div>
+        </div>
+        <div class="faq-item" onclick="toggleFAQ(this)" role="button" tabindex="0" aria-expanded="false">
+          <div class="faq-q">How do I cite RNAflow? <span class="faq-chev">▼</span></div>
+          <div class="faq-a"><div class="faq-a-inner">Through its Zenodo DOI. The <a href="/cite">How to cite</a> page has the reference, a BibTeX entry and the tools to cite alongside it.</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div>
+    <div class="contact-card">
+      <h2 class="h3">Send a message</h2>
+      <p class="sub form-intro">Goes straight to the project inbox. You will get a reply at the address you give.</p>
+
+      <form id="contact-form" data-endpoint="%%FORM_ENDPOINT%%" data-fallback="%%EMAIL%%">
+        <input type="hidden" name="form" value="contact">
+        <div class="form-field">
+          <label class="form-label" for="c-name">Your name</label>
+          <input class="form-input" id="c-name" type="text" name="name" required autocomplete="name" placeholder="Dr Jane Smith">
+        </div>
+        <div class="form-field">
+          <label class="form-label" for="c-email">Email address</label>
+          <input class="form-input" id="c-email" type="email" name="email" required autocomplete="email" placeholder="jane@university.edu">
+        </div>
+        <div class="form-field">
+          <label class="form-label" for="c-subject">Subject</label>
+          <select class="form-select" id="c-subject" name="_subject">
+            <option>Bug report</option>
+            <option>Feature request</option>
+            <option>Correction to the course</option>
+            <option>Collaboration</option>
+            <option>Question about RNAflow</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <div class="form-field">
+          <label class="form-label" for="c-message">Message</label>
+          <textarea class="form-textarea" id="c-message" name="message" required placeholder="Describe your question, bug or idea."></textarea>
+        </div>
+        <button class="form-submit" type="submit">Send message</button>
+        <p class="form-status" data-form-status role="status"></p>
+      </form>
+
+      <div class="form-success" data-form-success>
+        <strong>Message sent.</strong><br>
+        <span>Thank you. You will get a reply by email.</span>
+      </div>
+    </div>
+  </div>
+
+</div>

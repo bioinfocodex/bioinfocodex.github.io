@@ -1,0 +1,42 @@
+<!--
+title: Learn bioinformatics: a free %%MODULE_COUNT%%-module course | BioInfoCodex
+description: A free bioinformatics course in %%MODULE_COUNT%% modules and %%TOPIC_COUNT%% topics, from molecular biology and the command line to RNA-seq, variant calling and single-cell analysis.
+-->
+<div class="edu-hero">
+  <div class="edu-paths-wrap" id="edu-paths-left"></div>
+  <div class="edu-paths-wrap" id="edu-paths-right"></div>
+  <div class="label">Free course</div>
+  <h1 class="h1">Learn Bioinformatics</h1>
+  <p class="lead">From molecular biology fundamentals to genomic data analysis. Each topic is a short page with real commands you can copy.</p>
+  <div class="edu-hero-tags">
+    <span class="tag tag-green">%%MODULE_COUNT%% modules</span>
+    <span class="tag tag-blue">%%TOPIC_COUNT%% topics</span>
+    <span class="tag tag-purple">Real code examples</span>
+    <span class="tag tag-orange">Beginner to advanced</span>
+  </div>
+  <form class="learn-search" action="/search" method="get" role="search">
+    <svg class="ico" aria-hidden="true"><use href="#i-search"></use></svg>
+    <input type="search" name="q" placeholder="Search the course, e.g. DESeq2 or FASTQ" aria-label="Search the course">
+    <button type="submit">Search</button>
+  </form>
+</div>
+
+<div class="learn-wrap learn-index">
+  <div class="learn-index-head">
+    <div>
+      <h2 class="h2">Modules</h2>
+      <p class="sub">Work through them in order, or jump to what you need. Your progress is saved in this browser only.</p>
+    </div>
+    <button type="button" class="btn btn-outline" id="progress-reset">Reset progress</button>
+  </div>
+  <div class="module-grid">%%MODULE_CARDS%%
+  </div>
+
+  <h2 class="h2 learn-extras-title">Reference and practice</h2>
+  <div class="download-more">
+    <a class="doc-link-card" href="/learn/practice-dataset"><strong>Practice dataset</strong><span>Run an RNA-seq analysis on eight public samples with a known answer.</span></a>
+    <a class="doc-link-card" href="/learn/cheat-sheets"><strong>Cheat sheets</strong><span>The command line, file formats and the RNA-seq pipeline, ready to print.</span></a>
+    <a class="doc-link-card" href="/learn/glossary"><strong>Glossary</strong><span>Plain-language definitions of the terms the course uses.</span></a>
+    <a class="doc-link-card" href="/lessons"><strong>Video lessons</strong><span>Short videos with a simulation and a quiz.</span></a>
+  </div>
+</div>

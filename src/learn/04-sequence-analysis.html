@@ -1,0 +1,198 @@
+<!--
+module: 4
+slug: sequence-analysis
+short: Sequence Analysis
+label: Module 4 · Sequence Analysis
+title: BLAST, Alignment &amp; Sequence Comparison
+-->
+<p class="lead">Sequence comparison is the backbone of bioinformatics. Whether finding a gene's function, aligning reads, or building a phylogenetic tree — everything starts with comparing sequences.</p>
+
+<!--topic 4.1: BLAST — Finding Similar Sequences-->
+          <p class="sub">BLAST (Basic Local Alignment Search Tool) is the single most important tool in bioinformatics. Developed at NCBI in 1990, it compares a query sequence against a database and returns statistically significant matches. Understand it deeply — you will use it almost every day.</p>
+
+          <h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">How BLAST Works (The Algorithm)</h3>
+          <p class="sub">BLAST does NOT compare every position. Instead it uses a three-step heuristic: (1) <strong>Word finding</strong> — breaks your query into short words (default 11 bp for blastn, 3 aa for blastp) and finds exact matches in the database. (2) <strong>Extension</strong> — extends each word match left and right, tracking a running score. Stops when the score drops significantly. (3) <strong>Evaluation</strong> — calculates E-value for each high-scoring segment pair (HSP). This heuristic makes BLAST fast — but it can miss very divergent homologues.</p>
+
+          <h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">The Five BLAST Programs</h3>
+          <div class="card-grid card-grid-2" style="gap:10px;margin-top:8px;">
+            <div class="card" style="padding:14px;"><strong>blastn</strong><p class="sub" style="margin-top:4px;">Nucleotide → nucleotide. Use for: verifying a cloned sequence, finding a gene in a new genome. Fast but only finds close matches. For very similar sequences use <strong>megablast</strong> (default on NCBI web).</p></div>
+            <div class="card" style="padding:14px;"><strong>blastp</strong><p class="sub" style="margin-top:4px;">Protein → protein. Much more sensitive than blastn for detecting distant homologues — amino acid conservation is stronger than nucleotide. Uses substitution matrices (BLOSUM62 default).</p></div>
+            <div class="card" style="padding:14px;"><strong>blastx</strong><p class="sub" style="margin-top:4px;">Translates nucleotide query in all 6 reading frames → searches protein database. Use when you have an unknown DNA sequence and want to find the protein it encodes.</p></div>
+            <div class="card" style="padding:14px;"><strong>tblastn</strong><p class="sub" style="margin-top:4px;">Protein query → translated nucleotide database. Use for finding a gene in an unannotated genome — you have a known protein and want to find its genomic location.</p></div>
+            <div class="card" style="padding:14px;border-left:3px solid var(--purple);"><strong>PSI-BLAST</strong><p class="sub" style="margin-top:4px;">Position-Specific Iterated BLAST. Iteratively builds a profile from initial hits and re-searches. Much more sensitive for distant homology. Use for: finding remote protein family members.</p></div>
+            <div class="card" style="padding:14px;border-left:3px solid var(--orange);"><strong>DIAMOND</strong><p class="sub" style="margin-top:4px;">Not BLAST, but a modern alternative. 500–20,000× faster for blastx/blastp searches. Essential for metagenomics where you BLAST millions of reads. <code>mamba install -c bioconda diamond</code></p></div>
+          </div>
+
+          <h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">Understanding BLAST Output</h3>
+          <div class="info-box warn"><svg class="ico" aria-hidden="true"><use href="#i-warn"></use></svg><div><strong>E-value is NOT a p-value.</strong> E-value = expected number of hits with this score by random chance in a database of this size. E-value 0.001 = expect this hit once in 1,000 random databases. E-value &lt; 1e-5 is generally significant. <strong>E-value depends on database size</strong> — the same alignment has a different E-value in a small vs large database. Always compare E-values from the same search.</div></div>
+          <p class="sub">Key output fields in tabular format (-outfmt 6):</p>
+          <div class="card-grid card-grid-3" style="gap:8px;margin-top:8px;">
+            <div class="card" style="padding:10px;font-size:0.85em;"><strong>pident</strong> — % identity (how similar)</div>
+            <div class="card" style="padding:10px;font-size:0.85em;"><strong>length</strong> — alignment length</div>
+            <div class="card" style="padding:10px;font-size:0.85em;"><strong>evalue</strong> — statistical significance</div>
+            <div class="card" style="padding:10px;font-size:0.85em;"><strong>bitscore</strong> — alignment quality (higher = better, database-independent)</div>
+            <div class="card" style="padding:10px;font-size:0.85em;"><strong>qcovs</strong> — % of query covered by the alignment</div>
+            <div class="card" style="padding:10px;font-size:0.85em;"><strong>sseqid</strong> — subject (database hit) ID</div>
+          </div>
+
+          <h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">Complete BLAST Workflow</h3>
+          <div class="code-block"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button><span class="code-comment"># Install BLAST</span>
+mamba install -c bioconda blast
+
+<span class="code-comment"># 1. Build a local BLAST database</span>
+makeblastdb -in genome.fa -dbtype nucl -out blastdb/genome
+makeblastdb -in proteins.fa -dbtype prot -out blastdb/proteome
+
+<span class="code-comment"># 2. Run blastn with useful output format</span>
+blastn -query unknown_gene.fa -db blastdb/genome \
+    -out results.tsv -outfmt "6 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore qcovs" \
+    -evalue 1e-10 -max_target_seqs 5 -num_threads 8
+
+<span class="code-comment"># 3. Run blastp for protein function annotation</span>
+blastp -query my_protein.fa -db nr -remote \
+    -out results_nr.tsv -outfmt 6 -evalue 1e-5
+
+<span class="code-comment"># 4. Run blastx to find protein encoded by a DNA sequence</span>
+blastx -query unknown_cdna.fa -db blastdb/proteome \
+    -out blastx_results.tsv -outfmt 6 -evalue 1e-5
+
+<span class="code-comment"># 5. Reciprocal Best Hit (RBH) — the gold standard for orthology</span>
+<span class="code-comment"># Run BLAST in both directions, keep pairs that are best hits in BOTH</span>
+blastp -query speciesA.fa -db speciesB_db -outfmt 6 -evalue 1e-10 > A_vs_B.tsv
+blastp -query speciesB.fa -db speciesA_db -outfmt 6 -evalue 1e-10 > B_vs_A.tsv</div>
+
+          <div class="info-box tip"><svg class="ico" aria-hidden="true"><use href="#i-tip"></use></svg><div><strong>When BLAST isn't enough:</strong> BLAST misses very divergent homologues. For sensitive remote homology detection, use <strong>HMMER</strong> (profile-HMM searches — much more sensitive than PSI-BLAST) or <strong>HHblits</strong> (hidden Markov model vs HMM database). These tools are standard for protein domain annotation.</div></div>
+
+          <h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">Key Takeaways</h3>
+          <div class="chips"><span class="chip">E-value &lt; 1e-5 for significance</span><span class="chip">blastp more sensitive than blastn</span><span class="chip">Always check query coverage, not just E-value</span><span class="chip">Use DIAMOND for large-scale searches</span><span class="chip">Reciprocal Best Hit for orthology</span></div>
+
+<!--topic 4.2: Multiple Sequence Alignment (MSA)-->
+          <p class="sub">Multiple Sequence Alignment (MSA) arranges three or more biological sequences so that corresponding positions (homologous residues) line up in columns. This reveals evolutionary conservation: columns where all sequences have the same residue are under strong selective pressure — they are functionally important. MSA is the foundation for phylogenetics, protein domain identification, and functional annotation.</p>
+
+          <h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">How MSA Algorithms Work</h3>
+          <p class="sub">An exact optimal MSA is computationally infeasible for more than ~10 sequences (NP-hard problem). All practical tools use heuristics:</p>
+          <div class="card-grid card-grid-3" style="gap:10px;margin-top:8px;">
+            <div class="card" style="padding:14px;"><strong>Progressive (ClustalW, MUSCLE v3)</strong><p class="sub" style="margin-top:4px;">Build a guide tree from pairwise distances, then align sequences in order of relatedness. Fast but early errors propagate.</p></div>
+            <div class="card" style="padding:14px;"><strong>Iterative (MUSCLE v5, MAFFT)</strong><p class="sub" style="margin-top:4px;">Align progressively, then refine by re-aligning subgroups. Better accuracy. MAFFT L-INS-i is the gold standard for accuracy.</p></div>
+            <div class="card" style="padding:14px;"><strong>Consistency-based (T-Coffee)</strong><p class="sub" style="margin-top:4px;">Uses all pairwise alignments to guide the MSA. Very accurate for small sets. Too slow for &gt;200 sequences.</p></div>
+          </div>
+
+          <h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">Gap Penalties — Why They Matter</h3>
+          <p class="sub">Gaps represent insertions or deletions (indels) in evolution. The <strong>gap opening penalty</strong> controls how reluctant the aligner is to insert a gap. The <strong>gap extension penalty</strong> controls how costly it is to make an existing gap longer. High opening + low extension → fewer, longer gaps (appropriate for eukaryotic proteins). Low opening → many small gaps (may over-fragment the alignment).</p>
+
+          <h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">Which Tool to Use?</h3>
+          <div class="card-grid card-grid-2" style="gap:10px;margin-top:8px;">
+            <div class="card" style="padding:14px;border-left:3px solid var(--green);"><strong>MAFFT</strong><p class="sub" style="margin-top:4px;">Best overall choice. Use <code>--auto</code> to let MAFFT choose strategy. For &lt;200 sequences: <code>mafft --maxiterate 1000 --localpair</code> (L-INS-i, most accurate). For &gt;10,000 sequences: <code>mafft --retree 1</code>.</p><span class="tag tag-green" style="margin-top:6px;">Recommended</span></div>
+            <div class="card" style="padding:14px;border-left:3px solid var(--blue);"><strong>MUSCLE v5</strong><p class="sub" style="margin-top:4px;">Excellent accuracy, competitive with MAFFT. Newer "super5" algorithm scales well. Use <code>muscle -super5 input.fa -output aligned.fa</code> for large datasets.</p></div>
+          </div>
+
+          <div class="code-block"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button><span class="code-comment"># ─── Complete MSA workflow ───</span>
+mamba install -c bioconda mafft muscle trimal
+
+<span class="code-comment"># MAFFT — automatic mode (recommended start)</span>
+mafft --auto sequences.fa &gt; aligned.fa
+
+<span class="code-comment"># MAFFT — maximum accuracy (for &lt;200 seqs, publication-quality)</span>
+mafft --maxiterate 1000 --localpair sequences.fa &gt; aligned_accurate.fa
+
+<span class="code-comment"># MUSCLE v5 — large datasets</span>
+muscle -super5 sequences.fa -output aligned.fa
+
+<span class="code-comment"># ─── Trim poorly aligned regions ───</span>
+<span class="code-comment"># ALWAYS trim before building phylogenetic trees</span>
+trimal -in aligned.fa -out trimmed.fa -automated1
+
+<span class="code-comment"># Check alignment stats</span>
+trimal -in aligned.fa -sgc               # Show column conservation scores
+trimal -in aligned.fa -sident             # Show sequence identity matrix
+
+<span class="code-comment"># ─── Visualise alignment ───</span>
+<span class="code-comment"># Web: Jalview (jalview.org) — colour by conservation</span>
+<span class="code-comment"># Web: MView (ebi.ac.uk/Tools/msa/mview/) — quick coloured view</span>
+<span class="code-comment"># CLI: AliView — fast lightweight desktop viewer</span></div>
+
+          <div class="info-box warn"><svg class="ico" aria-hidden="true"><use href="#i-warn"></use></svg><div><strong>Common MSA mistakes:</strong> (1) Including too-divergent sequences — they add noise, not signal. Remove sequences with &lt;20% identity. (2) Not trimming before phylogenetics — gappy regions create artefactual branches. (3) Using ClustalW — it is outdated and less accurate than MAFFT/MUSCLE. Use modern tools.</div></div>
+
+          <h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">Key Takeaways</h3>
+          <div class="chips"><span class="chip">MAFFT --auto for most cases</span><span class="chip">Always trim before tree building</span><span class="chip">L-INS-i for best accuracy (&lt;200 seqs)</span><span class="chip">Visualise with Jalview or AliView</span><span class="chip">Conserved columns = functional importance</span></div>
+
+<!--topic 4.3: Phylogenetic Trees — Evolutionary Analysis-->
+          <p class="sub">A phylogenetic tree is a branching diagram that represents the evolutionary relationships among biological sequences or species. Trees are constructed from multiple sequence alignments and use mathematical models to infer how sequences have diverged over time. Understanding how to build, read, and interpret phylogenetic trees is a core skill in evolutionary biology, epidemiology, and comparative genomics.</p>
+
+          <h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">Reading a Phylogenetic Tree</h3>
+          <p class="sub">Every tree has key structural elements. The <strong>root</strong> represents the most recent common ancestor. <strong>Internal nodes</strong> represent inferred ancestral sequences (speciation or divergence events). <strong>Tips</strong> (also called leaves) are the extant sequences in your analysis. <strong>Branch length</strong> represents the amount of evolutionary change — typically measured in substitutions per site. A branch of length 0.05 means 5 nucleotide substitutions per 100 sites have occurred along that branch.</p>
+
+          <h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">Tree-Building Methods</h3>
+          <div class="card-grid card-grid-2" style="gap:10px;margin-top:12px;">
+            <div class="card" style="padding:14px;"><strong>Neighbour-Joining (NJ)</strong><p class="sub" style="margin-top:4px;">Fast, distance-based heuristic. Computes a pairwise distance matrix and groups closest neighbours iteratively. Good for quick exploratory trees with many sequences. Available in MEGA, FastTree, and Clustal Omega.</p></div>
+            <div class="card" style="padding:14px;"><strong>Maximum Likelihood (ML)</strong><p class="sub" style="margin-top:4px;">Statistical optimisation approach that evaluates the probability of the observed alignment given a tree topology and substitution model. Best method for publication-quality trees. Use IQ-TREE2 or RAxML-NG.</p></div>
+            <div class="card" style="padding:14px;"><strong>Bayesian Inference</strong><p class="sub" style="margin-top:4px;">Probabilistic framework using MCMC sampling to explore tree space. Produces posterior probability support values. MrBayes for phylogenetics, BEAST2 for molecular clock and divergence time estimation. Computationally expensive but powerful.</p></div>
+            <div class="card" style="padding:14px;"><strong>When to use which?</strong><p class="sub" style="margin-top:4px;">NJ: quick-and-dirty exploration (&gt;500 sequences). ML: standard research publication. Bayesian: when you need divergence time estimates or posterior probabilities. For most projects, ML with IQ-TREE2 is the right choice.</p></div>
+          </div>
+
+          <h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">Rooting a Tree with an Outgroup</h3>
+          <p class="sub">An unrooted tree shows relationships but not the direction of evolution. To root a tree, include an <strong>outgroup</strong> — a sequence known to be more distantly related than any ingroup member. For example, when building a tree of mammalian species, include a reptile as the outgroup. The root is placed on the branch leading to the outgroup, which polarises all other relationships.</p>
+
+          <h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">Bootstrap Support Interpretation</h3>
+          <p class="sub">Bootstrap values assess the reliability of each node. The alignment is resampled with replacement many times (typically 1000), and each resampled dataset produces a new tree. The bootstrap value is the percentage of times a given clade appears across all resampled trees.</p>
+          <div class="card-grid card-grid-2" style="gap:10px;margin-top:8px;">
+            <div class="card" style="padding:14px;"><strong>&gt;90% — Strongly supported</strong><p class="sub" style="margin-top:4px;">High confidence in this branching pattern. Reliable for biological conclusions.</p></div>
+            <div class="card" style="padding:14px;"><strong>70–90% — Moderately supported</strong><p class="sub" style="margin-top:4px;">Generally considered acceptable. Report with caution.</p></div>
+            <div class="card" style="padding:14px;"><strong>50–70% — Weakly supported</strong><p class="sub" style="margin-top:4px;">Unreliable. The relationship may change with more data or different methods.</p></div>
+            <div class="card" style="padding:14px;"><strong>&lt;50% — No support</strong><p class="sub" style="margin-top:4px;">The branching pattern is essentially random at this node. Do not interpret.</p></div>
+          </div>
+
+          <h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">Substitution Models</h3>
+          <p class="sub">Substitution models describe how nucleotides or amino acids change over evolutionary time. Choosing the right model is critical for accurate tree inference.</p>
+          <div class="card-grid card-grid-2" style="gap:10px;margin-top:8px;">
+            <div class="card" style="padding:14px;"><strong>DNA: JC69</strong><p class="sub" style="margin-top:4px;">Simplest model. Assumes all substitutions are equally likely and all bases have equal frequency. Rarely realistic but useful as a baseline.</p></div>
+            <div class="card" style="padding:14px;"><strong>DNA: GTR (General Time Reversible)</strong><p class="sub" style="margin-top:4px;">Most general model. Six substitution rate parameters and four base frequency parameters. Usually the best fit for real data. Often combined with +G (gamma rate variation) and +I (invariant sites).</p></div>
+            <div class="card" style="padding:14px;"><strong>Protein: WAG</strong><p class="sub" style="margin-top:4px;">Empirical amino acid substitution model based on globular protein alignments. Good general-purpose choice for protein trees.</p></div>
+            <div class="card" style="padding:14px;"><strong>Protein: LG</strong><p class="sub" style="margin-top:4px;">Newer and generally better-fitting than WAG. Estimated from a larger, more diverse set of protein alignments. Recommended as the default for protein phylogenetics.</p></div>
+          </div>
+          <div class="info-box tip"><svg class="ico" aria-hidden="true"><use href="#i-tip"></use></svg><div><strong>Model selection:</strong> Use IQ-TREE2's <code>-m TEST</code> flag (ModelFinder) to automatically test all models and select the best one by BIC. Never guess — always let the software choose.</div></div>
+
+          <h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">Complete IQ-TREE2 Workflow</h3>
+          <div class="code-block" style="margin-top:12px;"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button><span class="code-comment"># Install IQ-TREE2</span>
+conda install -c bioconda iqtree
+
+<span class="code-comment"># Step 1: Automatic model selection + ML tree + bootstrap</span>
+iqtree2 -s trimmed_alignment.fa \
+    -m TEST \
+    -B 1000 \
+    -T AUTO \
+    --prefix my_tree
+<span class="code-comment"># -m TEST: ModelFinder — tests all substitution models</span>
+<span class="code-comment"># -B 1000: 1000 ultrafast bootstrap replicates</span>
+<span class="code-comment"># -T AUTO: use optimal number of CPU threads</span>
+<span class="code-comment"># Output files:</span>
+<span class="code-comment">#   my_tree.treefile  — the best ML tree (Newick format)</span>
+<span class="code-comment">#   my_tree.iqtree    — full report with model parameters</span>
+<span class="code-comment">#   my_tree.log       — run log</span>
+
+<span class="code-comment"># Step 2: For more rigorous support, use SH-aLRT + ultrafast bootstrap</span>
+iqtree2 -s trimmed_alignment.fa -m TEST -B 1000 -alrt 1000 -T AUTO
+
+<span class="code-comment"># Step 3: For protein alignment</span>
+iqtree2 -s protein_alignment.fa -m TEST -B 1000 -T AUTO -st AA</div>
+
+          <h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">Tree Visualisation</h3>
+          <div class="code-block" style="margin-top:8px;"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button><span class="code-comment"># Option 1: FigTree (desktop application)</span>
+<span class="code-comment"># Download from: https://github.com/rambaut/figtree/releases</span>
+<span class="code-comment"># Open my_tree.treefile in FigTree</span>
+<span class="code-comment"># Display bootstrap values: Node Labels → Display → label</span>
+<span class="code-comment"># Colour branches by clade, adjust branch width, export as PDF/SVG</span>
+
+<span class="code-comment"># Option 2: iTOL (Interactive Tree Of Life — web-based)</span>
+<span class="code-comment"># Upload my_tree.treefile to https://itol.embl.de</span>
+<span class="code-comment"># Supports annotation files for metadata (colours, bars, heatmaps)</span>
+<span class="code-comment"># Export publication-quality figures in SVG/PDF/PNG</span>
+
+<span class="code-comment"># Option 3: ggtree in R (programmatic, highly customisable)</span>
+<span class="code-comment"># library(ggtree)</span>
+<span class="code-comment"># tree &lt;- read.tree("my_tree.treefile")</span>
+<span class="code-comment"># ggtree(tree) + geom_tiplab() + geom_nodelab(aes(label=label))</span></div>
+
+          <div class="info-box warn"><svg class="ico" aria-hidden="true"><use href="#i-warn"></use></svg><div><strong>Common mistake:</strong> Interpreting branch length as time. Branch lengths represent substitutions per site unless you explicitly calibrate a molecular clock (e.g., with BEAST2). Two long branches does not mean two species diverged long ago — it could mean they evolved rapidly.</div></div>
+
+          <div class="chips" style="margin-top:14px;"><span class="chip">Root = common ancestor</span><span class="chip">Branch length = substitutions/site</span><span class="chip">Bootstrap &gt;70 = supported</span><span class="chip">GTR+G = standard DNA model</span><span class="chip">IQ-TREE2 -m TEST = auto model</span><span class="chip">FigTree / iTOL for visualisation</span><span class="chip">Always include an outgroup</span></div>

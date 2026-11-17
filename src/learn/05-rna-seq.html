@@ -1,0 +1,430 @@
+<!--
+module: 5
+slug: rna-seq
+short: RNA-seq
+label: Module 5 · Transcriptomics
+title: RNA-seq Analysis — From Raw Reads to Gene Lists
+-->
+<p class="lead">RNA sequencing (RNA-seq) measures gene expression across the entire transcriptome. This module takes you through every step of the pipeline with detailed explanations of what each tool does and why.</p>
+
+<!--topic 5.1: Experimental Design — The Most Critical Step-->
+          <p class="sub" style="margin-bottom:12px;">No amount of computational analysis can rescue a poorly designed experiment. Experimental design decisions — replication, randomisation, library preparation — are made before any sequencing occurs and cannot be corrected downstream. This section covers the critical choices that determine whether your RNA-seq experiment will produce reliable, publishable results or generate data that no statistical method can salvage.</p>
+
+          <h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">Statistical Power: How Many Replicates Do You Need?</h3>
+          <p class="sub">Statistical power is the probability of detecting a true difference when one exists. Underpowered studies miss real biology; overpowered studies waste resources. Use the <strong>RNASeqPower</strong> R package to estimate sample size before your experiment.</p>
+          <div class="code-block" style="margin-top:8px;"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button><span class="code-comment"># Power analysis with RNASeqPower</span>
+library(RNASeqPower)
+
+<span class="code-comment"># How many replicates to detect 2-fold change (log2FC=1)?</span>
+rnapower(depth=20, cv=0.4, effect=1, alpha=0.05, power=0.8)
+<span class="code-comment"># Result: ~3 replicates per group</span>
+
+<span class="code-comment"># What about detecting smaller changes (1.5-fold, log2FC=0.58)?</span>
+rnapower(depth=20, cv=0.4, effect=0.58, alpha=0.05, power=0.8)
+<span class="code-comment"># Result: ~6 replicates per group</span>
+
+<span class="code-comment"># Parameters:</span>
+<span class="code-comment">#   depth  = sequencing depth in millions of reads</span>
+<span class="code-comment">#   cv     = biological coefficient of variation (0.1–0.4 typical)</span>
+<span class="code-comment">#   effect = log2 fold change you want to detect</span>
+<span class="code-comment">#   alpha  = significance threshold (0.05)</span>
+<span class="code-comment">#   power  = desired power (0.8 = 80%)</span></div>
+          <div class="info-box tip"><svg class="ico" aria-hidden="true"><use href="#i-tip"></use></svg><div><strong>Rule of thumb:</strong> 3 replicates can detect large changes (2-fold). To detect subtle but biologically important changes (1.5-fold), you need 6+ replicates. More replicates always outperform deeper sequencing for differential expression.</div></div>
+
+          <h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">Biological vs Technical Replicates</h3>
+          <div class="card-grid card-grid-2" style="gap:12px;margin-top:0;">
+            <div class="card" style="padding:16px;border-left:3px solid var(--green);"><strong>Biological replicates</strong><p class="sub" style="margin-top:6px;">Independent biological samples (different mice, different cell culture flasks, different patients). These capture true biological variability and are <strong>essential</strong> for statistical inference. Minimum 3 per condition, ideally 5–6.</p></div>
+            <div class="card" style="padding:16px;border-left:3px solid var(--orange);"><strong>Technical replicates</strong><p class="sub" style="margin-top:6px;">The same sample sequenced multiple times, or the same library prepared twice. These only measure technical noise (which is very low in modern RNA-seq). Technical replicates do NOT substitute for biological replicates and are generally a waste of sequencing budget.</p></div>
+          </div>
+
+          <h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">Randomisation and Blocking</h3>
+          <p class="sub">Batch effects are systematic non-biological variations caused by processing samples at different times, on different machines, or by different technicians. They can completely confound your results if not properly handled.</p>
+          <div class="info-box warn"><svg class="ico" aria-hidden="true"><use href="#i-warn"></use></svg><div><strong>Critical mistake:</strong> Never process all treatment samples on Monday and all control samples on Tuesday. If you do, you cannot distinguish the treatment effect from the day-of-processing effect. Instead, <strong>balance conditions across batches</strong>: process 2 treatment + 2 control samples on each day.</div></div>
+          <p class="sub">Use a <strong>randomised block design</strong>: assign samples to batches randomly while ensuring each batch contains samples from every condition. Record all batch information (date, technician, lane, flowcell) in your metadata — you can correct for known batches computationally, but only if you recorded them.</p>
+
+          <h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">RNA Quality</h3>
+          <p class="sub">RNA integrity is measured by the <strong>RIN (RNA Integrity Number)</strong>, scored 1–10 by a Bioanalyzer or TapeStation. Degraded RNA introduces systematic 3' bias because fragmented transcripts lose their 5' ends preferentially.</p>
+          <div class="card-grid card-grid-2" style="gap:10px;margin-top:8px;">
+            <div class="card" style="padding:14px;"><strong>RIN &gt; 7</strong><p class="sub" style="margin-top:4px;">Good quality. Suitable for standard RNA-seq with poly-A selection. This is the minimum for most experiments.</p></div>
+            <div class="card" style="padding:14px;"><strong>RIN 4–7</strong><p class="sub" style="margin-top:4px;">Partially degraded. Use rRNA depletion instead of poly-A selection. Consider FFPE-optimised protocols if working with clinical samples.</p></div>
+          </div>
+
+          <h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">Library Preparation Choices</h3>
+          <div class="card-grid card-grid-2" style="gap:12px;margin-top:0;">
+            <div class="card" style="padding:16px;border-left:3px solid var(--blue);"><strong>Poly-A selection vs rRNA depletion</strong><p class="sub" style="margin-top:6px;">Poly-A captures only mRNA (coding genes). Cheaper, cleaner signal. rRNA depletion captures mRNA + lncRNA + other non-coding RNA. Use rRNA depletion for degraded samples or when non-coding RNA is of interest.</p></div>
+            <div class="card" style="padding:16px;border-left:3px solid var(--purple);"><strong>Single-end (SE) vs Paired-end (PE)</strong><p class="sub" style="margin-top:6px;">SE reads one end of each fragment. PE reads both ends. PE is recommended for: novel isoform discovery, structural variant detection, and improved alignment to repetitive regions. For standard differential expression, SE 50bp is often sufficient and cheaper.</p></div>
+            <div class="card" style="padding:16px;border-left:3px solid var(--green);"><strong>Paired vs unpaired experimental design</strong><p class="sub" style="margin-top:6px;">If you measure the same patient before and after treatment, use a paired design (~ patient + treatment in DESeq2). Paired designs are more powerful because they control for inter-individual variation.</p></div>
+            <div class="card" style="padding:16px;border-left:3px solid var(--orange);"><strong>Multiplexing &amp; barcoding</strong><p class="sub" style="margin-top:6px;">Multiple samples pooled on one lane with unique index barcodes. Reduces cost and minimises lane-to-lane batch effects. Ensure all conditions are represented on each lane. Use dual-index barcodes to prevent index hopping on patterned flowcells.</p></div>
+          </div>
+
+          <div class="info-box note"><svg class="ico" aria-hidden="true"><use href="#i-note"></use></svg><div><strong>Sequencing depth guidelines:</strong> Differential expression: 20–30M reads/sample. Rare transcripts or lncRNA: 50–100M. Allele-specific expression: 100M+. For most bulk RNA-seq DE experiments, 25M PE 150bp reads is a good target.</div></div>
+
+          <div class="chips" style="margin-top:14px;"><span class="chip">Biological reps &gt; technical reps</span><span class="chip">3 reps minimum, 6 ideal</span><span class="chip">Balance batches across conditions</span><span class="chip">RIN &gt; 7 for poly-A</span><span class="chip">PE for isoform discovery</span><span class="chip">Use RNASeqPower for sample size</span><span class="chip">Record ALL batch metadata</span></div>
+
+<!--topic 5.2: Quality Control — FastQC &amp; Trimming-->
+          <p class="sub">Quality control is the first analytical step in any sequencing project. Before aligning reads, you must assess their quality to identify problems such as adapter contamination, low-quality bases, and library preparation artefacts. FastQC generates a per-sample report, MultiQC aggregates all reports for easy comparison, and trimming tools remove problematic sequences. Skipping QC risks propagating errors through the entire downstream analysis.</p>
+
+          <h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">Running FastQC and MultiQC</h3>
+          <div class="code-block" style="margin-top:8px;"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button><span class="code-comment"># Run FastQC on all samples (parallelised)</span>
+mkdir -p qc_reports
+fastqc raw_data/*.fastq.gz -o qc_reports/ -t 8
+
+<span class="code-comment"># Aggregate all FastQC reports with MultiQC</span>
+pip install multiqc
+multiqc qc_reports/ -o qc_reports/multiqc_report
+
+<span class="code-comment"># Open the MultiQC report in your browser</span>
+<span class="code-comment"># qc_reports/multiqc_report/multiqc_report.html</span>
+<span class="code-comment"># Look for: samples with outlier GC content, low quality, high adapter %</span></div>
+          <p class="sub">The MultiQC report shows all samples side-by-side. Look for outlier samples that differ dramatically from the rest — these may indicate contamination, sample mix-ups, or failed library preparation. The General Statistics table shows total reads, % duplicates, and % GC per sample.</p>
+
+          <h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">FastQC Modules — What Each Failure Actually Means</h3>
+          <div class="card-grid card-grid-2" style="gap:10px;margin-top:0;">
+            <div class="card" style="padding:14px;"><strong>Per Base Sequence Quality</strong><p class="sub" style="margin-top:4px;">Should stay in the green zone (&gt;Q28). Quality commonly drops at the 3' end — this is normal for Illumina chemistry. If quality drops below Q20 before position 50, investigate the sequencing run. <strong>Action:</strong> Trim low-quality 3' bases if they fall below Q20.</p></div>
+            <div class="card" style="padding:14px;"><strong>Per Sequence Quality Scores</strong><p class="sub" style="margin-top:4px;">Distribution of mean quality per read. Should be a single peak above Q30. A bimodal distribution or a shoulder below Q20 means a subset of reads are poor quality. <strong>Action:</strong> Filter reads with mean quality below Q20.</p></div>
+            <div class="card" style="padding:14px;"><strong>Per Base Sequence Content (FAIL at pos 1-10)</strong><p class="sub" style="margin-top:4px;">Non-uniform base composition at the first 10 positions is <strong>normal and expected</strong> for RNA-seq. It is caused by random hexamer priming bias during cDNA synthesis. <strong>Action:</strong> No action needed. Do NOT trim these bases.</p></div>
+            <div class="card" style="padding:14px;"><strong>Adapter Content (FAIL)</strong><p class="sub" style="margin-top:4px;">Adapter sequences detected in reads. This happens when insert size is shorter than read length. <strong>Action:</strong> You MUST trim adapters before alignment. Use Trim Galore or fastp.</p></div>
+            <div class="card" style="padding:14px;"><strong>Sequence Duplication Levels (WARN)</strong><p class="sub" style="margin-top:4px;">A WARN here is <strong>completely normal for RNA-seq</strong>. Highly expressed genes (ribosomal proteins, housekeeping genes) naturally produce many identical reads. Only worry if duplication exceeds 80% or if you see it in DNA-seq data. <strong>Action:</strong> None for RNA-seq.</p></div>
+            <div class="card" style="padding:14px;"><strong>Overrepresented Sequences</strong><p class="sub" style="margin-top:4px;">Shows sequences that make up &gt;0.1% of all reads. Common culprits: adapter dimers, rRNA contamination, or highly expressed transcripts. <strong>Action:</strong> If rRNA is dominant, your rRNA depletion failed. If adapter dimers are present, trim aggressively.</p></div>
+          </div>
+
+          <h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">Diagnostic Decision Tree</h3>
+          <div class="info-box note"><svg class="ico" aria-hidden="true"><use href="#i-note"></use></svg><div><strong>If Adapter Content FAIL →</strong> Trim with Trim Galore or fastp (mandatory).<br><strong>If Per Base Quality drops below Q20 →</strong> Trim low-quality bases from the 3' end.<br><strong>If GC Content shows bimodal distribution →</strong> Suspect contamination from another organism. Run FastQ Screen.<br><strong>If Overrepresented Sequences shows rRNA →</strong> Your rRNA depletion failed. Check remaining samples. Consider computational rRNA removal with SortMeRNA.<br><strong>If Sequence Duplication WARN →</strong> Normal for RNA-seq. Ignore.<br><strong>If Per Base Content FAIL at positions 1-10 →</strong> Normal for random hexamer priming. Ignore.</div></div>
+
+          <h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">Trimming Tools Compared</h3>
+          <div class="card-grid card-grid-2" style="gap:10px;margin-top:8px;">
+            <div class="card" style="padding:14px;"><strong>Trim Galore</strong><p class="sub" style="margin-top:4px;">Wrapper around Cutadapt. Auto-detects adapter type. Simple to use. Good default choice. Slightly slower than fastp.</p></div>
+            <div class="card" style="padding:14px;"><strong>fastp</strong><p class="sub" style="margin-top:4px;">All-in-one tool: QC + trimming + filtering in a single pass. Very fast (written in C++). Generates its own HTML report. Increasingly popular as a replacement for FastQC + Trim Galore.</p></div>
+            <div class="card" style="padding:14px;"><strong>Trimmomatic</strong><p class="sub" style="margin-top:4px;">Java-based. Flexible with many options. Older tool. Requires specifying adapter sequences manually. Still widely used but fastp is generally preferred now.</p></div>
+            <div class="card" style="padding:14px;"><strong>When NOT to trim</strong><p class="sub" style="margin-top:4px;">If using pseudoalignment (Salmon or kallisto), trimming is usually unnecessary — these tools handle adapters and low-quality bases internally. Trimming can even reduce accuracy by creating artificially short fragments.</p></div>
+          </div>
+
+          <h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">Trimming Commands</h3>
+          <div class="code-block" style="margin-top:8px;"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button><span class="code-comment"># Option 1: Trim Galore (recommended for beginners)</span>
+conda install -c bioconda trim-galore
+trim_galore --paired --cores 8 \
+    --quality 20 \
+    --length 36 \
+    sample_R1.fastq.gz sample_R2.fastq.gz \
+    --output_dir trimmed/
+<span class="code-comment"># --quality 20: trim bases with Q &lt; 20 from 3' end</span>
+<span class="code-comment"># --length 36: discard reads shorter than 36bp after trimming</span>
+
+<span class="code-comment"># Option 2: fastp (faster, all-in-one QC + trim)</span>
+conda install -c bioconda fastp
+fastp -i sample_R1.fastq.gz -I sample_R2.fastq.gz \
+    -o trimmed/sample_R1.fastq.gz -O trimmed/sample_R2.fastq.gz \
+    --detect_adapter_for_pe \
+    --qualified_quality_phred 20 \
+    --length_required 36 \
+    --html trimmed/sample_fastp.html \
+    --thread 8
+
+<span class="code-comment"># Re-run FastQC after trimming to verify improvement</span>
+fastqc trimmed/*.fastq.gz -o qc_reports/post_trim/ -t 8
+multiqc qc_reports/post_trim/ -o qc_reports/post_trim_multiqc/</div>
+
+          <div class="info-box warn"><svg class="ico" aria-hidden="true"><use href="#i-warn"></use></svg><div><strong>Always re-run FastQC after trimming</strong> to confirm that adapter contamination is gone and quality profiles have improved. If adapter content persists, your adapter sequence may not be in the default database — specify it manually with <code>--adapter</code>.</div></div>
+
+          <div class="chips" style="margin-top:14px;"><span class="chip">FastQC per sample, MultiQC for overview</span><span class="chip">Duplication WARN is normal for RNA-seq</span><span class="chip">Adapter FAIL = must trim</span><span class="chip">fastp = fastest all-in-one</span><span class="chip">No trimming needed for Salmon/kallisto</span><span class="chip">Re-run QC after trimming</span></div>
+
+<!--topic 5.3: Alignment with HISAT2 &amp; STAR-->
+          <p class="sub">Alignment (or mapping) is the process of determining where each sequencing read originated in the reference genome. For RNA-seq, this is complicated by splicing — a single read may span an exon-exon junction, so standard DNA aligners will fail. <strong>Splice-aware aligners</strong> like HISAT2 and STAR can split a read across introns to find the correct genomic position. The output is a BAM file containing the coordinates and quality of each alignment.</p>
+
+          <h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">HISAT2 vs STAR</h3>
+          <div class="card-grid card-grid-2" style="gap:10px;margin-top:12px;">
+            <div class="card" style="padding:14px;"><strong>HISAT2</strong><p class="sub" style="margin-top:4px;">Memory-efficient (~8 GB RAM for human genome), fast, and accurate. Uses a graph-based FM index that incorporates known splice sites and SNPs. Excellent for most organisms. Recommended when RAM is limited or for non-model organisms.</p><span class="tag tag-green" style="margin-top:6px;">Recommended</span></div>
+            <div class="card" style="padding:14px;"><strong>STAR</strong><p class="sub" style="margin-top:4px;">Slightly more accurate, especially for novel splice junctions, but requires ~30 GB RAM for the human genome. Required by some downstream tools (e.g., STAR-Fusion for fusion gene detection). Gold standard in ENCODE and GTEx projects.</p></div>
+          </div>
+
+          <h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">Alignment Workflow</h3>
+          <div class="code-block" style="margin-top:8px;"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button><span class="code-comment"># Build HISAT2 genome index (do once per genome)</span>
+hisat2-build -p 8 genome.fa genome_index/hisat2_index
+
+<span class="code-comment"># Align paired-end reads</span>
+hisat2 -p 8 -x genome_index/hisat2_index \
+    -1 sample_R1_trimmed.fastq.gz \
+    -2 sample_R2_trimmed.fastq.gz \
+    --dta \
+    --rna-strandness RF \
+    2&gt; sample_hisat2.log \
+    | samtools sort -@ 8 -o sample.bam
+
+<span class="code-comment"># Index the BAM file (required for most downstream tools)</span>
+samtools index sample.bam
+
+<span class="code-comment"># Check alignment statistics</span>
+samtools flagstat sample.bam</div>
+
+          <h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">SAM/BAM Format Explained</h3>
+          <p class="sub">SAM (Sequence Alignment/Map) is a tab-delimited text format. BAM is its compressed binary equivalent. Each alignment line has 11 mandatory fields:</p>
+          <div class="code-block" style="margin-top:8px;font-size:0.78em;"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button><span class="code-comment"># Example SAM line (one read alignment):</span>
+READ001  83  chr1  12345  60  75M200N25M  =  12800  555  ACGT...  FFFF...
+
+<span class="code-comment"># Field breakdown:</span>
+<span class="code-comment"># 1  QNAME: READ001         — Read name</span>
+<span class="code-comment"># 2  FLAG:  83              — Bitwise flag (see below)</span>
+<span class="code-comment"># 3  RNAME: chr1            — Reference chromosome</span>
+<span class="code-comment"># 4  POS:   12345           — 1-based leftmost position</span>
+<span class="code-comment"># 5  MAPQ:  60              — Mapping quality (60 = uniquely mapped)</span>
+<span class="code-comment"># 6  CIGAR: 75M200N25M      — 75bp match, 200bp intron, 25bp match</span>
+<span class="code-comment"># 7  RNEXT: =               — Mate maps to same chromosome</span>
+<span class="code-comment"># 8  PNEXT: 12800           — Mate position</span>
+<span class="code-comment"># 9  TLEN:  555             — Template/fragment length</span>
+<span class="code-comment"># 10 SEQ:   ACGT...         — Read sequence</span>
+<span class="code-comment"># 11 QUAL:  FFFF...         — Base quality (Phred+33)</span></div>
+
+          <h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">FLAG Values Decoded</h3>
+          <p class="sub">The FLAG field is a bitwise combination of properties. Common flags:</p>
+          <div class="card-grid card-grid-2" style="gap:10px;margin-top:8px;">
+            <div class="card" style="padding:14px;"><strong>FLAG 83 (0x53)</strong><p class="sub" style="margin-top:4px;">= 1 (paired) + 2 (proper pair) + 16 (reverse strand) + 64 (first in pair). A properly paired read on the reverse strand, first mate.</p></div>
+            <div class="card" style="padding:14px;"><strong>FLAG 163 (0xA3)</strong><p class="sub" style="margin-top:4px;">= 1 (paired) + 2 (proper pair) + 32 (mate reverse) + 128 (second in pair). A properly paired read on forward strand, second mate.</p></div>
+            <div class="card" style="padding:14px;"><strong>FLAG 4</strong><p class="sub" style="margin-top:4px;">= unmapped read. These reads did not align to the reference genome. Filter them with <code>samtools view -F 4</code>.</p></div>
+            <div class="card" style="padding:14px;"><strong>FLAG 256</strong><p class="sub" style="margin-top:4px;">= secondary alignment. The read mapped to multiple locations. This is the non-primary alignment. Filter with <code>samtools view -F 256</code>.</p></div>
+          </div>
+          <div class="info-box tip"><svg class="ico" aria-hidden="true"><use href="#i-tip"></use></svg><div><strong>Decode any FLAG value</strong> at <a href="https://broadinstitute.github.io/picard/explain-flags.html" target="_blank" style="color:var(--blue-text);">broadinstitute.github.io/picard/explain-flags.html</a> — enter a number and it shows exactly which bits are set.</div></div>
+
+          <h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">Essential samtools Commands</h3>
+          <div class="code-block" style="margin-top:8px;"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button><span class="code-comment"># Alignment statistics (mapped reads, paired, singletons)</span>
+samtools flagstat sample.bam
+
+<span class="code-comment"># Per-chromosome read counts</span>
+samtools idxstats sample.bam
+
+<span class="code-comment"># Extract only mapped reads (remove unmapped)</span>
+samtools view -F 4 -b sample.bam &gt; sample_mapped.bam
+
+<span class="code-comment"># Extract only properly paired reads</span>
+samtools view -f 2 -b sample.bam &gt; sample_proper_pairs.bam
+
+<span class="code-comment"># Mark PCR duplicates (important for DNA-seq, optional for RNA-seq)</span>
+samtools markdup sample.bam sample_markdup.bam
+
+<span class="code-comment"># View reads in a specific region</span>
+samtools view sample.bam chr1:1000000-1001000 | head</div>
+
+          <h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">Interpreting Alignment Rates</h3>
+          <div class="info-box tip"><svg class="ico" aria-hidden="true"><use href="#i-tip"></use></svg><div><strong>&gt;90% overall alignment rate:</strong> Excellent. Expected for well-prepared libraries aligned to the correct genome.<br><strong>75–90%:</strong> Acceptable. Some unmapped reads are normal (rRNA, adapter dimers, low-quality reads).<br><strong>50–75%:</strong> Investigate. Possible causes: wrong reference genome, cross-species contamination, significant adapter contamination.<br><strong>&lt;50%:</strong> Serious problem. Check: (1) Are you using the correct genome assembly? (2) Run FastQ Screen to check for contamination from other organisms. (3) Check if adapter trimming was performed.</div></div>
+
+          <h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">Visual Inspection with IGV</h3>
+          <p class="sub">Always visually inspect alignments for a few genes of interest using the <strong>Integrative Genomics Viewer (IGV)</strong>. Load your BAM file and the reference genome, then navigate to specific genes. Look for: even coverage across exons, clean splice junctions, and absence of systematic artefacts.</p>
+
+          <h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">Generating Coverage Tracks (bigWig)</h3>
+          <div class="code-block" style="margin-top:8px;"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button><span class="code-comment"># Generate normalised coverage tracks with deepTools</span>
+conda install -c bioconda deeptools
+
+bamCoverage -b sample.bam \
+    -o sample.bw \
+    --normalizeUsing RPKM \
+    --binSize 10 \
+    -p 8
+<span class="code-comment"># Output: sample.bw (bigWig format)</span>
+<span class="code-comment"># Load in IGV or UCSC Genome Browser for visualisation</span></div>
+
+          <div class="chips" style="margin-top:14px;"><span class="chip">HISAT2 = low RAM, STAR = higher accuracy</span><span class="chip">CIGAR string shows splicing (N = intron)</span><span class="chip">MAPQ 60 = uniquely mapped</span><span class="chip">samtools flagstat for QC</span><span class="chip">&gt;90% alignment = good</span><span class="chip">IGV for visual inspection</span><span class="chip">bamCoverage for bigWig tracks</span></div>
+
+<!--topic 5.4: Gene Counting with featureCounts-->
+          <p class="sub">Gene counting is the process of assigning each aligned read to a gene based on its overlap with annotated gene coordinates in a GTF/GFF file. The result is a <strong>count matrix</strong> — a table where rows are genes, columns are samples, and values are integer read counts. This matrix is the fundamental input for differential expression analysis with DESeq2 or edgeR. Getting the counting step right is critical because errors here propagate to every downstream result.</p>
+
+          <h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">How Gene Counting Works</h3>
+          <p class="sub">The counting tool examines each aligned read and checks whether it overlaps with an annotated gene feature (usually exons). If a read falls entirely within one gene's exons, it is assigned to that gene. If a read overlaps two genes (an <strong>ambiguous read</strong>), featureCounts discards it by default. HTSeq-count offers similar behaviour with its "union" mode. Reads that do not overlap any annotated feature are counted as "unassigned."</p>
+
+          <h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">Gene-level vs Transcript-level Counting</h3>
+          <div class="card-grid card-grid-2" style="gap:10px;margin-top:8px;">
+            <div class="card" style="padding:14px;"><strong>Gene-level counting</strong><p class="sub" style="margin-top:4px;">Counts reads per gene (collapsing all isoforms). Used by featureCounts and HTSeq-count. Simpler, more robust. Standard for differential expression analysis.</p></div>
+            <div class="card" style="padding:14px;"><strong>Transcript-level quantification</strong><p class="sub" style="margin-top:4px;">Estimates abundance per transcript isoform. Used by Salmon and kallisto (pseudoalignment). More information but more complex. Can be summarised to gene level with tximport.</p></div>
+          </div>
+
+          <h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">featureCounts Workflow</h3>
+          <div class="code-block"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button><span class="code-comment"># Install featureCounts (from Subread package)</span>
+conda install -c bioconda subread
+
+<span class="code-comment"># Count reads per gene for all samples</span>
+featureCounts -T 8 \
+    -a annotation.gtf \
+    -o counts.txt \
+    -s 2 \
+    -p --countReadPairs \
+    -B \
+    aligned/*.bam
+
+<span class="code-comment"># Key parameters:</span>
+<span class="code-comment"># -a  : GTF annotation file (must match genome used for alignment)</span>
+<span class="code-comment"># -o  : output file name</span>
+<span class="code-comment"># -s 2: reverse-stranded library (most Illumina kits)</span>
+<span class="code-comment"># -p --countReadPairs: count fragments, not individual reads (for PE)</span>
+<span class="code-comment"># -B  : require both reads in a pair to be aligned</span>
+
+<span class="code-comment"># The output is a table: genes x samples with read counts</span>
+<span class="code-comment"># Column 1: gene ID, columns 7+: counts per sample</span>
+<span class="code-comment"># A summary file (counts.txt.summary) shows assignment statistics</span></div>
+
+          <div class="info-box warn"><svg class="ico" aria-hidden="true"><use href="#i-warn"></use></svg><div><strong>Strandedness matters!</strong> Wrong <code>-s</code> setting can cause ~50% read loss or incorrect counting. Use <code>-s 0</code> (unstranded), <code>-s 1</code> (stranded-forward), or <code>-s 2</code> (stranded-reverse). Check your library preparation kit documentation. Most modern kits (Illumina TruSeq Stranded, NEBNext) are reverse-stranded (<code>-s 2</code>). If unsure, run featureCounts with all three settings on one sample and compare assignment rates — the correct setting will have the highest "Assigned" count.</div></div>
+
+          <h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">featureCounts vs HTSeq-count</h3>
+          <div class="card-grid card-grid-2" style="gap:10px;margin-top:8px;">
+            <div class="card" style="padding:14px;"><strong>featureCounts</strong><p class="sub" style="margin-top:4px;">Extremely fast (processes millions of reads per minute). Multi-threaded. Can process multiple BAM files in one command. Recommended for most use cases.</p></div>
+            <div class="card" style="padding:14px;"><strong>HTSeq-count</strong><p class="sub" style="margin-top:4px;">Python-based, slower. Processes one BAM file at a time. Offers fine-grained control over ambiguous read handling (union, intersection-strict, intersection-nonempty modes). Used historically but featureCounts is preferred.</p></div>
+          </div>
+
+          <h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">Pseudoalignment Alternative: Salmon</h3>
+          <p class="sub">Salmon and kallisto use <strong>pseudoalignment</strong> — they do not perform traditional alignment to the genome. Instead, they map reads directly to the transcriptome (cDNA sequences), skipping the genome alignment step entirely. This is dramatically faster (minutes instead of hours) and directly estimates transcript-level abundances.</p>
+          <div class="code-block" style="margin-top:8px;"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button><span class="code-comment"># Salmon quantification (no alignment needed)</span>
+conda install -c bioconda salmon
+
+<span class="code-comment"># Step 1: Build transcriptome index (do once)</span>
+salmon index -t transcriptome.fa -i salmon_index -p 8
+
+<span class="code-comment"># Step 2: Quantify each sample</span>
+salmon quant -i salmon_index \
+    -l A \
+    -1 sample_R1.fastq.gz \
+    -2 sample_R2.fastq.gz \
+    -p 8 \
+    --validateMappings \
+    -o salmon_output/sample/
+<span class="code-comment"># -l A: auto-detect library type</span>
+<span class="code-comment"># Output: quant.sf file with TPM and estimated counts per transcript</span></div>
+
+          <h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">Creating a Count Matrix from Salmon with tximport</h3>
+          <div class="code-block" style="margin-top:8px;"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button><span class="code-comment"># In R: import Salmon outputs into DESeq2 with tximport</span>
+library(tximport)
+library(DESeq2)
+
+<span class="code-comment"># Create a named vector of file paths</span>
+samples &lt;- c("control1","control2","control3","treated1","treated2","treated3")
+files &lt;- file.path("salmon_output", samples, "quant.sf")
+names(files) &lt;- samples
+
+<span class="code-comment"># Load transcript-to-gene mapping (from GTF or biomaRt)</span>
+tx2gene &lt;- read.csv("tx2gene.csv")  <span class="code-comment"># columns: TXNAME, GENEID</span>
+
+<span class="code-comment"># Import and summarise to gene level</span>
+txi &lt;- tximport(files, type="salmon", tx2gene=tx2gene)
+
+<span class="code-comment"># Create DESeq2 object directly from tximport</span>
+metadata &lt;- data.frame(condition=c(rep("control",3), rep("treated",3)),
+                       row.names=samples)
+dds &lt;- DESeqDataSetFromTximport(txi, metadata, ~condition)</div>
+
+          <div class="info-box tip"><svg class="ico" aria-hidden="true"><use href="#i-tip"></use></svg><div><strong>Salmon + tximport + DESeq2</strong> is increasingly the recommended pipeline because: (1) it is much faster than alignment-based counting, (2) it corrects for GC bias and sequence-specific bias, and (3) tximport provides offset matrices that improve DE accuracy at the gene level.</div></div>
+
+          <div class="chips" style="margin-top:14px;"><span class="chip">featureCounts = fast gene counting</span><span class="chip">Strandedness: check -s 0/1/2</span><span class="chip">Salmon = no alignment needed</span><span class="chip">tximport bridges Salmon → DESeq2</span><span class="chip">Gene-level for DE analysis</span><span class="chip">Ambiguous reads are discarded</span></div>
+
+<!--topic 5.5: Differential Expression with DESeq2-->
+          <p class="sub">DESeq2 is the gold-standard R package for identifying genes that are significantly more or less expressed between experimental conditions. It models RNA-seq count data using the <strong>negative binomial distribution</strong>, which accounts for both the mean expression level and the biological variability (dispersion) between replicates. Unlike simpler models (Poisson), the negative binomial captures the overdispersion that is characteristic of real biological data — where variance exceeds the mean.</p>
+
+          <h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">The DESeq2 Statistical Model</h3>
+          <p class="sub">DESeq2 performs three key steps internally: (1) <strong>Size factor estimation</strong> — normalises for differences in library size using the median-of-ratios method. (2) <strong>Dispersion estimation</strong> — estimates gene-wise dispersion with empirical Bayes shrinkage toward a fitted trend, borrowing strength across genes. (3) <strong>Wald test</strong> — tests whether the log2 fold change for each gene is significantly different from zero. The design formula (e.g., <code>~ condition</code>) specifies the experimental factors to model.</p>
+
+          <h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">Basic DESeq2 Workflow</h3>
+          <div class="code-block"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button>library(DESeq2)
+
+<span class="code-comment"># 1. Load count data from featureCounts</span>
+counts &lt;- read.table("counts.txt", header=TRUE, row.names=1, skip=1)
+counts &lt;- counts[, 6:ncol(counts)]  <span class="code-comment"># Keep only count columns</span>
+
+<span class="code-comment"># 2. Create metadata (sample information)</span>
+metadata &lt;- data.frame(
+  condition = c("control","control","control","treated","treated","treated"),
+  row.names = colnames(counts)
+)
+
+<span class="code-comment"># 3. Create DESeq2 object</span>
+dds &lt;- DESeqDataSetFromMatrix(counts, metadata, ~condition)
+
+<span class="code-comment"># 4. Set the reference level (control as baseline)</span>
+dds$condition &lt;- relevel(dds$condition, ref="control")
+
+<span class="code-comment"># 5. Filter low-count genes (improves power)</span>
+keep &lt;- rowSums(counts(dds)) &gt;= 10
+dds &lt;- dds[keep, ]
+
+<span class="code-comment"># 6. Run DESeq2 (size factors + dispersion + Wald test)</span>
+dds &lt;- DESeq(dds)
+
+<span class="code-comment"># 7. Get results</span>
+res &lt;- results(dds, contrast=c("condition","treated","control"))
+res &lt;- res[order(res$padj), ]
+summary(res)</div>
+
+          <h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">Multi-factor Designs</h3>
+          <p class="sub">When your experiment has known batch effects or additional covariates, include them in the design formula. DESeq2 will model their effect and remove it before testing the variable of interest.</p>
+          <div class="code-block"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button><span class="code-comment"># Multi-factor design: correct for batch while testing condition</span>
+metadata &lt;- data.frame(
+  condition = c("ctrl","ctrl","ctrl","treat","treat","treat"),
+  batch = c("A","B","A","B","A","B"),
+  row.names = colnames(counts)
+)
+dds &lt;- DESeqDataSetFromMatrix(counts, metadata, ~ batch + condition)
+<span class="code-comment"># The last variable in the formula is the one being tested</span>
+<span class="code-comment"># Batch effect is modelled but not tested</span>
+
+<span class="code-comment"># For paired designs (same patient before/after treatment):</span>
+<span class="code-comment"># design = ~ patient + treatment</span></div>
+
+          <h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">LFC Shrinkage with apeglm</h3>
+          <p class="sub">Raw log2 fold changes from DESeq2 can be noisy for low-count genes. LFC shrinkage produces more accurate, regularised fold change estimates — especially important for ranking genes and for visualisation.</p>
+          <div class="code-block"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button><span class="code-comment"># Apply apeglm shrinkage (recommended method)</span>
+library(apeglm)
+res_shrunk &lt;- lfcShrink(dds, coef="condition_treated_vs_control", type="apeglm")
+<span class="code-comment"># Use res_shrunk for MA plots and volcano plots</span>
+<span class="code-comment"># Use the non-shrunken 'res' for strict significance testing</span></div>
+
+          <h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">Visualisation: MA Plot, Volcano Plot, and Heatmap</h3>
+          <div class="code-block"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button><span class="code-comment"># MA plot — log2FC vs mean expression</span>
+plotMA(res_shrunk, ylim=c(-5, 5), main="MA Plot")
+<span class="code-comment"># Blue dots = significant (padj &lt; 0.1). Genes with high expression</span>
+<span class="code-comment"># and large fold change are most reliable.</span>
+
+<span class="code-comment"># Volcano plot with EnhancedVolcano</span>
+library(EnhancedVolcano)
+EnhancedVolcano(res,
+  lab = rownames(res),
+  x = "log2FoldChange",
+  y = "padj",
+  pCutoff = 0.05,
+  FCcutoff = 1,
+  title = "Treated vs Control",
+  subtitle = "DESeq2 results")
+
+<span class="code-comment"># Heatmap of top 50 DEGs</span>
+library(pheatmap)
+vsd &lt;- vst(dds, blind=FALSE)
+top50 &lt;- head(order(res$padj), 50)
+mat &lt;- assay(vsd)[top50, ]
+mat &lt;- mat - rowMeans(mat)  <span class="code-comment"># Center rows (z-score-like)</span>
+pheatmap(mat,
+  annotation_col = as.data.frame(colData(dds)["condition"]),
+  scale = "none",
+  show_rownames = TRUE,
+  fontsize_row = 7)</div>
+
+          <h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">Annotating and Exporting Results</h3>
+          <div class="code-block"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button><span class="code-comment"># Add gene symbols using biomaRt</span>
+library(biomaRt)
+ensembl &lt;- useEnsembl(biomart="genes", dataset="hsapiens_gene_ensembl")
+annotations &lt;- getBM(
+  attributes = c("ensembl_gene_id", "hgnc_symbol", "description"),
+  filters = "ensembl_gene_id",
+  values = rownames(res),
+  mart = ensembl
+)
+
+<span class="code-comment"># Merge annotations with results</span>
+res_df &lt;- as.data.frame(res)
+res_df$ensembl_gene_id &lt;- rownames(res_df)
+res_annotated &lt;- merge(res_df, annotations, by="ensembl_gene_id", all.x=TRUE)
+
+<span class="code-comment"># Export significant DEGs</span>
+sig &lt;- subset(res_annotated, padj &lt; 0.05 &amp; abs(log2FoldChange) &gt; 1)
+write.csv(sig, "DEGs_significant_annotated.csv", row.names=FALSE)
+
+<span class="code-comment"># Export for pathway analysis (all genes with stats)</span>
+write.csv(res_annotated, "all_genes_DESeq2.csv", row.names=FALSE)</div>
+
+          <div class="info-box note"><svg class="ico" aria-hidden="true"><use href="#i-note"></use></svg><div><strong>Interpreting results:</strong> <code>log2FoldChange</code> = direction and magnitude (+1 = 2x higher in treated, -1 = 2x lower). <code>padj</code> = Benjamini-Hochberg adjusted p-value (FDR). Always use <code>padj &lt; 0.05</code>, never raw <code>pvalue</code>. Combine with a fold-change threshold (<code>|log2FC| &gt; 1</code>) for biological relevance.</div></div>
+
+          <div class="info-box warn"><svg class="ico" aria-hidden="true"><use href="#i-warn"></use></svg><div><strong>Common mistakes:</strong> (1) Using normalised counts (TPM, RPKM) as input — DESeq2 requires raw integer counts. (2) Forgetting to set the reference level — the default alphabetical order may not be what you want. (3) Not filtering low-count genes — this reduces statistical power because of excessive multiple testing correction.</div></div>
+
+          <div class="chips" style="margin-top:14px;"><span class="chip">Negative binomial model</span><span class="chip">Raw counts as input (never normalised)</span><span class="chip">padj &lt; 0.05 + |log2FC| &gt; 1</span><span class="chip">apeglm for LFC shrinkage</span><span class="chip">~ batch + condition for multi-factor</span><span class="chip">EnhancedVolcano for plots</span><span class="chip">biomaRt for gene annotation</span></div>

@@ -1,0 +1,129 @@
+<!--
+module: 9
+slug: proteomics
+short: Proteomics
+label: Module 9 · Proteomics
+title: Mass Spectrometry &amp; Protein Analysis
+-->
+<p class="lead">Proteomics studies the entire complement of proteins in a cell, tissue, or organism. Unlike the genome (static), the proteome is dynamic — it changes with conditions, time, and cell type. Mass spectrometry is the workhorse technology for large-scale protein identification and quantification.</p>
+
+<!--topic 9.1: Mass Spectrometry Principles-->
+<p class="sub">Mass spectrometry (MS) measures the mass-to-charge ratio (m/z) of ionised molecules. In proteomics, proteins are digested into peptides (typically with trypsin), separated by liquid chromatography (LC), ionised, and then measured in the mass spectrometer. The combination — LC-MS/MS — is the standard workflow for identifying and quantifying thousands of proteins in a single experiment.</p>
+
+<h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">The LC-MS/MS Workflow</h3>
+<p class="sub">A typical bottom-up proteomics experiment follows these steps: (1) <strong>Protein extraction</strong> — lyse cells, solubilise proteins. (2) <strong>Digestion</strong> — trypsin cleaves after lysine (K) and arginine (R), producing peptides of 7–35 amino acids. (3) <strong>Separation</strong> — reverse-phase liquid chromatography separates peptides by hydrophobicity over a 60–120 minute gradient. (4) <strong>Ionisation</strong> — electrospray ionisation (ESI) converts peptides into gas-phase ions. (5) <strong>MS1 scan</strong> — measures intact peptide masses. (6) <strong>MS2 scan</strong> — isolates individual peptide ions and fragments them (HCD or CID). The fragmentation pattern reveals the amino acid sequence.</p>
+
+<h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">Key Instrument Types</h3>
+<div class="card-grid card-grid-2" style="gap:10px;margin-top:8px;">
+  <div class="card" style="padding:14px;"><strong>Orbitrap (Thermo)</strong><p class="sub" style="margin-top:4px;">High resolution (120,000–500,000), high mass accuracy (&lt;2 ppm). Gold standard for discovery proteomics. Exploris 480, Q Exactive series.</p></div>
+  <div class="card" style="padding:14px;"><strong>TOF (Bruker timsTOF)</strong><p class="sub" style="margin-top:4px;">Time-of-flight with trapped ion mobility (TIMS). Very fast scan rates. DIA-PASEF enables deep proteome coverage. Excellent for clinical applications.</p></div>
+  <div class="card" style="padding:14px;"><strong>Triple Quadrupole (QQQ)</strong><p class="sub" style="margin-top:4px;">Lower resolution but extremely sensitive and quantitative. Used for targeted proteomics (MRM/SRM) — measuring specific proteins with high precision.</p></div>
+  <div class="card" style="padding:14px;"><strong>MALDI-TOF</strong><p class="sub" style="margin-top:4px;">Matrix-assisted laser desorption. Used for intact protein profiling, tissue imaging (MALDI-MSI), and microbial identification (Bruker Biotyper).</p></div>
+</div>
+
+<h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">DDA vs DIA Acquisition</h3>
+<div class="card-grid card-grid-2" style="gap:10px;margin-top:8px;">
+  <div class="card" style="padding:14px;border-left:3px solid var(--blue);"><strong>DDA (Data-Dependent)</strong><p class="sub" style="margin-top:4px;">Selects the top N most intense ions from MS1 for fragmentation. Simple, well-established. Stochastic — may miss low-abundance peptides. Less reproducible between runs.</p></div>
+  <div class="card" style="padding:14px;border-left:3px solid var(--green);"><strong>DIA (Data-Independent)</strong><p class="sub" style="margin-top:4px;">Fragments ALL ions in wide m/z windows systematically. No selection bias. More reproducible and comprehensive. Requires spectral libraries or library-free tools (DIA-NN). Now the preferred method.</p><span class="tag tag-green" style="margin-top:6px;">Recommended</span></div>
+</div>
+
+<div class="info-box tip"><svg class="ico" aria-hidden="true"><use href="#i-tip"></use></svg><div><strong>Modern trend:</strong> DIA with tools like <strong>DIA-NN</strong> or <strong>Spectronaut</strong> is rapidly replacing DDA for most applications. DIA-NN can identify 8,000–10,000 proteins from a single human cell line in a 90-minute gradient, with excellent quantitative reproducibility.</div></div>
+
+<div class="chips" style="margin-top:14px;"><span class="chip">LC-MS/MS is standard workflow</span><span class="chip">Trypsin cleaves at K and R</span><span class="chip">Orbitrap = high resolution</span><span class="chip">DIA &gt; DDA for reproducibility</span><span class="chip">DIA-NN for library-free analysis</span></div>
+
+<!--topic 9.2: Protein Identification &amp; Database Searching-->
+          <p class="sub">After acquiring MS/MS spectra, the key bioinformatics task is identifying which peptides (and therefore proteins) generated them. This is done by matching experimental spectra against theoretical spectra predicted from a protein sequence database. The process is called <strong>database searching</strong> — and it is conceptually similar to BLAST, but for mass spectra instead of sequences.</p>
+
+          <h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">How Database Search Works</h3>
+          <p class="sub">(1) Take each experimental MS2 spectrum. (2) In silico digest all proteins from a reference database (e.g., UniProt human) with trypsin. (3) For each candidate peptide whose mass matches the precursor mass (within tolerance), predict the theoretical fragmentation spectrum. (4) Score the match between experimental and theoretical spectra. (5) Apply statistical validation (FDR control at 1% using target-decoy approach).</p>
+
+          <h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">Major Search Engines</h3>
+          <div class="card-grid card-grid-3" style="gap:10px;margin-top:8px;">
+            <div class="card" style="padding:14px;"><strong>MaxQuant</strong><p class="sub" style="margin-top:4px;">Free, widely used. Built-in Andromeda search engine. Excellent for label-free and SILAC. GUI-based. Standard in academic proteomics.</p></div>
+            <div class="card" style="padding:14px;"><strong>MSFragger / FragPipe</strong><p class="sub" style="margin-top:4px;">Ultrafast open search. 100× faster than traditional engines. Integrated in FragPipe with downstream analysis. Excellent for PTM discovery.</p></div>
+            <div class="card" style="padding:14px;"><strong>DIA-NN</strong><p class="sub" style="margin-top:4px;">Deep neural network for DIA data. Library-free mode generates in silico spectral libraries. State-of-the-art sensitivity and speed.</p></div>
+          </div>
+
+          <div class="code-block"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button><span class="code-comment"># ─── MaxQuant (GUI-based, download from maxquant.org) ───</span>
+<span class="code-comment"># Key settings to configure:</span>
+<span class="code-comment">#   Raw files: add your .raw files</span>
+<span class="code-comment">#   FASTA: download from uniprot.org (reviewed Swiss-Prot + isoforms)</span>
+<span class="code-comment">#   Digestion: Trypsin/P, max 2 missed cleavages</span>
+<span class="code-comment">#   Fixed mod: Carbamidomethyl (C) — from iodoacetamide alkylation</span>
+<span class="code-comment">#   Variable mods: Oxidation (M), Acetyl (Protein N-term)</span>
+<span class="code-comment">#   FDR: 1% at PSM and protein level</span>
+<span class="code-comment">#   Match between runs: ON (transfers IDs across runs)</span>
+<span class="code-comment">#   LFQ: ON for label-free quantification</span>
+
+<span class="code-comment"># ─── DIA-NN (command line) ───</span>
+<span class="code-comment"># Download from github.com/vdemichev/DiaNN</span>
+diann --f sample1.raw --f sample2.raw --f sample3.raw \
+      --lib "" \
+      --fasta uniprot_human.fasta \
+      --gen-spec-lib \
+      --predictor \
+      --qvalue 0.01 \
+      --matrices \
+      --out-lib report-lib.tsv \
+      --out report.tsv
+
+<span class="code-comment"># Key output files:</span>
+<span class="code-comment">#   report.tsv — all identified precursors with quantities</span>
+<span class="code-comment">#   report.pg_matrix.tsv — protein group quantities (use this!)</span></div>
+
+          <div class="info-box warn"><svg class="ico" aria-hidden="true"><use href="#i-warn"></use></svg><div><strong>Target-Decoy FDR:</strong> All search engines use a decoy database (reversed or shuffled sequences) to estimate false discovery rate. At 1% FDR: for every 100 identified proteins, ~1 is expected to be wrong. Always use 1% FDR at both PSM (peptide-spectrum match) and protein level. Never relax this to 5%.</div></div>
+
+          <div class="chips" style="margin-top:14px;"><span class="chip">1% FDR is mandatory</span><span class="chip">MaxQuant for DDA</span><span class="chip">DIA-NN for DIA</span><span class="chip">FragPipe = fastest</span><span class="chip">Use reviewed UniProt FASTA</span></div>
+
+<!--topic 9.3: Quantitative Proteomics &amp; Statistical Analysis-->
+          <p class="sub">Quantitative proteomics measures how much of each protein is present, enabling comparison between conditions. There are two main strategies: <strong>label-free quantification (LFQ)</strong>, which compares ion intensities directly, and <strong>labelling methods</strong> (TMT, SILAC), which use chemical or metabolic tags to multiplex samples.</p>
+
+          <h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">Quantification Strategies</h3>
+          <div class="card-grid card-grid-3" style="gap:10px;margin-top:8px;">
+            <div class="card" style="padding:14px;border-left:3px solid var(--green);"><strong>Label-Free (LFQ)</strong><p class="sub" style="margin-top:4px;">Compare MS1 peptide intensities across runs. Simple, no extra chemistry. Requires careful normalisation. Best with DIA. MaxLFQ algorithm in MaxQuant.</p><span class="tag tag-green" style="margin-top:6px;">Most common</span></div>
+            <div class="card" style="padding:14px;border-left:3px solid var(--blue);"><strong>TMT/iTRAQ</strong><p class="sub" style="margin-top:4px;">Chemical labels with same mass but different fragmentation reporters. Multiplex up to 18 samples in one run (TMTpro 18-plex). Reduces missing values. Higher throughput.</p></div>
+            <div class="card" style="padding:14px;border-left:3px solid var(--purple);"><strong>SILAC</strong><p class="sub" style="margin-top:4px;">Metabolic labelling — grow cells with heavy amino acids (13C-Lys, 13C-Arg). Most accurate quantification. Only works for cell culture. Not for tissues/clinical samples.</p></div>
+          </div>
+
+          <h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">Statistical Analysis with R</h3>
+          <div class="code-block"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button><span class="code-comment"># ─── Differential protein abundance analysis ───</span>
+<span class="code-comment"># Using limma (same package used for microarrays — works great for proteomics)</span>
+
+library(limma)
+library(tidyverse)
+
+<span class="code-comment"># Load MaxQuant proteinGroups.txt or DIA-NN pg_matrix</span>
+pg &lt;- read.delim("proteinGroups.txt")
+
+<span class="code-comment"># Filter: remove contaminants, reverse hits, only identified by site</span>
+pg &lt;- pg[pg$Reverse != "+" &amp; pg$Potential.contaminant != "+" &amp;
+         pg$Only.identified.by.site != "+", ]
+
+<span class="code-comment"># Extract LFQ intensity columns and log2-transform</span>
+lfq &lt;- pg[, grep("^LFQ.intensity.", names(pg))]
+lfq[lfq == 0] &lt;- NA                    # Replace 0 with NA
+mat &lt;- log2(as.matrix(lfq))
+
+<span class="code-comment"># Filter: keep proteins with values in at least 70% of samples per group</span>
+<span class="code-comment"># (adjust based on your design)</span>
+
+<span class="code-comment"># Imputation: replace missing values (MinProb method — common)</span>
+<span class="code-comment"># Or use DEqMS / msqrob2 for more sophisticated handling</span>
+
+<span class="code-comment"># Differential analysis with limma</span>
+group &lt;- factor(c("Control","Control","Control","Treated","Treated","Treated"))
+design &lt;- model.matrix(~ 0 + group)
+colnames(design) &lt;- levels(group)
+
+fit &lt;- lmFit(mat, design)
+contrast &lt;- makeContrasts(Treated - Control, levels = design)
+fit2 &lt;- contrasts.fit(fit, contrast)
+fit3 &lt;- eBayes(fit2)
+
+results &lt;- topTable(fit3, number = Inf, sort.by = "P")
+sig &lt;- results[results$adj.P.Val &lt; 0.05 &amp; abs(results$logFC) &gt; 1, ]
+cat(nrow(sig), "significantly changed proteins (|logFC|>1, FDR<0.05)\n")</div>
+
+          <div class="info-box tip"><svg class="ico" aria-hidden="true"><use href="#i-tip"></use></svg><div><strong>Missing values in proteomics:</strong> Unlike RNA-seq, proteomics data has many missing values (10–30% typically). These can be <strong>MCAR</strong> (missing completely at random — stochastic), <strong>MNAR</strong> (missing not at random — protein is below detection limit), or a mixture. Imputation strategy matters: use <strong>MinProb</strong> for MNAR, <strong>kNN</strong> for MCAR. Better yet, use statistical methods that handle missingness directly: <strong>DEqMS</strong>, <strong>msqrob2</strong>, or <strong>proDA</strong>.</div></div>
+
+          <div class="chips" style="margin-top:14px;"><span class="chip">LFQ for most experiments</span><span class="chip">TMT for multiplexing</span><span class="chip">limma works well for proteomics</span><span class="chip">Handle missing values carefully</span><span class="chip">|logFC| &gt; 1 + FDR &lt; 0.05</span></div>

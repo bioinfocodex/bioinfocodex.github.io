@@ -1,0 +1,669 @@
+<!--
+path: /tools/rnaflow
+id: tool-rnaflow
+nav: tools
+title: RNAflow: guided RNA-seq analysis on your own computer | BioInfoCodex
+description: RNAflow is a free, open-source desktop app for bulk RNA-seq analysis, from raw FASTQ files to differential expression and pathway enrichment. Full manual included.
+jsonld: rnaflow
+-->
+  <!-- Hero -->
+  <div class="tool-detail-hero">
+    <div class="breadcrumb" role="navigation" aria-label="Breadcrumb"><a href="/tools">Tools</a><span class="breadcrumb-sep">›</span><span aria-current="page">RNAflow</span></div>
+    <div style="display:flex;align-items:flex-start;gap:20px;flex-wrap:wrap;">
+      <div style="flex:1;">
+        <div class="label">RNA-seq Analysis Software</div>
+        <h1 class="h1" style="font-size:clamp(1.8em,4vw,3em);">RNAflow <span style="color:var(--green-text);font-size:0.6em;vertical-align:middle;">v%%RNAFLOW_VERSION%%</span></h1>
+        <p class="lead">A guided desktop app for bulk RNA-seq analysis, from raw FASTQ files to differential expression and pathway enrichment, running entirely on your own computer. Free and open source under the MIT licence.</p>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:8px;padding:20px;background:var(--surf);border:1px solid rgba(0,200,150,0.2);border-radius:var(--r2);min-width:200px;">
+        <div style="font-size:0.72em;text-transform:uppercase;letter-spacing:1px;color:var(--text3);margin-bottom:4px;">Version %%RNAFLOW_VERSION%% · %%RNAFLOW_RELEASED%%</div>
+        <a class="btn btn-green" href="/download" style="justify-content:center;width:100%;">Download RNAflow</a>
+        <a class="btn btn-outline" href="/tools/rnaflow/changelog" style="justify-content:center;width:100%;">Changelog</a>
+        <a class="btn btn-outline" href="/cite" style="justify-content:center;width:100%;">How to cite</a>
+        <div style="font-size:0.72em;color:var(--text3);text-align:center;margin-top:4px;">No registration · Runs locally</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sidebar + content -->
+  <div class="tool-detail-layout">
+
+    <!-- Sidebar navigation -->
+    <div class="tool-detail-sidebar">
+      <div style="font-size:0.7em;text-transform:uppercase;letter-spacing:1.5px;color:var(--text3);margin-bottom:12px;">Contents</div>
+
+      <div class="tool-nav-item active" onclick="showToolSection('ts-overview',this)" role="button" tabindex="0">📋 Overview</div>
+      <div class="tool-nav-item" onclick="showToolSection('ts-requirements',this)" role="button" tabindex="0">💻 Requirements</div>
+      <div class="tool-nav-item" onclick="showToolSection('ts-install',this)" role="button" tabindex="0">⚙️ Installation</div>
+
+      <div class="tool-nav-group">
+        <div class="tool-nav-group-title">Pipeline Manual</div>
+        <div class="tool-nav-item" onclick="showToolSection('ts-step1',this)" role="button" tabindex="0">1 · Configure project</div>
+        <div class="tool-nav-item" onclick="showToolSection('ts-step2',this)" role="button" tabindex="0">2 · Download data</div>
+        <div class="tool-nav-item" onclick="showToolSection('ts-step3',this)" role="button" tabindex="0">3 · Quality control</div>
+        <div class="tool-nav-item" onclick="showToolSection('ts-step4',this)" role="button" tabindex="0">4 · Trimming</div>
+        <div class="tool-nav-item" onclick="showToolSection('ts-step5',this)" role="button" tabindex="0">5 · Genome &amp; index</div>
+        <div class="tool-nav-item" onclick="showToolSection('ts-step6',this)" role="button" tabindex="0">6 · Alignment</div>
+        <div class="tool-nav-item" onclick="showToolSection('ts-step7',this)" role="button" tabindex="0">7 · Gene counting</div>
+        <div class="tool-nav-item" onclick="showToolSection('ts-genefam',this)" role="button" tabindex="0">8 · Gene family analysis</div>
+        <div class="tool-nav-item" onclick="showToolSection('ts-step8',this)" role="button" tabindex="0">9 · DESeq2 analysis</div>
+        <div class="tool-nav-item" onclick="showToolSection('ts-step9',this)" role="button" tabindex="0">10 · Plots &amp; results</div>
+      </div>
+
+      <div class="tool-nav-group">
+        <div class="tool-nav-group-title">Reference</div>
+        <div class="tool-nav-item" onclick="showToolSection('ts-interpret',this)" role="button" tabindex="0">📊 Interpreting results</div>
+        <div class="tool-nav-item" onclick="showToolSection('ts-organisms',this)" role="button" tabindex="0">🌍 Supported organisms</div>
+        <div class="tool-nav-item" onclick="showToolSection('ts-faq',this)" role="button" tabindex="0">❓ Troubleshooting</div>
+      </div>
+    </div>
+
+    <!-- Main content -->
+    <div>
+
+      <!-- OVERVIEW -->
+      <div class="tool-section active" id="ts-overview">
+        <div class="tool-section-title">What is RNAflow?</div>
+        <p class="tool-section-sub">RNAflow is a guided RNA-seq analysis application. Open it in any browser, enter your experiment details, and it generates every command you need — with explanations of what each command does and what good results look like. You can run commands automatically with one click, or copy them to your terminal manually.</p>
+
+        <div class="stat-row">
+          <div class="stat-box"><div class="stat-box-val">10</div><div class="stat-box-lbl">Guided steps in this manual</div></div>
+          <div class="stat-box"><div class="stat-box-val">15+</div><div class="stat-box-lbl">Organisms built-in</div></div>
+          <div class="stat-box"><div class="stat-box-val">40+</div><div class="stat-box-lbl">Gene families</div></div>
+          <div class="stat-box"><div class="stat-box-val">3</div><div class="stat-box-lbl">DE methods: DESeq2, edgeR, limma-voom</div></div>
+        <div class="info-box note" style="margin-top:16px;"><svg class="ico" aria-hidden="true"><use href="#i-note"></use></svg><div><strong>About this manual.</strong> It walks through the alignment route (HISAT2 and featureCounts). RNAflow %%RNAFLOW_VERSION%% also has a Salmon route, a small RNA route, pathway analysis with fgsea, and can start from a count table; those are described in the <a href="%%RNAFLOW_MANUAL%%" rel="noopener">current manual on the RNAflow site</a> and in the <a href="/tools/rnaflow/changelog">changelog</a>. To try the app on data with a known answer, use the <a href="/learn/practice-dataset">practice dataset</a>.</div></div>
+        </div>
+
+        <h2 class="h3" style="margin-top:24px;">What does RNA-seq measure?</h2>
+        <p class="sub">RNA sequencing measures <strong style="color:var(--text);">gene expression</strong> — which genes are active in a cell and by how much. Every cell contains the same DNA, but different cells (or the same cell under different conditions) activate different genes. RNA-seq captures a snapshot of this activity by sequencing the RNA molecules present at a specific moment.</p>
+        <div class="info-box note" style="margin-top:12px;"><svg class="ico" aria-hidden="true"><use href="#i-note"></use></svg><div>Think of it this way: DNA is the instruction manual for your entire body. RNA is the specific page that is currently being read. RNA-seq tells you which pages are being read, in which cells, and how intensively.</div></div>
+
+        <h2 class="h3" style="margin-top:24px;">What biological questions can RNAflow answer?</h2>
+        <div class="card-grid card-grid-2" style="margin-top:0;">
+          <div class="card" style="padding:16px;"><strong>Which genes change between conditions?</strong><p class="sub" style="margin-top:4px;">Compare wildtype vs mutant, treated vs untreated, healthy vs diseased. RNAflow identifies statistically significant changes.</p></div>
+          <div class="card" style="padding:16px;"><strong>How much does each gene change?</strong><p class="sub" style="margin-top:4px;">Fold change values show whether genes double, halve, or show more dramatic changes in expression.</p></div>
+          <div class="card" style="padding:16px;"><strong>Which biological pathways are affected?</strong><p class="sub" style="margin-top:4px;">Gene family analysis groups DE genes into pathways — transcription factors, kinases, hormone signalling and more.</p></div>
+          <div class="card" style="padding:16px;"><strong>How similar are my samples to each other?</strong><p class="sub" style="margin-top:4px;">PCA and heatmaps reveal whether replicates cluster correctly and how distinct your conditions are.</p></div>
+        </div>
+
+        <h2 class="h3" style="margin-top:24px;">The complete RNAflow pipeline</h2>
+        <div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--r2);padding:20px;margin-top:8px;">
+          <div style="display:flex;align-items:center;gap:0;flex-wrap:wrap;row-gap:8px;">
+            <div style="text-align:center;padding:8px 14px;background:rgba(0,200,150,0.1);border:1px solid rgba(0,200,150,0.2);border-radius:8px;font-size:0.8em;font-weight:600;color:var(--green-text);">Raw FASTQ</div>
+            <div style="color:var(--text3);padding:0 6px;font-size:0.8em;">→</div>
+            <div style="text-align:center;padding:8px 14px;background:var(--bg3);border:1px solid var(--border);border-radius:8px;font-size:0.8em;color:var(--text2);">FastQC / QC</div>
+            <div style="color:var(--text3);padding:0 6px;font-size:0.8em;">→</div>
+            <div style="text-align:center;padding:8px 14px;background:var(--bg3);border:1px solid var(--border);border-radius:8px;font-size:0.8em;color:var(--text2);">fastp Trim</div>
+            <div style="color:var(--text3);padding:0 6px;font-size:0.8em;">→</div>
+            <div style="text-align:center;padding:8px 14px;background:var(--bg3);border:1px solid var(--border);border-radius:8px;font-size:0.8em;color:var(--text2);">HISAT2 Align</div>
+            <div style="color:var(--text3);padding:0 6px;font-size:0.8em;">→</div>
+            <div style="text-align:center;padding:8px 14px;background:var(--bg3);border:1px solid var(--border);border-radius:8px;font-size:0.8em;color:var(--text2);">featureCounts</div>
+            <div style="color:var(--text3);padding:0 6px;font-size:0.8em;">→</div>
+            <div style="text-align:center;padding:8px 14px;background:var(--bg3);border:1px solid var(--border);border-radius:8px;font-size:0.8em;color:var(--text2);">DESeq2</div>
+            <div style="color:var(--text3);padding:0 6px;font-size:0.8em;">→</div>
+            <div style="text-align:center;padding:8px 14px;background:rgba(9,105,218,0.1);border:1px solid rgba(9,105,218,0.2);border-radius:8px;font-size:0.8em;font-weight:600;color:var(--blue-text);">Figures + Results</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- REQUIREMENTS -->
+      <div class="tool-section" id="ts-requirements">
+        <div class="tool-section-title">System requirements</div>
+        <p class="tool-section-sub">RNAflow runs on your own computer. You need a Conda environment with bioinformatics tools and R for the statistical analysis steps.</p>
+
+        <div class="card-grid card-grid-2" style="margin-bottom:20px;">
+          <div class="card" style="padding:20px;">
+            <div style="font-size:1.4em;margin-bottom:10px;">💻</div>
+            <strong>Operating system</strong>
+            <ul style="margin-top:8px;padding-left:16px;font-size:0.84em;color:var(--text2);line-height:1.8;">
+              <li>🍎 macOS 10.15 or newer</li>
+              <li>🐧 Linux — Ubuntu, Fedora, Debian, Arch</li>
+              <li>🪟 Windows via WSL2 (Ubuntu recommended)</li>
+            </ul>
+          </div>
+          <div class="card" style="padding:20px;">
+            <div style="font-size:1.4em;margin-bottom:10px;">🔧</div>
+            <strong>Required software</strong>
+            <ul style="margin-top:8px;padding-left:16px;font-size:0.84em;color:var(--text2);line-height:1.8;">
+              <li>Python 3.6+ (for the local server)</li>
+              <li>Conda / Miniforge (to install tools)</li>
+              <li>R 4.0+ with DESeq2 and ggplot2</li>
+              <li>RStudio (recommended for R steps)</li>
+              <li>Any modern web browser (Chrome, Firefox, Safari, Edge)</li>
+            </ul>
+          </div>
+          <div class="card" style="padding:20px;">
+            <div style="font-size:1.4em;margin-bottom:10px;">⚡</div>
+            <strong>Hardware (minimum)</strong>
+            <ul style="margin-top:8px;padding-left:16px;font-size:0.84em;color:var(--text2);line-height:1.8;">
+              <li>RAM: 8 GB minimum, 16 GB recommended</li>
+              <li>Storage: 50 GB free space per experiment</li>
+              <li>CPU: any modern processor (more cores = faster)</li>
+            </ul>
+          </div>
+          <div class="card" style="padding:20px;">
+            <div style="font-size:1.4em;margin-bottom:10px;">🌐</div>
+            <strong>Internet</strong>
+            <ul style="margin-top:8px;padding-left:16px;font-size:0.84em;color:var(--text2);line-height:1.8;">
+              <li>Required only for: downloading data (SRA), downloading genome files</li>
+              <li>Analysis itself runs completely offline</li>
+              <li>Large genomes (human, wheat) need fast connection — files can be 10–30 GB</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="info-box tip"><svg class="ico" aria-hidden="true"><use href="#i-tip"></use></svg><div><strong>Large genome note:</strong> For human, mouse, wheat, and maize, genome files are 3–30 GB. Use the app on a computer with a fast internet connection for the download steps.</div></div>
+      </div>
+
+      <!-- INSTALLATION -->
+      <div class="tool-section" id="ts-install">
+        <div class="tool-section-title">Installation</div>
+        <p class="tool-section-sub">RNAflow is a native desktop app for macOS, Windows, and Linux. Download the installer for your system and open it — the app then guides you through installing the bioinformatics tools it needs.</p>
+
+        <div class="manual-step open" onclick="toggleManualStep(this)" role="button" tabindex="0" aria-expanded="false">
+          <div class="manual-step-head"><span class="ms-num">1</span><span class="ms-title">Download &amp; install RNAflow</span><span class="ms-chev">▶</span></div>
+          <div class="manual-step-body"><div class="msb-inner">
+            <p class="sub" style="margin-bottom:14px;">Download the installer for your operating system. No registration is needed:</p>
+            <div class="dl-banner">
+              <div class="dl-banner-text"><h3>RNAflow v%%RNAFLOW_VERSION%%</h3><p>Desktop app · macOS and Linux, Windows through WSL2</p></div>
+              <div class="dl-banner-btns">
+                <a class="btn btn-green" href="/download">Download RNAflow</a>
+              </div>
+            </div>
+            <p class="sub">Run the installer, then launch RNAflow like any other app — the BioInfoCodex interface opens immediately. No browser and no separate files needed.</p>
+          </div></div>
+        </div>
+
+        <div class="manual-step" onclick="toggleManualStep(this)" role="button" tabindex="0" aria-expanded="false">
+          <div class="manual-step-head"><span class="ms-num">2</span><span class="ms-title">Install Conda (Miniforge) — if not already installed</span><span class="ms-chev">▶</span></div>
+          <div class="manual-step-body"><div class="msb-inner">
+            <p class="sub" style="margin-bottom:10px;">Conda is a package manager that installs bioinformatics tools. If you already have Anaconda or Miniconda, skip this step. The app's System Check will detect it automatically.</p>
+            <div class="info-box note"><svg class="ico" aria-hidden="true"><use href="#i-note"></use></svg><div>Download Miniforge from: <strong>github.com/conda-forge/miniforge/releases</strong> — scroll to the latest release and download the installer for your operating system.</div></div>
+            <div class="code-block"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button><span class="code-comment"># macOS / Linux — run in Terminal after downloading:</span>
+bash Miniforge3-MacOSX-arm64.sh   <span class="code-comment"># macOS Apple Silicon</span>
+bash Miniforge3-MacOSX-x86_64.sh  <span class="code-comment"># macOS Intel</span>
+bash Miniforge3-Linux-x86_64.sh   <span class="code-comment"># Linux</span>
+<span class="code-comment"># Follow the prompts, accept the licence, allow it to initialise conda</span>
+<span class="code-comment"># Close and reopen Terminal when finished</span></div>
+            <div class="info-box warn"><svg class="ico" aria-hidden="true"><use href="#i-warn"></use></svg><div>On Windows: install WSL2 first (search "Turn Windows features on or off" → enable "Windows Subsystem for Linux"), then install Ubuntu from the Microsoft Store. Open Ubuntu, then install Miniforge inside Ubuntu.</div></div>
+          </div></div>
+        </div>
+
+        <div class="manual-step" onclick="toggleManualStep(this)" role="button" tabindex="0" aria-expanded="false">
+          <div class="manual-step-head"><span class="ms-num">3</span><span class="ms-title">Create the rnaseq environment and install tools</span><span class="ms-chev">▶</span></div>
+          <div class="manual-step-body"><div class="msb-inner">
+            <p class="sub" style="margin-bottom:10px;">RNAflow uses a dedicated Conda environment called <code>rnaseq</code>. This keeps all bioinformatics tools isolated from your other software.</p>
+            <div class="code-block"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button><span class="code-comment"># Create the environment (takes 5-10 minutes)</span>
+conda create -n rnaseq python=3.10 -y
+
+<span class="code-comment"># Activate it</span>
+conda activate rnaseq
+
+<span class="code-comment"># Install all required bioinformatics tools</span>
+conda install -c bioconda -c conda-forge   fastqc fastp hisat2 samtools subread sra-tools multiqc -y</div>
+            <p class="sub" style="margin-top:10px;">This installs: FastQC (quality control), fastp (trimming), HISAT2 (alignment), samtools (BAM processing), featureCounts/subread (gene counting), fasterq-dump/sra-tools (data download), MultiQC (report generation).</p>
+          </div></div>
+        </div>
+
+        <div class="manual-step" onclick="toggleManualStep(this)" role="button" tabindex="0" aria-expanded="false">
+          <div class="manual-step-head"><span class="ms-num">4</span><span class="ms-title">Install R and required packages</span><span class="ms-chev">▶</span></div>
+          <div class="manual-step-body"><div class="msb-inner">
+            <p class="sub" style="margin-bottom:10px;">R and RStudio are used for the DESeq2 statistical analysis and all plots. Download R from <strong>r-project.org</strong> and RStudio from <strong>posit.co/download/rstudio-desktop</strong>.</p>
+            <div class="code-block"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button><span class="code-comment"># Open RStudio and run this to install all required R packages:</span>
+if (!require("BiocManager")) install.packages("BiocManager")
+BiocManager::install("DESeq2")
+install.packages(c("ggplot2", "pheatmap", "ggrepel", "dplyr", "RColorBrewer"))</div>
+            <div class="info-box tip"><svg class="ico" aria-hidden="true"><use href="#i-tip"></use></svg><div>Package installation takes 10–20 minutes the first time. You only need to do this once.</div></div>
+          </div></div>
+        </div>
+
+        <div class="manual-step" onclick="toggleManualStep(this)" role="button" tabindex="0" aria-expanded="false">
+          <div class="manual-step-head"><span class="ms-num">5</span><span class="ms-title">Python 3 — powers Run mode</span><span class="ms-chev">▶</span></div>
+          <div class="manual-step-body"><div class="msb-inner">
+            <p class="sub" style="margin-bottom:10px;">RNAflow bundles its local server and starts it automatically every time you launch the app — there is nothing to run by hand. Run mode (commands execute with one click) uses Python 3, so make sure Python is installed. The Miniforge install from Step 2 already includes it.</p>
+            <p class="sub" style="margin-bottom:10px;">When the server is ready, the connection dot in the app's top bar turns green. If you ever need to restart it, use the <strong>Server ▸ Start Local Server</strong> menu.</p>
+            <div class="info-box note"><svg class="ico" aria-hidden="true"><use href="#i-note"></use></svg><div>The bundled server only listens on <code>127.0.0.1</code> (your own computer). It is completely invisible to any other computer on your network or the internet. Your data never leaves your machine.</div></div>
+            <div class="info-box tip"><svg class="ico" aria-hidden="true"><use href="#i-tip"></use></svg><div>No Python installed? RNAflow still works in <strong>Copy mode</strong> — copy each generated command and paste it into your terminal manually.</div></div>
+          </div></div>
+        </div>
+      </div>
+
+      <!-- STEP 1 -->
+      <div class="tool-section" id="ts-step1">
+        <div class="tool-section-title">Step 1 — Configure your project</div>
+        <p class="tool-section-sub">Before running any commands, you set up your experiment details in the Configure page. RNAflow uses these settings to automatically generate every command throughout the pipeline.</p>
+
+        <div class="manual-step open" onclick="toggleManualStep(this)" role="button" tabindex="0" aria-expanded="false">
+          <div class="manual-step-head"><span class="ms-num">1</span><span class="ms-title">Select your organism</span><span class="ms-chev">▶</span></div>
+          <div class="manual-step-body"><div class="msb-inner">
+            <p class="sub">Choose from 15 pre-loaded organisms or enter custom genome URLs. When you select an organism, the genome FASTA and GTF annotation URLs are automatically filled in with the correct Ensembl links.</p>
+            <div class="card-grid card-grid-2" style="margin-top:10px;">
+              <div class="card" style="padding:14px;"><strong>🐾 Animals</strong><p class="sub" style="margin-top:4px;">Human, Mouse, Rat, Zebrafish, Drosophila, C. elegans, Yeast</p></div>
+              <div class="card" style="padding:14px;"><strong>🌱 Plants</strong><p class="sub" style="margin-top:4px;">Arabidopsis, Rice, Maize, Wheat, Soybean, Tomato, Yarrowia</p></div>
+            </div>
+            <div class="info-box tip"><svg class="ico" aria-hidden="true"><use href="#i-tip"></use></svg><div>For organisms not in the list, select <strong>Custom</strong> and paste your own Ensembl FTP URLs. The manual explains exactly how to find these on ensembl.org and plants.ensembl.org.</div></div>
+          </div></div>
+        </div>
+
+        <div class="manual-step" onclick="toggleManualStep(this)" role="button" tabindex="0" aria-expanded="false">
+          <div class="manual-step-head"><span class="ms-num">2</span><span class="ms-title">Name your conditions and add SRA accessions</span><span class="ms-chev">▶</span></div>
+          <div class="manual-step-body"><div class="msb-inner">
+            <p class="sub" style="margin-bottom:10px;">Give meaningful names to your two conditions (e.g. <code>wildtype</code> and <code>mutant</code>, or <code>control</code> and <code>drought_treated</code>). Then add SRA accession numbers for each replicate.</p>
+            <div class="info-box note"><svg class="ico" aria-hidden="true"><use href="#i-note"></use></svg><div><strong>Finding SRA accessions:</strong> Go to ncbi.nlm.nih.gov/sra → search your paper title or dataset ID → click the experiment → note the SRR/ERR/DRR number for each sample. These start with SRR, ERR, or DRR.</div></div>
+            <div class="result-explain result-info">
+              <div class="result-explain-title">📋 How many replicates do I need?</div>
+              <div class="result-explain-text">DESeq2 requires a minimum of <strong>2 biological replicates per condition</strong>, but 3 is strongly recommended and is standard for publication. Biological replicates are separate biological samples (different plants, animals, or cultures) — not the same sample sequenced twice.</div>
+            </div>
+          </div></div>
+        </div>
+
+        <div class="manual-step" onclick="toggleManualStep(this)" role="button" tabindex="0" aria-expanded="false">
+          <div class="manual-step-head"><span class="ms-num">3</span><span class="ms-title">Choose read type: single-end or paired-end</span><span class="ms-chev">▶</span></div>
+          <div class="manual-step-body"><div class="msb-inner">
+            <p class="sub" style="margin-bottom:10px;">This describes how the sequencing library was prepared. If unsure, check the SRA run page — it shows the "Layout" as SINGLE or PAIRED.</p>
+            <div class="card-grid card-grid-2" style="margin-top:0;">
+              <div class="result-explain result-info" style="margin:0;">
+                <div class="result-explain-title">Single-end (SE)</div>
+                <div class="result-explain-text">Each fragment is sequenced from one end only. Produces one FASTQ file per sample (e.g. SRR123.fastq). Older and cheaper but less information per read.</div>
+              </div>
+              <div class="result-explain result-info" style="margin:0;">
+                <div class="result-explain-title">Paired-end (PE)</div>
+                <div class="result-explain-text">Each fragment is sequenced from both ends. Produces two FASTQ files per sample (e.g. SRR123_1.fastq and SRR123_2.fastq). More expensive but more accurate alignment.</div>
+              </div>
+            </div>
+          </div></div>
+        </div>
+      </div>
+
+      <!-- STEP 2 -->
+      <div class="tool-section" id="ts-step2">
+        <div class="tool-section-title">Step 2 — Download raw data</div>
+        <p class="tool-section-sub">RNAflow downloads your raw sequencing files directly from NCBI SRA using fasterq-dump. The files are saved into your project folder automatically.</p>
+
+        <div class="manual-step open" onclick="toggleManualStep(this)" role="button" tabindex="0" aria-expanded="false">
+          <div class="manual-step-head"><span class="ms-num">1</span><span class="ms-title">What happens during download</span><span class="ms-chev">▶</span></div>
+          <div class="manual-step-body"><div class="msb-inner">
+            <p class="sub">The command <code>fasterq-dump</code> connects to NCBI's servers and downloads compressed sequencing data, then decompresses it into FASTQ format. Each sample is typically 1–10 GB depending on the sequencing depth.</p>
+            <div class="result-explain result-good">
+              <div class="result-explain-title">✅ Good result</div>
+              <div class="result-explain-text">Files appear in your <code>raw_data/</code> folder. Each sample has a .fastq file (single-end) or two .fastq files ending in _1 and _2 (paired-end). Use the check command to confirm file sizes are reasonable (&gt;100 MB per sample is normal).</div>
+            </div>
+            <div class="result-explain result-warn">
+              <div class="result-explain-title">⚠️ Slow download?</div>
+              <div class="result-explain-text">NCBI downloads can be slow. Typical speeds are 5–20 MB/s. A dataset of 6 samples at 2 GB each takes 10–60 minutes. Do not interrupt the download — if interrupted, run the command again and fasterq-dump will resume.</div>
+            </div>
+            <div class="result-explain result-bad">
+              <div class="result-explain-title">❌ Error: accession not found</div>
+              <div class="result-explain-text">The SRR/ERR number was entered incorrectly, or the dataset is not public yet. Check the accession on ncbi.nlm.nih.gov/sra — it should show "Public" status.</div>
+            </div>
+          </div></div>
+        </div>
+      </div>
+
+      <!-- STEP 3 -->
+      <div class="tool-section" id="ts-step3">
+        <div class="tool-section-title">Step 3 — Quality control with FastQC</div>
+        <p class="tool-section-sub">FastQC examines your raw reads and produces a visual HTML report for each sample. Always run this before any analysis — it reveals problems that would invalidate your results if not addressed.</p>
+
+        <div class="manual-step open" onclick="toggleManualStep(this)" role="button" tabindex="0" aria-expanded="false">
+          <div class="manual-step-head"><span class="ms-num">1</span><span class="ms-title">What FastQC checks</span><span class="ms-chev">▶</span></div>
+          <div class="manual-step-body"><div class="msb-inner">
+            <div class="card-grid card-grid-2">
+              <div class="result-explain result-good" style="margin:0;"><div class="result-explain-title">✅ Per-base quality (PASS)</div><div class="result-explain-text">The quality score at each position across all reads. Good data has Q30+ scores (green zone) across most of the read length. A slight drop at the 3' end is normal and expected.</div></div>
+              <div class="result-explain result-good" style="margin:0;"><div class="result-explain-title">✅ Per-sequence quality (PASS)</div><div class="result-explain-text">Distribution of average quality per read. Should peak above Q30. If most reads are below Q20, the sequencing run had quality issues — contact your sequencing provider.</div></div>
+              <div class="result-explain result-warn" style="margin:0;"><div class="result-explain-title">⚠️ Per-base sequence content (WARN/FAIL)</div><div class="result-explain-text">Shows nucleotide composition across positions. FAIL is normal for RNA-seq — the first 10–12 bases often show imbalance due to random hexamer priming bias during library preparation. This is expected and not a problem.</div></div>
+              <div class="result-explain result-warn" style="margin:0;"><div class="result-explain-title">⚠️ Sequence duplication (WARN)</div><div class="result-explain-text">RNA-seq data always shows high duplication because highly expressed genes have thousands of copies. A WARN or FAIL here is completely normal for RNA-seq and does not indicate a problem.</div></div>
+              <div class="result-explain result-bad" style="margin:0;"><div class="result-explain-title">❌ Adapter content (FAIL) — action needed</div><div class="result-explain-text">Adapter sequences are present in your reads. This happens when the cDNA fragment is shorter than the read length. Adapters must be removed in the trimming step (Step 4) before alignment.</div></div>
+              <div class="result-explain result-bad" style="margin:0;"><div class="result-explain-title">❌ Overrepresented sequences (FAIL)</div><div class="result-explain-text">A single sequence makes up &gt;0.1% of all reads. Usually this is rRNA contamination or adapters. If the sequence is identified as a ribosomal RNA, it will simply not align to protein-coding genes and won't affect your results significantly.</div></div>
+            </div>
+          </div></div>
+        </div>
+
+        <div class="manual-step" onclick="toggleManualStep(this)" role="button" tabindex="0" aria-expanded="false">
+          <div class="manual-step-head"><span class="ms-num">2</span><span class="ms-title">Reading the MultiQC summary report</span><span class="ms-chev">▶</span></div>
+          <div class="manual-step-body"><div class="msb-inner">
+            <p class="sub" style="margin-bottom:10px;">MultiQC combines all individual FastQC reports into one interactive HTML page. Open it in your browser after FastQC completes.</p>
+            <div class="result-explain result-info"><div class="result-explain-title">📊 What to look for in MultiQC</div><div class="result-explain-text">
+              The General Statistics table at the top shows: total reads (aim for 10–30 million per sample), % duplicates (60–90% is normal for RNA-seq), % GC content (should be consistent across samples). If one sample looks very different from the others, it may be a poor-quality sample.
+            </div></div>
+            <div class="result-explain result-good"><div class="result-explain-title">✅ Ready to proceed if:</div><div class="result-explain-text">All samples have similar read counts. Quality scores are mostly green. Any FAILs are only for Per-base sequence content or Sequence duplication (both normal for RNA-seq).</div></div>
+            <div class="result-explain result-bad"><div class="result-explain-title">❌ Investigate further if:</div><div class="result-explain-text">One sample has far fewer reads than the others (&lt;5 million). Adapter content shows FAIL. Per-base quality drops below Q20 before 50% of the read length.</div></div>
+          </div></div>
+        </div>
+      </div>
+
+      <!-- STEP 4 -->
+      <div class="tool-section" id="ts-step4">
+        <div class="tool-section-title">Step 4 — Adapter trimming with fastp</div>
+        <p class="tool-section-sub">fastp removes adapter sequences, low-quality bases, and very short reads. It is fast, accurate, and works for both single-end and paired-end data automatically.</p>
+
+        <div class="manual-step open" onclick="toggleManualStep(this)" role="button" tabindex="0" aria-expanded="false">
+          <div class="manual-step-head"><span class="ms-num">1</span><span class="ms-title">What fastp does and why it matters</span><span class="ms-chev">▶</span></div>
+          <div class="manual-step-body"><div class="msb-inner">
+            <p class="sub" style="margin-bottom:10px;">Adapter sequences are synthetic DNA added during library preparation — they are not part of your biological sample. If not removed, they interfere with alignment because the aligner cannot find a match for them in your genome. Low-quality bases at the ends of reads are also trimmed to improve alignment accuracy.</p>
+            <div class="result-explain result-good"><div class="result-explain-title">✅ Good fastp output</div><div class="result-explain-text">Reads passing filter: &gt;95%. Adapter-trimmed reads: depends on your data (0–40% is normal). Q30 rate: &gt;90%. Output files appear in your trimmed/ folder with the same names but _trimmed suffix.</div></div>
+          </div></div>
+        </div>
+
+        <div class="manual-step" onclick="toggleManualStep(this)" role="button" tabindex="0" aria-expanded="false">
+          <div class="manual-step-head"><span class="ms-num">2</span><span class="ms-title">fastp settings used by RNAflow</span><span class="ms-chev">▶</span></div>
+          <div class="manual-step-body"><div class="msb-inner">
+            <p class="sub" style="margin-bottom:8px;">RNAflow uses these fastp settings — all chosen to be conservative and appropriate for most RNA-seq experiments:</p>
+            <div class="code-block"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button>--trim_front1 5         <span class="code-comment"># Remove first 5 bases (hexamer bias)</span>
+--qualified_quality_phred 20  <span class="code-comment"># Keep bases with Q20+ quality</span>
+--length_required 36    <span class="code-comment"># Discard reads shorter than 36 bp after trimming</span>
+--detect_adapter_for_pe <span class="code-comment"># Auto-detect adapters (paired-end)</span></div>
+          </div></div>
+        </div>
+      </div>
+
+      <!-- STEP 5 -->
+      <div class="tool-section" id="ts-step5">
+        <div class="tool-section-title">Step 5 — Genome download and HISAT2 index</div>
+        <p class="tool-section-sub">The reference genome and gene annotation are downloaded from Ensembl, then HISAT2 builds an index — a compressed searchable version of the genome that makes alignment fast.</p>
+
+        <div class="manual-step open" onclick="toggleManualStep(this)" role="button" tabindex="0" aria-expanded="false">
+          <div class="manual-step-head"><span class="ms-num">1</span><span class="ms-title">What files are downloaded and why</span><span class="ms-chev">▶</span></div>
+          <div class="manual-step-body"><div class="msb-inner">
+            <div class="card-grid card-grid-2">
+              <div class="result-explain result-info" style="margin:0;"><div class="result-explain-title">Genome FASTA (.fa.gz)</div><div class="result-explain-text">The complete DNA sequence of your organism's genome, one chromosome at a time. This is what the aligner maps your reads to. File size: 30 MB (yeast) to 15 GB (wheat).</div></div>
+              <div class="result-explain result-info" style="margin:0;"><div class="result-explain-title">Gene annotation GTF (.gtf.gz)</div><div class="result-explain-text">A table of exactly where every gene and exon is located on the genome — chromosome, start position, end position, strand. Used by HISAT2 for splice-aware alignment and by featureCounts to assign reads to genes.</div></div>
+            </div>
+            <div class="info-box warn" style="margin-top:12px;"><svg class="ico" aria-hidden="true"><use href="#i-warn"></use></svg><div>Building the HISAT2 index takes 5–30 minutes depending on genome size. Human takes ~20 minutes, yeast takes ~2 minutes. This only needs to be done once — the index can be reused for future experiments with the same organism.</div></div>
+          </div></div>
+        </div>
+      </div>
+
+      <!-- STEP 6 -->
+      <div class="tool-section" id="ts-step6">
+        <div class="tool-section-title">Step 6 — Alignment with HISAT2</div>
+        <p class="tool-section-sub">HISAT2 maps each sequencing read back to its location on the reference genome. It is splice-aware, meaning it correctly handles reads that span exon-exon junctions — essential for accurate RNA-seq alignment.</p>
+
+        <div class="manual-step open" onclick="toggleManualStep(this)" role="button" tabindex="0" aria-expanded="false">
+          <div class="manual-step-head"><span class="ms-num">1</span><span class="ms-title">Understanding alignment statistics</span><span class="ms-chev">▶</span></div>
+          <div class="manual-step-body"><div class="msb-inner">
+            <p class="sub" style="margin-bottom:10px;">HISAT2 reports alignment statistics for each sample. These appear in the terminal output and are saved in your aligned/ folder as .log files.</p>
+            <div class="stat-row">
+              <div class="stat-box"><div class="stat-box-val">&gt;90%</div><div class="stat-box-lbl">Overall alignment — excellent</div></div>
+              <div class="stat-box" style="--green:var(--orange)"><div class="stat-box-val">70–90%</div><div class="stat-box-lbl">Overall alignment — acceptable</div></div>
+              <div class="stat-box" style="--green:var(--red)"><div class="stat-box-val">&lt;70%</div><div class="stat-box-lbl">Overall alignment — investigate</div></div>
+            </div>
+            <div class="result-explain result-good"><div class="result-explain-title">✅ Excellent: &gt;90% overall alignment rate</div><div class="result-explain-text">Most reads found their location in the genome. Your data quality is high and the correct reference genome was used.</div></div>
+            <div class="result-explain result-warn"><div class="result-explain-title">⚠️ Acceptable: 70–90% overall alignment rate</div><div class="result-explain-text">Some reads don't map — common reasons: reads from rRNA (which isn't in the genome annotation), very short reads after trimming, or reads from contaminating organisms. Analysis can proceed but investigate the unmapped reads if below 75%.</div></div>
+            <div class="result-explain result-bad"><div class="result-explain-title">❌ Low: &lt;70% overall alignment rate</div><div class="result-explain-text">Possible causes: wrong organism selected (check your accession on SRA), contaminated sample, genome version mismatch, or data quality issue. Check that your FASTA and GTF files are from the same Ensembl release number.</div></div>
+          </div></div>
+        </div>
+
+        <div class="manual-step" onclick="toggleManualStep(this)" role="button" tabindex="0" aria-expanded="false">
+          <div class="manual-step-head"><span class="ms-num">2</span><span class="ms-title">BAM file sorting and indexing</span><span class="ms-chev">▶</span></div>
+          <div class="manual-step-body"><div class="msb-inner">
+            <p class="sub">After alignment, HISAT2 produces SAM files (text format). RNAflow then uses samtools to convert these to BAM (binary, 5× smaller), sort them by chromosome position, and index them. This is required by featureCounts and enables fast access to any region of the genome.</p>
+            <div class="result-explain result-good"><div class="result-explain-title">✅ BAM file check</div><div class="result-explain-text">Each sample should have a .bam file and a .bam.bai index file in your aligned/ folder. File sizes are typically 200 MB–3 GB depending on read depth.</div></div>
+          </div></div>
+        </div>
+      </div>
+
+      <!-- STEP 7 -->
+      <div class="tool-section" id="ts-step7">
+        <div class="tool-section-title">Step 7 — Gene counting with featureCounts</div>
+        <p class="tool-section-sub">featureCounts counts how many reads aligned to each gene in each sample. This produces a count matrix — the input to DESeq2 for statistical analysis.</p>
+
+        <div class="manual-step open" onclick="toggleManualStep(this)" role="button" tabindex="0" aria-expanded="false">
+          <div class="manual-step-head"><span class="ms-num">1</span><span class="ms-title">Understanding the count matrix</span><span class="ms-chev">▶</span></div>
+          <div class="manual-step-body"><div class="msb-inner">
+            <p class="sub" style="margin-bottom:10px;">The output is a table where rows are genes and columns are samples. Each number is the count of reads that mapped to that gene in that sample.</p>
+            <div class="code-block"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button><span class="code-comment"># Example count matrix (first few rows):</span>
+GeneID    WT_rep1  WT_rep2  WT_rep3  MT_rep1  MT_rep2  MT_rep3
+AT1G01010    245      231      258      512      498      487
+AT1G01020     45       52       41       89       95       88
+AT1G01030    102       98      115       44       39       51</div>
+            <div class="result-explain result-info"><div class="result-explain-title">📊 What do these numbers mean?</div><div class="result-explain-text">The raw counts are not directly comparable between samples because samples have different total sequencing depths. A gene with 500 counts in a sample with 10 million total reads is proportionally more expressed than 500 counts in a sample with 50 million total reads. DESeq2 handles this normalisation automatically.</div></div>
+          </div></div>
+        </div>
+
+        <div class="manual-step" onclick="toggleManualStep(this)" role="button" tabindex="0" aria-expanded="false">
+          <div class="manual-step-head"><span class="ms-num">2</span><span class="ms-title">featureCounts assignment statistics</span><span class="ms-chev">▶</span></div>
+          <div class="manual-step-body"><div class="msb-inner">
+            <div class="result-explain result-good"><div class="result-explain-title">✅ Good: 60–80% assigned reads</div><div class="result-explain-text">Most reads were successfully assigned to a gene. This is a normal and expected range for RNA-seq data.</div></div>
+            <div class="result-explain result-warn"><div class="result-explain-title">⚠️ Unassigned: no features</div><div class="result-explain-text">Reads mapped to the genome but not to an annotated gene region (e.g. intergenic regions, introns, non-coding regions). Some unassigned reads are normal (10–30%). High rates (&gt;50%) may mean the GTF annotation version doesn't match your genome FASTA.</div></div>
+            <div class="result-explain result-bad"><div class="result-explain-title">❌ Very low assignment (&lt;40%)</div><div class="result-explain-text">Check that your genome FASTA and GTF are from the same Ensembl release number and the same organism. A mismatch between these two files is the most common cause.</div></div>
+          </div></div>
+        </div>
+      </div>
+
+      <!-- STEP 8 -->
+      <div class="tool-section" id="ts-step8">
+        <div class="tool-section-title">Step 8 — Differential expression with DESeq2</div>
+        <p class="tool-section-sub">DESeq2 is the gold-standard R package for RNA-seq differential expression analysis. It uses a negative binomial statistical model to identify genes that genuinely change between your conditions, accounting for biological variation.</p>
+
+        <div class="manual-step open" onclick="toggleManualStep(this)" role="button" tabindex="0" aria-expanded="false">
+          <div class="manual-step-head"><span class="ms-num">1</span><span class="ms-title">What DESeq2 does step by step</span><span class="ms-chev">▶</span></div>
+          <div class="manual-step-body"><div class="msb-inner">
+            <div class="card-grid card-grid-2">
+              <div class="result-explain result-info" style="margin:0;"><div class="result-explain-title">1. Size factor normalisation</div><div class="result-explain-text">DESeq2 calculates a size factor for each sample to correct for differences in sequencing depth. After normalisation, samples are directly comparable.</div></div>
+              <div class="result-explain result-info" style="margin:0;"><div class="result-explain-title">2. Dispersion estimation</div><div class="result-explain-text">DESeq2 estimates how much each gene varies between replicates. Genes with high variability need stronger evidence to be called significant.</div></div>
+              <div class="result-explain result-info" style="margin:0;"><div class="result-explain-title">3. Statistical testing</div><div class="result-explain-text">A Wald test is applied to every gene, producing a p-value for the probability that the observed difference is due to chance.</div></div>
+              <div class="result-explain result-info" style="margin:0;"><div class="result-explain-title">4. Multiple testing correction</div><div class="result-explain-text">Because thousands of genes are tested simultaneously, raw p-values are adjusted using the Benjamini-Hochberg method to control the false discovery rate (FDR). This produces the padj column.</div></div>
+            </div>
+          </div></div>
+        </div>
+
+        <div class="manual-step" onclick="toggleManualStep(this)" role="button" tabindex="0" aria-expanded="false">
+          <div class="manual-step-head"><span class="ms-num">2</span><span class="ms-title">Understanding DESeq2 results columns</span><span class="ms-chev">▶</span></div>
+          <div class="manual-step-body"><div class="msb-inner">
+            <div class="code-block"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button><span class="code-comment"># DESeq2 results table — one row per gene:</span>
+gene      baseMean  log2FC   lfcSE   stat    pvalue    padj
+AT1G01010  302.4    2.14    0.18   11.89  1.3e-32  8.2e-30
+AT1G01020   47.1   -1.82    0.31   -5.87  4.4e-09  6.1e-08</div>
+            <div class="card-grid card-grid-2" style="margin-top:12px;">
+              <div class="result-explain result-info" style="margin:0;"><div class="result-explain-title">baseMean</div><div class="result-explain-text">Average normalised count across all samples. Higher = more expressed overall. Very low baseMean genes (&lt;10) are often unreliable due to stochastic variation.</div></div>
+              <div class="result-explain result-info" style="margin:0;"><div class="result-explain-title">log2FoldChange (log2FC)</div><div class="result-explain-text">How much the gene changes. <strong>+1 = 2× higher</strong> in treatment. <strong>-1 = 2× lower</strong>. <strong>+2 = 4× higher</strong>. <strong>0 = no change</strong>. Positive values = upregulated in your treatment condition.</div></div>
+              <div class="result-explain result-info" style="margin:0;"><div class="result-explain-title">lfcSE (standard error)</div><div class="result-explain-text">Uncertainty in the fold change estimate. Small SE = reliable fold change. Large SE (especially in low-count genes) = less reliable.</div></div>
+              <div class="result-explain result-info" style="margin:0;"><div class="result-explain-title">pvalue</div><div class="result-explain-text">Raw probability. <strong>Never use this directly</strong> for significance — use padj instead. The raw p-value does not account for testing thousands of genes simultaneously.</div></div>
+              <div class="result-explain result-good" style="margin:0;"><div class="result-explain-title">padj (adjusted p-value) ← use this</div><div class="result-explain-text">The corrected p-value. Standard significance threshold: <strong>padj &lt; 0.05</strong>. This means there is a &lt;5% chance the result is a false discovery. Genes with padj &lt; 0.05 AND |log2FC| &gt; 1 are considered confidently differentially expressed.</div></div>
+              <div class="result-explain result-warn" style="margin:0;"><div class="result-explain-title">NA values in padj</div><div class="result-explain-text">Some genes have NA in the padj column. This means DESeq2 filtered them out — either too low count (filtered by independent filtering) or an outlier in one replicate. NA genes are not significant.</div></div>
+            </div>
+          </div></div>
+        </div>
+
+        <div class="manual-step" onclick="toggleManualStep(this)" role="button" tabindex="0" aria-expanded="false">
+          <div class="manual-step-head"><span class="ms-num">3</span><span class="ms-title">Interpreting the DESeq2 summary</span><span class="ms-chev">▶</span></div>
+          <div class="manual-step-body"><div class="msb-inner">
+            <p class="sub" style="margin-bottom:10px;">After running DESeq2, the summary() function prints a table like this:</p>
+            <div class="code-block"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button>out of 5944 with nonzero total read count
+adjusted p-value &lt; 0.05
+LFC &gt; 0 (up)   : 791, 13%      ← upregulated genes
+LFC &lt; 0 (down) : 1227, 21%     ← downregulated genes
+outliers       : 0, 0%
+low counts     : 578, 10%       ← filtered out (normal)</div>
+            <div class="result-explain result-info"><div class="result-explain-title">📊 Is my result normal?</div><div class="result-explain-text">The number of significant genes varies enormously depending on your experiment. A stress response might affect 10–40% of genes. A mild treatment might affect 1–5%. A comparison between very different cell types might affect 50%+. There is no "right" number — the biology of your experiment determines this.</div></div>
+          </div></div>
+        </div>
+      </div>
+
+      <!-- STEP 9 -->
+      <div class="tool-section" id="ts-step9">
+        <div class="tool-section-title">Step 9 — Plots and visualisation</div>
+        <p class="tool-section-sub">RNAflow generates three standard visualisations used in RNA-seq publications: a volcano plot, a heatmap, and a PCA plot. All are saved as 300 DPI PNG files suitable for direct use in papers and theses.</p>
+
+        <div class="manual-step open" onclick="toggleManualStep(this)" role="button" tabindex="0" aria-expanded="false">
+          <div class="manual-step-head"><span class="ms-num">1</span><span class="ms-title">Volcano plot — what it shows</span><span class="ms-chev">▶</span></div>
+          <div class="manual-step-body"><div class="msb-inner">
+            <p class="sub" style="margin-bottom:10px;">A volcano plot visualises all genes simultaneously — fold change on the x-axis and statistical significance on the y-axis. It gets its name from its characteristic shape.</p>
+            <div class="result-explain result-info"><div class="result-explain-title">🌋 Reading the volcano plot</div><div class="result-explain-text">
+              <strong>X-axis:</strong> log2 fold change. Left = downregulated, Right = upregulated. Genes near 0 don't change much.<br>
+              <strong>Y-axis:</strong> -log10(padj). Higher = more significant. The dashed horizontal line marks padj=0.05.<br>
+              <strong>Vertical dashed lines:</strong> mark log2FC = ±1 (= 2-fold change threshold).<br>
+              <strong>Orange dots:</strong> significantly upregulated (right of vertical line, above horizontal line).<br>
+              <strong>Blue dots:</strong> significantly downregulated.<br>
+              <strong>Grey dots:</strong> not significant.<br>
+              <strong>Gene labels:</strong> top 15 most significant genes are labelled automatically.
+            </div></div>
+            <div class="result-explain result-good"><div class="result-explain-title">✅ Good volcano plot</div><div class="result-explain-text">A clear separation between conditions shows as a wide spread of dots. Most dots cluster near the centre (no change) with a "volcano" shape — a few highly significant genes at the top of each arm.</div></div>
+            <div class="result-explain result-warn"><div class="result-explain-title">⚠️ Very few significant genes</div><div class="result-explain-text">If almost all dots are grey, your conditions may be very similar biologically, you may not have enough replicates, or sequencing depth was too low. Check your experimental design.</div></div>
+          </div></div>
+        </div>
+
+        <div class="manual-step" onclick="toggleManualStep(this)" role="button" tabindex="0" aria-expanded="false">
+          <div class="manual-step-head"><span class="ms-num">2</span><span class="ms-title">Heatmap — what it shows</span><span class="ms-chev">▶</span></div>
+          <div class="manual-step-body"><div class="msb-inner">
+            <p class="sub" style="margin-bottom:10px;">The heatmap shows the top 40 most significant genes as a colour grid — each row is a gene, each column is a sample. Colour represents expression level (scaled across the row).</p>
+            <div class="result-explain result-info"><div class="result-explain-title">🌡️ Reading the heatmap</div><div class="result-explain-text">
+              <strong>Blue:</strong> lower expression than average (downregulated relative to mean).<br>
+              <strong>Red/orange:</strong> higher expression than average (upregulated relative to mean).<br>
+              <strong>White:</strong> average expression level.<br>
+              <strong>Rows (genes)</strong> are clustered by similar expression pattern — genes that behave similarly group together.<br>
+              <strong>Columns (samples)</strong> are not clustered — kept in your original order to preserve condition grouping.
+            </div></div>
+            <div class="result-explain result-good"><div class="result-explain-title">✅ Good heatmap</div><div class="result-explain-text">You should see two clear colour blocks — one set of columns (your control samples) and one set (treatment) with opposite colours. Replicates within the same condition should look nearly identical.</div></div>
+          </div></div>
+        </div>
+
+        <div class="manual-step" onclick="toggleManualStep(this)" role="button" tabindex="0" aria-expanded="false">
+          <div class="manual-step-head"><span class="ms-num">3</span><span class="ms-title">PCA plot — what it shows</span><span class="ms-chev">▶</span></div>
+          <div class="manual-step-body"><div class="msb-inner">
+            <p class="sub" style="margin-bottom:10px;">Principal Component Analysis (PCA) reduces the expression of thousands of genes to just 2 dimensions. It shows how similar or different your samples are to each other overall.</p>
+            <div class="result-explain result-info"><div class="result-explain-title">🎯 Reading the PCA plot</div><div class="result-explain-text">
+              <strong>Each dot = one sample.</strong> Samples close together are similar in overall gene expression. Samples far apart are very different.<br>
+              <strong>PC1 (x-axis):</strong> captures the largest source of variation in your data — usually this is your experimental condition.<br>
+              <strong>PC2 (y-axis):</strong> captures the second-largest source — often batch effects or biological variation between replicates.<br>
+              <strong>% variance explained:</strong> shown on each axis. High PC1 % (e.g. 70%+) means your condition is the dominant source of variation.
+            </div></div>
+            <div class="result-explain result-good"><div class="result-explain-title">✅ Excellent PCA</div><div class="result-explain-text">Replicates cluster tightly together. The two conditions are far apart on PC1, which explains a large proportion of variance (&gt;50%). This means your experiment worked — the conditions are genuinely different and replicates are consistent.</div></div>
+            <div class="result-explain result-warn"><div class="result-explain-title">⚠️ One outlier replicate</div><div class="result-explain-text">If one sample from a group is far from its replicates on the PCA, it may be a poor-quality or contaminated sample. Consider removing it from your analysis if the quality metrics (alignment rate, read count) are also poor for that sample.</div></div>
+            <div class="result-explain result-bad"><div class="result-explain-title">❌ Conditions overlap completely</div><div class="result-explain-text">If your two conditions cannot be separated on any PC axis, the transcriptomes are very similar. You will find few or no significant genes. This may mean the treatment had no transcriptional effect, or the time point was wrong, or there is a sample labelling error.</div></div>
+          </div></div>
+        </div>
+      </div>
+
+      <!-- GENE FAMILY -->
+      <div class="tool-section" id="ts-genefam">
+        <div class="tool-section-title">Gene Family Analysis</div>
+        <p class="tool-section-sub">For large genomes (wheat, maize, human, soybean), researchers often want to focus on one biological family rather than all 30,000+ genes. RNAflow includes 40+ gene families across 8 categories.</p>
+
+        <div class="manual-step open" onclick="toggleManualStep(this)" role="button" tabindex="0" aria-expanded="false">
+          <div class="manual-step-head"><span class="ms-num">1</span><span class="ms-title">When to use gene family analysis</span><span class="ms-chev">▶</span></div>
+          <div class="manual-step-body"><div class="msb-inner">
+            <div class="result-explain result-info"><div class="result-explain-title">📋 Use gene family analysis when:</div><div class="result-explain-text">
+              • Your experiment targets a specific pathway (e.g. hormone response, stress signalling)<br>
+              • You are working with a large genome and want focused results<br>
+              • You want to produce a publication figure for a specific gene family<br>
+              • Your full DESeq2 analysis found many significant genes and you want to understand the biology
+            </div></div>
+            <p class="sub" style="margin-top:10px;">The gene family analysis produces its own volcano plot and heatmap for just the selected family, saved separately from the full analysis results.</p>
+          </div></div>
+        </div>
+
+        <div class="manual-step" onclick="toggleManualStep(this)" role="button" tabindex="0" aria-expanded="false">
+          <div class="manual-step-head"><span class="ms-num">2</span><span class="ms-title">Available gene families</span><span class="ms-chev">▶</span></div>
+          <div class="manual-step-body"><div class="msb-inner">
+            <div class="card-grid card-grid-2">
+              <div class="card" style="padding:14px;"><strong>Transcription factors</strong><p class="sub" style="margin-top:4px;">MYB, WRKY, bHLH, NAC, MADS, ERF, GRAS, bZIP, HOX, GATA, STAT, p53, NF-κB, ETS, SOX, FOX — 21 families</p></div>
+              <div class="card" style="padding:14px;"><strong>Protein kinases</strong><p class="sub" style="margin-top:4px;">MAPK, CDK, RLK, SnRK, CDPK, TOR, tyrosine kinases — 8 families</p></div>
+              <div class="card" style="padding:14px;"><strong>Plant hormone pathways</strong><p class="sub" style="margin-top:4px;">Auxin, GA, cytokinin, ABA, ethylene, JA, SA, BR, strigolactone, peptide hormones — 10 pathways</p></div>
+              <div class="card" style="padding:14px;"><strong>Transporters</strong><p class="sub" style="margin-top:4px;">ABC, aquaporin, sugar (SUT/SWEET), nitrate (NRT), phosphate, K+, metal (ZIP, YSL, NRAMP), SLC, ion channels</p></div>
+              <div class="card" style="padding:14px;"><strong>Animal signalling</strong><p class="sub" style="margin-top:4px;">Wnt/β-catenin, Notch, Hedgehog, TGF-β, PI3K/AKT, RAS/ERK, JAK/STAT, NF-κB, Hippo — 9 pathways</p></div>
+              <div class="card" style="padding:14px;"><strong>Immune / Cancer / Epigenetic</strong><p class="sub" style="margin-top:4px;">TLR, NLR, cytokines, BCL-2, caspases, oncogenes, tumour suppressors, DNA methylation, histone modifiers</p></div>
+            </div>
+          </div></div>
+        </div>
+      </div>
+
+      <!-- RESULT INTERPRETATION -->
+      <div class="tool-section" id="ts-interpret">
+        <div class="tool-section-title">Interpreting your results</div>
+        <p class="tool-section-sub">A quick reference guide for the most common questions researchers have when looking at their RNAflow results for the first time.</p>
+
+        <div class="manual-step open" onclick="toggleManualStep(this)" role="button" tabindex="0" aria-expanded="false">
+          <div class="manual-step-head"><span class="ms-num">1</span><span class="ms-title">How do I decide which genes are significant?</span><span class="ms-chev">▶</span></div>
+          <div class="manual-step-body"><div class="msb-inner">
+            <div class="result-explain result-good"><div class="result-explain-title">✅ Standard significance criteria</div><div class="result-explain-text">
+              A gene is considered differentially expressed (DE) if it meets BOTH of these criteria:<br><br>
+              1. <strong>padj &lt; 0.05</strong> — statistically significant after multiple testing correction<br>
+              2. <strong>|log2FoldChange| &gt; 1</strong> — biologically meaningful change (at least 2-fold)<br><br>
+              Some researchers use padj &lt; 0.01 (stricter) or |log2FC| &gt; 0.58 (~1.5-fold, more lenient). State your thresholds in your methods section.
+            </div></div>
+          </div></div>
+        </div>
+
+        <div class="manual-step" onclick="toggleManualStep(this)" role="button" tabindex="0" aria-expanded="false">
+          <div class="manual-step-head"><span class="ms-num">2</span><span class="ms-title">What do I do with my list of significant genes?</span><span class="ms-chev">▶</span></div>
+          <div class="manual-step-body"><div class="msb-inner">
+            <p class="sub" style="margin-bottom:10px;">Once you have a list of significant DE genes, these are the typical next steps in a research project:</p>
+            <div class="card-grid card-grid-2">
+              <div class="result-explain result-info" style="margin:0;"><div class="result-explain-title">Gene Ontology (GO) enrichment</div><div class="result-explain-text">Upload your DE gene list to geneontology.org or STRING-db to find which biological processes are overrepresented. This answers: "what is this list of genes collectively doing?"</div></div>
+              <div class="result-explain result-info" style="margin:0;"><div class="result-explain-title">KEGG pathway analysis</div><div class="result-explain-text">Map DE genes to metabolic and signalling pathways at kegg.jp. Shows which pathways are activated or suppressed in your treatment condition.</div></div>
+              <div class="result-explain result-info" style="margin:0;"><div class="result-explain-title">Validation by RT-qPCR</div><div class="result-explain-text">Select 5–10 top DE genes and validate their expression changes using RT-qPCR. This is typically required before publication to confirm the RNA-seq findings.</div></div>
+              <div class="result-explain result-info" style="margin:0;"><div class="result-explain-title">Protein interaction networks</div><div class="result-explain-text">Upload your DE gene list to string-db.org to visualise which proteins interact with each other. Clusters of interacting proteins often represent co-regulated functional modules.</div></div>
+            </div>
+          </div></div>
+        </div>
+
+        <div class="manual-step" onclick="toggleManualStep(this)" role="button" tabindex="0" aria-expanded="false">
+          <div class="manual-step-head"><span class="ms-num">3</span><span class="ms-title">How to cite RNAflow and its tools in your paper</span><span class="ms-chev">▶</span></div>
+          <div class="manual-step-body"><div class="msb-inner">
+            <p class="sub" style="margin-bottom:10px;">In your Methods section, cite each tool used in the pipeline. Example methods text:</p>
+            <div class="code-block"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button>RNA-seq analysis was performed using RNAflow (bioinfocodex.com).
+Raw reads were quality-assessed with FastQC (Andrews, 2010) and
+trimmed with fastp (Chen et al., 2018). Trimmed reads were aligned
+to the [organism] reference genome (Ensembl release [number]) using
+HISAT2 (Kim et al., 2019). Gene-level read counts were obtained with
+featureCounts (Liao et al., 2014). Differential expression analysis
+was performed with DESeq2 (Love et al., 2014) using a significance
+threshold of padj &lt; 0.05 and |log2FC| &gt; 1. Visualisations were
+generated using ggplot2 (Wickham, 2016) and pheatmap (Kolde, 2019).</div>
+          </div></div>
+        </div>
+      </div>
+
+      <!-- ORGANISMS -->
+      <div class="tool-section" id="ts-organisms">
+        <div class="tool-section-title">Supported organisms</div>
+        <p class="tool-section-sub">15 organisms are pre-loaded with their Ensembl genome URLs. Select any from the dropdown in the Configure page — genome and GTF URLs fill automatically.</p>
+        <div class="card-grid card-grid-2" style="margin-top:16px;">
+          <div class="card" style="padding:20px;">
+            <strong style="color:var(--text2);font-size:0.75em;text-transform:uppercase;letter-spacing:1px;">🐾 Animals</strong>
+            <ul style="margin-top:10px;padding-left:16px;font-size:0.84em;color:var(--text2);line-height:2;">
+              <li>Human — <em>Homo sapiens</em> (GRCh38)</li>
+              <li>Mouse — <em>Mus musculus</em> (GRCm39)</li>
+              <li>Rat — <em>Rattus norvegicus</em> (mRatBN7.2)</li>
+              <li>Zebrafish — <em>Danio rerio</em> (GRCz11)</li>
+              <li>Drosophila — <em>Drosophila melanogaster</em> (BDGP6)</li>
+              <li>C. elegans — <em>Caenorhabditis elegans</em> (WBcel235)</li>
+              <li>Yeast — <em>Saccharomyces cerevisiae</em> (R64)</li>
+              <li>Yarrowia — <em>Yarrowia lipolytica</em> (ASM101387v1)</li>
+            </ul>
+          </div>
+          <div class="card" style="padding:20px;">
+            <strong style="color:var(--text2);font-size:0.75em;text-transform:uppercase;letter-spacing:1px;">🌱 Plants</strong>
+            <ul style="margin-top:10px;padding-left:16px;font-size:0.84em;color:var(--text2);line-height:2;">
+              <li>Arabidopsis — <em>Arabidopsis thaliana</em> (TAIR10)</li>
+              <li>Rice — <em>Oryza sativa</em> (IRGSP-1.0)</li>
+              <li>Maize — <em>Zea mays</em> (B73-NAM-5.0)</li>
+              <li>Wheat — <em>Triticum aestivum</em> (IWGSC)</li>
+              <li>Soybean — <em>Glycine max</em> (Glycine_max_v2.1)</li>
+              <li>Tomato — <em>Solanum lycopersicum</em> (SL3.0)</li>
+            </ul>
+            <div class="info-box tip" style="margin-top:12px;"><svg class="ico" aria-hidden="true"><use href="#i-tip"></use></svg><div>For organisms not listed, select <strong>Custom</strong> and paste your own Ensembl FTP URLs.</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- FAQ / TROUBLESHOOTING -->
+      <div class="tool-section" id="ts-faq">
+        <div class="tool-section-title">Troubleshooting</div>
+        <p class="tool-section-sub">Solutions to the most common problems encountered during RNA-seq analysis with RNAflow.</p>
+        <div class="faq-list" style="margin-top:16px;">
+          <div class="faq-item" onclick="toggleFAQ(this)" role="button" tabindex="0" aria-expanded="false"><div class="faq-q">The Run button is greyed out — what do I do? <span class="faq-chev">▼</span></div><div class="faq-a"><div class="faq-a-inner">RNAflow starts its local server automatically when the app launches, so this usually clears on its own. If the Run button stays greyed out, make sure Python 3 is installed (Run mode needs it), then restart the server from the <strong>Server ▸ Start Local Server</strong> menu. The green dot in the top bar appears when connected. If you prefer not to use Run mode, use Mode B (Copy) to copy commands manually.</div></div></div>
+          <div class="faq-item" onclick="toggleFAQ(this)" role="button" tabindex="0" aria-expanded="false"><div class="faq-q">HISAT2 alignment rate is below 70% <span class="faq-chev">▼</span></div><div class="faq-a"><div class="faq-a-inner">Most common cause: the wrong organism was selected. Check your SRA accession on ncbi.nlm.nih.gov/sra to confirm the organism. Also confirm that the genome FASTA and GTF annotation are from the same Ensembl release number. A mismatch between these two files causes very low alignment rates.</div></div></div>
+          <div class="faq-item" onclick="toggleFAQ(this)" role="button" tabindex="0" aria-expanded="false"><div class="faq-q">DESeq2 gives an error about zero counts or missing samples <span class="faq-chev">▼</span></div><div class="faq-a"><div class="faq-a-inner">This usually means the column names in your count matrix don't match the sample names in your metadata. Check that the order of samples in the count table matches the order in the DESeq2 script exactly. Also ensure you have at least 2 samples per condition.</div></div></div>
+          <div class="faq-item" onclick="toggleFAQ(this)" role="button" tabindex="0" aria-expanded="false"><div class="faq-q">featureCounts assigned only 20–30% of reads <span class="faq-chev">▼</span></div><div class="faq-a"><div class="faq-a-inner">The GTF annotation version does not match the genome FASTA. Make sure both files are from the same Ensembl release number and the same species. For example, Ensembl release 109 genome FASTA must be used with the Ensembl release 109 GTF file.</div></div></div>
+          <div class="faq-item" onclick="toggleFAQ(this)" role="button" tabindex="0" aria-expanded="false"><div class="faq-q">I have no significant genes after DESeq2 <span class="faq-chev">▼</span></div><div class="faq-a"><div class="faq-a-inner">Common causes: (1) The biological conditions are too similar — try a larger fold-change or different time point. (2) Insufficient replicates — fewer than 3 replicates reduces statistical power. (3) Too few reads — aim for 10–20 million reads per sample. (4) The PCA shows samples don't separate — may indicate a sample labelling or metadata error.</div></div></div>
+          <div class="faq-item" onclick="toggleFAQ(this)" role="button" tabindex="0" aria-expanded="false"><div class="faq-q">How do I add more replicates or samples? <span class="faq-chev">▼</span></div><div class="faq-a"><div class="faq-a-inner">Go to the Configure page → click the + Add replicate button under each condition to add more SRA accession rows. You can add as many replicates as needed. All downstream commands update automatically.</div></div></div>
+          <div class="faq-item" onclick="toggleFAQ(this)" role="button" tabindex="0" aria-expanded="false"><div class="faq-q">The download is very slow or fails halfway <span class="faq-chev">▼</span></div><div class="faq-a"><div class="faq-a-inner">NCBI SRA downloads can be slow, especially for large files. If a download fails, simply run the fasterq-dump command again — it will resume from where it stopped. For very large datasets, consider downloading overnight or using the NCBI SRA toolkit's prefetch command first.</div></div></div>
+          <div class="faq-item" onclick="toggleFAQ(this)" role="button" tabindex="0" aria-expanded="false"><div class="faq-q">Can I analyse more than two conditions? <span class="faq-chev">▼</span></div><div class="faq-a"><div class="faq-a-inner">RNAflow currently supports two-condition comparisons (one control vs one treatment). For multi-condition experiments (e.g. timepoints, multiple treatments), run the pipeline separately for each pairwise comparison you are interested in. Future versions of RNAflow will support multi-factor designs.</div></div></div>
+        </div>
+      </div>
+
+    </div><!-- end main content -->
+  </div><!-- end layout -->

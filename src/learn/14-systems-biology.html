@@ -1,0 +1,113 @@
+<!--
+module: 14
+slug: systems-biology
+short: Systems Biology
+label: Module 14 · Systems Biology &amp; Network Analysis
+title: Networks, Interactions &amp; Integrative Analysis
+-->
+<p class="lead">Systems biology views biological processes as interconnected networks rather than isolated pathways. By integrating multi-omics data — transcriptomics, proteomics, metabolomics — with interaction networks, we can understand how molecular changes propagate through biological systems.</p>
+
+<!--topic 14.1: Protein-Protein Interaction Networks-->
+          <p class="sub">Protein-Protein Interaction (PPI) networks represent physical or functional associations between proteins. Nodes are proteins, edges represent interactions. Highly connected proteins (hubs) tend to be essential. PPI networks help identify functional modules, predict protein function, and prioritise drug targets.</p>
+
+          <h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">Key Resources &amp; Tools</h3>
+          <div class="card-grid card-grid-3" style="gap:10px;margin-top:8px;">
+            <div class="card" style="padding:14px;"><strong>STRING (string-db.org)</strong><p class="sub" style="margin-top:4px;">Largest PPI database. Integrates experimental data, co-expression, text mining, genomic context. Confidence scores 0–1. Use score &gt; 0.7 for high-confidence interactions.</p></div>
+            <div class="card" style="padding:14px;"><strong>Cytoscape</strong><p class="sub" style="margin-top:4px;">Desktop software for network visualisation and analysis. Supports plugins (clusterMaker, MCODE for module detection, CytoHubba for hub identification). Essential for publication figures.</p></div>
+            <div class="card" style="padding:14px;"><strong>BioGRID</strong><p class="sub" style="margin-top:4px;">Curated repository of experimentally validated interactions (protein, genetic, chemical). Over 2 million interactions. Higher confidence than computationally predicted interactions.</p></div>
+          </div>
+
+          <h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">Network Analysis Concepts</h3>
+          <div class="card-grid card-grid-2" style="gap:10px;margin-top:8px;">
+            <div class="card" style="padding:14px;"><strong>Degree</strong><p class="sub" style="margin-top:4px;">Number of connections a node has. High-degree nodes (hubs) are often essential genes. Degree distribution follows a power law in biological networks (scale-free property).</p></div>
+            <div class="card" style="padding:14px;"><strong>Betweenness Centrality</strong><p class="sub" style="margin-top:4px;">How often a node lies on shortest paths between other nodes. Bottleneck proteins control information flow through the network — they are often good drug targets.</p></div>
+            <div class="card" style="padding:14px;"><strong>Clustering Coefficient</strong><p class="sub" style="margin-top:4px;">How densely connected a node's neighbours are. Nodes in protein complexes have high clustering. Used to detect functional modules (MCODE algorithm).</p></div>
+            <div class="card" style="padding:14px;"><strong>Modules/Communities</strong><p class="sub" style="margin-top:4px;">Densely connected subnetworks often correspond to protein complexes or functional pathways. Detect with MCODE, Louvain, or Markov clustering (MCL).</p></div>
+          </div>
+
+          <div class="code-block"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button><span class="code-comment"># ─── Network analysis in Python with NetworkX ───</span>
+pip install networkx pandas matplotlib
+
+<span class="code-comment"># Build network from STRING export</span>
+import networkx as nx
+import pandas as pd
+
+edges = pd.read_csv("string_interactions.tsv", sep="\t")
+edges = edges[edges["combined_score"] &gt; 700]   # High confidence
+
+G = nx.from_pandas_edgelist(edges, "protein1", "protein2",
+                            edge_attr="combined_score")
+
+<span class="code-comment"># Key network metrics</span>
+print(f"Nodes: {G.number_of_nodes()}, Edges: {G.number_of_edges()}")
+print(f"Density: {nx.density(G):.4f}")
+print(f"Components: {nx.number_connected_components(G)}")
+
+<span class="code-comment"># Find hub genes (top 10 by degree)</span>
+degree = dict(G.degree())
+hubs = sorted(degree, key=degree.get, reverse=True)[:10]
+print("Hub genes:", hubs)
+
+<span class="code-comment"># Betweenness centrality (bottleneck nodes)</span>
+betw = nx.betweenness_centrality(G)
+bottlenecks = sorted(betw, key=betw.get, reverse=True)[:10]
+
+<span class="code-comment"># Community detection (Louvain)</span>
+from networkx.algorithms.community import louvain_communities
+communities = louvain_communities(G, resolution=1.0)
+print(f"Found {len(communities)} communities")</div>
+
+          <div class="info-box tip"><svg class="ico" aria-hidden="true"><use href="#i-tip"></use></svg><div><strong>DEG-PPI integration:</strong> A powerful approach is to overlay your differentially expressed genes onto a PPI network. This reveals which functional modules are disrupted in your condition. Steps: (1) Get DEGs from RNA-seq. (2) Query STRING with DEG list. (3) Import network into Cytoscape. (4) Colour nodes by log2FC (red = up, blue = down). (5) Run MCODE to find activated/repressed modules. (6) Run pathway enrichment on each module separately.</div></div>
+
+          <div class="chips" style="margin-top:14px;"><span class="chip">STRING for PPI data</span><span class="chip">Cytoscape for visualisation</span><span class="chip">Hub genes are often essential</span><span class="chip">MCODE for module detection</span><span class="chip">Overlay DEGs on PPI networks</span></div>
+
+<!--topic 14.2: Gene Regulatory Networks &amp; Multi-Omics Integration-->
+          <p class="sub">Gene Regulatory Networks (GRNs) describe how transcription factors (TFs) control the expression of target genes. Unlike PPI networks which show physical contacts, GRNs show regulatory relationships — which TFs activate or repress which genes. Multi-omics integration combines transcriptomics, proteomics, metabolomics, and epigenomics data to build comprehensive models of cellular regulation.</p>
+
+          <h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">GRN Inference Methods</h3>
+          <div class="card-grid card-grid-2" style="gap:10px;margin-top:8px;">
+            <div class="card" style="padding:14px;border-left:3px solid var(--green);"><strong>SCENIC / pySCENIC</strong><p class="sub" style="margin-top:4px;">Infers GRNs from single-cell RNA-seq data. Uses GRNBoost2 (random forest) for coexpression, then validates with TF binding motif enrichment (RcisTarget). Outputs regulon activity scores per cell.</p><span class="tag tag-green" style="margin-top:6px;">Best for scRNA-seq</span></div>
+            <div class="card" style="padding:14px;"><strong>WGCNA</strong><p class="sub" style="margin-top:4px;">Weighted Gene Co-expression Network Analysis. Groups genes into co-expression modules, correlates modules with clinical traits. Excellent for bulk RNA-seq. Widely used, well-cited. R package.</p></div>
+            <div class="card" style="padding:14px;"><strong>ARACNe / VIPER</strong><p class="sub" style="margin-top:4px;">Mutual information-based network inference. VIPER then infers TF activity from target gene expression. Widely used in cancer biology for identifying master regulators.</p></div>
+            <div class="card" style="padding:14px;"><strong>CellOracle</strong><p class="sub" style="margin-top:4px;">Combines scRNA-seq + scATAC-seq to build context-specific GRNs. Simulates TF perturbations in silico. Predicts effects of gene knockouts on cell fate.</p></div>
+          </div>
+
+          <h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">Multi-Omics Integration Strategies</h3>
+          <p class="sub">Integrating multiple data types reveals biology invisible to any single assay:</p>
+          <div class="card-grid card-grid-2" style="gap:10px;margin-top:8px;">
+            <div class="card" style="padding:14px;"><strong>Correlation-based</strong><p class="sub" style="margin-top:4px;">Correlate mRNA ↔ protein levels, mRNA ↔ metabolite levels. Discordant pairs (high mRNA, low protein) suggest post-transcriptional regulation. Tools: mixOmics (R), MOFA+.</p></div>
+            <div class="card" style="padding:14px;"><strong>Pathway-based</strong><p class="sub" style="margin-top:4px;">Map all omics data onto KEGG/Reactome pathways. Identify pathways with consistent changes across data types. Tools: Paintomics, iPath, OmicsNet.</p></div>
+            <div class="card" style="padding:14px;"><strong>Factor analysis (MOFA+)</strong><p class="sub" style="margin-top:4px;">Multi-Omics Factor Analysis decomposes multiple data matrices into shared latent factors. Identifies which sources of variation are shared vs unique to each data type.</p></div>
+            <div class="card" style="padding:14px;"><strong>Network-based</strong><p class="sub" style="margin-top:4px;">Construct multilayer networks connecting genes, proteins, metabolites. Network propagation algorithms (Random Walk with Restart) identify key regulators driving multi-level changes.</p></div>
+          </div>
+
+          <div class="code-block"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button><span class="code-comment"># ─── WGCNA in R (bulk RNA-seq co-expression networks) ───</span>
+library(WGCNA)
+
+<span class="code-comment"># Prepare normalised expression matrix (genes × samples)</span>
+<span class="code-comment"># Use VST-transformed counts from DESeq2</span>
+
+<span class="code-comment"># Choose soft-thresholding power (aim for scale-free topology R² &gt; 0.8)</span>
+powers &lt;- c(1:20)
+sft &lt;- pickSoftThreshold(datExpr, powerVector = powers, verbose = 5)
+<span class="code-comment"># Plot: sft$fitIndices[,1] vs -sign(sft$fitIndices[,3]) * sft$fitIndices[,2]</span>
+
+<span class="code-comment"># Build network and identify modules</span>
+net &lt;- blockwiseModules(datExpr, power = 6,
+    TOMType = "unsigned", minModuleSize = 30,
+    reassignThreshold = 0, mergeCutHeight = 0.25,
+    numericLabels = TRUE, saveTOMs = TRUE)
+
+<span class="code-comment"># Correlate modules with clinical traits</span>
+moduleTraitCor &lt;- cor(net$MEs, traits, use = "p")
+moduleTraitPvalue &lt;- corPvalueStudent(moduleTraitCor, nSamples)
+
+<span class="code-comment"># Find hub genes in a module of interest</span>
+module_genes &lt;- names(datExpr)[net$colors == module_number]
+kME &lt;- signedKME(datExpr, net$MEs)
+hub_genes &lt;- module_genes[order(kME[module_genes, paste0("kME", module_number)],
+    decreasing = TRUE)[1:20]]</div>
+
+          <div class="info-box note"><svg class="ico" aria-hidden="true"><use href="#i-note"></use></svg><div><strong>The future is multi-modal single-cell:</strong> Technologies like CITE-seq (RNA + surface protein), Multiome (RNA + ATAC), SHARE-seq, and spatial transcriptomics with paired proteomics are enabling true multi-omics integration at single-cell resolution. Tools like <strong>MOFA+</strong>, <strong>WNN (Seurat v4)</strong>, and <strong>scVI/totalVI</strong> are designed for these integrated analyses.</div></div>
+
+          <div class="chips" style="margin-top:14px;"><span class="chip">WGCNA for bulk co-expression</span><span class="chip">SCENIC for scRNA-seq GRNs</span><span class="chip">MOFA+ for multi-omics</span><span class="chip">Always validate key findings</span><span class="chip">Multi-modal single-cell is the future</span></div>

@@ -1,0 +1,127 @@
+<!--
+module: 11
+slug: epigenomics
+short: Epigenomics
+label: Module 11 · Epigenomics
+title: ChIP-seq, ATAC-seq &amp; DNA Methylation
+-->
+<p class="lead">Epigenetics studies heritable changes in gene activity that do not involve changes to the DNA sequence. These modifications — histone marks, chromatin accessibility, and DNA methylation — control which genes are on or off in each cell type. Epigenomic assays reveal the regulatory landscape of the genome.</p>
+
+<!--topic 11.1: ChIP-seq — Mapping Protein-DNA Interactions-->
+          <p class="sub">Chromatin Immunoprecipitation followed by sequencing (ChIP-seq) identifies where a specific protein (transcription factor or modified histone) binds across the genome. The protein-DNA complexes are cross-linked with formaldehyde, chromatin is sheared into 200–500 bp fragments, an antibody pulls down fragments bound by the target protein, and the bound DNA is sequenced. Peaks in the sequencing signal reveal binding sites.</p>
+
+          <h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">ChIP-seq Analysis Pipeline</h3>
+          <div class="code-block"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button><span class="code-comment"># ─── Complete ChIP-seq pipeline ───</span>
+mamba install -c bioconda bowtie2 samtools macs2 deeptools bedtools homer
+
+<span class="code-comment"># 1. Align reads to genome (bowtie2, not HISAT2 — no splice awareness needed)</span>
+bowtie2 -x bt2_index/genome -U chip_sample.fastq.gz \
+    --very-sensitive -p 8 | samtools sort -O bam -o chip.bam
+samtools index chip.bam
+
+<span class="code-comment"># Same for input/IgG control</span>
+bowtie2 -x bt2_index/genome -U input_control.fastq.gz \
+    --very-sensitive -p 8 | samtools sort -O bam -o input.bam
+samtools index input.bam
+
+<span class="code-comment"># 2. Remove duplicates</span>
+samtools markdup -r chip.bam chip_dedup.bam
+samtools markdup -r input.bam input_dedup.bam
+
+<span class="code-comment"># 3. Call peaks with MACS2</span>
+<span class="code-comment"># For transcription factors (narrow peaks):</span>
+macs2 callpeak -t chip_dedup.bam -c input_dedup.bam \
+    -f BAM -g hs --outdir peaks/ -n my_tf -q 0.01
+
+<span class="code-comment"># For histone marks like H3K27me3 (broad peaks):</span>
+macs2 callpeak -t chip_dedup.bam -c input_dedup.bam \
+    -f BAM -g hs --outdir peaks/ -n h3k27me3 --broad --broad-cutoff 0.1
+
+<span class="code-comment"># 4. Visualise with deepTools</span>
+bamCoverage -b chip_dedup.bam -o chip.bw --normalizeUsing RPGC \
+    --effectiveGenomeSize 2913022398 --binSize 10 -p 8
+
+<span class="code-comment"># 5. Motif analysis (what TF motifs are enriched in peaks?)</span>
+findMotifsGenome.pl peaks/my_tf_peaks.narrowPeak hg38 motif_output/ -size 200</div>
+
+          <div class="info-box warn"><svg class="ico" aria-hidden="true"><use href="#i-warn"></use></svg><div><strong>Always use an input control.</strong> ChIP-seq without a control (input DNA or IgG pulldown) will produce false peaks at open chromatin regions and repetitive elements. The control captures background signal, enabling the peak caller to distinguish real binding from noise. No control = no publication.</div></div>
+
+          <div class="info-box tip"><svg class="ico" aria-hidden="true"><use href="#i-tip"></use></svg><div><strong>CUT&amp;RUN / CUT&amp;Tag:</strong> Modern alternatives to ChIP-seq that require far fewer cells (100–1,000 vs millions), have lower background, and are cheaper. CUT&amp;Tag is especially popular — it uses a protein A-Tn5 fusion to cut and tag DNA near the antibody target. Analysis is similar to ChIP-seq but use SEACR instead of MACS2 for peak calling.</div></div>
+
+          <div class="chips" style="margin-top:14px;"><span class="chip">Bowtie2 for alignment</span><span class="chip">MACS2 for peak calling</span><span class="chip">Always include input control</span><span class="chip">HOMER for motif analysis</span><span class="chip">CUT&amp;Tag is replacing ChIP-seq</span></div>
+
+<!--topic 11.2: ATAC-seq — Chromatin Accessibility-->
+          <p class="sub">ATAC-seq (Assay for Transposase-Accessible Chromatin using sequencing) maps open chromatin regions genome-wide. It uses the Tn5 transposase, which preferentially inserts sequencing adapters into accessible (open) chromatin, avoiding tightly packed nucleosome-occupied regions. Open chromatin corresponds to active regulatory elements — promoters, enhancers, and transcription factor binding sites.</p>
+
+          <h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">ATAC-seq Analysis Pipeline</h3>
+          <div class="code-block"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button><span class="code-comment"># ─── ATAC-seq pipeline ───</span>
+mamba install -c bioconda bowtie2 samtools macs2 deeptools picard
+
+<span class="code-comment"># 1. Align with bowtie2 (paired-end, max fragment size 2000)</span>
+bowtie2 -x bt2_index/genome -1 atac_R1.fastq.gz -2 atac_R2.fastq.gz \
+    --very-sensitive -X 2000 --no-mixed --no-discordant -p 8 | \
+    samtools sort -O bam -o atac.bam
+
+<span class="code-comment"># 2. Remove mitochondrial reads (major contaminant in ATAC-seq!)</span>
+samtools view -h atac.bam | grep -v chrM | samtools sort -O bam -o atac_nomt.bam
+samtools index atac_nomt.bam
+
+<span class="code-comment"># 3. Remove duplicates</span>
+picard MarkDuplicates I=atac_nomt.bam O=atac_dedup.bam \
+    M=dup_metrics.txt REMOVE_DUPLICATES=true
+samtools index atac_dedup.bam
+
+<span class="code-comment"># 4. Shift reads (Tn5 inserts with +4/-5 bp offset)</span>
+alignmentSieve -b atac_dedup.bam -o atac_shifted.bam \
+    --ATACshift --minFragmentLength 0 --maxFragmentLength 2000
+
+<span class="code-comment"># 5. Call peaks (use --nomodel and shift parameters)</span>
+macs2 callpeak -t atac_shifted.bam -f BAMPE -g hs \
+    --nomodel --shift -75 --extsize 150 \
+    --outdir peaks/ -n atac -q 0.01 --keep-dup all
+
+<span class="code-comment"># 6. Generate signal track</span>
+bamCoverage -b atac_shifted.bam -o atac.bw --normalizeUsing RPGC \
+    --effectiveGenomeSize 2913022398 --binSize 10 -p 8</div>
+
+          <div class="info-box note"><svg class="ico" aria-hidden="true"><use href="#i-note"></use></svg><div><strong>Fragment size distribution:</strong> A good ATAC-seq library shows a characteristic nucleosomal ladder pattern: a peak at ~200 bp (nucleosome-free), ~400 bp (mono-nucleosome), ~600 bp (di-nucleosome). If you see only the ~200 bp peak, your transposition worked well. If the distribution is broad without clear peaks, the experiment may have had too many or too few Tn5 insertions.</div></div>
+
+          <div class="chips" style="margin-top:14px;"><span class="chip">Remove chrM reads first</span><span class="chip">Tn5 shift correction is essential</span><span class="chip">Nucleosomal ladder = good QC</span><span class="chip">No input control needed</span></div>
+
+<!--topic 11.3: DNA Methylation &amp; Bisulfite Sequencing-->
+          <p class="sub">DNA methylation — the addition of a methyl group to the 5th carbon of cytosine (5mC) — is the most studied epigenetic modification. In mammals, it occurs predominantly at CpG dinucleotides. Methylation of gene promoters generally silences transcription. It plays critical roles in development, X-chromosome inactivation, genomic imprinting, and cancer (where aberrant methylation is a hallmark).</p>
+
+          <h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">Detection Methods</h3>
+          <div class="card-grid card-grid-3" style="gap:10px;margin-top:8px;">
+            <div class="card" style="padding:14px;border-left:3px solid var(--green);"><strong>WGBS</strong><p class="sub" style="margin-top:4px;">Whole-genome bisulfite sequencing. Gold standard. Single-CpG resolution across entire genome. Expensive — needs 10–15× coverage. Bisulfite converts unmethylated C→U; methylated C is protected.</p></div>
+            <div class="card" style="padding:14px;"><strong>RRBS</strong><p class="sub" style="margin-top:4px;">Reduced Representation BS. MspI digestion enriches CpG-rich regions. 1–10% of genome, covers most CpG islands. Much cheaper than WGBS.</p></div>
+            <div class="card" style="padding:14px;"><strong>Methylation Arrays</strong><p class="sub" style="margin-top:4px;">Illumina EPIC array (850K CpGs). Cheapest per-sample. Good for clinical studies. Limited to pre-selected CpGs. EPIC v2 covers ~930K sites.</p></div>
+          </div>
+
+          <div class="code-block"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button><span class="code-comment"># ─── WGBS analysis with Bismark ───</span>
+mamba install -c bioconda bismark bowtie2 samtools trim-galore
+
+<span class="code-comment"># 1. Prepare bisulfite genome (creates C→T and G→A converted versions)</span>
+bismark_genome_preparation --bowtie2 genome_folder/
+
+<span class="code-comment"># 2. Trim adapters + low quality</span>
+trim_galore --paired --rrbs read_R1.fastq.gz read_R2.fastq.gz
+
+<span class="code-comment"># 3. Align with Bismark</span>
+bismark --bowtie2 --genome genome_folder/ \
+    -1 read_R1_val_1.fq.gz -2 read_R2_val_2.fq.gz -p 4
+
+<span class="code-comment"># 4. Deduplicate</span>
+deduplicate_bismark --bam read_R1_val_1_bismark_bt2_pe.bam
+
+<span class="code-comment"># 5. Extract methylation (outputs CpG, CHG, CHH context)</span>
+bismark_methylation_extractor --paired-end --comprehensive \
+    --CX --bedGraph --genome_folder genome_folder/ \
+    read_R1_val_1_bismark_bt2_pe.deduplicated.bam
+
+<span class="code-comment"># 6. Generate summary report</span>
+bismark2report</div>
+
+          <div class="info-box tip"><svg class="ico" aria-hidden="true"><use href="#i-tip"></use></svg><div><strong>Interpreting methylation:</strong> CpG island methylation at promoters = gene silencing. Gene body methylation = correlated with active transcription (paradoxically). Enhancer methylation = generally low at active enhancers. In cancer, look for promoter <strong>hypermethylation</strong> of tumour suppressors and global <strong>hypomethylation</strong> (genomic instability). DMRs (Differentially Methylated Regions) are typically more biologically meaningful than individual CpG changes — use tools like <strong>dmrseq</strong> or <strong>DSS</strong> for DMR calling.</div></div>
+
+          <div class="chips" style="margin-top:14px;"><span class="chip">WGBS = gold standard</span><span class="chip">Bismark for alignment</span><span class="chip">CpG islands at promoters</span><span class="chip">DMRs &gt; individual CpGs</span><span class="chip">Promoter methylation = silencing</span></div>

@@ -1,12 +1,12 @@
 # Netlify configuration for bioinfocodex.com
 #
-# The site is one static HTML file with no build step -- deploys are uploads.
-# Netlify (rather than GitHub Pages) is what makes the app routes indexable:
-# Pages cannot rewrite, so /tools/rnaflow had to be answered by 404.html with a
-# 404 status. The rewrite rules live in _redirects.
+# The site is built from src/ into dist/ by one standard-library Python script.
+# Every route is a real HTML file, so there are no rewrite rules: the redirects
+# that remain (src/_redirects) only keep old addresses working.
 
 [build]
-  publish = "."
+  command   = "python3 tools/build-site.py"
+  publish   = "dist"
   functions = "netlify/functions"
 
 [functions]
@@ -20,11 +20,18 @@
     Referrer-Policy        = "strict-origin-when-cross-origin"
     Permissions-Policy     = "geolocation=(), microphone=(), camera=()"
 
-# The app is one HTML file that changes on every content edit — never cache it.
+# Pages change on every content edit, so they always revalidate.
 [[headers]]
-  for = "/index.html"
+  for = "/*.html"
   [headers.values]
     Cache-Control = "public, max-age=0, must-revalidate"
+
+# Stylesheet, scripts and the search index carry a content hash in their file
+# name, so a changed file is a new URL and the old one can be cached forever.
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
 
 # Icons and the share card are content-stable; let them cache hard.
 [[headers]]
@@ -32,22 +39,24 @@
   [headers.values]
     Cache-Control = "public, max-age=31536000, immutable"
 
-# The SVG favicon belongs with the PNGs above -- it was falling through to the
-# default and being revalidated on every visit.
 [[headers]]
   for = "/favicon.svg"
   [headers.values]
     Cache-Control = "public, max-age=31536000, immutable"
 
-# The manifest changes only when the icon set or app name does.
+# Figures on the pages keep their names when replaced, so a day is the limit.
+[[headers]]
+  for = "/img/*"
+  [headers.values]
+    Cache-Control = "public, max-age=86400"
+
 [[headers]]
   for = "/site.webmanifest"
   [headers.values]
     Cache-Control = "public, max-age=86400"
 
-# Crawlers refetch these two constantly. An hour is short enough that a routing
-# change still reaches search engines the same day, and long enough to collapse
-# a burst of bots into one request each.
+# Crawlers refetch these two constantly; an hour collapses a burst of bots
+# into one request each.
 [[headers]]
   for = "/robots.txt"
   [headers.values]
@@ -60,8 +69,7 @@
 
 # Lessons. The catalogue and each lesson.json change whenever a lesson is added
 # or rebuilt under the same name, so they always revalidate. The media files
-# keep their names across rebuilds too, so a day is as long as they can cache
-# before a corrected video would be missed.
+# keep their names across rebuilds too, so a day is as long as they can cache.
 [[headers]]
   for = "/lesson-files/*.json"
   [headers.values]
@@ -79,10 +87,5 @@
 
 [[headers]]
   for = "/lesson-files/*/*.vtt"
-  [headers.values]
-    Cache-Control = "public, max-age=86400"
-
-[[headers]]
-  for = "/lesson-files/*/*.html"
   [headers.values]
     Cache-Control = "public, max-age=86400"

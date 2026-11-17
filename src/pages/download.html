@@ -1,0 +1,91 @@
+<!--
+path: /download
+id: register
+nav: download
+kind: Download
+title: Download RNAflow for macOS, Linux and Windows | BioInfoCodex
+description: Download RNAflow, a free open-source desktop app for RNA-seq analysis. No registration or licence key. Installers for macOS and Linux; Windows runs it through WSL2.
+crumbs: Tools=/tools > RNAflow=/tools/rnaflow > Download=/download
+-->
+<div class="section doc-section">
+
+  <div class="doc-head center">
+    <div class="label">Free and open source · MIT licence</div>
+    <h1 class="h1 doc-h1">Download RNAflow</h1>
+    <p class="lead">Version %%RNAFLOW_VERSION%%, released %%RNAFLOW_RELEASED%%. No registration and no licence key: pick your platform and install.</p>
+  </div>
+
+  <div class="card-grid card-grid-3 download-grid">
+    <div class="card download-card">
+      <h2 class="h3">macOS</h2>
+      <p class="sub">Apple silicon (M1 and later) or Intel</p>
+      <a href="%%RNAFLOW_DL%%/RNAflow-%%RNAFLOW_VERSION%%-arm64.dmg" class="btn btn-green">Apple silicon .dmg</a>
+      <a href="%%RNAFLOW_DL%%/RNAflow-%%RNAFLOW_VERSION%%.dmg" class="btn btn-outline">Intel .dmg</a>
+    </div>
+    <div class="card download-card">
+      <h2 class="h3">Linux</h2>
+      <p class="sub">Ubuntu 20.04 or later, Fedora 36 or later</p>
+      <a href="%%RNAFLOW_DL%%/RNAflow-%%RNAFLOW_VERSION%%.AppImage" class="btn btn-green">AppImage</a>
+      <a href="%%RNAFLOW_DL%%/rnaflow_%%RNAFLOW_VERSION%%_amd64.deb" class="btn btn-outline">Debian .deb</a>
+    </div>
+    <div class="card download-card">
+      <h2 class="h3">Windows</h2>
+      <p class="sub">Windows 10 or later, 64-bit, with WSL2</p>
+      <a href="%%RNAFLOW_DL%%/RNAflow-Setup-%%RNAFLOW_VERSION%%.exe" class="btn btn-green">Installer .exe</a>
+      <a href="%%RNAFLOW_DL%%/RNAflow-%%RNAFLOW_VERSION%%.exe" class="btn btn-outline">Portable .exe</a>
+    </div>
+  </div>
+
+  <div class="info-box note download-note"><svg class="ico" aria-hidden="true"><use href="#i-note"></use></svg><div>
+    <strong>First launch.</strong> RNAflow offers to install everything it needs (conda and the analysis tools, about 400 MB) into <code>~/.rnaflow</code>. It does not need an administrator password and does not change your shell settings.
+  </div></div>
+
+  <div class="info-box warn download-note"><svg class="ico" aria-hidden="true"><use href="#i-warn"></use></svg><div>
+    <strong>macOS says "RNAflow is damaged"?</strong> Open Terminal and run <code>xattr -cr /Applications/RNAflow.app</code>, then open the app again.
+  </div></div>
+
+  <div class="info-box note download-note"><svg class="ico" aria-hidden="true"><use href="#i-note"></use></svg><div>
+    <strong>Windows.</strong> The analysis tools come from Bioconda, which needs Linux, so on Windows they run inside <a href="https://learn.microsoft.com/windows/wsl/install" rel="noopener">WSL2</a>. The app shows the steps.
+  </div></div>
+
+  <div class="download-more">
+    <a class="doc-link-card" href="/tools/rnaflow">
+      <strong>Manual</strong><span>Every step explained, with what good output looks like.</span>
+    </a>
+    <a class="doc-link-card" href="/tools/rnaflow/changelog">
+      <strong>Changelog</strong><span>What changed in each release.</span>
+    </a>
+    <a class="doc-link-card" href="/cite">
+      <strong>How to cite</strong><span>DOI and reference for your methods section.</span>
+    </a>
+    <a class="doc-link-card" href="%%RNAFLOW_REPO%%/releases" rel="noopener">
+      <strong>All releases</strong><span>Earlier versions and checksums on GitHub.</span>
+    </a>
+  </div>
+
+  <p class="sub center download-alt">Prefer not to install an app? RNAflow is also one HTML file plus a small Python server with no dependencies. See <a href="%%RNAFLOW_SITE%%" rel="noopener">rnaflow.bioinfocodex.com</a>.</p>
+
+  <div class="notify-card" id="updates">
+    <div>
+      <h2 class="h3">Get an email when a new version is out</h2>
+      <p class="sub">Optional, and not needed to download. Release announcements only; your address is not shared with anyone.</p>
+    </div>
+    <div>
+      <form class="inline-form" data-endpoint="%%FORM_ENDPOINT%%" data-fallback="%%EMAIL%%">
+        <input type="hidden" name="_subject" value="RNAflow release list sign-up">
+        <input type="hidden" name="form" value="release-list">
+        <label class="form-label" for="upd-email">Email address</label>
+        <input class="form-input" id="upd-email" type="email" name="email" required autocomplete="email" placeholder="you@university.edu">
+        <label class="form-label" for="upd-area">Research area <span class="optional">(optional)</span></label>
+        <input class="form-input" id="upd-area" type="text" name="research_area" placeholder="e.g. plant biology">
+        <button class="btn btn-green" type="submit">Sign up</button>
+        <p class="form-status" data-form-status role="status"></p>
+      </form>
+      <div class="form-success" data-form-success>
+        <strong>Thanks, you are signed up.</strong><br>
+        <span>You will get an email when the next version is released.</span>
+      </div>
+    </div>
+  </div>
+
+</div>

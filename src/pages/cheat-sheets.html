@@ -1,0 +1,183 @@
+<!--
+path: /learn/cheat-sheets
+id: edu
+nav: learn
+kind: Reference
+title: Bioinformatics cheat sheets: command line, file formats, RNA-seq | BioInfoCodex
+description: Three printable cheat sheets: the Linux command line for bioinformatics, the common file formats, and the commands of an RNA-seq pipeline.
+crumbs: Learn=/learn > Cheat sheets=/learn/cheat-sheets
+-->
+<div class="learn-wrap cheat-wrap">
+  <div class="breadcrumb" role="navigation" aria-label="Breadcrumb"><a href="/learn">Learn</a><span class="breadcrumb-sep">›</span><span aria-current="page">Cheat sheets</span></div>
+  <div class="label">Reference</div>
+  <h1 class="h1 doc-h1">Cheat sheets</h1>
+  <p class="lead">Three one-page references to keep next to your terminal. Each one prints cleanly on its own page.</p>
+  <div class="btn-row cheat-nav">
+    <a class="btn btn-outline" href="#command-line">Command line</a>
+    <a class="btn btn-outline" href="#file-formats">File formats</a>
+    <a class="btn btn-outline" href="#rna-seq">RNA-seq pipeline</a>
+    <button type="button" class="btn btn-green" onclick="window.print()"><svg class="ico" aria-hidden="true"><use href="#i-print"></use></svg>Print</button>
+  </div>
+
+  <section class="cheat-sheet" id="command-line">
+    <h2>The command line for bioinformatics</h2>
+    <p class="sub">Covered in depth in <a href="/learn/computing">Module 2</a>.</p>
+    <div class="cheat-grid">
+      <div class="cheat-block">
+        <h3>Finding your way</h3>
+        <table class="cheat-table"><tbody>
+          <tr><td><code>pwd</code></td><td>Show the current folder</td></tr>
+          <tr><td><code>ls -lh</code></td><td>List files with readable sizes</td></tr>
+          <tr><td><code>cd data/raw</code></td><td>Move into a folder</td></tr>
+          <tr><td><code>cd ..</code></td><td>Go up one level</td></tr>
+          <tr><td><code>mkdir -p results/qc</code></td><td>Make a folder and its parents</td></tr>
+          <tr><td><code>du -sh *</code></td><td>Size of each item here</td></tr>
+          <tr><td><code>df -h .</code></td><td>Free space on this disk</td></tr>
+        </tbody></table>
+      </div>
+      <div class="cheat-block">
+        <h3>Looking inside files</h3>
+        <table class="cheat-table"><tbody>
+          <tr><td><code>head -n 8 reads.fastq</code></td><td>First 8 lines (2 reads)</td></tr>
+          <tr><td><code>less -S file.tsv</code></td><td>Page through without wrapping (<code>q</code> quits)</td></tr>
+          <tr><td><code>zcat reads.fastq.gz | head</code></td><td>Peek inside a gzipped file</td></tr>
+          <tr><td><code>wc -l file.txt</code></td><td>Count lines</td></tr>
+          <tr><td><code>grep -c "^>" seqs.fasta</code></td><td>Count sequences in a FASTA file</td></tr>
+          <tr><td><code>cut -f1,3 table.tsv</code></td><td>Keep columns 1 and 3</td></tr>
+          <tr><td><code>sort -k2,2nr table.tsv</code></td><td>Sort by column 2, largest first</td></tr>
+          <tr><td><code>sort file | uniq -c</code></td><td>Count how often each line occurs</td></tr>
+        </tbody></table>
+      </div>
+      <div class="cheat-block">
+        <h3>Combining commands</h3>
+        <table class="cheat-table"><tbody>
+          <tr><td><code>cmd1 | cmd2</code></td><td>Send the output of one into the next</td></tr>
+          <tr><td><code>cmd &gt; out.txt</code></td><td>Write output to a file (overwrites)</td></tr>
+          <tr><td><code>cmd &gt;&gt; out.txt</code></td><td>Append to a file</td></tr>
+          <tr><td><code>cmd 2&gt; err.log</code></td><td>Save error messages</td></tr>
+          <tr><td><code>cmd1 &amp;&amp; cmd2</code></td><td>Run the second only if the first worked</td></tr>
+          <tr><td><code>for f in *.fastq.gz; do echo "$f"; done</code></td><td>Repeat for every matching file</td></tr>
+        </tbody></table>
+      </div>
+      <div class="cheat-block">
+        <h3>Software and long jobs</h3>
+        <table class="cheat-table"><tbody>
+          <tr><td><code>conda create -n rnaseq -c bioconda -c conda-forge fastqc</code></td><td>New environment with a tool</td></tr>
+          <tr><td><code>conda activate rnaseq</code></td><td>Switch to it</td></tr>
+          <tr><td><code>conda env export &gt; env.yml</code></td><td>Record exact versions</td></tr>
+          <tr><td><code>nohup cmd &gt; log.txt 2&gt;&amp;1 &amp;</code></td><td>Keep running after you log out</td></tr>
+          <tr><td><code>top</code></td><td>What is using CPU and memory</td></tr>
+          <tr><td><code>md5sum file.gz</code></td><td>Checksum, to confirm a download</td></tr>
+        </tbody></table>
+      </div>
+    </div>
+  </section>
+
+  <section class="cheat-sheet" id="file-formats">
+    <h2>File formats</h2>
+    <p class="sub">Covered in depth in <a href="/learn/databases">Module 3</a>.</p>
+    <div class="table-scroll">
+      <table class="data-table cheat-formats">
+        <thead><tr><th>Format</th><th>Holds</th><th>How to recognise it</th><th>Usual tools</th></tr></thead>
+        <tbody>
+          <tr><td><strong>FASTA</strong><br><code>.fa .fasta</code></td><td>Sequences (genome, transcripts, proteins)</td><td>A <code>&gt;</code> header line, then sequence lines</td><td>samtools faidx, seqkit</td></tr>
+          <tr><td><strong>FASTQ</strong><br><code>.fastq .fq.gz</code></td><td>Raw reads with a quality score per base</td><td>4 lines per read: <code>@</code>name, sequence, <code>+</code>, qualities</td><td>FastQC, fastp</td></tr>
+          <tr><td><strong>SAM / BAM</strong><br><code>.sam .bam</code></td><td>Reads aligned to a reference. BAM is the compressed binary form</td><td>Header lines start with <code>@</code>; 11 tab-separated columns per read</td><td>samtools, IGV</td></tr>
+          <tr><td><strong>GTF / GFF3</strong><br><code>.gtf .gff3</code></td><td>Gene annotation: where genes, transcripts and exons are</td><td>9 tab-separated columns; column 3 is the feature type</td><td>featureCounts, gffread</td></tr>
+          <tr><td><strong>BED</strong><br><code>.bed</code></td><td>Genomic intervals (peaks, regions)</td><td>chrom, start, end; start is 0-based</td><td>bedtools</td></tr>
+          <tr><td><strong>VCF</strong><br><code>.vcf.gz</code></td><td>Variants (SNPs, indels) and genotypes</td><td><code>##</code> metadata lines, then one variant per row</td><td>bcftools, GATK</td></tr>
+          <tr><td><strong>Count matrix</strong><br><code>.tsv .csv</code></td><td>Reads per gene per sample</td><td>Rows are genes, columns are samples, values are whole numbers</td><td>DESeq2, edgeR</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="cheat-grid">
+      <div class="cheat-block">
+        <h3>Easy to get wrong</h3>
+        <ul>
+          <li><strong>Coordinates.</strong> BED starts counting at 0 and excludes the end; GTF, GFF3, SAM and VCF start at 1.</li>
+          <li><strong>Chromosome names.</strong> <code>chr1</code> (UCSC) and <code>1</code> (Ensembl) are not interchangeable. The genome and the annotation must use the same style.</li>
+          <li><strong>Annotation release.</strong> Use the GTF from the same source and release as the genome FASTA.</li>
+          <li><strong>Paired files.</strong> <code>_1</code> and <code>_2</code> (or <code>R1</code> and <code>R2</code>) must stay in the same read order.</li>
+        </ul>
+      </div>
+      <div class="cheat-block">
+        <h3>Quality scores (Phred)</h3>
+        <table class="cheat-table"><tbody>
+          <tr><td><code>Q10</code></td><td>1 error in 10 (90% accurate)</td></tr>
+          <tr><td><code>Q20</code></td><td>1 in 100 (99%)</td></tr>
+          <tr><td><code>Q30</code></td><td>1 in 1,000 (99.9%)</td></tr>
+          <tr><td><code>Q40</code></td><td>1 in 10,000 (99.99%)</td></tr>
+        </tbody></table>
+        <p class="sub">Q = −10 × log10(probability the base is wrong).</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="cheat-sheet" id="rna-seq">
+    <h2>An RNA-seq pipeline, command by command</h2>
+    <p class="sub">Paired-end reads, alignment route. Explained step by step in <a href="/learn/rna-seq">Module 5</a>; <a href="/tools/rnaflow">RNAflow</a> writes these for your own samples.</p>
+    <div class="code-block cheat-code"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button><span class="code-comment"># 1. Quality control of the raw reads</span>
+fastqc -t 4 -o qc/ raw/*.fastq.gz
+multiqc qc/ -o qc/
+
+<span class="code-comment"># 2. Trim adapters and low-quality bases</span>
+fastp -i raw/S1_1.fastq.gz -I raw/S1_2.fastq.gz \
+      -o trimmed/S1_1.fastq.gz -O trimmed/S1_2.fastq.gz \
+      --detect_adapter_for_pe -w 4 -h qc/S1_fastp.html -j qc/S1_fastp.json
+
+<span class="code-comment"># 3. Index the genome (once per genome)</span>
+hisat2-build -p 8 genome.fa index/genome
+
+<span class="code-comment"># 4. Align, sort and index</span>
+hisat2 -p 8 -x index/genome -1 trimmed/S1_1.fastq.gz -2 trimmed/S1_2.fastq.gz \
+  | samtools sort -@ 4 -o aligned/S1.bam -
+samtools index aligned/S1.bam
+samtools flagstat aligned/S1.bam
+
+<span class="code-comment"># 5. Count read pairs per gene (-s 0 unstranded, 1 forward, 2 reverse)</span>
+featureCounts -T 8 -p --countReadPairs -s 0 -a genes.gtf -o counts/counts.txt aligned/*.bam</div>
+
+    <div class="cheat-grid">
+      <div class="cheat-block">
+        <h3>Alignment-free alternative (Salmon)</h3>
+        <div class="code-block cheat-code"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button>salmon index -t transcripts.fa -i index/salmon
+salmon quant -i index/salmon -l A -p 8 --validateMappings \
+  -1 trimmed/S1_1.fastq.gz -2 trimmed/S1_2.fastq.gz -o quant/S1</div>
+      </div>
+      <div class="cheat-block">
+        <h3>Differential expression in R (DESeq2)</h3>
+        <div class="code-block cheat-code"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button>library(DESeq2)
+dds &lt;- DESeqDataSetFromMatrix(countData = counts,
+                              colData   = samples,
+                              design    = ~ condition)
+dds &lt;- dds[rowSums(counts(dds)) &gt;= 10, ]
+dds &lt;- DESeq(dds)
+resultsNames(dds)
+res &lt;- lfcShrink(dds, coef = 2, type = "apeglm")
+sig &lt;- subset(res, padj &lt; 0.05 &amp; abs(log2FoldChange) &gt; 1)</div>
+      </div>
+    </div>
+    <div class="cheat-grid">
+      <div class="cheat-block">
+        <h3>What good output looks like</h3>
+        <table class="cheat-table"><tbody>
+          <tr><td>Bases at Q30 or better</td><td>above 80%</td></tr>
+          <tr><td>Reads kept after trimming</td><td>above 90%</td></tr>
+          <tr><td>Overall alignment rate</td><td>above 80% for a good reference</td></tr>
+          <tr><td>Reads assigned to genes</td><td>roughly 60 to 80%</td></tr>
+          <tr><td>Replicates in the PCA</td><td>group by condition</td></tr>
+        </tbody></table>
+        <p class="sub">Typical values, not hard limits. A sample far from the others is the thing to look at.</p>
+      </div>
+      <div class="cheat-block">
+        <h3>Before you start</h3>
+        <ul>
+          <li>At least 3 biological replicates per condition.</li>
+          <li>Know whether the library is stranded; it changes the counting step.</li>
+          <li>Genome and annotation from the same source and release.</li>
+          <li>Write down every tool version. You will need them for the methods section.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+</div>

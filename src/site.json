@@ -1,0 +1,21 @@
+{
+  "site_url": "https://bioinfocodex.com",
+  "site_name": "BioInfoCodex",
+  "contact_email": "info@bioinfocodex.com",
+  "github_org": "https://github.com/bioinfocodex",
+  "formspree_id": "mlgoenbv",
+  "rnaflow": {
+    "version": "3.2.1",
+    "released": "2026-10-16",
+    "repo": "https://github.com/bioinfocodex/rnaflow",
+    "doi": "10.5281/zenodo.23424916",
+    "manual": "https://rnaflow.bioinfocodex.com/manual.html",
+    "app_site": "https://rnaflow.bioinfocodex.com"
+  },
+  "analytics": {
+    "_comment": "Leave provider empty for no analytics. Supported: plausible (set domain), goatcounter (set code). Both are cookie-free.",
+    "provider": "",
+    "domain": "",
+    "code": ""
+  }
+}

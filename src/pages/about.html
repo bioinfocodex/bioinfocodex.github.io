@@ -1,0 +1,43 @@
+<!--
+path: /about
+id: doc
+nav: about
+kind: About
+title: About BioInfoCodex
+description: BioInfoCodex publishes RNAflow, an open-source RNA-seq analysis app, and a free bioinformatics course. Who makes it, why, and how it is kept honest.
+-->
+<div class="section doc-section">
+  <div class="doc-head">
+    <div class="label">About</div>
+    <h1 class="h1 doc-h1">Software and teaching for people who have data but not a bioinformatics background</h1>
+    <p class="lead">BioInfoCodex is a small open-source project. It publishes one finished tool, RNAflow, and a free course that explains the methods behind it.</p>
+  </div>
+
+  <div class="prose">
+    <h2>Why it exists</h2>
+    <p>RNA-seq is now routine in the wet lab, but the analysis still expects you to be comfortable on the command line. Many biologists spend more time installing tools and fixing commands than thinking about their experiment. RNAflow was built to remove that barrier without hiding the analysis: it writes the commands for your project, runs them, and keeps them on screen so you can read, check and repeat every step.</p>
+    <p>The course exists for the same reason. A tool that runs an analysis for you is only useful if you understand what came out of it, so each method RNAflow uses has a matching topic that explains it from first principles.</p>
+
+    <h2>What is here</h2>
+    <ul>
+      <li><a href="/tools/rnaflow"><strong>RNAflow</strong></a>, a desktop app for bulk RNA-seq analysis, released under the MIT licence.</li>
+      <li><a href="/learn"><strong>The course</strong></a>: %%MODULE_COUNT%% modules and %%TOPIC_COUNT%% topics, with a <a href="/learn/glossary">glossary</a>, <a href="/learn/cheat-sheets">cheat sheets</a> and a <a href="/learn/practice-dataset">practice dataset</a>.</li>
+      <li><a href="/resources"><strong>A resource directory</strong></a> of databases and tools worth bookmarking.</li>
+    </ul>
+    <p>Other tools are <a href="/tools#roadmap">planned</a>. They are listed as planned, not as available.</p>
+
+    <h2>Who makes it</h2>
+    <p>BioInfoCodex is built and maintained by Matrika Bhattarai, an independent researcher (<a href="https://orcid.org/0000-0003-2627-6251" rel="noopener">ORCID 0000-0003-2627-6251</a>). Contributions are welcome: see the <a href="%%RNAFLOW_REPO%%" rel="noopener">RNAflow repository</a> or <a href="/contact">get in touch</a>.</p>
+
+    <h2>How it is kept honest</h2>
+    <ul>
+      <li><strong>Benchmarked.</strong> RNAflow is tested against a public dataset with a known answer, and the scripts and scores are <a href="%%RNAFLOW_REPO%%/tree/main/benchmark" rel="noopener">published</a>.</li>
+      <li><strong>Reproducible.</strong> Every tool is installed at a fixed version, and each release is archived on Zenodo with a DOI.</li>
+      <li><strong>Open.</strong> The code, the <a href="/tools/rnaflow/changelog">changelog</a> and the bugs that were fixed are all public.</li>
+      <li><strong>Private.</strong> Your sequencing data never leaves your computer.</li>
+    </ul>
+
+    <h2>A note on the course content</h2>
+    <p>The course is written to be accurate and is corrected when errors are found. One video lesson was generated with AI and is labelled as such. If you spot a mistake anywhere, <a href="/contact">please say so</a>.</p>
+  </div>
+</div>

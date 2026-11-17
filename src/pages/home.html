@@ -1,0 +1,273 @@
+<!--
+path: /
+id: home
+nav: home
+hero: dark
+scripts: home.js
+jsonld: home
+kind: Home
+title: BioInfoCodex: RNA-seq analysis software and a free bioinformatics course
+description: RNAflow is a free, open-source desktop app for RNA-seq analysis, from raw FASTQ files to figures on your own computer. Plus a free bioinformatics course.
+-->
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+<div class="orb orb-3"></div>
+
+<!-- ═══ HERO ═══ -->
+<div class="hero">
+  <canvas id="shader-canvas" aria-hidden="true"></canvas>
+
+  <div class="hero-overlay">
+    <a class="hero-trust-badge" href="/tools/rnaflow/changelog">
+      <svg class="ico" aria-hidden="true"><use href="#i-check"></use></svg>
+      <span>RNAflow %%RNAFLOW_VERSION%% · free and open source (MIT)</span>
+    </a>
+
+    <h1 class="hero-h1">
+      <span class="hero-h1-line1">RNA-seq from FASTQ to figures,</span>
+      <span class="hero-h1-line2">on your own computer</span>
+    </h1>
+
+    <p class="hero-sub">
+      RNAflow is a desktop app that guides you through a complete RNA-seq analysis. It writes the exact commands for your project, runs them with one click, and explains every result. Your reads are never uploaded.
+    </p>
+
+    <div class="hero-ctas">
+      <a class="hero-cta-primary" href="/download"><svg class="ico" aria-hidden="true"><use href="#i-download"></use></svg>Download RNAflow</a>
+      <a class="hero-cta-secondary" href="/learn"><svg class="ico" aria-hidden="true"><use href="#i-learn"></use></svg>Take the free course</a>
+    </div>
+
+    <div class="hero-stats">
+      <div class="hero-stat-item">
+        <div class="hstat-val" data-count="15" data-suffix="+">15+</div>
+        <div class="hstat-lbl">Organisms built in</div>
+      </div>
+      <div class="hero-stat-item">
+        <div class="hstat-val" data-count="3">3</div>
+        <div class="hstat-lbl">DE methods compared</div>
+      </div>
+      <div class="hero-stat-item">
+        <div class="hstat-val" data-count="%%MODULE_COUNT%%">%%MODULE_COUNT%%</div>
+        <div class="hstat-lbl">Course modules</div>
+      </div>
+      <div class="hero-stat-item">
+        <div class="hstat-val">$0</div>
+        <div class="hstat-lbl">No account needed</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ TOOLS IT RUNS ═══ -->
+<div class="trust-strip">
+  <span class="trust-label">RNAflow runs</span>
+  <div class="trust-tools">
+    <div class="trust-tool"><div class="trust-dot" style="background:#00d4a0;"></div>FastQC</div>
+    <div class="trust-tool"><div class="trust-dot" style="background:#0096ff;"></div>fastp</div>
+    <div class="trust-tool"><div class="trust-dot" style="background:#7c5ff5;"></div>Salmon</div>
+    <div class="trust-tool"><div class="trust-dot" style="background:#f0883e;"></div>HISAT2</div>
+    <div class="trust-tool"><div class="trust-dot" style="background:#00d4a0;"></div>featureCounts</div>
+    <div class="trust-tool"><div class="trust-dot" style="background:#0096ff;"></div>DESeq2</div>
+    <div class="trust-tool"><div class="trust-dot" style="background:#7c5ff5;"></div>edgeR</div>
+    <div class="trust-tool"><div class="trust-dot" style="background:#f0883e;"></div>limma-voom</div>
+    <div class="trust-tool"><div class="trust-dot" style="background:#00d4a0;"></div>fgsea</div>
+    <div class="trust-tool"><div class="trust-dot" style="background:#0096ff;"></div>MultiQC</div>
+  </div>
+</div>
+
+<!-- ═══ EVIDENCE: A REAL RESULT ═══ -->
+<div class="feature-section evidence-section">
+  <div class="feature-visual reveal">
+    <figure class="result-figure">
+      <img src="/img/rnaflow-airway-volcano.png" width="1200" height="1200" loading="lazy"
+           alt="Volcano plot made with RNAflow from the airway study GSE52778: 275 genes up and 170 down after dexamethasone treatment, with DUSP1, FKBP5, KLF15, PER1, TSC22D3, ZBTB16 and CRISPLD2 labelled among the up-regulated genes.">
+      <figcaption>Dexamethasone-treated against untreated airway cells (GSE52778), analysed from raw reads with RNAflow. The genes in bold are known glucocorticoid-response genes.</figcaption>
+    </figure>
+  </div>
+  <div class="feature-text reveal">
+    <div class="label">Checked against a known answer</div>
+    <h2 class="h2">It gets the published result</h2>
+    <p class="lead">RNAflow is benchmarked on the airway study, a public dataset whose answer is well established. The commands the app generates are run unchanged and scored against the published counts and an independent DESeq2 analysis.</p>
+    <table class="bench-table">
+      <tbody>
+        <tr><th scope="row">Known glucocorticoid-induced genes recovered</th><td>7 of 7</td></tr>
+        <tr><th scope="row">RNAflow's significant genes also significant in the reference</th><td>96%</td></tr>
+        <tr><th scope="row">Fold-change agreement with the reference (Pearson)</th><td>0.96</td></tr>
+        <tr><th scope="row">Reads mapped, lowest sample</th><td>95.5%</td></tr>
+      </tbody>
+    </table>
+    <p class="sub bench-note">Salmon route, 4 million read pairs per sample. The benchmark scripts and full results are in the <a href="%%RNAFLOW_REPO%%/tree/main/benchmark" rel="noopener">RNAflow repository</a>, and you can <a href="/learn/practice-dataset">run the same dataset yourself</a>.</p>
+  </div>
+</div>
+
+<div class="grad-divider"></div>
+
+<!-- ═══ WHAT RNAFLOW DOES ═══ -->
+<div class="feature-section">
+  <div class="feature-text reveal">
+    <div class="label">The software</div>
+    <h2 class="h2">RNAflow: a guided<br>RNA-seq analysis</h2>
+    <p class="lead">Written for biologists who have sequencing data but not a bioinformatics background. Every step is a page that explains what it does and what good output looks like.</p>
+    <div class="feature-points">
+      <div class="fp-item">
+        <div class="fp-icon"><svg class="ico" aria-hidden="true"><use href="#i-bolt"></use></svg></div>
+        <div class="fp-text">
+          <strong>One click per step</strong>
+          <span>The app builds the commands for your samples and runs them. The commands stay visible, so the analysis can be read, checked and repeated.</span>
+        </div>
+      </div>
+      <div class="fp-item">
+        <div class="fp-icon"><svg class="ico" aria-hidden="true"><use href="#i-chart"></use></svg></div>
+        <div class="fp-text">
+          <strong>The whole workflow</strong>
+          <span>Quality control, trimming, Salmon or HISAT2 with featureCounts, DESeq2 checked against edgeR and limma-voom, then GO, KEGG, Reactome and Hallmark enrichment.</span>
+        </div>
+      </div>
+      <div class="fp-item">
+        <div class="fp-icon"><svg class="ico" aria-hidden="true"><use href="#i-repeat"></use></svg></div>
+        <div class="fp-text">
+          <strong>Reproducible by default</strong>
+          <span>Every tool and R package is installed at a fixed version, and each run records the software behind its results.</span>
+        </div>
+      </div>
+      <div class="fp-item">
+        <div class="fp-icon"><svg class="ico" aria-hidden="true"><use href="#i-server"></use></svg></div>
+        <div class="fp-text">
+          <strong>Room to grow</strong>
+          <span>Generate SLURM, PBS or LSF job scripts, or export the project to nf-core/rnaseq when it outgrows a laptop.</span>
+        </div>
+      </div>
+    </div>
+    <div class="btn-row">
+      <a class="hero-cta-primary" href="/tools/rnaflow">Read the manual</a>
+      <a class="hero-cta-secondary" href="/download">Get RNAflow</a>
+    </div>
+  </div>
+
+  <div class="feature-visual reveal">
+    <div class="fv-card" role="img" aria-label="Illustration of the RNAflow step list, with the first five steps done and alignment running.">
+      <div class="fv-header">
+        <div class="fv-dot" style="background:#f85149;"></div>
+        <div class="fv-dot" style="background:#e3b341;margin-left:5px;"></div>
+        <div class="fv-dot" style="background:#3fb950;margin-left:5px;"></div>
+        <span class="fv-title">RNAflow · the steps of an analysis</span>
+      </div>
+      <div class="fv-body">
+        <div class="fv-step done"><span class="fv-step-num">✓</span><span class="fv-step-label">Configure project</span></div>
+        <div class="fv-step done"><span class="fv-step-num">✓</span><span class="fv-step-label">Download data from NCBI SRA</span></div>
+        <div class="fv-step done"><span class="fv-step-num">✓</span><span class="fv-step-label">FastQC quality control</span></div>
+        <div class="fv-step done"><span class="fv-step-num">✓</span><span class="fv-step-label">fastp adapter trimming</span></div>
+        <div class="fv-step done"><span class="fv-step-num">✓</span><span class="fv-step-label">Genome download and index</span></div>
+        <div class="fv-step active"><span class="fv-step-num">6</span><span class="fv-step-label">Alignment</span><span class="fv-step-badge">running</span></div>
+        <div class="fv-step"><span class="fv-step-num">7</span><span class="fv-step-label">Gene counting</span></div>
+        <div class="fv-step"><span class="fv-step-num">8</span><span class="fv-step-label">Gene family analysis</span></div>
+        <div class="fv-step"><span class="fv-step-num">9</span><span class="fv-step-label">Differential expression</span></div>
+        <div class="fv-step"><span class="fv-step-num">10</span><span class="fv-step-label">Plots and results</span></div>
+      </div>
+    </div>
+    <p class="fv-caption">Illustration of the step list. The manual walks through each step.</p>
+  </div>
+</div>
+
+<div class="grad-divider"></div>
+
+<!-- ═══ THE COURSE ═══ -->
+<div class="pipeline-section">
+  <div class="pipeline-section-inner">
+    <div class="center reveal">
+      <div class="label">The course</div>
+      <h2 class="h2">Learn bioinformatics, one topic at a time</h2>
+      <p class="sub section-lead">%%MODULE_COUNT%% modules and %%TOPIC_COUNT%% topics, from the central dogma to variant calling and single-cell analysis. Free to read, with real commands you can copy.</p>
+    </div>
+    <div class="home-course-grid">
+      <a class="module-card reveal" href="/learn/foundations">
+        <span class="module-num">Start here</span>
+        <span class="module-title">Molecular biology and bioinformatics fundamentals</span>
+        <span class="module-desc">What bioinformatics is, how genes are organised, and how sequencing works.</span>
+      </a>
+      <a class="module-card reveal" href="/learn/computing">
+        <span class="module-num">Module 2</span>
+        <span class="module-title">Linux, the terminal and programming</span>
+        <span class="module-desc">The command line, conda, and enough scripting to run an analysis.</span>
+      </a>
+      <a class="module-card reveal" href="/learn/rna-seq">
+        <span class="module-num">Module 5</span>
+        <span class="module-title">RNA-seq, from raw reads to gene lists</span>
+        <span class="module-desc">Experimental design, quality control, alignment, counting and DESeq2.</span>
+      </a>
+      <a class="module-card reveal" href="/learn/statistics">
+        <span class="module-num">Module 7</span>
+        <span class="module-title">Statistics for bioinformatics</span>
+        <span class="module-desc">P-values, multiple testing and the ideas behind differential expression.</span>
+      </a>
+    </div>
+    <div class="center home-course-links">
+      <a class="btn btn-green" href="/learn">See all %%MODULE_COUNT%% modules</a>
+      <a class="btn btn-outline" href="/learn/cheat-sheets">Cheat sheets</a>
+      <a class="btn btn-outline" href="/learn/glossary">Glossary</a>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ WHY ═══ -->
+<div class="why-section">
+  <div class="why-section-inner">
+    <div class="center reveal">
+      <div class="label">How it is built</div>
+      <h2 class="h2">Made for people with data,<br>not for bioinformaticians</h2>
+    </div>
+    <div class="why-grid">
+      <div class="why-card reveal" style="--c:var(--green);">
+        <span class="why-icon"><svg class="ico" aria-hidden="true"><use href="#i-lock"></use></svg></span>
+        <div class="why-title">Your data stays on your machine</div>
+        <div class="why-desc">Analyses run locally and your reads are never uploaded. Only public lookups, such as a GEO accession, go to NCBI or Ensembl.</div>
+      </div>
+      <div class="why-card reveal" style="--c:var(--blue);">
+        <span class="why-icon"><svg class="ico" aria-hidden="true"><use href="#i-learn"></use></svg></span>
+        <div class="why-title">Everything is explained</div>
+        <div class="why-desc">Each command comes with a plain-English explanation, and each result is interpreted: volcano plots, heatmaps, alignment rates and DESeq2 tables.</div>
+      </div>
+      <div class="why-card reveal" style="--c:var(--purple);">
+        <span class="why-icon"><svg class="ico" aria-hidden="true"><use href="#i-download"></use></svg></span>
+        <div class="why-title">Public data in one step</div>
+        <div class="why-desc">Paste a GEO or SRA accession to import every sample in a study, or start from a count table from your sequencing core.</div>
+      </div>
+      <div class="why-card reveal" style="--c:var(--orange);">
+        <span class="why-icon"><svg class="ico" aria-hidden="true"><use href="#i-globe"></use></svg></span>
+        <div class="why-title">15+ organisms ready</div>
+        <div class="why-desc">Human, mouse, Arabidopsis, rice, wheat, maize, soybean, tomato, zebrafish, Drosophila, C. elegans, yeast and more, with Ensembl genome and annotation addresses pre-loaded.</div>
+      </div>
+      <div class="why-card reveal" style="--c:var(--green);">
+        <span class="why-icon"><svg class="ico" aria-hidden="true"><use href="#i-code"></use></svg></span>
+        <div class="why-title">Open source</div>
+        <div class="why-desc">RNAflow is released under the MIT licence. There is no subscription and no paywalled feature, and the code and benchmarks are public.</div>
+      </div>
+      <div class="why-card reveal" style="--c:var(--blue);">
+        <span class="why-icon"><svg class="ico" aria-hidden="true"><use href="#i-note"></use></svg></span>
+        <div class="why-title">Citable</div>
+        <div class="why-desc">Every release is archived on Zenodo with its own DOI, so the exact version you used can go in your methods. <a href="/cite">How to cite</a>.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ ROADMAP TEASER ═══ -->
+<div class="roadmap-strip reveal">
+  <div>
+    <div class="label">What comes next</div>
+    <p class="roadmap-strip-text">RNAflow is the first tool. Pipelines for variant calling, ChIP-seq, single-cell RNA-seq and more are planned but not built yet.</p>
+  </div>
+  <a class="btn btn-outline" href="/tools#roadmap">See the roadmap<svg class="ico" aria-hidden="true"><use href="#i-arrow"></use></svg></a>
+</div>
+
+<!-- ═══ CTA ═══ -->
+<div class="cta-banner reveal">
+  <div class="cta-banner-content">
+    <h2>Start your first RNA-seq analysis</h2>
+    <p>Download RNAflow for macOS or Linux, or run it on Windows through WSL2. No registration, no licence key.</p>
+    <div class="cta-btns">
+      <a class="hero-cta-primary" href="/download">Download RNAflow %%RNAFLOW_VERSION%%</a>
+      <a class="hero-cta-secondary" href="/tools/rnaflow">Read the manual first</a>
+    </div>
+  </div>
+</div>

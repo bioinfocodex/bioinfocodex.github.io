@@ -1,0 +1,18 @@
+# Netlify redirects. Every page is a real file in dist/, so there are no
+# rewrite rules any more: these only keep old addresses working.
+
+# The registration page is now the download page.
+/register                 /download            301
+
+# Tools that are still planned no longer have a page each; they are listed
+# together on the roadmap.
+/tools/ngsuite            /tools#roadmap       301
+/tools/plasmidmap         /tools#roadmap       301
+/tools/chipflow           /tools#roadmap       301
+/tools/metaflow           /tools#roadmap       301
+/tools/scrnaflow          /tools#roadmap       301
+/tools/proteomics         /tools#roadmap       301
+
+# The standalone RNAflow files live on the RNAflow site only.
+/RNAflow_App.html         https://rnaflow.bioinfocodex.com/RNAflow_App.html    301
+/rnaflow_server.py        https://rnaflow.bioinfocodex.com/rnaflow_server.py   301

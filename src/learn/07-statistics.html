@@ -1,0 +1,201 @@
+<!--
+module: 7
+slug: statistics
+short: Statistics
+label: Module 7 · Statistics
+title: Statistical Foundations for Bioinformatics
+-->
+<p class="lead">Bad statistics ruins good biology. This module covers the statistical concepts every bioinformatician must understand — from p-values and FDR to normalisation and dimensionality reduction.</p>
+
+<!--topic 7.1: P-values, Multiple Testing &amp; FDR-->
+          <p class="sub">Understanding p-values, multiple testing correction, and the False Discovery Rate (FDR) is arguably the single most important statistical concept in genomics. Misinterpreting these values leads to publishing false discoveries or missing real biology. This section provides the intuition, the mathematics, and the practical application you need to correctly interpret differential expression results.</p>
+
+          <div class="info-box warn"><svg class="ico" aria-hidden="true"><use href="#i-warn"></use></svg><div><strong>What a p-value IS:</strong> P(data | null hypothesis is true). The probability of observing data as extreme as yours, assuming there is no real effect. <strong>It is NOT:</strong> the probability that your gene is truly differentially expressed. A p-value of 0.03 does NOT mean there is a 97% chance the gene is real.</div></div>
+
+          <h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">The Multiple Testing Problem — A Worked Example</h3>
+          <p class="sub">Consider a typical RNA-seq experiment where you test 20,000 genes for differential expression. Suppose 1,000 genes are truly differentially expressed and 19,000 are not.</p>
+          <div class="card-grid card-grid-2" style="gap:10px;margin-top:8px;">
+            <div class="card" style="padding:16px;border-left:3px solid var(--red);"><strong>Without correction (p &lt; 0.05)</strong><p class="sub" style="margin-top:6px;">Of the 19,000 null genes, 5% will produce p &lt; 0.05 by chance = <strong>950 false positives</strong>. Of the 1,000 true DEGs (assuming 80% power), you detect ~800. Your "significant" list has 800 + 950 = 1,750 genes, but <strong>54% are false</strong>. You cannot tell which are real.</p></div>
+            <div class="card" style="padding:16px;border-left:3px solid var(--green);"><strong>With BH correction (padj &lt; 0.05)</strong><p class="sub" style="margin-top:6px;">Benjamini-Hochberg correction ensures that among your "significant" genes, <strong>at most 5% are false positives</strong>. If you call 750 genes significant, you expect ~38 false discoveries. This is manageable and scientifically defensible.</p></div>
+          </div>
+
+          <h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">Benjamini-Hochberg FDR: Step-by-Step</h3>
+          <p class="sub">The BH procedure adjusts p-values by ranking them:</p>
+          <p class="sub">1. Rank all m p-values from smallest to largest: p<sub>(1)</sub> &le; p<sub>(2)</sub> &le; ... &le; p<sub>(m)</sub></p>
+          <p class="sub">2. For each gene at rank i, compare its p-value to the threshold: i/m &times; q (where q is your desired FDR, e.g., 0.05)</p>
+          <p class="sub">3. Find the largest rank k where p<sub>(k)</sub> &le; k/m &times; q</p>
+          <p class="sub">4. All genes with rank &le; k are declared significant</p>
+          <div class="code-block" style="margin-top:8px;"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button><span class="code-comment"># Example with 5 genes (m=5), FDR threshold q=0.05</span>
+<span class="code-comment"># Gene   Raw p-value   Rank(i)   BH threshold (i/m × q)   Significant?</span>
+<span class="code-comment"># GeneA  0.001         1         1/5 × 0.05 = 0.010       YES (0.001 &lt; 0.010)</span>
+<span class="code-comment"># GeneB  0.008         2         2/5 × 0.05 = 0.020       YES (0.008 &lt; 0.020)</span>
+<span class="code-comment"># GeneC  0.030         3         3/5 × 0.05 = 0.030       YES (0.030 &le; 0.030)</span>
+<span class="code-comment"># GeneD  0.040         4         4/5 × 0.05 = 0.040       YES (0.040 &le; 0.040)</span>
+<span class="code-comment"># GeneE  0.060         5         5/5 × 0.05 = 0.050       NO  (0.060 &gt; 0.050)</span>
+
+<span class="code-comment"># In R, this is simply:</span>
+p_values &lt;- c(0.001, 0.008, 0.030, 0.040, 0.060)
+p.adjust(p_values, method = "BH")
+<span class="code-comment"># DESeq2 does this automatically in the 'padj' column</span></div>
+
+          <h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">FDR vs FWER</h3>
+          <div class="card-grid card-grid-2" style="gap:10px;margin-top:8px;">
+            <div class="card" style="padding:16px;border-left:3px solid var(--green);"><strong>FDR (False Discovery Rate)</strong><p class="sub" style="margin-top:6px;">Controls the <strong>proportion</strong> of false discoveries among all rejected hypotheses. "Of the genes I call significant, at most 5% are false." Used for: RNA-seq, ChIP-seq, proteomics — any discovery-oriented experiment where some false positives are tolerable.</p></div>
+            <div class="card" style="padding:16px;border-left:3px solid var(--orange);"><strong>FWER (Family-Wise Error Rate)</strong><p class="sub" style="margin-top:6px;">Controls the <strong>probability of even one</strong> false positive. Much more conservative. Bonferroni: divide alpha by number of tests (0.05/20,000 = 2.5×10<sup>-6</sup>). Used for: GWAS, where a single false positive could lead to expensive follow-up studies.</p></div>
+          </div>
+
+          <h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">Why padj, Not pvalue, in DESeq2</h3>
+          <p class="sub">The <code>pvalue</code> column in DESeq2 results is the raw, uncorrected p-value. The <code>padj</code> column is the BH-adjusted p-value. <strong>Always use padj for determining significance.</strong> If you use raw p-values, you are ignoring the multiple testing problem and your results will be full of false positives.</p>
+
+          <h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">Independent Filtering in DESeq2</h3>
+          <p class="sub">DESeq2 automatically performs <strong>independent filtering</strong>: it removes genes with very low mean expression before applying multiple testing correction. Why? Genes with almost zero counts across all samples have no chance of being significant, but they consume part of the multiple testing budget, reducing power for the remaining genes. By filtering them out, DESeq2 increases statistical power for the genes that matter.</p>
+          <div class="info-box note"><svg class="ico" aria-hidden="true"><use href="#i-note"></use></svg><div><strong>NA values in padj:</strong> If you see NA in the padj column, it means DESeq2 filtered that gene out (usually due to very low counts or extreme outlier detection). These genes should not be interpreted as significant or non-significant — they were excluded from testing.</div></div>
+
+          <h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">Effect Size and Biological Significance</h3>
+          <p class="sub">Statistical significance (small padj) does not equal biological significance. With enough replicates, even tiny fold changes become statistically significant. A gene with padj = 0.0001 but log2FC = 0.1 is a 7% expression change — real but unlikely to be biologically meaningful. Always apply <strong>both</strong> a significance threshold (padj &lt; 0.05) and an effect size threshold (|log2FC| &gt; 1, i.e., 2-fold change) when defining your DEG list.</p>
+
+          <div class="info-box tip"><svg class="ico" aria-hidden="true"><use href="#i-tip"></use></svg><div><strong>Volcano plot intuition:</strong> X-axis = log2FoldChange (effect size), Y-axis = -log10(padj) (significance). Top-right = significantly upregulated with large effect. Top-left = significantly downregulated. Bottom-centre = not significant. Right side but not high = large fold change but underpowered (add more replicates).</div></div>
+
+          <div class="chips" style="margin-top:14px;"><span class="chip">p-value = P(data | H0 true)</span><span class="chip">Always use padj, never pvalue</span><span class="chip">BH-FDR = standard in genomics</span><span class="chip">Bonferroni = too conservative for RNA-seq</span><span class="chip">padj &lt; 0.05 AND |log2FC| &gt; 1</span><span class="chip">NA in padj = gene was filtered</span><span class="chip">Statistical ≠ biological significance</span></div>
+
+<!--topic 7.2: Normalisation Methods-->
+          <p class="sub">Raw read counts cannot be compared directly across samples or genes because they are confounded by two major technical factors: <strong>library size</strong> (total number of reads sequenced) and <strong>gene length</strong> (longer genes capture more reads). Normalisation removes these technical biases so that observed differences reflect true biological variation. Choosing the wrong normalisation method for your analysis is one of the most common errors in bioinformatics.</p>
+
+          <h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">Why Normalisation Is Needed — A Concrete Example</h3>
+          <p class="sub">Suppose Gene X has 100 raw counts in both Sample A and Sample B. It looks like equal expression. But Sample A has 10 million total reads and Sample B has 20 million total reads. Gene X consumed 100/10,000,000 = 0.001% of Sample A's reads, but only 100/20,000,000 = 0.0005% of Sample B's. <strong>Gene X is actually expressed at half the level in Sample B.</strong> Without normalisation, you would completely miss this 2-fold difference.</p>
+
+          <h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">Normalisation Methods</h3>
+          <div class="card-grid card-grid-2" style="gap:10px;margin-top:12px;">
+            <div class="card" style="padding:14px;"><strong>CPM (Counts Per Million)</strong><p class="sub" style="margin-top:4px;">Corrects for library size only. Formula: CPM = (raw count / total counts) &times; 10<sup>6</sup>. Use for within-gene comparisons across samples. Does NOT correct for gene length, so cannot compare expression between different genes.</p></div>
+            <div class="card" style="padding:14px;"><strong>TPM (Transcripts Per Million)</strong><p class="sub" style="margin-top:4px;">Corrects for gene length first, then library size. Formula: (1) Divide counts by gene length in kb → RPK. (2) Sum all RPK values → scaling factor. (3) Divide each RPK by scaling factor &times; 10<sup>6</sup>. TPM values sum to 1 million per sample, making samples directly comparable. Current standard for expression visualisation.</p></div>
+            <div class="card" style="padding:14px;"><strong>RPKM / FPKM</strong><p class="sub" style="margin-top:4px;">RPKM = Reads Per Kilobase per Million mapped reads. FPKM = the paired-end equivalent. Formula: RPKM = (raw count &times; 10<sup>9</sup>) / (total counts &times; gene length). Problem: RPKM values do NOT sum to the same value across samples, making cross-sample comparison unreliable. <strong>Superseded by TPM.</strong></p></div>
+            <div class="card" style="padding:14px;"><strong>DESeq2 size factors (median-of-ratios)</strong><p class="sub" style="margin-top:4px;">Computes a per-sample scaling factor that accounts for library size AND composition bias (when a few highly expressed genes consume a disproportionate fraction of reads). Does NOT correct for gene length. Used internally by DESeq2 for differential expression.</p></div>
+          </div>
+
+          <h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">DESeq2 Size Factor Calculation</h3>
+          <p class="sub">The median-of-ratios method works as follows: (1) For each gene, compute the geometric mean across all samples. (2) For each sample, divide each gene's count by this geometric mean. (3) The <strong>median</strong> of these ratios is the size factor for that sample. Using the median makes this robust to outlier genes (e.g., one massively upregulated gene does not skew the normalisation).</p>
+          <div class="code-block" style="margin-top:8px;"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button><span class="code-comment"># DESeq2 size factors (computed automatically by DESeq())</span>
+dds &lt;- estimateSizeFactors(dds)
+sizeFactors(dds)
+<span class="code-comment"># Values near 1.0 = average library. &gt;1 = larger library. &lt;1 = smaller library.</span>
+<span class="code-comment"># Normalised counts = raw count / size factor</span>
+normalized_counts &lt;- counts(dds, normalized=TRUE)</div>
+
+          <h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">TMM Normalisation in edgeR</h3>
+          <p class="sub">TMM (Trimmed Mean of M-values) is the normalisation method used by edgeR. It works by selecting a reference sample, computing fold-changes and absolute expression levels between each sample and the reference, trimming the extremes (top/bottom 30% of fold-changes, top/bottom 5% of expression), and computing a weighted mean of the remaining values as the scaling factor.</p>
+          <div class="code-block" style="margin-top:8px;"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button><span class="code-comment"># TMM normalisation in edgeR</span>
+library(edgeR)
+dge &lt;- DGEList(counts = count_matrix)
+dge &lt;- calcNormFactors(dge, method = "TMM")
+<span class="code-comment"># Effective library size = lib.size * norm.factors</span>
+dge$samples</div>
+
+          <h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">Which Normalisation for Which Purpose?</h3>
+          <div class="card-grid card-grid-2" style="gap:10px;margin-top:8px;">
+            <div class="card" style="padding:14px;"><strong>Differential expression analysis</strong><p class="sub" style="margin-top:4px;">Use <strong>raw counts</strong> as input to DESeq2 or edgeR. These tools apply their own internal normalisation (size factors or TMM). Never pre-normalise counts before DE analysis.</p></div>
+            <div class="card" style="padding:14px;"><strong>Cross-sample visualisation (heatmaps, PCA)</strong><p class="sub" style="margin-top:4px;">Use <strong>TPM</strong> or variance-stabilised transform (VST/rlog from DESeq2). These make samples comparable for visualisation.</p></div>
+            <div class="card" style="padding:14px;"><strong>Cross-gene comparison within a sample</strong><p class="sub" style="margin-top:4px;">Use <strong>TPM</strong> (accounts for gene length). CPM is insufficient because longer genes accumulate more reads regardless of expression level.</p></div>
+            <div class="card" style="padding:14px;"><strong>Reporting expression levels</strong><p class="sub" style="margin-top:4px;">Use <strong>TPM</strong> in publications and supplementary tables. It is the current community standard and is comparable across samples and studies (with caveats).</p></div>
+          </div>
+
+          <div class="info-box warn"><svg class="ico" aria-hidden="true"><use href="#i-warn"></use></svg><div><strong>Common mistakes:</strong> (1) Using RPKM/FPKM for differential expression — these are not appropriate because the variance structure is lost. (2) Using CPM to compare expression between genes of different lengths. (3) Pre-normalising counts before passing to DESeq2 — the tool expects raw integer counts.</div></div>
+
+          <div class="chips" style="margin-top:14px;"><span class="chip">Raw counts for DE analysis</span><span class="chip">TPM for visualisation</span><span class="chip">RPKM/FPKM is outdated</span><span class="chip">DESeq2 = median-of-ratios</span><span class="chip">edgeR = TMM</span><span class="chip">Library size + composition bias</span><span class="chip">Gene length matters for cross-gene comparison</span></div>
+
+<!--topic 7.3: PCA &amp; Clustering for Quality Control-->
+          <p class="sub">Before running differential expression, you should always visualise your samples using dimensionality reduction (PCA) and clustering. These exploratory analyses reveal sample outliers, batch effects, sample mix-ups, and whether your biological conditions are the dominant source of variation. Skipping this step means you may not discover critical problems until after you have wasted time on downstream analysis.</p>
+
+          <h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">What PCA Actually Does</h3>
+          <p class="sub">Principal Component Analysis (PCA) takes your high-dimensional data (20,000 genes per sample) and finds the <strong>directions of maximum variance</strong>. The first principal component (PC1) captures the most variance in the data, PC2 captures the second most (orthogonal to PC1), and so on. By plotting samples on PC1 vs PC2, you project 20,000 dimensions down to 2, preserving as much information as possible.</p>
+
+          <h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">Interpreting a PCA Plot</h3>
+          <div class="card-grid card-grid-2" style="gap:10px;margin-top:8px;">
+            <div class="card" style="padding:14px;"><strong>PC1 (X-axis)</strong><p class="sub" style="margin-top:4px;">Captures the largest source of variation. Ideally this is your biological condition (treatment vs control). The % variance explained is shown in the axis label (e.g., "PC1: 65% variance").</p></div>
+            <div class="card" style="padding:14px;"><strong>PC2 (Y-axis)</strong><p class="sub" style="margin-top:4px;">The second largest source of variation. Often captures batch effects, sex differences, or other covariates. If PC2 separates batches more than conditions, you have a batch effect problem.</p></div>
+            <div class="card" style="padding:14px;"><strong>Good PCA</strong><p class="sub" style="margin-top:4px;">Replicates cluster tightly together. Conditions separate clearly along PC1. Percentage of variance explained by PC1 is high (&gt;30%).</p></div>
+            <div class="card" style="padding:14px;"><strong>Problematic PCA</strong><p class="sub" style="margin-top:4px;">One replicate clusters with the wrong condition (sample mix-up). Samples cluster by batch rather than condition (batch effect). One sample is far from all others (outlier — consider removal).</p></div>
+          </div>
+
+          <h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">PCA and Sample Distance Heatmap Code</h3>
+          <div class="code-block"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button>library(DESeq2); library(ggplot2); library(pheatmap)
+
+<span class="code-comment"># Variance stabilising transformation (for visualisation only)</span>
+vsd &lt;- vst(dds, blind=TRUE)
+
+<span class="code-comment"># PCA plot coloured by condition</span>
+plotPCA(vsd, intgroup="condition") +
+  theme_minimal(base_size=14) +
+  ggtitle("PCA — Sample Overview") +
+  theme(plot.title = element_text(face="bold"))
+
+<span class="code-comment"># Custom PCA with more components</span>
+pcaData &lt;- plotPCA(vsd, intgroup=c("condition","batch"), returnData=TRUE)
+percentVar &lt;- round(100 * attr(pcaData, "percentVar"))
+ggplot(pcaData, aes(PC1, PC2, color=condition, shape=batch)) +
+  geom_point(size=4) +
+  xlab(paste0("PC1: ", percentVar[1], "% variance")) +
+  ylab(paste0("PC2: ", percentVar[2], "% variance")) +
+  theme_minimal(base_size=14)
+
+<span class="code-comment"># Sample distance heatmap</span>
+sampleDists &lt;- dist(t(assay(vsd)))
+sampleDistMatrix &lt;- as.matrix(sampleDists)
+colnames(sampleDistMatrix) &lt;- NULL
+annotation_df &lt;- as.data.frame(colData(dds)[, c("condition"), drop=FALSE])
+pheatmap(sampleDistMatrix,
+  clustering_distance_rows = sampleDists,
+  clustering_distance_cols = sampleDists,
+  annotation_row = annotation_df,
+  color = colorRampPalette(c("white","steelblue"))(50))</div>
+
+          <h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">Detecting and Correcting Batch Effects</h3>
+          <p class="sub">If your PCA shows samples clustering by batch (processing date, lane, technician) rather than by biological condition, you have a batch effect. Two common correction methods:</p>
+          <div class="code-block" style="margin-top:8px;"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button><span class="code-comment"># Option 1: ComBat (from sva package) — for correcting normalised data</span>
+library(sva)
+<span class="code-comment"># Use on normalised expression matrix (for visualisation, clustering)</span>
+adjusted &lt;- ComBat(
+  dat = assay(vsd),
+  batch = colData(dds)$batch,
+  mod = model.matrix(~ condition, data=colData(dds))
+)
+<span class="code-comment"># Now use 'adjusted' matrix for PCA, heatmaps, etc.</span>
+
+<span class="code-comment"># Option 2: removeBatchEffect (from limma) — for visualisation only</span>
+library(limma)
+adjusted &lt;- removeBatchEffect(
+  assay(vsd),
+  batch = colData(dds)$batch,
+  design = model.matrix(~ condition, data=colData(dds))
+)
+<span class="code-comment"># Use adjusted matrix for PCA/heatmaps</span>
+
+<span class="code-comment"># For DE analysis: do NOT use corrected data!</span>
+<span class="code-comment"># Instead, include batch in the DESeq2 design formula:</span>
+<span class="code-comment"># design = ~ batch + condition</span></div>
+          <div class="info-box warn"><svg class="ico" aria-hidden="true"><use href="#i-warn"></use></svg><div><strong>Never use batch-corrected data for differential expression.</strong> ComBat and removeBatchEffect are for visualisation and clustering only. For DE analysis, include the batch variable in the DESeq2 design formula (<code>~ batch + condition</code>). DESeq2 will model and remove the batch effect statistically.</div></div>
+
+          <h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">Hierarchical Clustering Methods</h3>
+          <div class="card-grid card-grid-2" style="gap:10px;margin-top:8px;">
+            <div class="card" style="padding:14px;"><strong>Ward's method (ward.D2)</strong><p class="sub" style="margin-top:4px;">Minimises within-cluster variance. Produces compact, evenly-sized clusters. Best for sample clustering in gene expression data. Most commonly used.</p></div>
+            <div class="card" style="padding:14px;"><strong>Complete linkage</strong><p class="sub" style="margin-top:4px;">Distance between clusters = maximum distance between any two members. Produces tight clusters. Sensitive to outliers.</p></div>
+            <div class="card" style="padding:14px;"><strong>Average linkage (UPGMA)</strong><p class="sub" style="margin-top:4px;">Distance between clusters = mean of all pairwise distances. Produces ultrametric trees. Used in phylogenetics but assumes constant rate of evolution.</p></div>
+            <div class="card" style="padding:14px;"><strong>Gene expression heatmap</strong><p class="sub" style="margin-top:4px;">Rows = genes (usually top DEGs), columns = samples. Colour = expression level (z-score). Both rows and columns are clustered. Reveals co-expression patterns.</p></div>
+          </div>
+
+          <div class="code-block" style="margin-top:8px;"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button><span class="code-comment"># Gene expression heatmap of top 50 DEGs</span>
+library(pheatmap)
+top50 &lt;- head(order(res$padj), 50)
+mat &lt;- assay(vsd)[top50, ]
+mat &lt;- t(scale(t(mat)))  <span class="code-comment"># Z-score per gene (row)</span>
+
+pheatmap(mat,
+  annotation_col = as.data.frame(colData(dds)[, "condition", drop=FALSE]),
+  clustering_method = "ward.D2",
+  show_rownames = TRUE,
+  fontsize_row = 7,
+  color = colorRampPalette(c("navy","white","firebrick3"))(50),
+  main = "Top 50 Differentially Expressed Genes")</div>
+
+          <div class="info-box tip"><svg class="ico" aria-hidden="true"><use href="#i-tip"></use></svg><div><strong>What % variance explained means:</strong> If PC1 explains 65% of the variance, it means 65% of all the variation across your 20,000 genes can be captured by a single direction. The remaining 35% is spread across all other PCs. High PC1 variance usually means a strong biological signal (good). Very low PC1 (&lt;15%) may mean high noise or complex multi-factor design.</div></div>
+
+          <div class="chips" style="margin-top:14px;"><span class="chip">PCA before DE analysis</span><span class="chip">PC1 = largest variance source</span><span class="chip">Replicates should cluster together</span><span class="chip">ComBat / limma for batch correction</span><span class="chip">~ batch + condition in DESeq2</span><span class="chip">Ward.D2 for clustering</span><span class="chip">Z-score heatmaps for DEGs</span></div>

@@ -1,0 +1,82 @@
+<!--
+path: /learn/practice-dataset
+id: edu
+nav: learn
+kind: Practice
+title: Practice dataset: run an RNA-seq analysis with a known answer | BioInfoCodex
+description: Practise RNA-seq analysis on the airway study (GSE52778): eight public samples, dexamethasone against untreated, with seven genes you should recover.
+crumbs: Learn=/learn > Practice dataset=/learn/practice-dataset
+-->
+<div class="learn-wrap doc-narrow">
+  <div class="breadcrumb" role="navigation" aria-label="Breadcrumb"><a href="/learn">Learn</a><span class="breadcrumb-sep">›</span><span aria-current="page">Practice dataset</span></div>
+  <div class="label">Practice</div>
+  <h1 class="h1 doc-h1">Run an RNA-seq analysis with a known answer</h1>
+  <p class="lead">Reading about a pipeline is not the same as running one. This page gives you a small public dataset whose result is well established, so you can check your own analysis against it.</p>
+
+  <div class="prose">
+    <h2>The dataset</h2>
+    <p>The airway study (GEO series <a href="https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE52778" rel="noopener">GSE52778</a>; Himes et al., 2014) sequenced human airway smooth-muscle cells from four donors, each with and without the glucocorticoid dexamethasone. It is the dataset behind the Bioconductor <code>airway</code> package and one of the most re-analysed RNA-seq experiments, which makes it a good first target.</p>
+    <ul>
+      <li><strong>Question:</strong> which genes change when the cells are treated with dexamethasone?</li>
+      <li><strong>Design:</strong> 4 donors × 2 conditions = 8 samples, paired-end reads. Each donor has both conditions, so this is a paired design.</li>
+      <li><strong>Organism:</strong> human.</li>
+    </ul>
+
+    <div class="table-scroll">
+      <table class="data-table">
+        <thead><tr><th>Run</th><th>Donor (cell line)</th><th>Condition</th></tr></thead>
+        <tbody>
+          <tr><td><code>SRR1039508</code></td><td>N61311</td><td>untreated</td></tr>
+          <tr><td><code>SRR1039509</code></td><td>N61311</td><td>dexamethasone</td></tr>
+          <tr><td><code>SRR1039512</code></td><td>N052611</td><td>untreated</td></tr>
+          <tr><td><code>SRR1039513</code></td><td>N052611</td><td>dexamethasone</td></tr>
+          <tr><td><code>SRR1039516</code></td><td>N080611</td><td>untreated</td></tr>
+          <tr><td><code>SRR1039517</code></td><td>N080611</td><td>dexamethasone</td></tr>
+          <tr><td><code>SRR1039520</code></td><td>N061011</td><td>untreated</td></tr>
+          <tr><td><code>SRR1039521</code></td><td>N061011</td><td>dexamethasone</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>The GEO series also contains albuterol-treated samples. Use only the eight runs above.</p>
+
+    <div class="info-box warn"><svg class="ico" aria-hidden="true"><use href="#i-warn"></use></svg><div><strong>Size.</strong> The full FASTQ files for eight human samples take tens of gigabytes and several hours on a laptop. For practice, a subset of a few million read pairs per sample is enough to recover the main result. RNAflow's own benchmark uses 4 million read pairs per sample; its <a href="%%RNAFLOW_REPO%%/tree/main/benchmark" rel="noopener">benchmark folder</a> has the script that fetches that subset.</div></div>
+
+    <h2>Option 1: with RNAflow</h2>
+    <ol>
+      <li><a href="/download">Install RNAflow</a> and let it set up its tools on first launch.</li>
+      <li>Start a project with <strong>Human</strong> as the organism, and import the samples by pasting the accession <code>GSE52778</code>. Keep the eight runs in the table.</li>
+      <li>Set the two conditions (untreated and dexamethasone) and use a paired design, with the donor as the pairing factor.</li>
+      <li>Follow the steps in order. The <a href="/tools/rnaflow">manual</a> explains what each one does and what good output looks like.</li>
+    </ol>
+
+    <h2>Option 2: on the command line</h2>
+    <p>Download the reads with sra-tools, then follow the <a href="/learn/rna-seq">RNA-seq module</a> step by step.</p>
+    <div class="code-block"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button>mkdir -p airway/raw &amp;&amp; cd airway
+for run in SRR1039508 SRR1039509 SRR1039512 SRR1039513 \
+           SRR1039516 SRR1039517 SRR1039520 SRR1039521; do
+  fasterq-dump "$run" --split-files --outdir raw --progress
+done
+gzip raw/*.fastq</div>
+    <p>The <a href="/learn/cheat-sheets#rna-seq">RNA-seq cheat sheet</a> has the commands for the steps that follow.</p>
+
+    <h2>What you should find</h2>
+    <p>Dexamethasone switches on a well-known set of glucocorticoid-response genes. All seven of these should be significantly up-regulated in your result:</p>
+    <p class="gene-list"><code>DUSP1</code> <code>FKBP5</code> <code>KLF15</code> <code>PER1</code> <code>TSC22D3</code> <code>ZBTB16</code> <code>CRISPLD2</code></p>
+    <figure class="result-figure result-figure-inline">
+      <img src="/img/rnaflow-airway-volcano.png" width="1200" height="1200" loading="lazy"
+           alt="Volcano plot of the airway dataset analysed with RNAflow: 275 genes up and 170 down, with the seven glucocorticoid-response genes labelled in bold among the up-regulated genes.">
+      <figcaption>RNAflow's result on this dataset: 275 genes up and 170 down at adjusted p &lt; 0.05 and |log2 fold change| &gt; 1. Your counts will be close to these but not identical, because they depend on read depth, the annotation release and the route you took.</figcaption>
+    </figure>
+
+    <h2>Check your work</h2>
+    <ul class="checklist">
+      <li>Alignment or mapping rate is high (above about 90% for this dataset).</li>
+      <li>In the PCA plot, samples separate by treatment once the donor effect is accounted for.</li>
+      <li>The seven genes above appear among the up-regulated genes.</li>
+      <li>You can say, in one sentence, why a paired design fits this experiment better than an unpaired one.</li>
+    </ul>
+
+    <h2>Reference</h2>
+    <p>Himes BE, Jiang X, Wagner P, et al. (2014). RNA-Seq transcriptome profiling identifies CRISPLD2 as a glucocorticoid responsive gene that modulates cytokine function in airway smooth muscle cells. <em>PLoS ONE</em> 9(6): e99625.</p>
+  </div>
+</div>

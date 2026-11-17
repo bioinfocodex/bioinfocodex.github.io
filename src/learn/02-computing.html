@@ -1,0 +1,545 @@
+<!--
+module: 2
+slug: computing
+short: Computing
+label: Module 2 · Computing Skills
+title: Linux, Terminal &amp; Programming for Bioinformatics
+-->
+<p class="lead">Almost all bioinformatics tools run on Linux/macOS in the terminal. This module teaches you the computing skills you need before running any analysis — from basic commands to writing scripts.</p>
+
+<!--topic 2.1: Essential Linux / Terminal Commands-->
+          <p class="sub">You will spend 80% of your time in the terminal. These commands are non-negotiable knowledge. Linux (and macOS terminal) is the native environment for nearly all bioinformatics tools. Mastering the command line is not optional — it is the single most important skill for a bioinformatician.</p>
+
+          <h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">Navigation and File Operations</h3>
+          <div class="code-block"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button><span class="code-comment"># Navigation</span>
+pwd                        <span class="code-comment"># Print current directory</span>
+ls -lh                     <span class="code-comment"># List files (human-readable sizes)</span>
+ls -lhS                    <span class="code-comment"># List files sorted by size (largest first)</span>
+ls -lht                    <span class="code-comment"># List files sorted by modification time</span>
+cd /path/to/folder         <span class="code-comment"># Change directory</span>
+cd ..                      <span class="code-comment"># Go up one level</span>
+cd ~                       <span class="code-comment"># Go to home directory</span>
+cd -                       <span class="code-comment"># Go to previous directory (very useful!)</span>
+
+<span class="code-comment"># File operations</span>
+cp source.txt dest.txt     <span class="code-comment"># Copy file</span>
+cp -r dir1/ dir2/          <span class="code-comment"># Copy directory recursively</span>
+mv old.txt new.txt         <span class="code-comment"># Move or rename</span>
+rm file.txt                <span class="code-comment"># Delete file (PERMANENT — no Trash!)</span>
+mkdir -p project/data/raw  <span class="code-comment"># Create nested directories</span>
+ln -s /path/to/file link   <span class="code-comment"># Create symbolic link (saves disk space)</span>
+
+<span class="code-comment"># Viewing files</span>
+cat file.txt               <span class="code-comment"># Print entire file</span>
+head -20 file.txt          <span class="code-comment"># First 20 lines</span>
+tail -20 file.txt          <span class="code-comment"># Last 20 lines</span>
+less file.txt              <span class="code-comment"># Page through (press q to quit)</span>
+wc -l file.txt             <span class="code-comment"># Count lines</span>
+
+<span class="code-comment"># Searching</span>
+grep "pattern" file.txt    <span class="code-comment"># Find lines matching pattern</span>
+grep -c ">" file.fa        <span class="code-comment"># Count sequences in FASTA</span>
+grep -v "^#" file.vcf      <span class="code-comment"># Exclude comment/header lines</span>
+find . -name "*.fastq.gz"  <span class="code-comment"># Find files by name pattern</span>
+
+<span class="code-comment"># Compression</span>
+gzip file.fastq            <span class="code-comment"># Compress (creates .fastq.gz)</span>
+gunzip file.fastq.gz       <span class="code-comment"># Decompress</span>
+zcat file.fastq.gz | head  <span class="code-comment"># View compressed file without decompressing</span></div>
+
+          <div class="info-box warn"><svg class="ico" aria-hidden="true"><use href="#i-warn"></use></svg><div><code>rm -rf</code> is permanent and irreversible. There is no Trash. Always double-check before running delete commands. Never run <code>rm -rf /</code> or <code>rm -rf *</code> without absolute certainty.</div></div>
+
+          <h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">File Permissions</h3>
+          <p class="sub">Linux file permissions control who can read, write, and execute files. Understanding permissions is essential because scripts need execute permission, and shared HPC directories require correct group permissions.</p>
+          <div class="code-block"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button><span class="code-comment"># View permissions (the -rwxr-xr-- part of ls -l output)</span>
+ls -l script.sh
+<span class="code-comment"># Output: -rwxr-xr-- 1 user group 1234 Mar 20 10:00 script.sh</span>
+<span class="code-comment">#   r=read(4), w=write(2), x=execute(1)</span>
+<span class="code-comment">#   Positions: owner | group | others</span>
+
+<span class="code-comment"># Make a script executable</span>
+chmod +x script.sh         <span class="code-comment"># Add execute permission for everyone</span>
+chmod 755 script.sh        <span class="code-comment"># rwx for owner, rx for group and others</span>
+chmod 644 data.txt         <span class="code-comment"># rw for owner, read-only for group and others</span>
+
+<span class="code-comment"># Change ownership (requires sudo or being the owner)</span>
+chown user:group file.txt  <span class="code-comment"># Change owner and group</span>
+chgrp labgroup project/    <span class="code-comment"># Change group for shared projects</span></div>
+
+          <h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">Pipes and Redirection</h3>
+          <p class="sub">Pipes (<code>|</code>) and redirection (<code>&gt;</code>, <code>&gt;&gt;</code>) are the heart of Unix philosophy — chain small tools together to accomplish complex tasks. This is how most bioinformatics one-liners work.</p>
+          <div class="code-block"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button><span class="code-comment"># Pipe: send output of one command as input to the next</span>
+cat file.fastq | grep "^@" | wc -l    <span class="code-comment"># Count reads in FASTQ</span>
+
+<span class="code-comment"># Redirect output to a file</span>
+samtools flagstat file.bam > stats.txt  <span class="code-comment"># Overwrite file</span>
+echo "run complete" >> log.txt          <span class="code-comment"># Append to file</span>
+
+<span class="code-comment"># Redirect stderr separately from stdout</span>
+hisat2 -x index -U reads.fq -S out.sam 2> alignment_log.txt
+
+<span class="code-comment"># Redirect both stdout and stderr</span>
+command &> all_output.txt
+
+<span class="code-comment"># Powerful bioinformatics one-liners using pipes</span>
+<span class="code-comment"># Count reads per chromosome from BAM:</span>
+samtools idxstats sorted.bam | cut -f1,3 | sort -k2 -nr | head
+
+<span class="code-comment"># Extract unique gene names from a GTF file:</span>
+grep -v "^#" genes.gtf | awk '$3=="gene"' | grep -o 'gene_name "[^"]*"' | sort -u | wc -l</div>
+
+          <h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">Process Management</h3>
+          <p class="sub">Bioinformatics jobs often run for hours. Knowing how to manage long-running processes is critical, especially when working over SSH.</p>
+          <div class="code-block"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button><span class="code-comment"># Monitor system resources</span>
+top                        <span class="code-comment"># Live process viewer (press q to quit)</span>
+htop                       <span class="code-comment"># Better version of top (install with conda)</span>
+df -h                      <span class="code-comment"># Check disk space</span>
+du -sh */                  <span class="code-comment"># Size of each subdirectory</span>
+free -h                    <span class="code-comment"># Check available RAM</span>
+
+<span class="code-comment"># Run jobs in background</span>
+nohup long_command &        <span class="code-comment"># Run in background, survives logout</span>
+jobs                        <span class="code-comment"># List background jobs</span>
+kill %1                     <span class="code-comment"># Kill background job #1</span>
+kill -9 12345               <span class="code-comment"># Force kill process by PID</span>
+
+<span class="code-comment"># screen / tmux — persistent terminal sessions (essential for SSH)</span>
+screen -S mysession         <span class="code-comment"># Start named session</span>
+<span class="code-comment"># Ctrl+A, D to detach</span>
+screen -r mysession         <span class="code-comment"># Reattach to session</span>
+screen -ls                  <span class="code-comment"># List sessions</span>
+
+<span class="code-comment"># tmux (modern alternative to screen)</span>
+tmux new -s analysis        <span class="code-comment"># Start named session</span>
+<span class="code-comment"># Ctrl+B, D to detach</span>
+tmux attach -t analysis     <span class="code-comment"># Reattach</span></div>
+
+          <h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">SSH for HPC / Server Access</h3>
+          <p class="sub">Most bioinformatics work is done on remote servers or High-Performance Computing (HPC) clusters. SSH (Secure Shell) is how you connect:</p>
+          <div class="code-block"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button><span class="code-comment"># Basic SSH connection</span>
+ssh username@hpc.university.edu
+
+<span class="code-comment"># SSH with key authentication (more secure, no password prompt)</span>
+ssh-keygen -t ed25519       <span class="code-comment"># Generate key pair (once)</span>
+ssh-copy-id user@server     <span class="code-comment"># Copy public key to server</span>
+
+<span class="code-comment"># Transfer files with scp</span>
+scp local_file.txt user@server:/path/to/dest/
+scp user@server:/path/to/results.txt ./
+
+<span class="code-comment"># Transfer files with rsync (better for large transfers — resumable)</span>
+rsync -avP local_dir/ user@server:/remote/dir/</div>
+
+          <h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">Bioinformatics-Specific Tricks</h3>
+          <div class="code-block"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button><span class="code-comment"># Run a command on multiple files with xargs</span>
+ls *.fastq.gz | xargs -I {} fastqc {}
+
+<span class="code-comment"># GNU parallel — run commands in parallel (much faster)</span>
+ls *.fastq.gz | parallel -j 4 "fastqc {}"
+
+<span class="code-comment"># Process all FASTQ pairs in a directory</span>
+for f in *_R1.fastq.gz; do
+  r2=${f/_R1/_R2}
+  sample=$(basename $f _R1.fastq.gz)
+  echo "Processing $sample: $f and $r2"
+done
+
+<span class="code-comment"># Quick stats: column-based operations with awk</span>
+awk '{sum+=$5} END {print "Mean:", sum/NR}' data.txt
+
+<span class="code-comment"># Sort and remove duplicate lines</span>
+sort -u gene_list.txt > unique_genes.txt
+
+<span class="code-comment"># Join two files by a common column</span>
+join -t$'\t' -1 1 -2 1 &lt;(sort file1.txt) &lt;(sort file2.txt)</div>
+
+          <div class="info-box note" style="margin-top:14px;"><svg class="ico" aria-hidden="true"><use href="#i-note"></use></svg><div><strong>Key Takeaways:</strong><br>
+          &bull; Master navigation (cd, ls, pwd), file operations (cp, mv, rm), and file viewing (head, tail, less, grep)<br>
+          &bull; Understand permissions (chmod 755) — your scripts must be executable to run<br>
+          &bull; Pipes and redirection are the foundation of bioinformatics one-liners<br>
+          &bull; Use screen/tmux for persistent sessions when working over SSH<br>
+          &bull; GNU parallel and xargs enable efficient batch processing of many files</div></div>
+
+<!--topic 2.2: Setting Up Your Environment (Conda)-->
+          <p class="sub">Conda is the standard package manager for bioinformatics. It installs tools and manages dependencies so they don't conflict with each other. Proper environment management is one of the most important skills for reproducible research — if you cannot recreate your exact software environment, your results cannot be reproduced.</p>
+
+          <h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">Installing Conda / Mamba</h3>
+          <div class="code-block"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button><span class="code-comment"># Option A: Install Miniconda (traditional)</span>
+wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
+bash Miniconda3-latest-Linux-x86_64.sh
+source ~/.bashrc
+
+<span class="code-comment"># Option B: Install Miniforge (RECOMMENDED — includes mamba by default)</span>
+wget https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-Linux-x86_64.sh
+bash Miniforge3-Linux-x86_64.sh
+source ~/.bashrc
+
+<span class="code-comment"># Set up bioinformatics channels</span>
+conda config --add channels defaults
+conda config --add channels bioconda
+conda config --add channels conda-forge
+conda config --set channel_priority strict  <span class="code-comment"># Important for reproducibility</span></div>
+
+          <div class="info-box tip"><svg class="ico" aria-hidden="true"><use href="#i-tip"></use></svg><div><strong>Why Mamba over Conda?</strong> Mamba is a drop-in replacement for conda that uses a C++ solver instead of Python. It resolves dependencies 10-50x faster than conda. With Miniforge, mamba is included by default. Just replace <code>conda install</code> with <code>mamba install</code> — everything else is the same.</div></div>
+
+          <h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">Creating and Managing Environments</h3>
+          <div class="code-block"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button><span class="code-comment"># Create a project environment (ALWAYS use environments!)</span>
+mamba create -n rnaseq python=3.10
+conda activate rnaseq
+
+<span class="code-comment"># Install tools into the environment</span>
+mamba install -c bioconda fastqc trim-galore hisat2 samtools subread
+mamba install -c conda-forge r-base r-biocmanager
+
+<span class="code-comment"># List installed tools and their versions</span>
+conda list
+
+<span class="code-comment"># Save environment for reproducibility</span>
+conda env export > environment.yml
+<span class="code-comment"># Recreate on another machine:</span>
+conda env create -f environment.yml
+
+<span class="code-comment"># Useful management commands</span>
+conda env list                  <span class="code-comment"># List all environments</span>
+conda deactivate                <span class="code-comment"># Return to base</span>
+conda env remove -n old_env     <span class="code-comment"># Delete an environment</span></div>
+          <div class="info-box warn"><svg class="ico" aria-hidden="true"><use href="#i-warn"></use></svg><div><strong>Never install tools into your base environment.</strong> One project = one environment. This prevents version conflicts between projects and ensures reproducibility.</div></div>
+
+          <h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">Containers: Docker and Singularity</h3>
+          <p class="sub">Containers go beyond conda by packaging the <em>entire</em> operating system, libraries, and tools into a single portable image. This guarantees that the software runs identically on any machine. Docker is the standard for local development; <strong>Singularity (Apptainer)</strong> is the standard on HPC clusters because it does not require root privileges.</p>
+          <div class="code-block"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button><span class="code-comment"># Docker — pull and run a bioinformatics image</span>
+docker pull biocontainers/samtools:v1.17
+docker run -v $(pwd):/data biocontainers/samtools:v1.17 samtools flagstat /data/aligned.bam
+
+<span class="code-comment"># Singularity — the HPC alternative (no root needed)</span>
+singularity pull docker://biocontainers/samtools:v1.17
+singularity exec samtools_v1.17.sif samtools flagstat aligned.bam
+
+<span class="code-comment"># Many Nextflow/Snakemake pipelines use containers automatically</span></div>
+
+          <h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">Project Directory Structure</h3>
+          <p class="sub">Organising your project directory consistently saves enormous time and prevents errors. Here is a recommended structure:</p>
+          <div class="code-block"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button><span class="code-comment"># Create a standard project structure</span>
+mkdir -p my_rnaseq_project/{data/{raw,trimmed,aligned},results/{counts,deseq2,figures},scripts,logs,ref}
+
+<span class="code-comment"># Resulting structure:</span>
+<span class="code-comment"># my_rnaseq_project/</span>
+<span class="code-comment">#   data/</span>
+<span class="code-comment">#     raw/          &lt;-- raw FASTQ files (never modify these!)</span>
+<span class="code-comment">#     trimmed/      &lt;-- trimmed FASTQ files</span>
+<span class="code-comment">#     aligned/      &lt;-- BAM files</span>
+<span class="code-comment">#   results/</span>
+<span class="code-comment">#     counts/       &lt;-- gene count matrices</span>
+<span class="code-comment">#     deseq2/       &lt;-- differential expression results</span>
+<span class="code-comment">#     figures/      &lt;-- publication-ready plots</span>
+<span class="code-comment">#   scripts/        &lt;-- analysis scripts (version controlled)</span>
+<span class="code-comment">#   logs/           &lt;-- log files from each step</span>
+<span class="code-comment">#   ref/            &lt;-- reference genome, GTF, indices</span></div>
+
+          <h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">Version Control with Git</h3>
+          <p class="sub">Track your analysis scripts with git. This provides a history of every change you made and allows collaboration. Do not track large data files — only scripts and small config files.</p>
+          <div class="code-block"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button><span class="code-comment"># Initialise a git repo in your project</span>
+cd my_rnaseq_project
+git init
+echo -e "data/\nresults/\nlogs/\n*.bam\n*.fastq.gz" > .gitignore
+git add scripts/ .gitignore environment.yml
+git commit -m "Initial project setup"
+
+<span class="code-comment"># Push to GitHub for backup and collaboration</span>
+git remote add origin https://github.com/user/project.git
+git push -u origin main</div>
+
+          <h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">HPC Module System</h3>
+          <p class="sub">Many HPC clusters use the <strong>module</strong> system instead of (or alongside) conda to manage software. The module system allows administrators to install centrally-maintained software that users can load as needed.</p>
+          <div class="code-block"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button><span class="code-comment"># Common module commands on HPC</span>
+module avail                  <span class="code-comment"># List all available modules</span>
+module avail samtools         <span class="code-comment"># Search for a specific tool</span>
+module load samtools/1.17     <span class="code-comment"># Load a specific version</span>
+module list                   <span class="code-comment"># Show currently loaded modules</span>
+module unload samtools        <span class="code-comment"># Unload a module</span>
+module purge                  <span class="code-comment"># Unload all modules</span></div>
+
+          <div class="info-box note" style="margin-top:14px;"><svg class="ico" aria-hidden="true"><use href="#i-note"></use></svg><div><strong>Key Takeaways:</strong><br>
+          &bull; Use Mamba (via Miniforge) instead of plain Conda for much faster dependency resolution<br>
+          &bull; Always create separate environments for each project; never install into base<br>
+          &bull; Containers (Docker/Singularity) provide the highest level of reproducibility<br>
+          &bull; Maintain a consistent project directory structure and track scripts with git<br>
+          &bull; On HPC clusters, use the module system or Singularity containers</div></div>
+
+<!--topic 2.3: Bash Scripting for Automation-->
+          <p class="sub">When you have 20 samples, you don't run commands one by one. Bash scripts automate repetitive tasks — this is the single most time-saving skill in bioinformatics. A well-written script ensures every sample is processed identically, provides a record of exactly what was done, and can be re-run when parameters need to change.</p>
+
+          <h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">Variables, Arrays, and String Operations</h3>
+          <div class="code-block"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button>#!/bin/bash
+
+<span class="code-comment"># Variables — no spaces around the = sign!</span>
+SAMPLE="control_rep1"
+THREADS=8
+GENOME="/ref/hg38/genome"
+
+<span class="code-comment"># String operations</span>
+echo ${SAMPLE}                  <span class="code-comment"># control_rep1</span>
+echo ${SAMPLE^^}                <span class="code-comment"># CONTROL_REP1 (uppercase)</span>
+echo ${SAMPLE/_rep1/}           <span class="code-comment"># control (substitution)</span>
+echo ${SAMPLE%.fastq.gz}        <span class="code-comment"># Remove suffix</span>
+
+<span class="code-comment"># Arrays — store lists of items</span>
+SAMPLES=("ctrl_1" "ctrl_2" "treat_1" "treat_2")
+echo ${SAMPLES[0]}              <span class="code-comment"># ctrl_1 (first element)</span>
+echo ${SAMPLES[@]}              <span class="code-comment"># All elements</span>
+echo ${#SAMPLES[@]}             <span class="code-comment"># 4 (number of elements)</span>
+
+<span class="code-comment"># Loop over array</span>
+for s in "${SAMPLES[@]}"; do
+    echo "Processing $s"
+done</div>
+
+          <h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">Conditionals (if/else)</h3>
+          <div class="code-block"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button>#!/bin/bash
+
+<span class="code-comment"># Check if a file exists before processing</span>
+if [ -f "${SAMPLE}_R1.fastq.gz" ]; then
+    echo "File found, processing..."
+elif [ -d "$INPUT_DIR" ]; then
+    echo "Directory exists but no file found"
+else
+    echo "ERROR: Input not found!" >&2
+    exit 1
+fi
+
+<span class="code-comment"># Check if a tool is installed</span>
+if ! command -v samtools &> /dev/null; then
+    echo "ERROR: samtools not found. Install with: mamba install -c bioconda samtools"
+    exit 1
+fi
+
+<span class="code-comment"># Numeric comparisons</span>
+READ_COUNT=$(zcat sample.fastq.gz | wc -l)
+READ_COUNT=$((READ_COUNT / 4))
+if [ "$READ_COUNT" -lt 1000000 ]; then
+    echo "WARNING: Only $READ_COUNT reads — too few for reliable DE analysis"
+fi</div>
+
+          <h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">Error Handling — set -euo pipefail</h3>
+          <p class="sub">By default, bash scripts continue running even when a command fails. This is dangerous — if trimming fails silently, you might align garbage data. Always start scripts with safety flags:</p>
+          <div class="code-block"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button>#!/bin/bash
+set -euo pipefail
+<span class="code-comment"># -e: Exit immediately if any command fails</span>
+<span class="code-comment"># -u: Treat unset variables as an error</span>
+<span class="code-comment"># -o pipefail: If any command in a pipe fails, the whole pipe fails</span>
+
+<span class="code-comment"># Without pipefail, this would silently fail if hisat2 crashes:</span>
+hisat2 -x index -U reads.fq | samtools sort -o out.bam
+<span class="code-comment"># With pipefail, the script stops and reports the error</span></div>
+          <div class="info-box warn"><svg class="ico" aria-hidden="true"><use href="#i-warn"></use></svg><div><code>set -euo pipefail</code> should be on line 2 of every bioinformatics script. Without it, you may not notice when a critical step fails, leading to incorrect results downstream.</div></div>
+
+          <h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">Logging Output</h3>
+          <div class="code-block"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button>#!/bin/bash
+set -euo pipefail
+
+<span class="code-comment"># Create a log file with timestamp</span>
+LOG="logs/pipeline_$(date +%Y%m%d_%H%M%S).log"
+exec > >(tee -a "$LOG") 2>&1   <span class="code-comment"># Send stdout and stderr to both screen and log</span>
+
+echo "Pipeline started at $(date)"
+echo "Working directory: $(pwd)"
+echo "Conda environment: $CONDA_DEFAULT_ENV"
+echo "---"
+
+<span class="code-comment"># Your pipeline commands here...</span>
+
+echo "Pipeline finished at $(date)"</div>
+
+          <h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">Full RNA-seq Pipeline Script</h3>
+          <div class="code-block"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button>#!/bin/bash
+set -euo pipefail
+
+<span class="code-comment"># ─────────────────────────────────────────</span>
+<span class="code-comment"># RNA-seq preprocessing pipeline</span>
+<span class="code-comment"># Usage: bash pipeline.sh</span>
+<span class="code-comment"># ─────────────────────────────────────────</span>
+
+<span class="code-comment"># Define paths (edit these)</span>
+RAW_DIR="./data/raw"
+TRIM_DIR="./data/trimmed"
+ALIGN_DIR="./data/aligned"
+GENOME_DIR="./ref"
+THREADS=8
+
+<span class="code-comment"># Create output directories</span>
+mkdir -p "$TRIM_DIR" "$ALIGN_DIR" "logs"
+
+<span class="code-comment"># Loop over all samples</span>
+for R1 in ${RAW_DIR}/*_R1.fastq.gz; do
+    SAMPLE=$(basename "$R1" _R1.fastq.gz)
+    R2="${RAW_DIR}/${SAMPLE}_R2.fastq.gz"
+
+    echo "=== Processing: $SAMPLE ==="
+
+    <span class="code-comment"># Check paired file exists</span>
+    if [ ! -f "$R2" ]; then
+        echo "ERROR: Paired file not found: $R2" >&2
+        exit 1
+    fi
+
+    <span class="code-comment"># Trim adapters with Trim Galore</span>
+    trim_galore --paired --cores $THREADS \
+        --fastqc -o "$TRIM_DIR" \
+        "$R1" "$R2" 2>&1 | tee "logs/${SAMPLE}_trim.log"
+
+    <span class="code-comment"># Align to genome</span>
+    hisat2 -p $THREADS -x "${GENOME_DIR}/hisat2_index" \
+        -1 "${TRIM_DIR}/${SAMPLE}_R1_val_1.fq.gz" \
+        -2 "${TRIM_DIR}/${SAMPLE}_R2_val_2.fq.gz" \
+        2> "logs/${SAMPLE}_align.log" \
+        | samtools sort -@ $THREADS -o "${ALIGN_DIR}/${SAMPLE}.bam"
+
+    samtools index "${ALIGN_DIR}/${SAMPLE}.bam"
+    echo "=== Done: $SAMPLE ==="
+done
+
+echo "All samples processed!"</div>
+
+          <h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">Running Scripts on HPC with SLURM</h3>
+          <p class="sub">On most HPC clusters, you do not run jobs directly. Instead, you submit them to a job scheduler (most commonly <strong>SLURM</strong>). SLURM allocates resources and runs your script when resources become available.</p>
+          <div class="code-block"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button>#!/bin/bash
+#SBATCH --job-name=rnaseq_align
+#SBATCH --output=logs/slurm_%j.out     <span class="code-comment"># %j = job ID</span>
+#SBATCH --error=logs/slurm_%j.err
+#SBATCH --time=12:00:00                <span class="code-comment"># Max wall time: 12 hours</span>
+#SBATCH --cpus-per-task=8              <span class="code-comment"># Number of CPU cores</span>
+#SBATCH --mem=32G                      <span class="code-comment"># RAM request</span>
+#SBATCH --partition=general            <span class="code-comment"># Queue/partition name</span>
+
+set -euo pipefail
+
+<span class="code-comment"># Load conda environment</span>
+source ~/.bashrc
+conda activate rnaseq
+
+<span class="code-comment"># Run the pipeline</span>
+bash scripts/pipeline.sh
+
+<span class="code-comment"># Submit with: sbatch scripts/slurm_align.sh</span>
+<span class="code-comment"># Monitor with: squeue -u $USER</span>
+<span class="code-comment"># Cancel with: scancel JOB_ID</span></div>
+
+          <div class="info-box tip" style="margin-top:12px;"><svg class="ico" aria-hidden="true"><use href="#i-tip"></use></svg><div><strong>SLURM array jobs</strong> let you submit one script that runs many times with different inputs — perfect for processing many samples in parallel: <code>#SBATCH --array=1-20</code> and use <code>$SLURM_ARRAY_TASK_ID</code> to select the sample.</div></div>
+
+          <div class="info-box note" style="margin-top:14px;"><svg class="ico" aria-hidden="true"><use href="#i-note"></use></svg><div><strong>Key Takeaways:</strong><br>
+          &bull; Always start scripts with <code>set -euo pipefail</code> to catch errors early<br>
+          &bull; Use variables for paths and parameters — makes scripts reusable<br>
+          &bull; Log everything: timestamps, tool versions, and parameters used<br>
+          &bull; Test on one sample before running on all; check outputs at each step<br>
+          &bull; On HPC, use SLURM (#SBATCH directives) to request resources and submit jobs</div></div>
+
+<!--topic 2.4: R for Bioinformatics — Getting Started-->
+          <p class="sub">R is the language of choice for statistical analysis, visualisation, and Bioconductor packages (DESeq2, edgeR, limma). You don't need to be a software engineer — a working knowledge of R is enough to run the statistical analyses and produce publication-quality plots that make up the second half of most bioinformatics projects.</p>
+
+          <h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">RStudio Setup</h3>
+          <p class="sub"><strong>RStudio</strong> is the standard IDE for R. It provides a console, script editor, plot viewer, file browser, and help panel in one interface. Install R first (from CRAN or via conda), then install RStudio Desktop (free). For HPC, you can use RStudio Server through a web browser.</p>
+          <div class="code-block"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button><span class="code-comment"># Install via conda (recommended for reproducibility)</span>
+mamba install -c conda-forge r-base=4.3 r-tidyverse r-biocmanager rstudio-desktop
+
+<span class="code-comment"># Or install R packages within R:</span>
+install.packages(c("tidyverse", "ggplot2", "pheatmap", "RColorBrewer"))
+
+<span class="code-comment"># Install Bioconductor packages</span>
+if (!require("BiocManager")) install.packages("BiocManager")
+BiocManager::install(c("DESeq2", "edgeR", "clusterProfiler",
+                        "EnhancedVolcano", "ComplexHeatmap", "org.Hs.eg.db"))</div>
+
+          <h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">Reading and Writing Data</h3>
+          <div class="code-block"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button><span class="code-comment"># Read different file formats</span>
+counts &lt;- read.csv("counts.csv", row.names = 1)       <span class="code-comment"># CSV</span>
+counts &lt;- read.delim("counts.txt", row.names = 1)     <span class="code-comment"># Tab-delimited</span>
+counts &lt;- readRDS("counts.rds")                        <span class="code-comment"># R binary (fast, compact)</span>
+
+<span class="code-comment"># Inspect the data</span>
+head(counts)          <span class="code-comment"># First 6 rows</span>
+dim(counts)           <span class="code-comment"># Dimensions: genes x samples</span>
+str(counts)           <span class="code-comment"># Structure of the object</span>
+summary(counts[, 1])  <span class="code-comment"># Summary statistics for first column</span>
+
+<span class="code-comment"># Write outputs</span>
+write.csv(results, "deseq2_results.csv")
+saveRDS(dds, "deseq2_object.rds")  <span class="code-comment"># Save full R object (can reload later)</span></div>
+
+          <h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">Tidyverse Data Wrangling</h3>
+          <p class="sub">The <strong>tidyverse</strong> is a collection of R packages (dplyr, tidyr, ggplot2, readr, etc.) that share a common design philosophy. The pipe operator (<code>|&gt;</code> or <code>%&gt;%</code>) chains operations together, making code readable.</p>
+          <div class="code-block"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button>library(tidyverse)
+
+<span class="code-comment"># Read metadata and filter</span>
+metadata &lt;- read_csv("metadata.csv")
+
+metadata |&gt;
+  filter(condition == "treated") |&gt;         <span class="code-comment"># Keep only treated samples</span>
+  select(sample_id, condition, batch) |&gt;    <span class="code-comment"># Select specific columns</span>
+  arrange(batch) |&gt;                         <span class="code-comment"># Sort by batch</span>
+  mutate(label = paste(condition, batch, sep = "_"))  <span class="code-comment"># Add new column</span>
+
+<span class="code-comment"># Summarise expression across groups</span>
+results &lt;- read_csv("deseq2_results.csv")
+results |&gt;
+  filter(!is.na(padj)) |&gt;                  <span class="code-comment"># Remove NA values</span>
+  filter(padj &lt; 0.05, abs(log2FoldChange) &gt; 1) |&gt;  <span class="code-comment"># Significant DEGs</span>
+  arrange(padj) |&gt;                          <span class="code-comment"># Sort by significance</span>
+  head(20)                                  <span class="code-comment"># Top 20</span></div>
+
+          <h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">ggplot2 for Genomics Visualisation</h3>
+          <p class="sub">ggplot2 is the most powerful plotting system in R. It uses a "grammar of graphics" — you build plots by adding layers (geom_point, geom_boxplot, etc.) to a base aesthetic mapping.</p>
+          <div class="code-block"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button>library(ggplot2)
+
+<span class="code-comment"># Volcano plot — the classic DE visualisation</span>
+ggplot(results, aes(x = log2FoldChange, y = -log10(padj))) +
+  geom_point(aes(color = padj &lt; 0.05 &amp; abs(log2FoldChange) &gt; 1),
+             size = 0.8, alpha = 0.6) +
+  scale_color_manual(values = c("grey70", "red3"),
+                     labels = c("NS", "Significant")) +
+  geom_hline(yintercept = -log10(0.05), linetype = "dashed", color = "grey40") +
+  geom_vline(xintercept = c(-1, 1), linetype = "dashed", color = "grey40") +
+  labs(x = "Log2 Fold Change", y = "-Log10 Adjusted P-value",
+       title = "Differential Expression: Treated vs Control") +
+  theme_minimal(base_size = 12) +
+  theme(legend.position = "bottom")
+
+<span class="code-comment"># Save plot as publication-quality PDF</span>
+ggsave("figures/volcano_plot.pdf", width = 7, height = 6, dpi = 300)
+
+<span class="code-comment"># Boxplot of gene expression across conditions</span>
+ggplot(expr_long, aes(x = condition, y = log2(count + 1), fill = condition)) +
+  geom_boxplot(outlier.size = 0.5) +
+  facet_wrap(~gene, scales = "free_y") +
+  theme_bw()</div>
+
+          <h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">R Markdown for Reproducible Reports</h3>
+          <p class="sub"><strong>R Markdown</strong> lets you combine code, results, and narrative text in a single document. When you "knit" the document, R runs all the code and produces a formatted HTML or PDF report. This is the gold standard for reproducible analysis.</p>
+          <div class="code-block"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button><span class="code-comment"># In an .Rmd file:</span>
+---
+title: "RNA-seq Analysis Report"
+author: "Your Name"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+## Quality Control
+```{r qc-summary}
+library(DESeq2)
+dds &lt;- readRDS("deseq2_object.rds")
+plotPCA(vst(dds), intgroup = "condition")
+```
+
+## Differential Expression
+```{r de-results}
+res &lt;- results(dds, contrast = c("condition", "treated", "control"))
+summary(res)
+```</div>
+
+          <div class="info-box note" style="margin-top:14px;"><svg class="ico" aria-hidden="true"><use href="#i-note"></use></svg><div><strong>Recommended R learning path:</strong> (1) R for Data Science by Hadley Wickham (free online at r4ds.had.co.nz) &rarr; (2) Bioconductor Workflows at bioconductor.org &rarr; (3) DESeq2 vignette &rarr; (4) ggplot2 book (ggplot2-book.org)</div></div>
+
+          <div class="info-box note" style="margin-top:14px;"><svg class="ico" aria-hidden="true"><use href="#i-note"></use></svg><div><strong>Key Takeaways:</strong><br>
+          &bull; Install R + RStudio for interactive analysis; use Bioconductor for genomics-specific packages<br>
+          &bull; The tidyverse (dplyr, ggplot2, tidyr) is essential for data wrangling and visualisation<br>
+          &bull; ggplot2 builds plots in layers — master aes(), geom_*, and theme() for publication figures<br>
+          &bull; Use R Markdown to combine code, results, and narrative in reproducible reports<br>
+          &bull; Save R objects with saveRDS() so you can reload them without re-running slow computations</div></div>

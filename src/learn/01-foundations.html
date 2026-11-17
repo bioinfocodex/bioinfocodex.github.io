@@ -1,0 +1,298 @@
+<!--
+module: 1
+slug: foundations
+short: Foundations
+label: Module 1 · Foundations
+title: Molecular Biology &amp; Bioinformatics Fundamentals
+-->
+<p class="lead">Before writing a single command, you must understand what you are analysing. This module covers the biological foundations every bioinformatician needs — DNA structure, gene expression, the central dogma, and why bioinformatics exists.</p>
+
+<!--topic 1.1: What is Bioinformatics?-->
+<p class="sub">Bioinformatics is an interdisciplinary science that develops and applies computational methods to analyse biological data. It sits at the intersection of <strong>biology</strong>, <strong>computer science</strong>, <strong>mathematics</strong>, and <strong>statistics</strong>. The field emerged because modern biology generates data at a scale that is impossible to analyse by hand — a single whole-genome sequencing run produces hundreds of gigabytes of raw data, and large consortia such as the UK Biobank have sequenced over 500,000 individuals.</p>
+
+<div class="info-box tip"><svg class="ico" aria-hidden="true"><use href="#i-tip"></use></svg><div>Think of a sequencing machine as a very sophisticated camera. It produces a "photograph" of millions of DNA/RNA fragments. Bioinformatics is the darkroom — the place where raw data becomes biological insight.</div></div>
+
+<h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">A Brief History</h3>
+<p class="sub">The roots of bioinformatics trace back to the 1960s, when <strong>Margaret Dayhoff</strong> compiled the first protein sequence database — the Atlas of Protein Sequence and Structure — and developed the PAM substitution matrices still used in sequence alignment today. In the 1970s, Needleman-Wunsch (1970) and Smith-Waterman (1981) published their foundational sequence alignment algorithms. The launch of the <strong>Human Genome Project</strong> in 1990 was a watershed moment: a $3 billion, 13-year international effort that produced the first draft of the human genome in 2001. Since then, sequencing costs have plummeted dramatically — from roughly $100 million per genome in 2001 to under $200 today — falling faster than Moore's Law. This exponential cost reduction has democratised genomics and made bioinformatics skills essential for modern biological research.</p>
+
+<div class="card-grid card-grid-2" style="margin-top:12px;gap:10px;">
+  <div class="card" style="padding:14px;"><strong>1965</strong> — Dayhoff's Atlas of Protein Sequence and Structure</div>
+  <div class="card" style="padding:14px;"><strong>1977</strong> — Sanger sequencing developed</div>
+  <div class="card" style="padding:14px;"><strong>1990</strong> — Human Genome Project begins</div>
+  <div class="card" style="padding:14px;"><strong>2001</strong> — Draft human genome published</div>
+  <div class="card" style="padding:14px;"><strong>2005</strong> — Next-gen sequencing (454, Illumina) arrives</div>
+  <div class="card" style="padding:14px;"><strong>2012</strong> — CRISPR-Cas9 gene editing described</div>
+  <div class="card" style="padding:14px;"><strong>2020</strong> — AlphaFold2 solves protein folding</div>
+  <div class="card" style="padding:14px;"><strong>2022</strong> — T2T consortium completes full human genome</div>
+</div>
+
+<h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">Why Does Bioinformatics Matter?</h3>
+<div class="card-grid card-grid-3" style="margin-top:0;gap:12px;">
+  <div class="card" style="padding:16px;"><strong>Drug Discovery</strong><p class="sub" style="margin-top:6px;">Identify drug targets by finding genes upregulated in disease. AlphaFold predicted 200M+ protein structures, accelerating structure-based drug design.</p></div>
+  <div class="card" style="padding:16px;"><strong>Agriculture</strong><p class="sub" style="margin-top:6px;">Improve crop resistance by identifying beneficial genetic variants in plant genomes through GWAS and marker-assisted selection.</p></div>
+  <div class="card" style="padding:16px;"><strong>Epidemiology</strong><p class="sub" style="margin-top:6px;">Track viral evolution in real time. SARS-CoV-2 variant tracking relied entirely on bioinformatics pipelines and GISAID.</p></div>
+</div>
+
+<h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">What a Typical Bioinformatics Project Looks Like</h3>
+<p class="sub">A typical project follows a pipeline from experimental question to biological insight:</p>
+<div style="background:var(--bg2);border-radius:10px;padding:16px;margin:10px 0;font-size:0.88em;text-align:center;">
+  <strong>Define Question</strong> &rarr; <strong>Design Experiment</strong> &rarr; <strong>Generate Data</strong> (sequencing) &rarr; <strong>Quality Control</strong> &rarr; <strong>Alignment / Assembly</strong> &rarr; <strong>Quantification</strong> &rarr; <strong>Statistical Analysis</strong> &rarr; <strong>Biological Interpretation</strong> &rarr; <strong>Visualisation &amp; Publication</strong>
+</div>
+<p class="sub">At each step, the bioinformatician must make choices: Which aligner to use? What quality thresholds? How to handle batch effects? The answers depend on the specific data type (RNA-seq, ChIP-seq, WGS, etc.), the organism, and the biological question. This course will walk you through each step.</p>
+
+<h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">Major Sub-fields</h3>
+<div class="card-grid card-grid-2" style="margin-top:0;gap:10px;">
+  <div class="card" style="padding:14px;"><strong>Genomics</strong> — studying entire genomes, variant calling, assembly, GWAS</div>
+  <div class="card" style="padding:14px;"><strong>Transcriptomics</strong> — measuring which genes are active (RNA-seq, scRNA-seq)</div>
+  <div class="card" style="padding:14px;"><strong>Proteomics</strong> — identifying and quantifying proteins (mass spectrometry)</div>
+  <div class="card" style="padding:14px;"><strong>Metabolomics</strong> — measuring small molecules (metabolites) in cells</div>
+  <div class="card" style="padding:14px;"><strong>Structural Biology</strong> — 3D shapes of macromolecules (X-ray, cryo-EM, AlphaFold)</div>
+  <div class="card" style="padding:14px;"><strong>Metagenomics</strong> — sequencing entire microbial communities (16S, shotgun)</div>
+  <div class="card" style="padding:14px;"><strong>Epigenomics</strong> — DNA methylation, histone modifications, chromatin accessibility</div>
+  <div class="card" style="padding:14px;"><strong>Pharmacogenomics</strong> — how genetic variation affects drug response</div>
+</div>
+
+<h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">Career Paths and Demand</h3>
+<p class="sub">Bioinformatics professionals are in very high demand. Common job titles include <strong>Bioinformatics Scientist</strong>, <strong>Computational Biologist</strong>, <strong>Genomics Data Analyst</strong>, and <strong>Research Software Engineer (Bioinformatics)</strong>. Positions exist in academia, pharmaceutical companies, biotech startups, clinical diagnostics labs, and agricultural genomics companies.</p>
+<div class="card-grid card-grid-2" style="margin-top:10px;gap:10px;">
+  <div class="card" style="padding:14px;"><strong>Academic Research</strong> — postdoc, research associate, or bioinformatics core facility staff at universities</div>
+  <div class="card" style="padding:14px;"><strong>Pharma / Biotech</strong> — drug target identification, clinical trial genomics, companion diagnostics</div>
+  <div class="card" style="padding:14px;"><strong>Clinical Genomics</strong> — variant interpretation, genetic counselling support, diagnostic pipeline development</div>
+  <div class="card" style="padding:14px;"><strong>Industry Tools</strong> — software engineering at companies like Illumina, 10x Genomics, or Oxford Nanopore</div>
+</div>
+
+<h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">The Tools Ecosystem</h3>
+<p class="sub">Bioinformatics relies on an ecosystem of mostly open-source tools. You will use a combination of command-line tools on Linux, scripting languages (Python, R, Bash), and specialised software for specific analyses.</p>
+<div class="chips">
+  <span class="chip">Linux/Bash</span>
+  <span class="chip">Python</span>
+  <span class="chip">R / Bioconductor</span>
+  <span class="chip">Conda / Mamba</span>
+  <span class="chip">Nextflow / Snakemake</span>
+  <span class="chip">Galaxy</span>
+  <span class="chip">Docker / Singularity</span>
+  <span class="chip">HPC / SLURM</span>
+</div>
+
+<div class="info-box note" style="margin-top:14px;"><svg class="ico" aria-hidden="true"><use href="#i-note"></use></svg><div><strong>Key Takeaways:</strong><br>
+&bull; Bioinformatics combines biology + CS + statistics to extract meaning from biological data<br>
+&bull; The field was born from protein databases in the 1960s and exploded with the Human Genome Project<br>
+&bull; Sequencing costs have fallen over a million-fold, making data generation easy — analysis is now the bottleneck<br>
+&bull; A typical project flows from experimental design through QC, alignment, quantification, statistics, and interpretation<br>
+&bull; Career demand is extremely high across academia, pharma, clinical, and industry settings</div></div>
+
+<!--topic 1.2: DNA, RNA and Proteins — The Central Dogma-->
+<p class="sub">Francis Crick's central dogma (1958) describes the flow of genetic information: <strong>DNA &rarr; RNA &rarr; Protein</strong>. Every bioinformatics workflow targets one of these molecules. Understanding this flow at a molecular level is essential because the tools you use (aligners, quantifiers, variant callers) all make assumptions about the underlying biology.</p>
+
+<div style="background:linear-gradient(135deg,rgba(0,200,150,0.06),rgba(9,105,218,0.06));border:1px solid rgba(0,200,150,0.2);border-radius:12px;padding:20px;margin:14px 0;text-align:center;">
+  <div style="display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap;font-size:0.9em;font-weight:600;">
+    <span style="background:rgba(0,200,150,0.15);border:1px solid rgba(0,200,150,0.3);padding:8px 16px;border-radius:8px;">DNA<br><small style="font-weight:400;color:var(--text3);">Double-stranded<br>A, T, G, C</small></span>
+    <span style="font-size:1.4em;color:var(--green-text);">&rarr;</span>
+    <span style="background:rgba(9,105,218,0.1);border:1px solid rgba(9,105,218,0.2);padding:8px 16px;border-radius:8px;">mRNA<br><small style="font-weight:400;color:var(--text3);">Transcription<br>A, U, G, C</small></span>
+    <span style="font-size:1.4em;color:var(--blue-text);">&rarr;</span>
+    <span style="background:rgba(124,58,237,0.1);border:1px solid rgba(124,58,237,0.2);padding:8px 16px;border-radius:8px;">Protein<br><small style="font-weight:400;color:var(--text3);">Translation<br>20 amino acids</small></span>
+  </div>
+</div>
+
+<h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">Base Pairing Rules</h3>
+<p class="sub">DNA is a double-stranded helix held together by hydrogen bonds between complementary bases. The pairing rules are strict and fundamental to replication, transcription, and sequencing technology:</p>
+<div class="card-grid card-grid-2" style="margin-top:10px;gap:10px;">
+  <div class="card" style="padding:14px;"><strong>In DNA</strong><br>Adenine (A) pairs with Thymine (T) — 2 hydrogen bonds<br>Guanine (G) pairs with Cytosine (C) — 3 hydrogen bonds<br><small style="color:var(--text3);">G-C pairs are stronger, so GC-rich regions are harder to denature and can cause sequencing bias.</small></div>
+  <div class="card" style="padding:14px;"><strong>In RNA</strong><br>Adenine (A) pairs with Uracil (U) — 2 hydrogen bonds<br>Guanine (G) pairs with Cytosine (C) — 3 hydrogen bonds<br><small style="color:var(--text3);">RNA uses uracil instead of thymine. FASTQ files still write T by convention, but remember the molecule is actually U.</small></div>
+</div>
+
+<h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">Transcription — Step by Step</h3>
+<p class="sub">Transcription is the process of copying a gene's DNA sequence into messenger RNA (mRNA). It occurs in the nucleus of eukaryotic cells and involves several steps:</p>
+<div style="background:var(--bg2);border-radius:10px;padding:16px;margin:10px 0;font-size:0.88em;">
+  <strong>1. Initiation:</strong> Transcription factors bind to the <strong>promoter</strong> region (e.g., TATA box at ~-25 bp). RNA Polymerase II is recruited to form the pre-initiation complex.<br><br>
+  <strong>2. Elongation:</strong> RNA Pol II moves along the template strand (3' &rarr; 5'), synthesising mRNA in the 5' &rarr; 3' direction. It reads the template strand and adds complementary RNA bases (A&rarr;U, T&rarr;A, G&rarr;C, C&rarr;G).<br><br>
+  <strong>3. Termination:</strong> RNA Pol II reaches a polyadenylation signal (AAUAAA). The pre-mRNA is cleaved and released.<br><br>
+  <strong>4. Processing:</strong> Three modifications occur before the mRNA leaves the nucleus:<br>
+  &nbsp;&nbsp;&bull; <strong>5' cap</strong> — a modified guanine nucleotide added to the 5' end (protects from degradation)<br>
+  &nbsp;&nbsp;&bull; <strong>3' poly-A tail</strong> — 100-250 adenine nucleotides added (stability, export signal). This is why poly-A selection works for mRNA isolation in RNA-seq.<br>
+  &nbsp;&nbsp;&bull; <strong>Splicing</strong> — introns removed, exons joined by the spliceosome
+</div>
+
+<h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">Translation — The Genetic Code</h3>
+<p class="sub">Translation occurs at ribosomes in the cytoplasm. The mRNA sequence is read in triplets called <strong>codons</strong>, each specifying one of 20 amino acids. The code is degenerate — most amino acids are encoded by multiple codons (e.g., Leucine has 6 codons). Key codons to know:</p>
+<div class="card-grid card-grid-3" style="margin-top:10px;gap:10px;">
+  <div class="card" style="padding:14px;text-align:center;"><strong>AUG</strong><br><small>Start codon<br>Codes for Methionine</small></div>
+  <div class="card" style="padding:14px;text-align:center;"><strong>UAA, UAG, UGA</strong><br><small>Stop codons<br>"Ochre, Amber, Opal"</small></div>
+  <div class="card" style="padding:14px;text-align:center;"><strong>64 total codons</strong><br><small>61 code for amino acids<br>3 are stop codons</small></div>
+</div>
+<p class="sub" style="margin-top:10px;">The reading frame matters enormously. A single insertion or deletion shifts the entire frame downstream (a <strong>frameshift mutation</strong>), usually producing a nonfunctional protein. This is why indels in coding regions are often more damaging than substitutions.</p>
+
+<h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">Post-Translational Modifications (PTMs)</h3>
+<p class="sub">After translation, proteins are often chemically modified. These modifications can change protein activity, location, stability, and interactions. Common PTMs include <strong>phosphorylation</strong> (adding a phosphate group — central to cell signalling), <strong>glycosylation</strong> (adding sugar chains — important for secreted proteins), <strong>ubiquitination</strong> (tagging for degradation by the proteasome), and <strong>acetylation</strong> (especially on histones, regulating gene expression). Proteomics and mass spectrometry are the primary tools for studying PTMs.</p>
+
+<h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">Why RNA is Unstable Compared to DNA</h3>
+<p class="sub">RNA is chemically less stable than DNA for two reasons: (1) the 2'-OH group on the ribose sugar makes RNA susceptible to alkaline hydrolysis, and (2) RNA is single-stranded, making it vulnerable to RNases (ubiquitous enzymes that degrade RNA). This instability is why RNA extraction requires careful technique — RNase-free conditions, working on ice, and rapid processing. It also means RNA quality degrades over time, which is why we measure <strong>RIN (RNA Integrity Number)</strong> before sequencing.</p>
+
+<h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">Exceptions to the Central Dogma</h3>
+<div class="info-box warn"><svg class="ico" aria-hidden="true"><use href="#i-warn"></use></svg><div>The central dogma has important exceptions that are biologically and clinically significant:</div></div>
+<div class="card-grid card-grid-2" style="margin-top:10px;gap:10px;">
+  <div class="card" style="padding:14px;"><strong>Reverse Transcription</strong><p class="sub" style="margin-top:4px;">RNA &rarr; DNA. Performed by <strong>reverse transcriptase</strong> in retroviruses (HIV) and retrotransposons. Also used in the lab to create cDNA from mRNA (the basis of RNA-seq library preparation).</p></div>
+  <div class="card" style="padding:14px;"><strong>RNA Replication</strong><p class="sub" style="margin-top:4px;">RNA &rarr; RNA. RNA viruses (influenza, SARS-CoV-2) use RNA-dependent RNA polymerase (RdRp) to replicate their genomes. This enzyme is a drug target (e.g., remdesivir).</p></div>
+  <div class="card" style="padding:14px;"><strong>RNA Editing</strong><p class="sub" style="margin-top:4px;">Bases in mRNA can be chemically modified after transcription (e.g., A-to-I editing by ADAR enzymes). This means the mRNA sequence can differ from the genomic DNA — a potential pitfall in variant calling.</p></div>
+  <div class="card" style="padding:14px;"><strong>Prions</strong><p class="sub" style="margin-top:4px;">Protein &rarr; Protein. Misfolded prion proteins can template the misfolding of normal proteins without any nucleic acid involvement (the cause of mad cow disease / CJD).</p></div>
+</div>
+
+<h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">Non-coding RNA</h3>
+<p class="sub">Not all RNA becomes protein. In fact, the vast majority of transcribed RNA in human cells is non-coding. Key types include: <strong>rRNA</strong> (ribosomal RNA — ~80% of total RNA, forms the ribosome structure), <strong>tRNA</strong> (transfer RNA — carries amino acids during translation), <strong>miRNA</strong> (microRNA — ~22 nt, silences gene expression post-transcriptionally), <strong>lncRNA</strong> (long non-coding RNA — &gt;200 nt, diverse regulatory roles), and <strong>circRNA</strong> (circular RNA — resistant to degradation, potential biomarkers). These are increasingly studied in bioinformatics.</p>
+
+<div class="info-box note" style="margin-top:14px;"><svg class="ico" aria-hidden="true"><use href="#i-note"></use></svg><div><strong>Key Takeaways:</strong><br>
+&bull; The central dogma: DNA &rarr; RNA &rarr; Protein, with important exceptions (reverse transcription, RNA viruses, prions)<br>
+&bull; Base pairing: A-T (DNA) / A-U (RNA) with 2 H-bonds; G-C with 3 H-bonds (stronger)<br>
+&bull; Transcription produces pre-mRNA that is capped, polyadenylated, and spliced before export<br>
+&bull; The genetic code is degenerate (64 codons for 20 amino acids + 3 stops); reading frame is critical<br>
+&bull; RNA instability (2'-OH, RNases) has direct practical implications for sample handling and sequencing quality</div></div>
+
+<!--topic 1.3: Genome Organisation &amp; Gene Structure-->
+<p class="sub">Understanding how genes are organised in the genome is essential for interpreting any bioinformatics result. When you load a BAM file in a genome browser, annotate variants, or run differential expression analysis, you are navigating genome structure. This section covers the physical and functional organisation of genomes, from the chromosome level down to individual regulatory elements.</p>
+
+<h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">Chromosomes and Chromatin</h3>
+<p class="sub">In eukaryotes, genomic DNA is packaged with histone proteins into <strong>chromatin</strong>, which is further organised into <strong>chromosomes</strong>. Humans have 23 pairs of chromosomes (22 autosomes + 1 pair of sex chromosomes, XX or XY), totalling about 3.2 billion base pairs. During cell division, each chromosome is replicated, and the two copies (called <strong>sister chromatids</strong>) are joined at the centromere before being separated.</p>
+<div class="card-grid card-grid-2" style="gap:10px;margin-top:12px;">
+  <div class="card" style="padding:14px;"><strong>Euchromatin</strong><p class="sub" style="margin-top:4px;">Loosely packed, transcriptionally active chromatin. Most genes are expressed from euchromatic regions. Appears light in chromosome staining.</p></div>
+  <div class="card" style="padding:14px;"><strong>Heterochromatin</strong><p class="sub" style="margin-top:4px;">Tightly packed, largely silent chromatin. Found at centromeres and telomeres. Contains repetitive sequences. Constitutive (always condensed) or facultative (conditionally silenced, e.g., the inactive X chromosome).</p></div>
+</div>
+
+<h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">Genome Size and the C-Value Paradox</h3>
+<div class="chips" style="margin:8px 0;">
+  <span class="chip">E. coli: 4.6 Mb, ~4,300 genes</span>
+  <span class="chip">Yeast: 12 Mb, ~6,000 genes</span>
+  <span class="chip">Fly: 180 Mb, ~14,000 genes</span>
+  <span class="chip">Human: 3.2 Gb, ~20,000 genes</span>
+  <span class="chip">Wheat: 17 Gb, ~107,000 genes</span>
+  <span class="chip">Paris japonica (plant): 149 Gb</span>
+</div>
+<p class="sub">The <strong>C-value paradox</strong> refers to the observation that genome size does not correlate with organism complexity. Humans have 3.2 Gb but only ~20,000 protein-coding genes, while the onion has 16 Gb. The difference is largely due to repetitive elements — transposons, retrotransposons, and satellite DNA account for about 45% of the human genome. Only about 1.5% of the human genome actually encodes proteins.</p>
+
+<h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">Regulatory Elements</h3>
+<div class="card-grid card-grid-2" style="gap:10px;margin-top:8px;">
+  <div class="card" style="padding:14px;"><strong>Promoters</strong><p class="sub" style="margin-top:4px;">Located immediately upstream of genes (within ~1 kb of the TSS). Contain elements like the <strong>TATA box</strong> (~-25 bp) and <strong>CpG islands</strong> (GC-rich regions, often unmethylated in active promoters). RNA polymerase and transcription factors bind here to initiate transcription.</p></div>
+  <div class="card" style="padding:14px;"><strong>Enhancers</strong><p class="sub" style="margin-top:4px;">Can be located thousands or even millions of base pairs away from their target gene — upstream, downstream, or even within introns. They loop in 3D space to contact the promoter and boost transcription. Enhancer activity is tissue-specific, explaining why the same genome produces different cell types.</p></div>
+</div>
+
+<h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">CpG Islands</h3>
+<p class="sub"><strong>CpG islands</strong> are regions of at least 200 bp with a GC content above 50% and an observed/expected CpG ratio above 0.6. About 70% of human gene promoters are associated with CpG islands. In normal cells, most CpG islands in promoters are <strong>unmethylated</strong>, allowing gene expression. In cancer, aberrant <strong>hypermethylation</strong> of tumour suppressor gene promoters is a hallmark event. This is studied using bisulfite sequencing or methylation arrays (e.g., Illumina EPIC array).</p>
+
+<h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">Gene Structure — A Real Example</h3>
+<p class="sub">Consider the human <strong>BRCA1</strong> gene (associated with breast cancer risk). It spans about 81 kb on chromosome 17, contains <strong>23 exons</strong>, and produces a protein of 1,863 amino acids. The coding sequence itself is only about 5,592 bp — just 7% of the gene's genomic span. The rest consists of introns, UTRs, and regulatory regions.</p>
+<div style="background:var(--bg2);border-radius:10px;padding:16px;margin:10px 0;font-family:var(--fm);font-size:0.78em;overflow-x:auto;">
+  <strong>BRCA1 gene structure (simplified):</strong><br><br>
+  5'---[Promoter/CpG island]---[5'UTR]---<span style="color:var(--green-text);">[Exon 1]</span>---intron 1 (34 kb)---<span style="color:var(--green-text);">[Exon 2]</span>---intron 2---...---<span style="color:var(--green-text);">[Exon 23]</span>---[3'UTR]---[polyA signal]---3'<br><br>
+  <span style="color:var(--green-text);">Green = exons (coding)</span> | Grey = introns (removed by splicing) | Total span: ~81 kb
+</div>
+
+<h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">Alternative Splicing</h3>
+<p class="sub">A single gene can produce multiple protein variants (<strong>isoforms</strong>) through alternative splicing of its pre-mRNA. The human genome has ~20,000 protein-coding genes but produces over 200,000 different mRNA transcripts. Common types of alternative splicing include:</p>
+<div class="card-grid card-grid-2" style="gap:10px;margin-top:8px;">
+  <div class="card" style="padding:14px;"><strong>Exon skipping</strong><p class="sub" style="margin-top:4px;">The most common type in humans. An entire exon is excluded from the mature mRNA. Example: the Drosophila <em>Dscam</em> gene can produce over 38,000 isoforms through exon skipping.</p></div>
+  <div class="card" style="padding:14px;"><strong>Alternative 5' or 3' splice site</strong><p class="sub" style="margin-top:4px;">A different splice site is used within the same exon, making the exon longer or shorter. Changes the protein sequence at the boundary.</p></div>
+  <div class="card" style="padding:14px;"><strong>Intron retention</strong><p class="sub" style="margin-top:4px;">An intron is not removed and remains in the mature mRNA. More common in plants and fungi. Can introduce premature stop codons.</p></div>
+  <div class="card" style="padding:14px;"><strong>Mutually exclusive exons</strong><p class="sub" style="margin-top:4px;">One of two exons is included, but never both. The choice is regulated in a tissue-specific manner.</p></div>
+</div>
+
+<div class="info-box warn" style="margin-top:14px;"><svg class="ico" aria-hidden="true"><use href="#i-warn"></use></svg><div>When aligning RNA-seq reads to a genome, use a <strong>splice-aware aligner</strong> (STAR, HISAT2) — not a simple aligner like BWA. Otherwise reads spanning exon-exon junctions will fail to align. If you need isoform-level analysis, consider tools like <strong>Salmon</strong> or <strong>Kallisto</strong> for transcript-level quantification, or <strong>PacBio IsoSeq</strong> for full-length transcript sequencing.</div></div>
+
+<div class="info-box note" style="margin-top:14px;"><svg class="ico" aria-hidden="true"><use href="#i-note"></use></svg><div><strong>Key Takeaways:</strong><br>
+&bull; Eukaryotic genomes are organised into chromosomes with euchromatin (active) and heterochromatin (silent) regions<br>
+&bull; Genome size does not correlate with complexity (C-value paradox) — most large genomes are inflated by repetitive elements<br>
+&bull; Promoters, enhancers, and CpG islands control when and where genes are expressed<br>
+&bull; Gene structure: 5'UTR - exons/introns - 3'UTR; introns are spliced out during mRNA processing<br>
+&bull; Alternative splicing enables one gene to produce multiple protein isoforms, greatly expanding the proteome</div></div>
+
+<!--topic 1.4: Sequencing Technologies-->
+<p class="sub">Most bioinformatics data comes from Next-Generation Sequencing (NGS). Understanding what the machine actually does explains why your data looks the way it does — including error profiles, quality score distributions, read length limitations, and the types of biases you will encounter. The three major platforms each have distinct chemistries with different strengths and trade-offs.</p>
+
+<h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">How Illumina Sequencing-by-Synthesis Works</h3>
+<p class="sub">Illumina is the dominant platform, generating the majority of the world's sequencing data. Here is the step-by-step process:</p>
+<div style="background:var(--bg2);border-radius:10px;padding:16px;margin:10px 0;font-size:0.88em;">
+  <strong>Step 1 — Library Preparation:</strong> DNA/cDNA is fragmented (~300-500 bp), and <strong>adapters</strong> are ligated to both ends. These adapters contain sequences for binding to the flow cell and for PCR amplification. An index (barcode) sequence is included to allow multiplexing of multiple samples on one lane.<br><br>
+  <strong>Step 2 — Cluster Generation:</strong> The library is loaded onto a <strong>flow cell</strong> — a glass slide coated with millions of short oligos complementary to the adapters. Each fragment binds to the surface, then undergoes <strong>bridge amplification</strong>: the fragment bends over and binds to a nearby oligo, forming a bridge, which is then extended by polymerase. This cycle repeats ~35 times, creating a <strong>cluster</strong> of ~1,000 identical copies of the original fragment. Each cluster will produce one "read."<br><br>
+  <strong>Step 3 — Sequencing by Synthesis:</strong> Fluorescently-labelled, <strong>reversibly-terminated</strong> nucleotides are washed across the flow cell. In each cycle, exactly one nucleotide is incorporated into each growing strand. The flow cell is imaged to determine which base was added (each of A, C, G, T has a different fluorescent colour). The terminator and fluorescent tag are then chemically removed, and the next cycle begins. Typically 100-150 cycles are performed per read.<br><br>
+  <strong>Step 4 — Base Calling:</strong> The raw images are processed by Illumina's <strong>Real-Time Analysis (RTA)</strong> software to determine the base at each position and assign a <strong>quality score</strong>. The output is a <strong>FASTQ file</strong> — one per read direction (R1 and R2 for paired-end). A standard run produces billions of reads.
+</div>
+
+<h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">PHRED Quality Scores</h3>
+<p class="sub">Every base in a FASTQ file has an associated <strong>PHRED quality score (Q)</strong> that represents the probability of an incorrect base call. The relationship is logarithmic:</p>
+<div style="background:var(--bg2);border-radius:10px;padding:16px;margin:10px 0;font-family:var(--fm);font-size:0.82em;">
+  Q = -10 &times; log<sub>10</sub>(P)<br><br>
+  Where P = probability of error<br><br>
+  <strong>Q10</strong> = 1 in 10 error rate (10%) &mdash; terrible<br>
+  <strong>Q20</strong> = 1 in 100 error rate (1%) &mdash; minimum acceptable<br>
+  <strong>Q30</strong> = 1 in 1,000 error rate (0.1%) &mdash; good quality<br>
+  <strong>Q40</strong> = 1 in 10,000 error rate (0.01%) &mdash; excellent
+</div>
+<p class="sub">In FASTQ files, quality scores are encoded as ASCII characters. For Illumina 1.8+ (Phred+33 encoding), the character <code>!</code> = Q0, <code>I</code> = Q40. When you see a quality string like <code>FFFFFFFF</code>, each F represents Q37 — very high quality. Quality typically degrades toward the end of reads, which is why trimming the 3' ends is common practice.</p>
+
+<h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">Technology Comparison</h3>
+<div style="overflow-x:auto;margin:12px 0;">
+  <table style="width:100%;border-collapse:collapse;font-size:0.82em;">
+    <tr style="background:var(--bg2);font-weight:600;">
+      <td style="padding:10px;border:1px solid var(--border);">Feature</td>
+      <td style="padding:10px;border:1px solid var(--border);">Illumina</td>
+      <td style="padding:10px;border:1px solid var(--border);">PacBio HiFi</td>
+      <td style="padding:10px;border:1px solid var(--border);">Oxford Nanopore</td>
+    </tr>
+    <tr>
+      <td style="padding:10px;border:1px solid var(--border);">Read length</td>
+      <td style="padding:10px;border:1px solid var(--border);">75-300 bp</td>
+      <td style="padding:10px;border:1px solid var(--border);">10-25 kb</td>
+      <td style="padding:10px;border:1px solid var(--border);">Up to 4 Mb</td>
+    </tr>
+    <tr style="background:var(--bg2);">
+      <td style="padding:10px;border:1px solid var(--border);">Accuracy</td>
+      <td style="padding:10px;border:1px solid var(--border);">&gt;99.9% (Q30+)</td>
+      <td style="padding:10px;border:1px solid var(--border);">~99.9% (HiFi mode)</td>
+      <td style="padding:10px;border:1px solid var(--border);">~95-99% (improving)</td>
+    </tr>
+    <tr>
+      <td style="padding:10px;border:1px solid var(--border);">Throughput</td>
+      <td style="padding:10px;border:1px solid var(--border);">Up to 6 Tb (NovaSeq X)</td>
+      <td style="padding:10px;border:1px solid var(--border);">~30 Gb per cell</td>
+      <td style="padding:10px;border:1px solid var(--border);">~50-300 Gb (PromethION)</td>
+    </tr>
+    <tr style="background:var(--bg2);">
+      <td style="padding:10px;border:1px solid var(--border);">Run time</td>
+      <td style="padding:10px;border:1px solid var(--border);">12-48 hours</td>
+      <td style="padding:10px;border:1px solid var(--border);">~24 hours</td>
+      <td style="padding:10px;border:1px solid var(--border);">Minutes to days</td>
+    </tr>
+    <tr>
+      <td style="padding:10px;border:1px solid var(--border);">Error type</td>
+      <td style="padding:10px;border:1px solid var(--border);">Substitutions</td>
+      <td style="padding:10px;border:1px solid var(--border);">Indels (rare in HiFi)</td>
+      <td style="padding:10px;border:1px solid var(--border);">Indels (homopolymers)</td>
+    </tr>
+    <tr style="background:var(--bg2);">
+      <td style="padding:10px;border:1px solid var(--border);">Cost per Gb</td>
+      <td style="padding:10px;border:1px solid var(--border);">~$2-5</td>
+      <td style="padding:10px;border:1px solid var(--border);">~$20-30</td>
+      <td style="padding:10px;border:1px solid var(--border);">~$10-20</td>
+    </tr>
+    <tr>
+      <td style="padding:10px;border:1px solid var(--border);">Best for</td>
+      <td style="padding:10px;border:1px solid var(--border);">RNA-seq, WGS, ChIP-seq, variant calling</td>
+      <td style="padding:10px;border:1px solid var(--border);">Genome assembly, structural variants, isoforms</td>
+      <td style="padding:10px;border:1px solid var(--border);">Field diagnostics, real-time, direct RNA, methylation</td>
+    </tr>
+  </table>
+</div>
+
+<h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">When to Choose Each Technology</h3>
+<div class="card-grid card-grid-3" style="gap:12px;margin-top:8px;">
+  <div class="card" style="padding:16px;border-top:3px solid var(--green);"><strong>Choose Illumina when:</strong><p class="sub" style="margin-top:6px;">&bull; Differential gene expression (RNA-seq)<br>&bull; Whole-genome variant calling<br>&bull; ChIP-seq / ATAC-seq<br>&bull; Large sample numbers (multiplexing)<br>&bull; Budget is a concern</p></div>
+  <div class="card" style="padding:16px;border-top:3px solid var(--blue);"><strong>Choose PacBio when:</strong><p class="sub" style="margin-top:6px;">&bull; De novo genome assembly<br>&bull; Full-length transcript isoforms (IsoSeq)<br>&bull; Structural variant detection<br>&bull; Repetitive region resolution<br>&bull; Phased diploid assembly</p></div>
+  <div class="card" style="padding:16px;border-top:3px solid var(--purple);"><strong>Choose Nanopore when:</strong><p class="sub" style="margin-top:6px;">&bull; Rapid pathogen identification<br>&bull; Field work (MinION is portable)<br>&bull; Direct RNA sequencing (no RT step)<br>&bull; Epigenetic modifications (m5C, m6A)<br>&bull; Ultra-long reads needed</p></div>
+</div>
+
+<div class="info-box tip" style="margin-top:14px;"><svg class="ico" aria-hidden="true"><use href="#i-tip"></use></svg><div><strong>Hybrid approaches:</strong> Many genome assembly projects now combine <strong>Illumina short reads</strong> (for accuracy/polishing) with <strong>long reads</strong> (for scaffolding and resolving repeats). The T2T (Telomere-to-Telomere) consortium used PacBio HiFi and Oxford Nanopore ultra-long reads to complete the first truly gapless human genome assembly in 2022.</div></div>
+
+<div class="info-box note" style="margin-top:14px;"><svg class="ico" aria-hidden="true"><use href="#i-note"></use></svg><div><strong>Key Takeaways:</strong><br>
+&bull; Illumina sequencing-by-synthesis uses fluorescent reversible terminators to read one base per cycle across billions of clusters<br>
+&bull; PHRED quality scores are logarithmic: Q30 means a 1/1,000 chance of error<br>
+&bull; Quality degrades at read ends; Illumina errors are substitutions, while long-read errors are typically indels<br>
+&bull; Choose the platform based on your application: Illumina for most quantitative assays, long-read for assembly and structural analysis<br>
+&bull; Hybrid approaches combining short and long reads often give the best results for genome projects</div></div>

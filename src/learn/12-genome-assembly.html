@@ -1,0 +1,117 @@
+<!--
+module: 12
+slug: genome-assembly
+short: Genome Assembly
+label: Module 12 · Genome Assembly &amp; Annotation
+title: Building Genomes from Scratch
+-->
+<p class="lead">De novo genome assembly reconstructs complete chromosome sequences from millions of short or long sequencing reads — like assembling a jigsaw puzzle without the picture on the box. With the emergence of long-read technologies, telomere-to-telomere assemblies are now achievable for many organisms.</p>
+
+<!--topic 12.1: De Novo Assembly — Short &amp; Long Reads-->
+          <p class="sub">Genome assembly combines overlapping reads into longer contiguous sequences (contigs), then scaffolds contigs into chromosome-scale sequences. The approach depends fundamentally on read length: short reads (150 bp Illumina) cannot span repetitive elements, producing fragmented assemblies. Long reads (10–100 kb from PacBio HiFi or Oxford Nanopore) span most repeats, enabling near-complete assemblies.</p>
+
+          <h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">Assembly Strategies</h3>
+          <div class="card-grid card-grid-2" style="gap:10px;margin-top:8px;">
+            <div class="card" style="padding:14px;"><strong>Short-read (de Bruijn graph)</strong><p class="sub" style="margin-top:4px;">Chops reads into k-mers, builds a graph where k-mers are nodes and overlaps are edges. Traverses the graph to produce contigs. Tools: <strong>SPAdes</strong> (small genomes, metagenomes), <strong>MEGAHIT</strong> (metagenomes). Good for bacteria, not for complex eukaryotes.</p></div>
+            <div class="card" style="padding:14px;"><strong>Long-read (overlap-layout-consensus)</strong><p class="sub" style="margin-top:4px;">Finds overlaps between all read pairs, constructs a layout graph, derives consensus sequence. Tools: <strong>hifiasm</strong> (PacBio HiFi — best), <strong>Flye</strong> (Nanopore/PacBio CLR). Produces chromosome-scale contigs for most genomes.</p></div>
+          </div>
+
+          <div class="code-block"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button><span class="code-comment"># ─── Bacterial genome (short reads, SPAdes) ───</span>
+mamba install -c bioconda spades quast
+
+spades.py -1 reads_R1.fastq.gz -2 reads_R2.fastq.gz \
+    -o spades_output/ -t 16 --careful
+
+<span class="code-comment"># ─── Eukaryotic genome (PacBio HiFi, hifiasm) ───</span>
+mamba install -c bioconda hifiasm
+
+<span class="code-comment"># Haplotype-resolved assembly (diploid)</span>
+hifiasm -o asm -t 32 hifi_reads.fastq.gz
+
+<span class="code-comment"># Convert GFA to FASTA</span>
+awk '/^S/{print ">"$2"\n"$3}' asm.bp.p_ctg.gfa | fold &gt; primary_assembly.fa
+
+<span class="code-comment"># ─── Nanopore (Flye) ───</span>
+mamba install -c bioconda flye
+
+flye --nano-hq nanopore_reads.fastq.gz \
+    --out-dir flye_output/ --threads 32 --genome-size 500m
+
+<span class="code-comment"># Polish Nanopore assembly with short reads (Illumina)</span>
+mamba install -c bioconda pilon
+pilon --genome flye_output/assembly.fasta \
+    --frags illumina_aligned.bam --output polished</div>
+
+          <div class="info-box note"><svg class="ico" aria-hidden="true"><use href="#i-note"></use></svg><div><strong>Assembly quality metrics:</strong> <strong>N50</strong> = the contig length such that 50% of the assembly is in contigs of this size or larger. Higher N50 = more contiguous. <strong>L50</strong> = how many contigs make up 50% of the assembly. Lower L50 = better. <strong>BUSCO</strong> = completeness assessment based on universal single-copy orthologs (aim for &gt;95% complete). Always report all three.</div></div>
+
+          <div class="chips" style="margin-top:14px;"><span class="chip">hifiasm for HiFi reads</span><span class="chip">SPAdes for bacteria</span><span class="chip">N50 measures contiguity</span><span class="chip">BUSCO measures completeness</span><span class="chip">Polish Nanopore with Illumina</span></div>
+
+<!--topic 12.2: Assembly QC — BUSCO &amp; QUAST-->
+          <p class="sub">An assembly is only useful if it is correct and complete. Quality assessment uses two complementary approaches: <strong>contiguity statistics</strong> (N50, total length, number of contigs) measured by QUAST, and <strong>gene completeness</strong> measured by BUSCO (Benchmarking Universal Single-Copy Orthologs), which checks whether expected genes are present and intact.</p>
+
+          <div class="code-block"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button><span class="code-comment"># ─── QUAST — contiguity statistics ───</span>
+mamba install -c bioconda quast
+
+quast assembly.fa -o quast_output/ -t 8
+<span class="code-comment"># If you have a reference genome for comparison:</span>
+quast assembly.fa -r reference.fa -g genes.gff -o quast_output/ -t 8
+
+<span class="code-comment"># Key outputs: N50, L50, total length, # contigs, GC%, misassemblies</span>
+
+<span class="code-comment"># ─── BUSCO — gene completeness ───</span>
+mamba install -c bioconda busco
+
+<span class="code-comment"># Choose the right lineage dataset for your organism:</span>
+busco --list-datasets   # Shows all available lineages
+
+<span class="code-comment"># Run BUSCO</span>
+busco -i assembly.fa -o busco_output -m genome \
+    -l mammalia_odb10 -c 16
+
+<span class="code-comment"># Interpretation:</span>
+<span class="code-comment">#   C: &gt;95% = excellent assembly</span>
+<span class="code-comment">#   C: 90-95% = good</span>
+<span class="code-comment">#   C: &lt;80% = significant genes missing (check lineage choice)</span>
+<span class="code-comment">#   D: &gt;5% = possible contamination or collapsed haplotypes</span></div>
+
+          <div class="info-box tip"><svg class="ico" aria-hidden="true"><use href="#i-tip"></use></svg><div><strong>Merqury</strong> is a reference-free assembly evaluation tool that uses k-mer counts from raw reads to assess completeness, accuracy, and phasing of haplotype-resolved assemblies. It is now the gold standard for HiFi assemblies.</div></div>
+
+          <div class="chips" style="margin-top:14px;"><span class="chip">BUSCO &gt;95% = excellent</span><span class="chip">QUAST for contiguity stats</span><span class="chip">Merqury for k-mer QC</span><span class="chip">Choose correct BUSCO lineage</span></div>
+
+<!--topic 12.3: Gene Prediction &amp; Genome Annotation-->
+          <p class="sub">After assembling a genome, the next step is annotation — finding where the genes are and what they encode. Gene prediction uses ab initio methods (statistical models trained on known gene structures), homology-based methods (aligning known proteins or transcripts), and evidence-based methods (using RNA-seq data from the same organism). Modern pipelines combine all three approaches.</p>
+
+          <h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">Annotation Pipeline</h3>
+          <div class="code-block"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button><span class="code-comment"># ─── Prokaryotic annotation (fast, automated) ───</span>
+mamba install -c bioconda prokka
+
+prokka assembly.fa --outdir annotation/ --prefix my_organism \
+    --kingdom Bacteria --genus Streptomyces --cpus 16
+
+<span class="code-comment"># Output: .gff (gene coordinates), .faa (protein sequences),</span>
+<span class="code-comment">#         .ffn (gene nucleotide sequences), .gbk (GenBank format)</span>
+
+<span class="code-comment"># ─── Eukaryotic annotation (more complex) ───</span>
+<span class="code-comment"># Step 1: Mask repeats (RepeatMasker)</span>
+mamba install -c bioconda repeatmasker
+RepeatMasker -species "homo sapiens" -pa 16 -xsmall assembly.fa
+
+<span class="code-comment"># Step 2: Align RNA-seq evidence (HISAT2 → StringTie)</span>
+hisat2 -x genome_index -1 rnaseq_R1.fq.gz -2 rnaseq_R2.fq.gz -p 16 | \
+    samtools sort -O bam -o rnaseq_aligned.bam
+stringtie rnaseq_aligned.bam -o transcripts.gtf
+
+<span class="code-comment"># Step 3: Run BRAKER2/3 (combines ab initio + RNA-seq + protein evidence)</span>
+<span class="code-comment"># BRAKER3 (recommended — integrates GeneMark + AUGUSTUS + protein hints)</span>
+braker.pl --genome=assembly.fa.masked \
+    --bam=rnaseq_aligned.bam \
+    --prot_seq=proteins_from_related_species.fa \
+    --softmasking --threads 16
+
+<span class="code-comment"># Step 4: Functional annotation (assign GO terms, domains, pathways)</span>
+mamba install -c bioconda interproscan
+interproscan.sh -i predicted_proteins.faa -f tsv -dp -goterms -pa</div>
+
+          <div class="info-box warn"><svg class="ico" aria-hidden="true"><use href="#i-warn"></use></svg><div><strong>Repeat masking is essential:</strong> Eukaryotic genomes can be 40–80% repetitive. Without masking, gene predictors will predict thousands of spurious genes in transposable elements. Always run RepeatMasker before gene prediction. Use soft-masking (lowercase, not N-replacement) so gene predictors can still use the sequence information.</div></div>
+
+          <div class="chips" style="margin-top:14px;"><span class="chip">Prokka for bacteria</span><span class="chip">BRAKER3 for eukaryotes</span><span class="chip">RepeatMasker before gene prediction</span><span class="chip">RNA-seq evidence improves accuracy</span><span class="chip">InterProScan for functional annotation</span></div>

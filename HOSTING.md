@@ -1,3 +1,16 @@
+# Hosting
+
+**Current setup (November 2026).** The site is built by `tools/build-site.py`
+from `src/` into `dist/`, and Netlify publishes `dist/`. Every route is a real
+HTML file with its own title, description and canonical URL, so nothing below
+about rewrites applies any more; `src/_redirects` only redirects old addresses.
+The rest of this file is the record of the earlier move from GitHub Pages.
+
+DNS is unchanged: `bioinfocodex.com` points at Netlify, and
+`rnaflow.bioinfocodex.com` is still GitHub Pages from the `rnaflow` repo.
+
+---
+
 # Making the routes indexable
 
 **Done — the site moved to Netlify on 24 August 2026.** `/tools/rnaflow` and the

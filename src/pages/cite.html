@@ -1,0 +1,61 @@
+<!--
+path: /cite
+id: doc
+nav: tools
+kind: Reference
+title: How to cite RNAflow | BioInfoCodex
+description: Cite RNAflow through its Zenodo DOI. Reference text, BibTeX, and the underlying tools to cite in your methods section.
+crumbs: Tools=/tools > RNAflow=/tools/rnaflow > How to cite=/cite
+-->
+<div class="section doc-section">
+  <div class="doc-head">
+    <div class="label">RNAflow</div>
+    <h1 class="h1 doc-h1">How to cite RNAflow</h1>
+    <p class="lead">Cite the archived software through its Zenodo DOI. Then cite the tools RNAflow ran for you, because they did the analysis.</p>
+  </div>
+
+  <div class="prose">
+    <h2>The software</h2>
+    <p>This DOI always resolves to the latest version. Each release also has its own DOI on Zenodo; use that one if you want to pin the exact version you ran.</p>
+    <div class="cite-box">
+      Bhattarai, M. (2026). <em>RNAflow: a guided desktop application for reproducible bulk RNA-seq analysis</em> (Version %%RNAFLOW_VERSION%%) [Computer software]. Zenodo. <a href="https://doi.org/%%DOI%%" rel="noopener">https://doi.org/%%DOI%%</a>
+    </div>
+
+    <h3>BibTeX</h3>
+    <div class="code-block"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button>@software{bhattarai_rnaflow,
+  author    = {Bhattarai, Matrika},
+  title     = {RNAflow: a guided desktop application for reproducible bulk RNA-seq analysis},
+  year      = {2026},
+  version   = {%%RNAFLOW_VERSION%%},
+  publisher = {Zenodo},
+  doi       = {%%DOI%%},
+  url       = {https://doi.org/%%DOI%%}
+}</div>
+    <p>GitHub's "Cite this repository" button on the <a href="%%RNAFLOW_REPO%%" rel="noopener">RNAflow repository</a> gives the same reference in other formats.</p>
+
+    <h2>In your methods section</h2>
+    <p>State the RNAflow version, then name each tool and version that produced your results. RNAflow writes these to <code>results/software_versions.txt</code> for every run. A typical sentence:</p>
+    <div class="cite-box">
+      RNA-seq reads were processed with RNAflow v%%RNAFLOW_VERSION%% (Bhattarai, 2026). Reads were quality-checked with FastQC and trimmed with fastp, transcripts were quantified with Salmon, and differential expression was tested with DESeq2 using apeglm shrinkage of fold changes. Genes with adjusted <em>p</em> &lt; 0.05 and |log2 fold change| &gt; 1 were considered differentially expressed.
+    </div>
+    <p>Change the sentence to match the route you took (for example HISAT2 and featureCounts in place of Salmon) and the thresholds you used.</p>
+
+    <h2>Tools to cite alongside RNAflow</h2>
+    <p>Cite the ones your analysis used. The <a href="/tools/rnaflow#interpret">interpreting results</a> section of the manual has example methods text for the alignment route.</p>
+    <ul class="cite-tools">
+      <li><strong>FastQC</strong>: quality control of raw reads</li>
+      <li><strong>fastp</strong>: adapter and quality trimming</li>
+      <li><strong>Salmon</strong>: transcript quantification</li>
+      <li><strong>HISAT2</strong>: read alignment</li>
+      <li><strong>featureCounts</strong> (Subread): read counting</li>
+      <li><strong>DESeq2</strong>, <strong>edgeR</strong>, <strong>limma-voom</strong>: differential expression</li>
+      <li><strong>apeglm</strong>: fold-change shrinkage</li>
+      <li><strong>clusterProfiler</strong>, <strong>fgsea</strong>, <strong>MSigDB</strong>: enrichment analysis</li>
+      <li><strong>MultiQC</strong>: summary reports</li>
+      <li><strong>Ensembl</strong>: reference genome and annotation, with the release number</li>
+    </ul>
+
+    <h2>Citing the course</h2>
+    <p>To cite a page of the course, give its title, "BioInfoCodex", the address and the date you read it.</p>
+  </div>
+</div>

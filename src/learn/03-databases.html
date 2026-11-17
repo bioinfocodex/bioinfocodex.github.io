@@ -1,0 +1,231 @@
+<!--
+module: 3
+slug: databases
+short: Databases
+label: Module 3 · Databases &amp; Data
+title: Biological Databases &amp; File Formats
+-->
+<p class="lead">Public databases hold billions of sequences, structures, and experiments — and they are all free. Knowing which database to use and how to download data efficiently is an essential skill.</p>
+
+<!--topic 3.1: The Major Biological Databases-->
+          <p class="sub">Public biological databases are one of the greatest resources in science. They contain billions of sequences, millions of structures, and thousands of curated experiments — all freely accessible. Knowing which database to search, how to interpret accession numbers, and how to programmatically retrieve data are essential skills for any bioinformatician.</p>
+
+          <h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">The Core Databases</h3>
+          <div class="card-grid card-grid-2" style="gap:12px;margin-top:8px;">
+            <div class="card" style="padding:16px;border-left:3px solid var(--green);"><strong>NCBI</strong> <span class="tag tag-green" style="font-size:0.65em;">Multi-purpose</span><p class="sub" style="margin-top:6px;">National Center for Biotechnology Information. Houses GenBank (nucleotide sequences), SRA (raw sequencing data), PubMed (literature), RefSeq (curated reference sequences), and ClinVar (clinical variants). Start here for most searches. URL: ncbi.nlm.nih.gov</p></div>
+            <div class="card" style="padding:16px;border-left:3px solid var(--blue);"><strong>Ensembl</strong> <span class="tag tag-blue" style="font-size:0.65em;">Genome</span><p class="sub" style="margin-top:6px;">Best source for annotated reference genomes and GTF annotation files for 300+ species. Provides BioMart for bulk queries. Use this to download genome FASTA and GTF files. URL: ensembl.org</p></div>
+            <div class="card" style="padding:16px;border-left:3px solid var(--purple);"><strong>UniProt</strong> <span class="tag tag-purple" style="font-size:0.65em;">Protein</span><p class="sub" style="margin-top:6px;">Comprehensive protein database. <strong>Swiss-Prot</strong> = manually curated (~570K entries, high quality). <strong>TrEMBL</strong> = computationally annotated (~250M entries). URL: uniprot.org</p></div>
+            <div class="card" style="padding:16px;border-left:3px solid var(--orange);"><strong>RCSB PDB</strong> <span class="tag tag-orange" style="font-size:0.65em;">Structure</span><p class="sub" style="margin-top:6px;">Protein Data Bank. 200,000+ experimentally determined 3D structures (X-ray, cryo-EM, NMR). Now complemented by AlphaFold DB with 200M+ predicted structures. URL: rcsb.org</p></div>
+            <div class="card" style="padding:16px;border-left:3px solid var(--green);"><strong>GEO / SRA</strong> <span class="tag tag-green" style="font-size:0.65em;">Expression</span><p class="sub" style="margin-top:6px;">Gene Expression Omnibus (processed data, metadata) and Sequence Read Archive (raw FASTQ files). Search by organism + condition + technology. Most published datasets are deposited here.</p></div>
+            <div class="card" style="padding:16px;border-left:3px solid var(--blue);"><strong>KEGG / Reactome</strong> <span class="tag tag-blue" style="font-size:0.65em;">Pathways</span><p class="sub" style="margin-top:6px;">KEGG: metabolic pathways, drug targets, disease associations. Reactome: curated biological pathways and reactions, especially good for human data. Essential for pathway enrichment analysis.</p></div>
+            <div class="card" style="padding:16px;border-left:3px solid var(--purple);"><strong>STRING</strong> <span class="tag tag-purple" style="font-size:0.65em;">Interactions</span><p class="sub" style="margin-top:6px;">Protein-protein interaction networks for 5000+ species. Input a gene list and get a functional interaction network. URL: string-db.org</p></div>
+            <div class="card" style="padding:16px;border-left:3px solid var(--orange);"><strong>Gene Ontology (GO)</strong> <span class="tag tag-orange" style="font-size:0.65em;">Annotation</span><p class="sub" style="margin-top:6px;">Standardised vocabulary for gene function. Three domains: Biological Process (BP), Molecular Function (MF), Cellular Component (CC). Used in enrichment analysis. URL: geneontology.org</p></div>
+          </div>
+
+          <h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">Accession Number Formats</h3>
+          <p class="sub">Every entry in a database has a unique <strong>accession number</strong>. Recognising the format tells you which database it comes from:</p>
+          <div style="overflow-x:auto;margin:12px 0;">
+            <table style="width:100%;border-collapse:collapse;font-size:0.82em;">
+              <tr style="background:var(--bg2);font-weight:600;">
+                <td style="padding:10px;border:1px solid var(--border);">Pattern</td>
+                <td style="padding:10px;border:1px solid var(--border);">Example</td>
+                <td style="padding:10px;border:1px solid var(--border);">Database</td>
+                <td style="padding:10px;border:1px solid var(--border);">What It Is</td>
+              </tr>
+              <tr><td style="padding:10px;border:1px solid var(--border);">NM_######</td><td style="padding:10px;border:1px solid var(--border);">NM_007294</td><td style="padding:10px;border:1px solid var(--border);">NCBI RefSeq</td><td style="padding:10px;border:1px solid var(--border);">mRNA transcript</td></tr>
+              <tr style="background:var(--bg2);"><td style="padding:10px;border:1px solid var(--border);">NP_######</td><td style="padding:10px;border:1px solid var(--border);">NP_009225</td><td style="padding:10px;border:1px solid var(--border);">NCBI RefSeq</td><td style="padding:10px;border:1px solid var(--border);">Protein</td></tr>
+              <tr><td style="padding:10px;border:1px solid var(--border);">ENSG###########</td><td style="padding:10px;border:1px solid var(--border);">ENSG00000012048</td><td style="padding:10px;border:1px solid var(--border);">Ensembl</td><td style="padding:10px;border:1px solid var(--border);">Gene (human)</td></tr>
+              <tr style="background:var(--bg2);"><td style="padding:10px;border:1px solid var(--border);">ENST###########</td><td style="padding:10px;border:1px solid var(--border);">ENST00000357654</td><td style="padding:10px;border:1px solid var(--border);">Ensembl</td><td style="padding:10px;border:1px solid var(--border);">Transcript</td></tr>
+              <tr><td style="padding:10px;border:1px solid var(--border);">P##### or Q#####</td><td style="padding:10px;border:1px solid var(--border);">P38398</td><td style="padding:10px;border:1px solid var(--border);">UniProt Swiss-Prot</td><td style="padding:10px;border:1px solid var(--border);">Curated protein</td></tr>
+              <tr style="background:var(--bg2);"><td style="padding:10px;border:1px solid var(--border);">SRR#######</td><td style="padding:10px;border:1px solid var(--border);">SRR1234567</td><td style="padding:10px;border:1px solid var(--border);">NCBI SRA</td><td style="padding:10px;border:1px solid var(--border);">Sequencing run</td></tr>
+              <tr><td style="padding:10px;border:1px solid var(--border);">GSE######</td><td style="padding:10px;border:1px solid var(--border);">GSE53697</td><td style="padding:10px;border:1px solid var(--border);">NCBI GEO</td><td style="padding:10px;border:1px solid var(--border);">Dataset/Series</td></tr>
+            </table>
+          </div>
+
+          <h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">How Databases Link to Each Other</h3>
+          <p class="sub">Databases are extensively cross-referenced. A gene page on NCBI Gene links to its RefSeq transcript (NM_), RefSeq protein (NP_), UniProt entry, Ensembl ID, associated GEO datasets, ClinVar variants, and PDB structures. Similarly, an Ensembl gene page links out to NCBI, UniProt, KEGG, and more. This interconnection means you can start from <em>any</em> database and navigate to the information you need.</p>
+
+          <h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">NCBI E-utilities API</h3>
+          <p class="sub">For programmatic access, NCBI provides the <strong>E-utilities</strong> API — a set of URL-based tools for searching and retrieving records. This is essential for automating data retrieval in scripts.</p>
+          <div class="code-block"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button><span class="code-comment"># Search PubMed for articles about BRCA1 and RNA-seq</span>
+esearch -db pubmed -query "BRCA1 AND RNA-seq" | efetch -format abstract | head -50
+
+<span class="code-comment"># Fetch a nucleotide sequence in FASTA format</span>
+efetch -db nucleotide -id NM_007294 -format fasta > BRCA1_mRNA.fa
+
+<span class="code-comment"># Search SRA for human RNA-seq datasets</span>
+esearch -db sra -query '"Homo sapiens"[Organism] AND "RNA-Seq"[Strategy]' | efetch -format runinfo | head
+
+<span class="code-comment"># Install E-utilities via conda</span>
+mamba install -c bioconda entrez-direct</div>
+
+          <h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">How to Cite Databases</h3>
+          <div class="info-box tip"><svg class="ico" aria-hidden="true"><use href="#i-tip"></use></svg><div>Always cite the databases you use in your Methods section. Each database publishes a yearly "Database Issue" paper in <em>Nucleic Acids Research</em>. For example: "Reference genome and annotation were obtained from Ensembl release 111 (Cunningham et al., 2024). Raw sequencing data were downloaded from the NCBI Sequence Read Archive (accession SRP123456)."</div></div>
+
+          <div class="info-box note" style="margin-top:14px;"><svg class="ico" aria-hidden="true"><use href="#i-note"></use></svg><div><strong>Key Takeaways:</strong><br>
+          &bull; NCBI is the starting point for most searches; Ensembl is best for genome downloads; UniProt for protein information<br>
+          &bull; Learn to recognise accession number formats (NM_, ENSG, P#####, SRR) to identify the source database<br>
+          &bull; Databases are cross-linked — navigate from gene to transcript to protein to structure to pathway<br>
+          &bull; Use NCBI E-utilities for programmatic access in automated pipelines<br>
+          &bull; Always cite the databases and their version/release numbers in publications</div></div>
+
+<!--topic 3.2: Essential File Formats Explained-->
+          <p class="sub">Each step of a bioinformatics analysis produces a different file format. Recognising these formats, understanding their structure, and knowing how to convert between them is essential. Misinterpreting a file format is one of the most common causes of analysis errors.</p>
+
+          <h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">FASTA (.fa / .fasta)</h3>
+          <p class="sub">The simplest sequence format. Each entry has a header line starting with <code>&gt;</code> followed by one or more lines of sequence. Used for reference genomes, transcriptomes, and protein sequences.</p>
+          <div class="code-block"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button><span class="code-comment"># Example FASTA file</span>
+&gt;ENST00000357654.9 BRCA1-201 cds chromosome:GRCh38:17:43044295:43125483:-1
+ATGGATTTATCTGCTCTTCGCGTTGAAGAAGTACAAAATGTCATTAATGCTATGCAGAAA
+ATCTTAGAGTGTCCCATCTGTCTGGAGTTGATCAAGGAACCTGTCTCCACAAAGTGTGAC
+...</div>
+          <div class="info-box tip"><svg class="ico" aria-hidden="true"><use href="#i-tip"></use></svg><div>Useful one-liners: <code>grep -c "^&gt;" file.fa</code> counts the number of sequences. <code>samtools faidx genome.fa</code> creates an index (.fai) needed by many tools. The index file lists each sequence name, length, offset, line bases, and line bytes.</div></div>
+
+          <h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">FASTQ (.fastq / .fastq.gz)</h3>
+          <p class="sub">Raw sequencing reads. Every read is exactly 4 lines. FASTQ files are almost always gzip-compressed (.fastq.gz) to save space.</p>
+          <div class="code-block"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button><span class="code-comment"># Example FASTQ entry (4 lines per read)</span>
+@SRR1234567.1 1 length=150                      <span class="code-comment"># Line 1: Header (starts with @)</span>
+ATCGATCGATCGATCGATCGATCGATCGATCGATCGATCGATCG     <span class="code-comment"># Line 2: Sequence</span>
++                                                 <span class="code-comment"># Line 3: Separator (always +)</span>
+IIIIIIIIIIIIIHHHHHGGGGFFFDDDBBBB@@@@&gt;&gt;&gt;555222   <span class="code-comment"># Line 4: Quality scores (ASCII)</span>
+
+<span class="code-comment"># Quality scores: I=Q40(99.99%), F=Q37, 5=Q20(99%), !=Q0</span>
+<span class="code-comment"># Count reads: divide total lines by 4</span>
+echo $(( $(zcat sample.fastq.gz | wc -l) / 4 ))</div>
+
+          <h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">SAM / BAM / CRAM</h3>
+          <p class="sub">Alignment files. SAM is human-readable text; BAM is the compressed binary equivalent (5-10x smaller); CRAM compresses even further by referencing the genome. Always store BAM, never SAM.</p>
+          <div class="code-block"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button><span class="code-comment"># SAM format (tab-separated, 11 mandatory columns)</span>
+<span class="code-comment"># QNAME  FLAG  RNAME  POS  MAPQ  CIGAR  RNEXT  PNEXT  TLEN  SEQ  QUAL</span>
+SRR123.1  99  chr17  43044295  60  150M  =  43044450  305  ATCGATCG...  IIIIIIII...
+
+<span class="code-comment"># Key samtools commands</span>
+samtools view -bS aligned.sam &gt; aligned.bam   <span class="code-comment"># SAM to BAM</span>
+samtools sort aligned.bam -o sorted.bam       <span class="code-comment"># Sort by coordinate</span>
+samtools index sorted.bam                     <span class="code-comment"># Create .bai index</span>
+samtools flagstat sorted.bam                  <span class="code-comment"># Quick alignment stats</span></div>
+
+          <h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">GTF / GFF3</h3>
+          <p class="sub">Gene annotation files define where genes, exons, transcripts, and other features are located in the genome. Essential for gene counting (featureCounts) and transcript quantification.</p>
+          <div class="code-block"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button><span class="code-comment"># GTF format: 9 tab-separated columns</span>
+<span class="code-comment"># chr  source  feature  start  end  score  strand  frame  attributes</span>
+chr17  ensembl  gene   43044295  43125483  .  -  .  gene_id "ENSG00000012048"; gene_name "BRCA1";
+chr17  ensembl  transcript  43044295  43125483  .  -  .  gene_id "ENSG00000012048"; transcript_id "ENST00000357654";
+chr17  ensembl  exon   43124017  43125483  .  -  .  gene_id "ENSG00000012048"; exon_number "1";</div>
+
+          <h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">VCF (.vcf / .vcf.gz)</h3>
+          <p class="sub">Variant Call Format — the standard for storing genetic variants. Covered in detail in Module 6.</p>
+
+          <h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">BED (.bed)</h3>
+          <p class="sub">Simple genomic interval format. Minimum 3 columns: chrom, start (0-based), end. Used for ChIP-seq peaks, exon coordinates, target regions, blacklisted regions.</p>
+          <div class="info-box warn"><svg class="ico" aria-hidden="true"><use href="#i-warn"></use></svg><div><strong>Coordinate systems matter!</strong> BED uses <strong>0-based, half-open</strong> coordinates (start is 0-indexed, end is exclusive). GTF/GFF and VCF use <strong>1-based, inclusive</strong> coordinates. A region at chr1:100-200 in BED is the same as chr1:101-200 in GTF. Mixing these up is a very common source of off-by-one errors.</div></div>
+
+          <h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">Converting Between Formats</h3>
+          <div class="code-block"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button><span class="code-comment"># SAM &lt;-&gt; BAM &lt;-&gt; CRAM</span>
+samtools view -bS input.sam &gt; output.bam         <span class="code-comment"># SAM to BAM</span>
+samtools view -h input.bam &gt; output.sam          <span class="code-comment"># BAM to SAM</span>
+samtools view -C -T ref.fa input.bam &gt; out.cram  <span class="code-comment"># BAM to CRAM</span>
+
+<span class="code-comment"># GTF &lt;-&gt; BED (extract gene coordinates)</span>
+awk '$3=="gene"' genes.gtf | awk '{print $1"\t"$4-1"\t"$5"\t"$10}' | tr -d '";' &gt; genes.bed
+
+<span class="code-comment"># BED operations with bedtools</span>
+bedtools intersect -a peaks.bed -b genes.bed       <span class="code-comment"># Overlapping regions</span>
+bedtools getfasta -fi genome.fa -bed regions.bed   <span class="code-comment"># Extract sequences</span>
+
+<span class="code-comment"># Validate file integrity</span>
+samtools quickcheck sorted.bam &amp;&amp; echo "OK" || echo "CORRUPTED"
+md5sum file.fastq.gz &gt; file.md5                   <span class="code-comment"># Generate checksum</span>
+md5sum -c file.md5                                 <span class="code-comment"># Verify checksum</span></div>
+
+          <div class="info-box note" style="margin-top:14px;"><svg class="ico" aria-hidden="true"><use href="#i-note"></use></svg><div><strong>Key Takeaways:</strong><br>
+          &bull; FASTA = sequences, FASTQ = sequences + quality, BAM = aligned reads, GTF = gene annotations, VCF = variants, BED = intervals<br>
+          &bull; Always store alignments as BAM (or CRAM), never SAM — the space savings are enormous<br>
+          &bull; Watch out for coordinate systems: BED is 0-based half-open; GTF and VCF are 1-based inclusive<br>
+          &bull; Use samtools and bedtools for format conversion and manipulation<br>
+          &bull; Always verify file integrity with checksums (md5sum) after transfers</div></div>
+
+<!--topic 3.3: Downloading Data from SRA &amp; Ensembl-->
+          <p class="sub">Most bioinformatics projects begin by downloading data — either raw sequencing data from public repositories (to reproduce or extend a study) or reference genomes and annotations for alignment. This section covers how to find, download, and verify data efficiently.</p>
+
+          <h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">Finding SRA Accession Numbers from a Paper</h3>
+          <p class="sub">Published papers deposit raw data in public repositories. To find the accession number: (1) Check the paper's <strong>Data Availability</strong> section — it will list a GEO accession (GSE######) or BioProject (PRJNA######). (2) Go to NCBI GEO and search for the GSE number. (3) Click "SRA Run Selector" at the bottom of the GEO page. (4) This gives you a table of all SRR accessions and their metadata. Download the <strong>Accession List</strong> text file.</p>
+
+          <h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">Downloading from NCBI SRA</h3>
+          <div class="code-block"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button><span class="code-comment"># Install SRA toolkit</span>
+mamba install -c bioconda sra-tools
+
+<span class="code-comment"># Download single-end data</span>
+fasterq-dump SRR1234567 --outdir ./data/raw --progress
+
+<span class="code-comment"># Download paired-end data (creates _1.fastq and _2.fastq)</span>
+fasterq-dump SRR1234567 --outdir ./data/raw --split-files --progress
+
+<span class="code-comment"># Compress immediately (fasterq-dump outputs uncompressed!)</span>
+gzip ./data/raw/SRR1234567*.fastq
+
+<span class="code-comment"># Batch download from accession list</span>
+cat SRR_Acc_List.txt | parallel -j 4 "fasterq-dump {} --outdir ./data/raw --split-files &amp;&amp; gzip ./data/raw/{}*.fastq"</div>
+
+          <div class="info-box warn"><svg class="ico" aria-hidden="true"><use href="#i-warn"></use></svg><div><strong>fasterq-dump outputs uncompressed FASTQ!</strong> A single sample can be 20-50 GB uncompressed. Always gzip immediately after download. Also, fasterq-dump uses a cache in <code>~/ncbi/</code> which can fill your home directory — set <code>vdb-config --set /repository/user/cache-disabled=true</code> or use <code>--temp /scratch/tmp</code>.</div></div>
+
+          <h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">Faster Downloads with Aspera and ENA</h3>
+          <p class="sub"><strong>Aspera</strong> is a high-speed transfer protocol that can be 10-50x faster than wget/ftp. NCBI and ENA both support it. The <strong>European Nucleotide Archive (ENA)</strong> is an alternative to SRA that is often faster, especially if you are in Europe, and provides pre-compressed FASTQ files directly.</p>
+          <div class="code-block"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button><span class="code-comment"># Download from ENA (often faster, provides .fastq.gz directly)</span>
+<span class="code-comment"># Search: https://www.ebi.ac.uk/ena/browser/</span>
+<span class="code-comment"># ENA URLs follow a predictable pattern:</span>
+wget ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR123/007/SRR1234567/SRR1234567_1.fastq.gz
+wget ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR123/007/SRR1234567/SRR1234567_2.fastq.gz
+
+<span class="code-comment"># Using Aspera for fast downloads</span>
+mamba install -c bioconda aspera-cli
+ascp -QT -l 300m -P 33001 -i ~/.aspera/cli/etc/asperaweb_id_dsa.openssh \
+  era-fasp@fasp.sra.ebi.ac.uk:/vol1/fastq/SRR123/007/SRR1234567/SRR1234567_1.fastq.gz \
+  ./data/raw/</div>
+
+          <h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">Downloading Reference Genomes from Ensembl</h3>
+          <div class="code-block"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button><span class="code-comment"># Human genome (GRCh38) — use primary_assembly (no alt/patch contigs)</span>
+wget https://ftp.ensembl.org/pub/release-111/fasta/homo_sapiens/dna/Homo_sapiens.GRCh38.dna.primary_assembly.fa.gz
+
+<span class="code-comment"># Human GTF annotation (matching release!)</span>
+wget https://ftp.ensembl.org/pub/release-111/gtf/homo_sapiens/Homo_sapiens.GRCh38.111.gtf.gz
+
+<span class="code-comment"># Mouse (GRCm39)</span>
+wget https://ftp.ensembl.org/pub/release-111/fasta/mus_musculus/dna/Mus_musculus.GRCm39.dna.primary_assembly.fa.gz
+wget https://ftp.ensembl.org/pub/release-111/gtf/mus_musculus/Mus_musculus.GRCm39.111.gtf.gz
+
+<span class="code-comment"># Decompress</span>
+gunzip *.fa.gz *.gtf.gz</div>
+          <div class="info-box tip"><svg class="ico" aria-hidden="true"><use href="#i-tip"></use></svg><div><strong>Always use primary_assembly</strong> (not top_level) to avoid alt contigs and patches that can cause ambiguous alignments. And always ensure your genome FASTA and GTF come from the <strong>same Ensembl release</strong> — mismatched versions cause chromosome naming mismatches and counting errors.</div></div>
+
+          <h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">Verifying Downloaded Data</h3>
+          <div class="code-block"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button><span class="code-comment"># Verify file integrity with md5sum</span>
+wget https://ftp.ensembl.org/pub/release-111/fasta/homo_sapiens/dna/CHECKSUMS
+md5sum Homo_sapiens.GRCh38.dna.primary_assembly.fa.gz
+<span class="code-comment"># Compare the hash with the value in the CHECKSUMS file</span>
+
+<span class="code-comment"># Quick sanity checks for FASTQ files</span>
+zcat sample_R1.fastq.gz | head -8           <span class="code-comment"># Check first 2 reads look normal</span>
+echo $(( $(zcat sample_R1.fastq.gz | wc -l) / 4 ))  <span class="code-comment"># Count total reads</span>
+
+<span class="code-comment"># Check that R1 and R2 have the same number of reads</span>
+echo "R1: $(( $(zcat sample_R1.fastq.gz | wc -l) / 4 )) reads"
+echo "R2: $(( $(zcat sample_R2.fastq.gz | wc -l) / 4 )) reads"</div>
+
+          <h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">Organising Your Data</h3>
+          <div class="code-block"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button><span class="code-comment"># Recommended project data structure</span>
+mkdir -p project/{data/raw,data/trimmed,data/aligned,ref,results,scripts,logs}
+
+<span class="code-comment"># Rename SRR files to meaningful sample names using a mapping file</span>
+<span class="code-comment"># mapping.txt: SRR1234567 control_rep1</span>
+while read srr name; do
+    mv data/raw/${srr}_1.fastq.gz data/raw/${name}_R1.fastq.gz
+    mv data/raw/${srr}_2.fastq.gz data/raw/${name}_R2.fastq.gz
+done &lt; mapping.txt</div>
+
+          <div class="info-box note" style="margin-top:14px;"><svg class="ico" aria-hidden="true"><use href="#i-note"></use></svg><div><strong>Key Takeaways:</strong><br>
+          &bull; Find SRR accessions via GEO Run Selector (from the paper's Data Availability section)<br>
+          &bull; fasterq-dump outputs uncompressed files — always gzip immediately to save disk space<br>
+          &bull; ENA (European) often provides faster downloads with pre-compressed FASTQ files<br>
+          &bull; Always verify downloads with md5sum and check that R1/R2 files have matching read counts<br>
+          &bull; Keep genome FASTA and GTF from the same Ensembl release to avoid naming mismatches</div></div>

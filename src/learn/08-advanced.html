@@ -1,0 +1,421 @@
+<!--
+module: 8
+slug: advanced
+short: Advanced
+label: Module 8 · Advanced Topics
+title: Single-cell RNA-seq, Pathway Analysis &amp; Machine Learning
+-->
+<p class="lead">The frontier of bioinformatics. These topics are increasingly required in modern research — from dissecting cell heterogeneity with scRNA-seq to interpreting gene lists with pathway analysis and applying machine learning to genomic data.</p>
+
+<!--topic 8.1: Single-cell RNA-seq (scRNA-seq) — Introduction-->
+          <p class="sub">Single-cell RNA sequencing (scRNA-seq) measures gene expression in individual cells, revealing cellular heterogeneity that is invisible to bulk RNA-seq. Where bulk RNA-seq reports the average expression across thousands of cells, scRNA-seq can identify rare cell populations, map developmental trajectories, and characterise the cellular composition of complex tissues like tumours or the immune system. The most widely used platform is the 10x Genomics Chromium system.</p>
+
+          <h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">How 10x Chromium Works</h3>
+          <p class="sub">In the 10x Chromium system, individual cells are captured in nanoliter-sized oil droplets (GEMs — Gel Beads-in-emulsion) together with barcoded hydrogel beads. Each bead carries millions of oligonucleotides with three components: (1) a <strong>cell barcode</strong> (16bp, unique to each droplet/cell), (2) a <strong>UMI</strong> (Unique Molecular Identifier, 12bp, unique to each captured mRNA molecule), and (3) a poly-T capture sequence that binds mRNA. After reverse transcription inside the droplet, all cDNA from one cell shares the same barcode, allowing computational demultiplexing.</p>
+
+          <h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">Why scRNA-seq Has High Dropout (Zero Inflation)</h3>
+          <p class="sub">A major characteristic of scRNA-seq data is <strong>dropout</strong>: many genes that are truly expressed in a cell are detected as zero. This happens because each cell contributes only ~10–20% of its mRNA to the captured library (low capture efficiency). Lowly expressed genes are particularly affected — they may be expressed but not captured. This "zero inflation" complicates analysis and requires specialised statistical methods.</p>
+
+          <h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">Quality Control Metrics</h3>
+          <div class="card-grid card-grid-2" style="gap:10px;margin-top:8px;">
+            <div class="card" style="padding:14px;"><strong>nFeature_RNA (genes per cell)</strong><p class="sub" style="margin-top:4px;">Number of unique genes detected. Too low (&lt;200): empty droplet or dead cell. Too high (&gt;5,000–8,000): possible doublet (two cells in one droplet). Typical range: 500–5,000 genes.</p></div>
+            <div class="card" style="padding:14px;"><strong>nCount_RNA (UMIs per cell)</strong><p class="sub" style="margin-top:4px;">Total UMI counts. Proportional to mRNA content. Very low counts indicate low-quality cells. Extremely high counts may indicate doublets.</p></div>
+            <div class="card" style="padding:14px;"><strong>percent.mt (mitochondrial %)</strong><p class="sub" style="margin-top:4px;">Percentage of reads from mitochondrial genes. Dying cells release cytoplasmic mRNA but retain mitochondrial mRNA, so high mt% (&gt;20%) indicates cell stress or death. Common threshold: remove cells with &gt;15–20% mt.</p></div>
+            <div class="card" style="padding:14px;"><strong>Typical QC thresholds</strong><p class="sub" style="margin-top:4px;">Remove cells with: nFeature_RNA &lt; 200 or &gt; 5000, percent.mt &gt; 20%. These are starting points — adjust based on your cell type (some cells naturally have high mt% or low gene counts).</p></div>
+          </div>
+
+          <h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">Advanced QC: Ambient RNA and Doublets</h3>
+          <div class="card-grid card-grid-2" style="gap:10px;margin-top:8px;">
+            <div class="card" style="padding:14px;"><strong>Ambient RNA removal (SoupX)</strong><p class="sub" style="margin-top:4px;">During cell lysis, free-floating mRNA ("soup") contaminates all droplets. SoupX estimates the contamination profile from empty droplets and subtracts it from each cell's counts. Run before standard Seurat analysis.</p></div>
+            <div class="card" style="padding:14px;"><strong>Doublet detection (scDblFinder / DoubletFinder)</strong><p class="sub" style="margin-top:4px;">Doublets (two cells captured in one droplet) appear as cells with hybrid gene expression profiles. scDblFinder simulates artificial doublets and identifies real cells that resemble them. Expected doublet rate: ~0.8% per 1,000 cells loaded.</p></div>
+          </div>
+
+          <h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">Complete Seurat Workflow</h3>
+          <div class="code-block" style="margin-top:8px;"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button><span class="code-comment"># Standard Seurat v5 scRNA-seq workflow</span>
+library(Seurat)
+
+<span class="code-comment"># Load 10x Cell Ranger output</span>
+data &lt;- Read10X("filtered_feature_bc_matrix/")
+seurat &lt;- CreateSeuratObject(data, min.cells=3, min.features=200)
+
+<span class="code-comment"># Quality control</span>
+seurat[["pct_mt"]] &lt;- PercentageFeatureSet(seurat, pattern="^MT-")
+VlnPlot(seurat, features=c("nFeature_RNA","nCount_RNA","pct_mt"), pt.size=0.1)
+seurat &lt;- subset(seurat, nFeature_RNA &gt; 200 &amp; nFeature_RNA &lt; 5000 &amp; pct_mt &lt; 20)
+
+<span class="code-comment"># Normalise (log-normalisation)</span>
+seurat &lt;- NormalizeData(seurat)
+
+<span class="code-comment"># Find highly variable genes (for dimensionality reduction)</span>
+seurat &lt;- FindVariableFeatures(seurat, selection.method="vst", nfeatures=2000)
+
+<span class="code-comment"># Scale data (z-score, optionally regress out confounders)</span>
+seurat &lt;- ScaleData(seurat, vars.to.regress="pct_mt")
+
+<span class="code-comment"># PCA → Nearest neighbours → Clustering → UMAP</span>
+seurat &lt;- RunPCA(seurat, npcs=30)
+ElbowPlot(seurat)  <span class="code-comment"># Choose number of PCs (elbow ~15-20)</span>
+seurat &lt;- FindNeighbors(seurat, dims=1:20)
+seurat &lt;- FindClusters(seurat, resolution=0.5)
+seurat &lt;- RunUMAP(seurat, dims=1:20)
+
+<span class="code-comment"># Visualise clusters</span>
+DimPlot(seurat, label=TRUE, repel=TRUE) + NoLegend()
+
+<span class="code-comment"># Find marker genes for each cluster</span>
+markers &lt;- FindAllMarkers(seurat, only.pos=TRUE, min.pct=0.25, logfc.threshold=0.5)
+top5 &lt;- markers %&gt;% group_by(cluster) %&gt;% slice_max(avg_log2FC, n=5)
+DoHeatmap(seurat, features=top5$gene)</div>
+
+          <h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">Cell Cycle Scoring and Regression</h3>
+          <div class="code-block" style="margin-top:8px;"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button><span class="code-comment"># Score cells for cell cycle phase</span>
+s.genes &lt;- cc.genes$s.genes
+g2m.genes &lt;- cc.genes$g2m.genes
+seurat &lt;- CellCycleScoring(seurat, s.features=s.genes, g2m.features=g2m.genes)
+
+<span class="code-comment"># If cell cycle dominates clustering, regress it out:</span>
+seurat &lt;- ScaleData(seurat, vars.to.regress=c("S.Score","G2M.Score"))</div>
+
+          <h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">Trajectory Analysis with Monocle3</h3>
+          <p class="sub">Trajectory analysis (pseudotime) orders cells along a continuous path representing a biological process (e.g., differentiation, activation). Monocle3 constructs a principal graph through the UMAP embedding and assigns each cell a pseudotime value based on its position along this graph.</p>
+          <div class="info-box tip"><svg class="ico" aria-hidden="true"><use href="#i-tip"></use></svg><div><strong>When to use trajectories:</strong> Developmental datasets (stem cell differentiation, embryogenesis), immune activation time courses, or any scenario where cells exist along a continuum rather than in discrete types.</div></div>
+
+          <h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">Dataset Integration</h3>
+          <p class="sub">When analysing multiple scRNA-seq datasets (different patients, batches, or experiments), batch effects cause identical cell types to cluster separately by dataset rather than by biology. Integration methods align datasets so that shared cell types overlap.</p>
+          <div class="card-grid card-grid-2" style="gap:10px;margin-top:8px;">
+            <div class="card" style="padding:14px;"><strong>Harmony</strong><p class="sub" style="margin-top:4px;">Fast, lightweight. Operates in PCA space. Iteratively adjusts PCs to remove batch effects. Works well for most integration tasks. <code>RunHarmony(seurat, "batch")</code></p></div>
+            <div class="card" style="padding:14px;"><strong>Seurat RPCA integration</strong><p class="sub" style="margin-top:4px;">Uses reciprocal PCA to find shared anchors between datasets. More conservative — better at preserving unique cell populations that exist in only one dataset. More computationally expensive.</p></div>
+          </div>
+
+          <div class="info-box warn"><svg class="ico" aria-hidden="true"><use href="#i-warn"></use></svg><div><strong>Integration pitfall:</strong> Over-integration can merge truly different cell types across datasets. Always compare integrated and non-integrated results. If a cell type appears in only one condition, integration may incorrectly merge it with a different cell type.</div></div>
+
+          <div class="chips" style="margin-top:14px;"><span class="chip">10x Chromium = cell barcode + UMI</span><span class="chip">nFeature 200–5000, mt% &lt; 20%</span><span class="chip">SoupX for ambient RNA</span><span class="chip">scDblFinder for doublets</span><span class="chip">FindAllMarkers for cluster identity</span><span class="chip">Harmony for fast integration</span><span class="chip">Monocle3 for trajectories</span></div>
+
+<!--topic 8.2: Gene Ontology &amp; Pathway Enrichment Analysis-->
+          <p class="sub">After identifying differentially expressed genes, the natural next question is: <em>what biological processes, pathways, or functions are affected?</em> Pathway enrichment analysis moves from individual genes to biological interpretation. Rather than examining 500 DEGs one by one, you ask whether genes belonging to a specific pathway (e.g., "apoptosis" or "cell cycle") appear more often in your results than expected by chance. Two main approaches exist: Over-Representation Analysis (ORA) and Gene Set Enrichment Analysis (GSEA).</p>
+
+          <h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">What Is a Gene Set?</h3>
+          <p class="sub">A gene set is a group of genes that share a common biological property. Gene sets are defined by databases:</p>
+          <div class="card-grid card-grid-2" style="gap:10px;margin-top:8px;">
+            <div class="card" style="padding:14px;"><strong>Gene Ontology (GO)</strong><p class="sub" style="margin-top:4px;">Three domains: Biological Process (BP), Molecular Function (MF), Cellular Component (CC). Hierarchically organised (e.g., "immune response" contains "inflammatory response" contains "cytokine production"). Very comprehensive but often redundant.</p></div>
+            <div class="card" style="padding:14px;"><strong>KEGG Pathways</strong><p class="sub" style="margin-top:4px;">Curated metabolic and signalling pathways with detailed diagrams. ~340 human pathways. Good for metabolism, signalling, and disease pathways. Less comprehensive than GO but more interpretable.</p></div>
+            <div class="card" style="padding:14px;"><strong>MSigDB Hallmark Gene Sets</strong><p class="sub" style="margin-top:4px;">50 carefully curated gene sets representing well-defined biological states (e.g., "HALLMARK_INFLAMMATORY_RESPONSE", "HALLMARK_OXIDATIVE_PHOSPHORYLATION"). Excellent starting point — covers major biological themes without redundancy.</p></div>
+            <div class="card" style="padding:14px;"><strong>Reactome</strong><p class="sub" style="margin-top:4px;">Peer-reviewed pathway database with detailed molecular events. ~2,500 human pathways. More granular than KEGG. Open-source and actively curated.</p></div>
+          </div>
+
+          <h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">How ORA Works</h3>
+          <p class="sub">Over-Representation Analysis uses Fisher's exact test (or hypergeometric test) to ask: <em>Is the overlap between my DEG list and a specific pathway larger than expected by chance?</em></p>
+          <p class="sub">Imagine you have 500 DEGs from a universe of 15,000 expressed genes. The "apoptosis" pathway contains 200 genes. If 40 of your 500 DEGs are in the apoptosis pathway, is that more than the ~7 you would expect by chance (200/15,000 &times; 500)? Fisher's exact test gives you a p-value for this overlap.</p>
+          <div class="info-box warn"><svg class="ico" aria-hidden="true"><use href="#i-warn"></use></svg><div><strong>Background gene set matters:</strong> Always use <strong>all expressed genes</strong> (genes that passed your expression filter) as the background, not all genes in the genome (~20,000). Using the wrong background inflates false positives because unexpressed genes cannot possibly appear in your DEG list but are counted as expected in the pathway.</div></div>
+
+          <h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">How GSEA Works — Step by Step</h3>
+          <p class="sub">GSEA does not use a DEG list with a cutoff. Instead, it uses the <strong>full ranked gene list</strong> (all genes ranked by fold change):</p>
+          <p class="sub">1. <strong>Rank all genes</strong> by log2 fold change (or a signed statistic like -log10(p) &times; sign(FC)).</p>
+          <p class="sub">2. <strong>Walk down the ranked list.</strong> For each gene, if it is in the pathway, increase a running enrichment score (ES); if not, decrease it.</p>
+          <p class="sub">3. The <strong>enrichment score</strong> is the maximum deviation from zero during the walk. A positive ES means the pathway genes are concentrated at the top (upregulated). A negative ES means they are at the bottom (downregulated).</p>
+          <p class="sub">4. <strong>Significance</strong> is assessed by permutation: shuffle gene labels 1,000 times and compute ES each time. Compare your real ES to the permutation distribution.</p>
+          <p class="sub">5. The <strong>Normalised Enrichment Score (NES)</strong> accounts for gene set size, making scores comparable across pathways.</p>
+          <div class="info-box note"><svg class="ico" aria-hidden="true"><use href="#i-note"></use></svg><div><strong>NES interpretation:</strong> Positive NES = pathway genes are enriched among upregulated genes. Negative NES = enriched among downregulated genes. Larger |NES| = stronger enrichment. Use padj &lt; 0.05 for significance.</div></div>
+
+          <h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">clusterProfiler Code — ORA and GSEA</h3>
+          <div class="code-block" style="margin-top:8px;"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button>library(clusterProfiler); library(org.Hs.eg.db); library(enrichplot)
+
+<span class="code-comment"># Convert gene symbols to Entrez IDs</span>
+gene_list &lt;- bitr(rownames(sig), fromType="SYMBOL",
+                  toType="ENTREZID", OrgDb=org.Hs.eg.db)
+
+<span class="code-comment"># Define background (all expressed genes, not just DEGs)</span>
+background &lt;- bitr(rownames(res), fromType="SYMBOL",
+                   toType="ENTREZID", OrgDb=org.Hs.eg.db)
+
+<span class="code-comment"># === ORA: GO Biological Process ===</span>
+ego &lt;- enrichGO(gene       = gene_list$ENTREZID,
+                universe   = background$ENTREZID,
+                OrgDb      = org.Hs.eg.db,
+                ont        = "BP",
+                pAdjustMethod = "BH",
+                qvalueCutoff  = 0.05,
+                readable   = TRUE)
+
+<span class="code-comment"># Remove redundant GO terms</span>
+ego_simplified &lt;- simplify(ego, cutoff=0.7, by="p.adjust")
+dotplot(ego_simplified, showCategory=20)
+
+<span class="code-comment"># === ORA: KEGG pathways ===</span>
+kk &lt;- enrichKEGG(gene      = gene_list$ENTREZID,
+                 organism  = "hsa",
+                 pvalueCutoff = 0.05)
+barplot(kk, showCategory=15)
+
+<span class="code-comment"># === GSEA: full ranked gene list ===</span>
+<span class="code-comment"># Create named, sorted vector of fold changes</span>
+gene_rank &lt;- setNames(res$log2FoldChange, rownames(res))
+gene_rank &lt;- sort(gene_rank, decreasing=TRUE)  <span class="code-comment"># Must be sorted!</span>
+
+gsea_res &lt;- gseGO(geneList = gene_rank,
+                  OrgDb    = org.Hs.eg.db,
+                  ont      = "BP",
+                  minGSSize = 15,
+                  maxGSSize = 500,
+                  pvalueCutoff = 0.05)
+
+<span class="code-comment"># Visualisations</span>
+ridgeplot(gsea_res, showCategory=15)
+gseaplot2(gsea_res, geneSetID=1:3)  <span class="code-comment"># Running score plot</span>
+
+<span class="code-comment"># Enrichment network (shows relationships between terms)</span>
+emapplot(pairwise_termsim(ego_simplified), showCategory=20)</div>
+
+          <h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">Common Visualisations</h3>
+          <div class="card-grid card-grid-2" style="gap:10px;margin-top:8px;">
+            <div class="card" style="padding:14px;"><strong>Dot plot</strong><p class="sub" style="margin-top:4px;">Dot size = number of genes, colour = padj, X-axis = gene ratio. The default and most informative single plot.</p></div>
+            <div class="card" style="padding:14px;"><strong>Enrichment map / network</strong><p class="sub" style="margin-top:4px;">Nodes = pathways, edges connect pathways sharing genes. Reveals clusters of related biological themes. Use <code>emapplot()</code>.</p></div>
+            <div class="card" style="padding:14px;"><strong>Ridgeplot</strong><p class="sub" style="margin-top:4px;">Shows the distribution of fold changes for genes in each pathway. Useful for GSEA results to see the shift direction.</p></div>
+            <div class="card" style="padding:14px;"><strong>GSEA running score plot</strong><p class="sub" style="margin-top:4px;">Shows the running enrichment score as you walk down the ranked list. The peak/trough is the ES. Vertical lines show where pathway genes fall.</p></div>
+          </div>
+
+          <h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">Common Pitfalls</h3>
+          <div class="info-box warn"><svg class="ico" aria-hidden="true"><use href="#i-warn"></use></svg><div><strong>Redundant GO terms:</strong> GO is hierarchical, so related terms often appear together (e.g., "immune response", "innate immune response", "regulation of immune response"). Use <code>simplify()</code> in clusterProfiler or <a href="http://revigo.irb.hr" target="_blank" style="color:var(--blue-text);">REVIGO</a> to remove redundancy and focus on the most specific or most significant terms.</div></div>
+
+          <div class="info-box tip"><svg class="ico" aria-hidden="true"><use href="#i-tip"></use></svg><div><strong>ORA vs GSEA:</strong> Use ORA when you have a clear DEG list (padj &lt; 0.05, |log2FC| &gt; 1). Use GSEA when you want to detect subtle, coordinated changes across an entire pathway — especially when few individual genes pass the significance threshold but many show small shifts in the same direction.</div></div>
+
+          <div class="chips" style="margin-top:14px;"><span class="chip">ORA = Fisher's test on DEG list</span><span class="chip">GSEA = full ranked list, no cutoff</span><span class="chip">Positive NES = upregulated pathway</span><span class="chip">Use expressed genes as background</span><span class="chip">simplify() removes GO redundancy</span><span class="chip">MSigDB Hallmark = best starting point</span><span class="chip">clusterProfiler for both ORA and GSEA</span></div>
+
+<!--topic 8.3: Machine Learning in Bioinformatics-->
+          <p class="sub">Machine learning (ML) is now embedded across bioinformatics — from protein structure prediction (AlphaFold) to variant pathogenicity scoring, cell type classification, and biomarker discovery. This section covers the key ML concepts that bioinformaticians need, including the unique challenges posed by genomic data (many features, few samples), practical workflows in Python with scikit-learn, and when ML is appropriate versus when simpler statistical methods suffice.</p>
+
+          <h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">Supervised vs Unsupervised Learning</h3>
+          <div class="card-grid card-grid-2" style="gap:10px;margin-top:8px;">
+            <div class="card" style="padding:14px;"><strong>Supervised learning</strong><p class="sub" style="margin-top:4px;">You have labels (e.g., cancer subtype, drug response). The model learns to predict labels from features (gene expression). Examples: classify tumour vs normal, predict patient survival, identify pathogenic variants. Algorithms: Random Forest, SVM, logistic regression, neural networks.</p></div>
+            <div class="card" style="padding:14px;"><strong>Unsupervised learning</strong><p class="sub" style="margin-top:4px;">No labels. The model discovers structure in the data. Examples: clustering scRNA-seq cells into types, identifying patient subtypes from multi-omics data, PCA for dimensionality reduction. Algorithms: k-means, hierarchical clustering, UMAP, t-SNE, NMF.</p></div>
+          </div>
+
+          <h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">The Curse of Dimensionality</h3>
+          <p class="sub">Genomic datasets typically have 20,000+ features (genes) but only 50–200 samples. This "p &gt;&gt; n" problem means: (1) models can easily memorise the training data (overfit), (2) many spurious correlations exist by chance, and (3) <strong>feature selection is critical</strong>. Before training, reduce features using: variance filtering (remove low-variance genes), differential expression pre-filtering, or embedded methods (Random Forest feature importance).</p>
+
+          <h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">Cross-Validation: The Cardinal Rule</h3>
+          <p class="sub">Never evaluate a model on the same data used to train it. Cross-validation provides an honest estimate of model performance on unseen data.</p>
+          <div class="card-grid card-grid-2" style="gap:10px;margin-top:8px;">
+            <div class="card" style="padding:14px;"><strong>k-fold cross-validation</strong><p class="sub" style="margin-top:4px;">Split data into k folds (typically k=5 or k=10). Train on k-1 folds, test on the held-out fold. Repeat k times. Average the scores. The standard approach for most genomic ML.</p></div>
+            <div class="card" style="padding:14px;"><strong>Leave-One-Out (LOO)</strong><p class="sub" style="margin-top:4px;">Each sample is held out once. Maximises training data but computationally expensive. Useful for very small datasets (&lt;30 samples) where you cannot afford to hold out 20% of data.</p></div>
+          </div>
+          <div class="info-box warn"><svg class="ico" aria-hidden="true"><use href="#i-warn"></use></svg><div><strong>Feature selection MUST happen inside CV:</strong> If you select the top 100 genes using all samples and then split into train/test, information from the test set leaked into feature selection. Always perform feature selection within each CV fold to get unbiased performance estimates.</div></div>
+
+          <h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">Practical Example: Cancer Classification with scikit-learn</h3>
+          <div class="code-block" style="margin-top:8px;"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button>import pandas as pd
+import numpy as np
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.model_selection import StratifiedKFold, cross_val_score
+from sklearn.preprocessing import StandardScaler
+from sklearn.pipeline import Pipeline
+from sklearn.metrics import classification_report, roc_auc_score
+from sklearn.feature_selection import SelectKBest, f_classif
+
+<span class="code-comment"># Load expression matrix (genes x samples) and labels</span>
+expr = pd.read_csv("expression_matrix.csv", index_col=0).T  <span class="code-comment"># samples x genes</span>
+labels = pd.read_csv("sample_labels.csv")["subtype"]
+
+<span class="code-comment"># Build a pipeline: feature selection → scaling → classifier</span>
+pipeline = Pipeline([
+    ("select", SelectKBest(f_classif, k=200)),   <span class="code-comment"># Top 200 genes by ANOVA</span>
+    ("scale",  StandardScaler()),                 <span class="code-comment"># Z-score normalise</span>
+    ("clf",    RandomForestClassifier(
+                  n_estimators=500,
+                  max_depth=10,
+                  random_state=42))
+])
+
+<span class="code-comment"># 5-fold stratified cross-validation</span>
+cv = StratifiedKFold(n_splits=5, shuffle=True, random_state=42)
+scores = cross_val_score(pipeline, expr, labels, cv=cv, scoring="roc_auc_ovr")
+print(f"Mean AUC: {scores.mean():.3f} (+/- {scores.std():.3f})")
+
+<span class="code-comment"># Train final model and get feature importance</span>
+pipeline.fit(expr, labels)
+selector = pipeline.named_steps["select"]
+clf = pipeline.named_steps["clf"]
+
+<span class="code-comment"># Get selected gene names and their importance</span>
+selected_genes = expr.columns[selector.get_support()]
+importance = pd.Series(clf.feature_importances_, index=selected_genes)
+top_biomarkers = importance.sort_values(ascending=False).head(20)
+print("Top 20 biomarker genes:")
+print(top_biomarkers)</div>
+
+          <h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">ROC Curve and AUC Interpretation</h3>
+          <p class="sub">The ROC (Receiver Operating Characteristic) curve plots the True Positive Rate vs False Positive Rate at different classification thresholds. The AUC (Area Under the Curve) summarises overall performance:</p>
+          <div class="card-grid card-grid-2" style="gap:10px;margin-top:8px;">
+            <div class="card" style="padding:14px;"><strong>AUC = 0.5</strong><p class="sub" style="margin-top:4px;">Random guessing. The model has no discriminative ability. Your features carry no signal for this task.</p></div>
+            <div class="card" style="padding:14px;"><strong>AUC = 0.7–0.8</strong><p class="sub" style="margin-top:4px;">Acceptable discrimination. Useful for biomarker discovery but may not be sufficient for clinical decisions.</p></div>
+            <div class="card" style="padding:14px;"><strong>AUC = 0.8–0.9</strong><p class="sub" style="margin-top:4px;">Good discrimination. Strong enough for most research applications and preliminary clinical use.</p></div>
+            <div class="card" style="padding:14px;"><strong>AUC &gt; 0.9</strong><p class="sub" style="margin-top:4px;">Excellent discrimination. Be cautious — if AUC is &gt;0.95 on a small dataset, double-check for data leakage or confounders (batch effect masquerading as biology).</p></div>
+          </div>
+
+          <h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">Deep Learning for Sequence Data</h3>
+          <p class="sub">Deep learning excels when the input is raw sequence data (DNA, RNA, protein). A common architecture is a <strong>1D convolutional neural network (CNN)</strong> applied to one-hot encoded DNA sequences (4 channels: A, C, G, T). These models can learn motifs (like transcription factor binding sites) directly from sequence without hand-crafted features.</p>
+          <div class="code-block" style="margin-top:8px;"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button>import tensorflow as tf
+from tensorflow.keras import layers, models
+
+<span class="code-comment"># 1D CNN for TF binding site prediction</span>
+<span class="code-comment"># Input: one-hot encoded DNA sequences (batch, length=200, channels=4)</span>
+model = models.Sequential([
+    layers.Conv1D(64, kernel_size=12, activation="relu", input_shape=(200, 4)),
+    layers.MaxPooling1D(pool_size=4),
+    layers.Conv1D(128, kernel_size=8, activation="relu"),
+    layers.GlobalMaxPooling1D(),
+    layers.Dense(64, activation="relu"),
+    layers.Dropout(0.3),
+    layers.Dense(1, activation="sigmoid")  <span class="code-comment"># Binary: bound / not bound</span>
+])
+
+model.compile(optimizer="adam", loss="binary_crossentropy", metrics=["AUC"])
+model.summary()
+
+<span class="code-comment"># One-hot encode DNA sequence</span>
+def one_hot_encode(seq):
+    mapping = {"A": [1,0,0,0], "C": [0,1,0,0], "G": [0,0,1,0], "T": [0,0,0,1]}
+    return np.array([mapping.get(base, [0,0,0,0]) for base in seq])</div>
+
+          <h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">When NOT to Use Machine Learning</h3>
+          <div class="info-box warn"><svg class="ico" aria-hidden="true"><use href="#i-warn"></use></svg><div><strong>ML is not always the answer:</strong> (1) <strong>Small sample sizes</strong> (n &lt; 30) — models cannot generalise reliably. Use traditional statistics instead. (2) <strong>Confounded data</strong> — if your treatment is perfectly correlated with batch, no ML model can separate them. Fix the experimental design. (3) <strong>Simple questions</strong> — "which genes are differentially expressed?" is better answered by DESeq2 than by a neural network. Use the simplest method that works.</div></div>
+
+          <div class="chips" style="margin-top:14px;"><span class="chip">Supervised = labelled data</span><span class="chip">p &gt;&gt; n = curse of dimensionality</span><span class="chip">Feature selection inside CV</span><span class="chip">AUC 0.5 = random, &gt;0.9 = excellent</span><span class="chip">Random Forest for biomarker genes</span><span class="chip">1D CNN for DNA sequence</span><span class="chip">Never test on training data</span><span class="chip">Simplest method that works</span></div>
+
+<!--topic 8.4: Metagenomics &amp; Microbiome Analysis-->
+          <p class="sub">Metagenomics is the study of genetic material recovered directly from environmental or clinical samples — soil, ocean water, the human gut — without the need to culture individual organisms. It reveals the composition and functional potential of entire microbial communities. Two main approaches exist: 16S rRNA amplicon sequencing (which bacteria are present?) and shotgun metagenomics (what are they doing?). This section covers both workflows in detail.</p>
+
+          <h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">16S rRNA Amplicon Sequencing</h3>
+          <p class="sub">The 16S ribosomal RNA gene is present in all bacteria and archaea. It contains <strong>conserved regions</strong> (where universal primers bind) flanking <strong>variable regions</strong> (V1–V9) that differ between species. By PCR-amplifying and sequencing the V3-V4 region (~460bp), you can identify which bacterial taxa are present in your sample. This approach is cost-effective, well-established, and sufficient for community profiling.</p>
+
+          <h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">ASV vs OTU</h3>
+          <div class="card-grid card-grid-2" style="gap:10px;margin-top:8px;">
+            <div class="card" style="padding:14px;"><strong>OTU (Operational Taxonomic Unit)</strong><p class="sub" style="margin-top:4px;">Older approach. Clusters sequences at 97% similarity. Loses resolution (different species with &gt;97% identity are merged). Computationally simple but biologically imprecise. Tools: QIIME1, mothur (legacy).</p></div>
+            <div class="card" style="padding:14px;"><strong>ASV (Amplicon Sequence Variant)</strong><p class="sub" style="margin-top:4px;">Modern standard. Resolves sequences to <strong>single-nucleotide precision</strong>. Each unique error-corrected sequence is an ASV. Reproducible across studies (unlike OTUs which depend on clustering parameters). Superior in every way. Tools: DADA2, Deblur.</p></div>
+          </div>
+          <div class="info-box tip"><svg class="ico" aria-hidden="true"><use href="#i-tip"></use></svg><div><strong>Always use ASVs.</strong> OTUs are a legacy concept from when sequencing error rates made exact sequences unreliable. Modern denoising algorithms (DADA2) correct errors statistically, making ASVs the standard since ~2017.</div></div>
+
+          <h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">QIIME2 Pipeline Overview</h3>
+          <div class="code-block" style="margin-top:8px;"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button><span class="code-comment"># Install QIIME2 (in a conda environment)</span>
+conda env create -n qiime2 --file qiime2-amplicon-2024.5-py39-linux-conda.yml
+conda activate qiime2
+
+<span class="code-comment"># Step 1: Import raw FASTQ files</span>
+qiime tools import \
+    --type 'SampleData[PairedEndSequencesWithQuality]' \
+    --input-path raw_reads/ \
+    --input-format CasavaOneEightSingleLanePerSampleDirFmt \
+    --output-path demux.qza
+
+<span class="code-comment"># Step 2: Visualise read quality (choose truncation lengths)</span>
+qiime demux summarize --i-data demux.qza --o-visualization demux.qzv
+
+<span class="code-comment"># Step 3: Denoise with DADA2 (produces ASV table)</span>
+qiime dada2 denoise-paired \
+    --i-demultiplexed-seqs demux.qza \
+    --p-trunc-len-f 280 \
+    --p-trunc-len-r 220 \
+    --p-n-threads 8 \
+    --o-table table.qza \
+    --o-representative-sequences rep-seqs.qza \
+    --o-denoising-stats stats.qza
+
+<span class="code-comment"># Step 4: Assign taxonomy (using SILVA or Greengenes2)</span>
+qiime feature-classifier classify-sklearn \
+    --i-classifier silva-138-99-nb-classifier.qza \
+    --i-reads rep-seqs.qza \
+    --o-classification taxonomy.qza
+
+<span class="code-comment"># Step 5: Build phylogenetic tree (needed for UniFrac)</span>
+qiime phylogeny align-to-tree-mafft-fasttree \
+    --i-sequences rep-seqs.qza \
+    --o-alignment aligned-rep-seqs.qza \
+    --o-masked-alignment masked-aligned.qza \
+    --o-tree unrooted-tree.qza \
+    --o-rooted-tree rooted-tree.qza
+
+<span class="code-comment"># Step 6: Alpha and beta diversity</span>
+qiime diversity core-metrics-phylogenetic \
+    --i-phylogeny rooted-tree.qza \
+    --i-table table.qza \
+    --p-sampling-depth 10000 \
+    --m-metadata-file metadata.tsv \
+    --output-dir diversity-results/</div>
+
+          <h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">Taxonomy Databases</h3>
+          <div class="card-grid card-grid-2" style="gap:10px;margin-top:8px;">
+            <div class="card" style="padding:14px;"><strong>SILVA</strong><p class="sub" style="margin-top:4px;">Comprehensive database for bacteria, archaea, and eukaryotes (18S/28S). Version 138.1 is the current standard. Highest quality curated taxonomy. Recommended for most studies.</p></div>
+            <div class="card" style="padding:14px;"><strong>Greengenes2 (2022)</strong><p class="sub" style="margin-top:4px;">Rebuilt from scratch using whole-genome phylogenetics. Consistent taxonomy derived from the Genome Taxonomy Database (GTDB). Better phylogenetic accuracy than the original Greengenes. Compatible with UniFrac.</p></div>
+          </div>
+
+          <h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">Alpha Diversity Metrics</h3>
+          <p class="sub">Alpha diversity measures the diversity <strong>within</strong> a single sample. Different metrics capture different aspects:</p>
+          <div class="card-grid card-grid-2" style="gap:10px;margin-top:8px;">
+            <div class="card" style="padding:14px;"><strong>Shannon index (H')</strong><p class="sub" style="margin-top:4px;">Accounts for both <strong>richness</strong> (number of species) and <strong>evenness</strong> (how evenly individuals are distributed). Higher H' = more diverse. A sample dominated by one species has low Shannon even if many species are present.</p></div>
+            <div class="card" style="padding:14px;"><strong>Simpson index (1-D)</strong><p class="sub" style="margin-top:4px;">Probability that two randomly drawn individuals belong to different species. Emphasises <strong>dominant species</strong>. Less sensitive to rare species than Shannon. Range: 0 (no diversity) to 1 (high diversity).</p></div>
+            <div class="card" style="padding:14px;"><strong>Observed ASVs (richness)</strong><p class="sub" style="margin-top:4px;">Simply the number of unique ASVs detected. Sensitive to sequencing depth — always rarefy (subsample to equal depth) before comparing.</p></div>
+            <div class="card" style="padding:14px;"><strong>Faith's Phylogenetic Diversity (PD)</strong><p class="sub" style="margin-top:4px;">Sum of branch lengths in the phylogenetic tree connecting all species in the sample. Captures <strong>phylogenetic breadth</strong> — a sample with many distantly related species has higher PD than one with many closely related species.</p></div>
+          </div>
+
+          <h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">Beta Diversity and Ordination</h3>
+          <p class="sub">Beta diversity measures differences <strong>between</strong> samples. Each pair of samples gets a distance value, producing a distance matrix that is visualised by ordination (PCoA).</p>
+          <div class="card-grid card-grid-2" style="gap:10px;margin-top:8px;">
+            <div class="card" style="padding:14px;"><strong>Bray-Curtis dissimilarity</strong><p class="sub" style="margin-top:4px;">Based on shared species abundances. Does not consider phylogeny. Range: 0 (identical) to 1 (completely different). The most common non-phylogenetic metric.</p></div>
+            <div class="card" style="padding:14px;"><strong>UniFrac (weighted &amp; unweighted)</strong><p class="sub" style="margin-top:4px;">Incorporates phylogenetic relationships. <strong>Unweighted</strong> UniFrac considers only presence/absence (sensitive to rare taxa). <strong>Weighted</strong> UniFrac also considers abundance (sensitive to dominant taxa). Requires a phylogenetic tree.</p></div>
+          </div>
+
+          <h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">PERMANOVA for Statistical Testing</h3>
+          <p class="sub">To test whether microbial communities differ significantly between groups (e.g., healthy vs diseased), use <strong>PERMANOVA</strong> (Permutational Multivariate Analysis of Variance). It tests whether the centroids of groups in beta diversity space are significantly different by comparing observed F-statistics to a permutation distribution.</p>
+          <div class="code-block" style="margin-top:8px;"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button><span class="code-comment"># PERMANOVA in QIIME2</span>
+qiime diversity beta-group-significance \
+    --i-distance-matrix diversity-results/bray_curtis_distance_matrix.qza \
+    --m-metadata-file metadata.tsv \
+    --m-metadata-column group \
+    --p-method permanova \
+    --o-visualization permanova-results.qzv
+
+<span class="code-comment"># In R with vegan:</span>
+<span class="code-comment"># library(vegan)</span>
+<span class="code-comment"># adonis2(dist_matrix ~ group, data=metadata, permutations=999)</span></div>
+
+          <h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">Shotgun Metagenomics Workflow</h3>
+          <p class="sub">Unlike 16S amplicon sequencing, shotgun metagenomics sequences all DNA in the sample. This reveals not just which organisms are present (taxonomy) but also their functional potential (metabolic pathways, antibiotic resistance genes).</p>
+          <div class="code-block" style="margin-top:8px;"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button><span class="code-comment"># Shotgun metagenomics pipeline</span>
+
+<span class="code-comment"># Step 1: Quality control (remove host reads if applicable)</span>
+fastp -i sample_R1.fastq.gz -I sample_R2.fastq.gz \
+    -o clean_R1.fastq.gz -O clean_R2.fastq.gz \
+    --detect_adapter_for_pe
+
+<span class="code-comment"># Remove human reads (for clinical samples)</span>
+bowtie2 -x human_genome -1 clean_R1.fastq.gz -2 clean_R2.fastq.gz \
+    --un-conc-gz non_host_%.fastq.gz -S /dev/null
+
+<span class="code-comment"># Step 2: Taxonomic profiling with MetaPhlAn4</span>
+conda install -c bioconda metaphlan
+metaphlan non_host_1.fastq.gz,non_host_2.fastq.gz \
+    --input_type fastq \
+    --nproc 8 \
+    -o taxonomy_profile.txt
+
+<span class="code-comment"># Step 3: Functional profiling with HUMAnN3</span>
+conda install -c bioconda humann
+humann --input non_host_1.fastq.gz \
+    --output humann_output/ \
+    --threads 8
+
+<span class="code-comment"># HUMAnN3 outputs:</span>
+<span class="code-comment">#   genefamilies.tsv  — gene family abundances (UniRef90)</span>
+<span class="code-comment">#   pathabundance.tsv — metabolic pathway abundances (MetaCyc)</span>
+<span class="code-comment">#   pathcoverage.tsv  — pathway coverage (fraction of pathway detected)</span>
+
+<span class="code-comment"># Step 4: Merge profiles across samples</span>
+humann_join_tables -i humann_output/ -o merged_genefamilies.tsv \
+    --file_name genefamilies
+humann_renorm_table -i merged_genefamilies.tsv -o merged_genefamilies_cpm.tsv \
+    --units cpm</div>
+
+          <div class="info-box note"><svg class="ico" aria-hidden="true"><use href="#i-note"></use></svg><div><strong>16S vs Shotgun:</strong> Use 16S for cost-effective community profiling when you only need to know "who is there." Use shotgun metagenomics when you also need to know "what are they doing" (functional profiling) or when you need to identify viruses and eukaryotes (which lack the 16S gene).</div></div>
+
+          <div class="info-box warn"><svg class="ico" aria-hidden="true"><use href="#i-warn"></use></svg><div><strong>Rarefaction:</strong> Before comparing alpha diversity across samples, rarefy (subsample) all samples to the same sequencing depth. Samples with more reads will always show more taxa, creating a false diversity difference. Choose a rarefaction depth that retains most samples while providing sufficient coverage (e.g., the 10th percentile of library sizes).</div></div>
+
+          <div class="chips" style="margin-top:14px;"><span class="chip">16S V3-V4 for bacterial profiling</span><span class="chip">ASV &gt; OTU (always)</span><span class="chip">DADA2 for denoising</span><span class="chip">SILVA for taxonomy</span><span class="chip">Shannon = richness + evenness</span><span class="chip">UniFrac = phylogenetic beta diversity</span><span class="chip">PERMANOVA for group testing</span><span class="chip">MetaPhlAn4 + HUMAnN3 for shotgun</span></div>

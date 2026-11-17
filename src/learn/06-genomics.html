@@ -1,0 +1,370 @@
+<!--
+module: 6
+slug: genomics
+short: Genomics
+label: Module 6 · Genomics
+title: DNA Sequencing, Variant Calling &amp; Genome Analysis
+-->
+<p class="lead">Whole-genome and whole-exome sequencing reveal the genetic blueprint of an organism. This module covers variant calling, genome assembly, and annotation.</p>
+
+<!--topic 6.1: WGS/WES Pipeline — Variant Calling-->
+          <p class="sub">Variant calling is the process of identifying positions in a sequenced genome where the sample differs from the reference. These differences include SNPs (single nucleotide polymorphisms — one base changed to another), indels (insertions or deletions of one or more bases), and MNVs (multi-nucleotide variants — multiple adjacent substitutions). Variant calling is the foundation of clinical genomics, population genetics, and disease gene discovery.</p>
+
+          <h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">Variant Types and Zygosity</h3>
+          <div class="card-grid card-grid-2" style="gap:10px;margin-top:8px;">
+            <div class="card" style="padding:14px;"><strong>SNP (Single Nucleotide Polymorphism)</strong><p class="sub" style="margin-top:4px;">A single base change: e.g., reference A → alternative G. The most common variant type. ~4–5 million SNPs per human genome.</p></div>
+            <div class="card" style="padding:14px;"><strong>Indel (Insertion / Deletion)</strong><p class="sub" style="margin-top:4px;">Insertion of extra bases or deletion of reference bases. Short indels (1–50bp) are called by GATK. Larger structural variants require specialised tools (Manta, DELLY).</p></div>
+            <div class="card" style="padding:14px;"><strong>Homozygous reference (0/0)</strong><p class="sub" style="margin-top:4px;">Both copies of the chromosome carry the reference allele. This position is not a variant in this individual.</p></div>
+            <div class="card" style="padding:14px;"><strong>Heterozygous (0/1)</strong><p class="sub" style="margin-top:4px;">One chromosome carries the reference allele, the other carries the alternative. Expect ~50% of reads supporting each allele.</p></div>
+            <div class="card" style="padding:14px;"><strong>Homozygous alternative (1/1)</strong><p class="sub" style="margin-top:4px;">Both chromosomes carry the alternative allele. Expect ~100% of reads supporting the ALT allele.</p></div>
+            <div class="card" style="padding:14px;"><strong>MNV (Multi-Nucleotide Variant)</strong><p class="sub" style="margin-top:4px;">Two or more adjacent bases changed simultaneously (e.g., AG → TC). Often caused by a single mutational event. Correctly phasing these is important for protein impact prediction.</p></div>
+          </div>
+
+          <h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">Why We Mark Duplicates</h3>
+          <p class="sub">During library preparation, PCR amplification creates identical copies of DNA fragments. These PCR duplicates are not independent observations — they all come from the same original molecule. If not removed, they artificially inflate the number of reads supporting a variant, leading to false-positive variant calls. Duplicate marking identifies reads with identical start and end coordinates and flags all but one as duplicates.</p>
+
+          <h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">How HaplotypeCaller Works</h3>
+          <p class="sub">GATK's HaplotypeCaller does not simply count bases at each position. Instead, it performs <strong>local de novo assembly</strong> in active regions (regions with evidence of variation). It: (1) identifies active regions where the data deviates from the reference, (2) assembles the reads in that region into candidate haplotypes, (3) realigns reads to these haplotypes using a pair-HMM, and (4) assigns genotype likelihoods. This approach is more accurate than simple pileup-based callers, especially for indels and complex variants.</p>
+
+          <h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">Complete GATK4 Pipeline</h3>
+          <div class="code-block"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button><span class="code-comment"># Step 1: Align with BWA-MEM2 (faster successor to BWA-MEM)</span>
+bwa-mem2 mem -t 8 -R "@RG\tID:sample\tSM:sample\tPL:ILLUMINA\tLB:lib1" \
+    reference.fa sample_R1.fastq.gz sample_R2.fastq.gz \
+    | samtools sort -@ 8 -o sample.bam
+samtools index sample.bam
+
+<span class="code-comment"># Step 2: Mark PCR duplicates</span>
+gatk MarkDuplicates \
+    -I sample.bam \
+    -O sample_markdup.bam \
+    -M metrics.txt \
+    --CREATE_INDEX true
+
+<span class="code-comment"># Step 3: Base Quality Score Recalibration (BQSR)</span>
+<span class="code-comment"># Corrects systematic errors in base quality scores</span>
+gatk BaseRecalibrator \
+    -I sample_markdup.bam -R reference.fa \
+    --known-sites dbsnp.vcf.gz \
+    --known-sites mills_indels.vcf.gz \
+    -O recal.table
+gatk ApplyBQSR \
+    -I sample_markdup.bam -R reference.fa \
+    --bqsr-recal-file recal.table \
+    -O sample_recal.bam
+
+<span class="code-comment"># Step 4: Call variants (per-sample GVCF mode)</span>
+gatk HaplotypeCaller \
+    -I sample_recal.bam -R reference.fa \
+    -O sample.g.vcf.gz \
+    -ERC GVCF
+
+<span class="code-comment"># Step 5: Joint genotyping (for cohorts)</span>
+gatk GenotypeGVCFs -R reference.fa \
+    -V sample.g.vcf.gz \
+    -O sample.vcf.gz
+
+<span class="code-comment"># Step 6: Filter variants</span>
+gatk VariantFiltration -V sample.vcf.gz -O sample_filtered.vcf.gz \
+    --filter-expression "QD &lt; 2.0" --filter-name "LowQD" \
+    --filter-expression "MQ &lt; 40.0" --filter-name "LowMQ" \
+    --filter-expression "FS &gt; 60.0" --filter-name "HighFS" \
+    --filter-expression "SOR &gt; 3.0" --filter-name "HighSOR"</div>
+
+          <h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">Hard Filtering vs VQSR</h3>
+          <div class="card-grid card-grid-2" style="gap:10px;margin-top:8px;">
+            <div class="card" style="padding:14px;"><strong>Hard filtering</strong><p class="sub" style="margin-top:4px;">Apply fixed thresholds on quality metrics (QD, MQ, FS, SOR). Simple and works for any project size. Use for small cohorts (&lt;30 samples), non-model organisms, or targeted panels.</p></div>
+            <div class="card" style="padding:14px;"><strong>VQSR (Variant Quality Score Recalibration)</strong><p class="sub" style="margin-top:4px;">Machine learning approach that learns the quality profile from known true variants (e.g., HapMap, 1000 Genomes). More accurate but requires large cohorts (&gt;30 whole genomes) and curated training resources.</p></div>
+          </div>
+
+          <h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">Quality Filter Annotations Explained</h3>
+          <div class="card-grid card-grid-2" style="gap:10px;margin-top:8px;">
+            <div class="card" style="padding:14px;"><strong>QD (QualByDepth)</strong><p class="sub" style="margin-top:4px;">Variant quality normalised by depth. Low QD (&lt;2) means the variant quality is low relative to coverage — likely a false positive.</p></div>
+            <div class="card" style="padding:14px;"><strong>MQ (MappingQuality)</strong><p class="sub" style="margin-top:4px;">RMS mapping quality of reads at the site. Low MQ (&lt;40) indicates reads are mapping to multiple locations — the region is ambiguous.</p></div>
+            <div class="card" style="padding:14px;"><strong>FS (FisherStrand)</strong><p class="sub" style="margin-top:4px;">Strand bias estimated by Fisher's exact test. High FS (&gt;60 for SNPs) means the variant is only supported by reads on one strand — likely an artefact.</p></div>
+            <div class="card" style="padding:14px;"><strong>SOR (StrandOddsRatio)</strong><p class="sub" style="margin-top:4px;">Alternative strand bias metric. More robust than FS for high-coverage data. SOR &gt; 3 indicates significant strand bias.</p></div>
+          </div>
+
+          <h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">Visualising Variants in IGV</h3>
+          <p class="sub">Always visually inspect candidate variants in the <strong>Integrative Genomics Viewer (IGV)</strong>. Load the BAM file and VCF together, navigate to a variant position, and check: (1) Is there sufficient read depth? (2) Are both strands represented? (3) Are the variant-supporting reads properly mapped (no soft-clipping artefacts)? (4) Is the region not in a repeat or low-complexity sequence?</p>
+
+          <div class="info-box warn"><svg class="ico" aria-hidden="true"><use href="#i-warn"></use></svg><div><strong>BQSR requires known variant databases</strong> (dbSNP, Mills indels). For non-model organisms without these resources, skip BQSR and use more stringent hard filtering instead.</div></div>
+
+          <div class="chips" style="margin-top:14px;"><span class="chip">SNP = single base change</span><span class="chip">0/0 = hom ref, 0/1 = het, 1/1 = hom alt</span><span class="chip">Mark duplicates before calling</span><span class="chip">HaplotypeCaller = local assembly</span><span class="chip">Hard filter for small projects</span><span class="chip">VQSR for large cohorts</span><span class="chip">Always inspect in IGV</span></div>
+
+<!--topic 6.2: Understanding VCF Files &amp; Variant Annotation-->
+          <p class="sub">The Variant Call Format (VCF) is the standard file format for storing genetic variants discovered by variant calling pipelines. Understanding the VCF format in detail is essential for filtering, annotating, and interpreting variant data. A VCF file consists of header lines (metadata) followed by data lines (one variant per line), and can contain genotype information for one or many samples.</p>
+
+          <h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">VCF File Structure</h3>
+          <p class="sub">A VCF file has two sections: the <strong>header</strong> (lines starting with <code>##</code>) and the <strong>data lines</strong> (tab-separated variant records). The header defines the meaning of INFO and FORMAT fields used in the data lines.</p>
+          <div class="code-block" style="font-size:0.75em;margin-top:8px;"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button><span class="code-comment">## VCF header lines (metadata)</span>
+##fileformat=VCFv4.2
+##INFO=&lt;ID=DP,Number=1,Type=Integer,Description="Total read depth"&gt;
+##INFO=&lt;ID=AF,Number=A,Type=Float,Description="Allele frequency"&gt;
+##FORMAT=&lt;ID=GT,Number=1,Type=String,Description="Genotype"&gt;
+##FORMAT=&lt;ID=GQ,Number=1,Type=Integer,Description="Genotype quality"&gt;
+##FORMAT=&lt;ID=DP,Number=1,Type=Integer,Description="Read depth"&gt;
+##FORMAT=&lt;ID=AD,Number=R,Type=Integer,Description="Allelic depths (REF,ALT)"&gt;
+#CHROM  POS     ID       REF  ALT  QUAL    FILTER  INFO             FORMAT         Sample1
+chr1    925952  rs12345  G    A    5000.1  PASS    DP=45;AF=0.50    GT:GQ:DP:AD    0/1:99:45:22,23</div>
+
+          <h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">Anatomy of a VCF Data Line</h3>
+          <p class="sub">Let us dissect the example line above field by field:</p>
+          <div class="card-grid card-grid-2" style="gap:10px;margin-top:8px;">
+            <div class="card" style="padding:14px;"><strong>CHROM: chr1</strong><p class="sub" style="margin-top:4px;">Chromosome where the variant is located.</p></div>
+            <div class="card" style="padding:14px;"><strong>POS: 925952</strong><p class="sub" style="margin-top:4px;">1-based position on the reference. For indels, this is the position of the base before the event.</p></div>
+            <div class="card" style="padding:14px;"><strong>ID: rs12345</strong><p class="sub" style="margin-top:4px;">dbSNP identifier if known, otherwise "." (missing). Links to public variant databases.</p></div>
+            <div class="card" style="padding:14px;"><strong>REF: G / ALT: A</strong><p class="sub" style="margin-top:4px;">Reference allele and alternative allele. For SNPs: single bases. For a deletion: REF=ACG, ALT=A (CG deleted). For an insertion: REF=A, ALT=ATCG (TCG inserted).</p></div>
+            <div class="card" style="padding:14px;"><strong>QUAL: 5000.1</strong><p class="sub" style="margin-top:4px;">Phred-scaled quality score. QUAL 30 = 1/1000 chance the variant is wrong. QUAL 5000 = extremely confident. Higher is better.</p></div>
+            <div class="card" style="padding:14px;"><strong>FILTER: PASS</strong><p class="sub" style="margin-top:4px;">PASS means the variant passed all quality filters. Other values (e.g., "LowQD") indicate which filter(s) it failed.</p></div>
+          </div>
+
+          <h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">Genotype Field (FORMAT + Sample)</h3>
+          <p class="sub">The FORMAT column defines the order of fields in the sample column(s). In our example: <code>GT:GQ:DP:AD</code> → <code>0/1:99:45:22,23</code></p>
+          <div class="card-grid card-grid-2" style="gap:10px;margin-top:8px;">
+            <div class="card" style="padding:14px;"><strong>GT: 0/1</strong><p class="sub" style="margin-top:4px;"><strong>Genotype.</strong> 0 = reference allele, 1 = first ALT allele. So 0/1 = heterozygous. 0/0 = homozygous reference. 1/1 = homozygous alternative. 0|1 = phased heterozygous.</p></div>
+            <div class="card" style="padding:14px;"><strong>GQ: 99</strong><p class="sub" style="margin-top:4px;"><strong>Genotype quality.</strong> Phred-scaled confidence that the genotype call is correct. GQ 99 = very high confidence. Low GQ (&lt;20) means the genotype is uncertain.</p></div>
+            <div class="card" style="padding:14px;"><strong>DP: 45</strong><p class="sub" style="margin-top:4px;"><strong>Read depth</strong> at this position for this sample. For WGS, typically 30x. For WES, typically 50–100x. Low depth (&lt;10) = unreliable genotype.</p></div>
+            <div class="card" style="padding:14px;"><strong>AD: 22,23</strong><p class="sub" style="margin-top:4px;"><strong>Allelic depths.</strong> 22 reads support REF (G), 23 reads support ALT (A). For a heterozygous call, expect roughly 50:50. Severe imbalance may indicate an artefact.</p></div>
+          </div>
+
+          <h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">bcftools: Filtering, Extracting, and Merging VCFs</h3>
+          <div class="code-block" style="margin-top:8px;"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button><span class="code-comment"># Install bcftools</span>
+conda install -c bioconda bcftools
+
+<span class="code-comment"># View basic stats</span>
+bcftools stats sample.vcf.gz | head -40
+
+<span class="code-comment"># Filter: keep only PASS variants with depth &gt;= 20</span>
+bcftools view -f PASS -i 'DP&gt;=20' sample.vcf.gz -Oz -o filtered.vcf.gz
+
+<span class="code-comment"># Extract only SNPs (exclude indels)</span>
+bcftools view -v snps sample.vcf.gz -Oz -o snps_only.vcf.gz
+
+<span class="code-comment"># Extract only indels</span>
+bcftools view -v indels sample.vcf.gz -Oz -o indels_only.vcf.gz
+
+<span class="code-comment"># Extract specific regions</span>
+bcftools view -r chr1:1000000-2000000 sample.vcf.gz
+
+<span class="code-comment"># Extract specific samples from a multi-sample VCF</span>
+bcftools view -s Sample1,Sample2 cohort.vcf.gz -Oz -o subset.vcf.gz
+
+<span class="code-comment"># Merge multiple single-sample VCFs</span>
+bcftools merge sample1.vcf.gz sample2.vcf.gz sample3.vcf.gz \
+    -Oz -o merged.vcf.gz
+
+<span class="code-comment"># Index a VCF (required for most operations)</span>
+bcftools index -t filtered.vcf.gz</div>
+
+          <h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">Variant Annotation with SnpEff</h3>
+          <p class="sub">SnpEff annotates each variant with its predicted functional impact on genes, transcripts, and proteins. It adds an ANN field to the INFO column.</p>
+          <div class="code-block" style="margin-top:8px;"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button><span class="code-comment"># Install SnpEff</span>
+conda install -c bioconda snpeff
+
+<span class="code-comment"># List available databases</span>
+snpEff databases | grep -i "homo_sapiens"
+
+<span class="code-comment"># Download the human genome database</span>
+snpEff download GRCh38.105
+
+<span class="code-comment"># Annotate variants</span>
+snpEff ann GRCh38.105 filtered.vcf.gz &gt; annotated.vcf
+
+<span class="code-comment"># Generate an HTML summary report</span>
+snpEff ann -stats snpEff_summary.html GRCh38.105 filtered.vcf.gz &gt; annotated.vcf
+
+<span class="code-comment"># Extract high-impact variants only</span>
+cat annotated.vcf | snpSift filter "ANN[*].IMPACT = 'HIGH'" &gt; high_impact.vcf</div>
+
+          <h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">Variant Functional Categories</h3>
+          <div class="card-grid card-grid-2" style="gap:10px;margin-top:8px;">
+            <div class="card" style="padding:14px;"><strong>Synonymous (LOW impact)</strong><p class="sub" style="margin-top:4px;">DNA change that does NOT alter the amino acid (e.g., GCC→GCT both encode Alanine). Usually benign due to codon degeneracy.</p></div>
+            <div class="card" style="padding:14px;"><strong>Missense (MODERATE impact)</strong><p class="sub" style="margin-top:4px;">DNA change that alters one amino acid (e.g., GAG→GTG: Glutamate→Valine). May or may not affect protein function depending on the position and amino acid properties.</p></div>
+            <div class="card" style="padding:14px;"><strong>Nonsense / Stop-gained (HIGH impact)</strong><p class="sub" style="margin-top:4px;">Creates a premature stop codon (e.g., CAG→TAG: Glutamine→Stop). Truncates the protein. Often loss-of-function. Subject to nonsense-mediated decay (NMD).</p></div>
+            <div class="card" style="padding:14px;"><strong>Frameshift (HIGH impact)</strong><p class="sub" style="margin-top:4px;">Insertion or deletion not divisible by 3. Shifts the reading frame, altering all downstream amino acids and usually creating a premature stop. Almost always loss-of-function.</p></div>
+            <div class="card" style="padding:14px;"><strong>Splice site (HIGH impact)</strong><p class="sub" style="margin-top:4px;">Variant at an exon-intron boundary (donor GT or acceptor AG). Disrupts normal splicing, potentially causing exon skipping or intron retention. Often pathogenic.</p></div>
+            <div class="card" style="padding:14px;"><strong>In-frame indel (MODERATE impact)</strong><p class="sub" style="margin-top:4px;">Insertion or deletion divisible by 3. Adds or removes amino acids without shifting the reading frame. Effect depends on the protein domain affected.</p></div>
+          </div>
+
+          <h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">Clinical Interpretation Resources</h3>
+          <div class="card-grid card-grid-2" style="gap:10px;margin-top:8px;">
+            <div class="card" style="padding:14px;"><strong>ClinVar</strong><p class="sub" style="margin-top:4px;">NCBI database of variants with clinical significance (pathogenic, likely pathogenic, benign, VUS). The primary resource for clinical variant interpretation. Query by rsID or genomic coordinates.</p></div>
+            <div class="card" style="padding:14px;"><strong>gnomAD</strong><p class="sub" style="margin-top:4px;">Population allele frequencies from &gt;140,000 exomes and &gt;76,000 genomes. A variant with AF &gt; 1% in gnomAD is almost certainly benign. Essential for filtering common polymorphisms.</p></div>
+          </div>
+
+          <div class="info-box tip"><svg class="ico" aria-hidden="true"><use href="#i-tip"></use></svg><div><strong>Filtering strategy for clinical variants:</strong> Start with ~4 million variants → filter PASS only → remove AF &gt; 0.01 in gnomAD → keep HIGH/MODERATE impact → check ClinVar → manual review in IGV. This typically reduces to a manageable list of 50–200 candidate variants.</div></div>
+
+          <div class="chips" style="margin-top:14px;"><span class="chip">VCF = standard variant format</span><span class="chip">GT:GQ:DP:AD = genotype fields</span><span class="chip">0/1 = heterozygous</span><span class="chip">bcftools for filtering</span><span class="chip">SnpEff for annotation</span><span class="chip">HIGH impact = likely functional</span><span class="chip">gnomAD for population frequency</span><span class="chip">ClinVar for clinical significance</span></div>
+
+<!--topic 6.3: NGS Library Preparation — DNA Fragmentation Methods-->
+<p class="sub">Next-generation sequencers read DNA in short stretches of 50–300 bp. Human genomic DNA is ~3 billion bp long — a molecule millions of times too large to sequence directly. Before any library can be prepared, the DNA must be broken into sequenceable fragments. The fragmentation method you choose affects coverage uniformity, sequence bias, DNA input requirements, and the cost of your experiment.</p>
+
+<!-- Key stats -->
+<div class="card-grid card-grid-2" style="gap:10px;margin:14px 0;">
+  <div class="card" style="padding:14px;border-left:3px solid var(--green);">
+    <strong>~3 billion bp</strong>
+    <p class="sub" style="margin-top:4px;">Human genome size — the full length of DNA that must be broken down before sequencing.</p>
+  </div>
+  <div class="card" style="padding:14px;border-left:3px solid var(--blue);">
+    <strong>150–300 bp</strong>
+    <p class="sub" style="margin-top:4px;">Target fragment size for standard Illumina short-read sequencing. Longer fragments reduce cluster density.</p>
+  </div>
+  <div class="card" style="padding:14px;border-left:3px solid var(--purple);">
+    <strong>30× depth</strong>
+    <p class="sub" style="margin-top:4px;">Minimum sequencing depth for confident variant calling in whole-genome sequencing.</p>
+  </div>
+  <div class="card" style="padding:14px;border-left:3px solid var(--orange);">
+    <strong>4 methods</strong>
+    <p class="sub" style="margin-top:4px;">Probe sonication, acoustic shearing (Covaris AFA), enzymatic digestion, and tagmentation (Tn5).</p>
+  </div>
+</div>
+
+<!-- Four methods -->
+<h4 style="margin:18px 0 10px;font-size:0.92em;font-weight:600;">The four fragmentation approaches</h4>
+
+<div class="card-grid card-grid-2" style="gap:10px;margin-bottom:14px;">
+
+  <div class="card" style="padding:16px;border-top:3px solid var(--green);">
+    <strong style="color:var(--green-text);">1 — Probe Sonication</strong>
+    <p class="sub" style="margin-top:6px;">A metal probe is submerged directly in the DNA sample and vibrates at ultrasonic frequency (~20 kHz). The vibration creates <strong>cavitation</strong> — microscopic bubbles that collapse violently, generating shear forces that break phosphodiester bonds. Fragment size is controlled by adjusting pulse duration, amplitude, and number of cycles.</p>
+    <div style="margin-top:10px;font-size:0.78em;color:var(--text3);">
+      Fragment size: <strong>100 bp – 1 kb</strong> &nbsp;·&nbsp;
+      Bias: <strong>moderate</strong> &nbsp;·&nbsp;
+      Cost: <strong>medium (~$3k)</strong>
+    </div>
+    <div class="info-box tip" style="margin-top:10px;"><svg class="ico" aria-hidden="true"><use href="#i-tip"></use></svg><div>Common instruments: Branson SFX, Cole-Parmer. Protocols are flexible and easy to troubleshoot — ideal for teaching labs and pilot experiments.</div></div>
+  </div>
+
+  <div class="card" style="padding:16px;border-top:3px solid var(--blue);">
+    <strong style="color:var(--blue-text);">2 — Covaris AFA (Acoustic Focused Acoustics)</strong>
+    <p class="sub" style="margin-top:6px;">Covaris instruments use a precisely focused acoustic transducer to deliver energy through the tube wall — the probe never touches the sample. This eliminates cross-contamination and heat, and produces extremely reproducible fragment size distributions. The gold standard for clinical genomics and large-scale sequencing projects.</p>
+    <div style="margin-top:10px;font-size:0.78em;color:var(--text3);">
+      Fragment size: <strong>150–500 bp</strong> &nbsp;·&nbsp;
+      Bias: <strong>minimal</strong> &nbsp;·&nbsp;
+      Cost: <strong>high (~$80k+)</strong>
+    </div>
+    <div class="info-box note" style="margin-top:10px;"><svg class="ico" aria-hidden="true"><use href="#i-note"></use></svg><div>High capital cost but unmatched reproducibility. Required for regulatory-compliance environments (clinical labs, FDA submissions).</div></div>
+  </div>
+
+  <div class="card" style="padding:16px;border-top:3px solid var(--purple);">
+    <strong style="color:var(--purple-text);">3 — Enzymatic Fragmentation</strong>
+    <p class="sub" style="margin-top:6px;">Nucleases (typically DNase I or a proprietary enzyme cocktail) are used to randomly cleave dsDNA. Reaction conditions (enzyme concentration, temperature, time) control fragment size. Requires only a thermocycler — no specialised equipment. Commercial kits include NEBNext Ultra II FS and Kapa HyperPlus.</p>
+    <div style="margin-top:10px;font-size:0.78em;color:var(--text3);">
+      Fragment size: <strong>200–700 bp</strong> &nbsp;·&nbsp;
+      Bias: <strong>AT/GC bias possible</strong> &nbsp;·&nbsp;
+      Cost: <strong>low</strong>
+    </div>
+    <div class="info-box tip" style="margin-top:10px;"><svg class="ico" aria-hidden="true"><use href="#i-tip"></use></svg><div>Best for budget labs or high-throughput (96+ samples/day). Can be automated on liquid handling platforms (Hamilton, Tecan) for plate-scale processing.</div></div>
+  </div>
+
+  <div class="card" style="padding:16px;border-top:3px solid var(--orange);">
+    <strong style="color:var(--orange-text);">4 — Tagmentation (Tn5 Transposase)</strong>
+    <p class="sub" style="margin-top:6px;">The Tn5 transposase enzyme simultaneously fragments DNA and inserts sequencing adapters in a single reaction — dramatically simplifying library preparation. Tn5 preferentially inserts at AT-rich, accessible regions of chromatin. This is both a bias (for WGS) and a feature (for ATAC-seq, where open chromatin is precisely what you want to measure).</p>
+    <div style="margin-top:10px;font-size:0.78em;color:var(--text3);">
+      Fragment size: <strong>150–500 bp</strong> &nbsp;·&nbsp;
+      Bias: <strong>AT-rich preference</strong> &nbsp;·&nbsp;
+      Speed: <strong>very fast (1 step)</strong>
+    </div>
+    <div class="info-box note" style="margin-top:10px;"><svg class="ico" aria-hidden="true"><use href="#i-note"></use></svg><div>Essential for ATAC-seq — the assay is fundamentally built on Tn5 inserting at open chromatin. Also ideal for low DNA input (&lt;10 ng) samples such as rare cell populations.</div></div>
+  </div>
+
+</div>
+
+<!-- Comparison table -->
+<h4 style="margin:18px 0 10px;font-size:0.92em;font-weight:600;">Comparison at a glance</h4>
+<div style="overflow-x:auto;">
+  <table class="ref-table" style="width:100%;font-size:0.83em;">
+    <tr>
+      <th>Method</th><th>Fragment size</th><th>Size control</th><th>Sequence bias</th><th>Equipment cost</th><th>Best for</th>
+    </tr>
+    <tr>
+      <td><strong>Probe sonication</strong></td><td>100 bp – 1 kb</td>
+      <td><span class="tag tag-yellow">Moderate</span></td>
+      <td><span class="tag tag-yellow">Moderate</span></td>
+      <td>~$3k</td><td>Teaching labs, flexible protocols</td>
+    </tr>
+    <tr>
+      <td><strong>Covaris AFA</strong></td><td>150–500 bp</td>
+      <td><span class="tag tag-green">Excellent</span></td>
+      <td><span class="tag tag-green">Minimal</span></td>
+      <td>~$80k+</td><td>Clinical WGS, large cohorts</td>
+    </tr>
+    <tr>
+      <td><strong>Enzymatic</strong></td><td>200–700 bp</td>
+      <td><span class="tag tag-yellow">Moderate</span></td>
+      <td><span class="tag tag-yellow">AT/GC bias</span></td>
+      <td>Low (kit only)</td><td>High-throughput, automation</td>
+    </tr>
+    <tr>
+      <td><strong>Tagmentation (Tn5)</strong></td><td>150–500 bp</td>
+      <td><span class="tag tag-yellow">Moderate</span></td>
+      <td><span class="tag tag-red">AT-rich bias</span></td>
+      <td>Low (kit only)</td><td>ATAC-seq, low input WGS</td>
+    </tr>
+  </table>
+</div>
+
+<!-- Practical guide -->
+<h4 style="margin:18px 0 10px;font-size:0.92em;font-weight:600;">Which method should you use?</h4>
+<div style="display:flex;flex-direction:column;gap:8px;margin-bottom:14px;">
+  <div class="card" style="padding:12px 16px;display:flex;gap:14px;align-items:flex-start;">
+    <span style="font-size:0.75em;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;color:var(--text3);min-width:120px;flex-shrink:0;padding-top:2px;">Gold-standard WGS</span>
+    <div><strong>Covaris AFA</strong> — unmatched reproducibility and minimal bias. Essential when accuracy and regulatory compliance matter.</div>
+  </div>
+  <div class="card" style="padding:12px 16px;display:flex;gap:14px;align-items:flex-start;">
+    <span style="font-size:0.75em;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;color:var(--text3);min-width:120px;flex-shrink:0;padding-top:2px;">Budget lab</span>
+    <div><strong>Enzymatic fragmentation</strong> (e.g. NEBNext Ultra II FS, Kapa HyperPlus). No specialised instrument needed — just a thermocycler and pipettes.</div>
+  </div>
+  <div class="card" style="padding:12px 16px;display:flex;gap:14px;align-items:flex-start;">
+    <span style="font-size:0.75em;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;color:var(--text3);min-width:120px;flex-shrink:0;padding-top:2px;">Low input (&lt;10 ng)</span>
+    <div><strong>Tagmentation</strong> — Tn5 is optimised for picogram-level inputs, ideal for rare cell populations or precious samples.</div>
+  </div>
+  <div class="card" style="padding:12px 16px;display:flex;gap:14px;align-items:flex-start;">
+    <span style="font-size:0.75em;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;color:var(--text3);min-width:120px;flex-shrink:0;padding-top:2px;">ATAC-seq</span>
+    <div><strong>Tagmentation only</strong> — Tn5 preferentially inserts at open chromatin. The assay is fundamentally built around this property.</div>
+  </div>
+  <div class="card" style="padding:12px 16px;display:flex;gap:14px;align-items:flex-start;">
+    <span style="font-size:0.75em;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;color:var(--text3);min-width:120px;flex-shrink:0;padding-top:2px;">High throughput</span>
+    <div><strong>Enzymatic or Covaris S-series</strong> — both can be automated on liquid handling platforms for 96+ samples per day.</div>
+  </div>
+  <div class="card" style="padding:12px 16px;display:flex;gap:14px;align-items:flex-start;">
+    <span style="font-size:0.75em;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;color:var(--text3);min-width:120px;flex-shrink:0;padding-top:2px;">Teaching / pilot</span>
+    <div><strong>Probe sonication</strong> — instruments are common, protocols are flexible, and the method is easy to troubleshoot and understand.</div>
+  </div>
+</div>
+
+<!-- Library prep pipeline -->
+<h4 style="margin:18px 0 10px;font-size:0.92em;font-weight:600;">Where fragmentation sits in the full library preparation workflow</h4>
+<div style="display:flex;flex-direction:column;gap:4px;margin-bottom:14px;">
+  <div class="card" style="padding:12px 16px;border-left:3px solid var(--green);background:rgba(0,212,160,0.05);">
+    <strong style="color:var(--green-text);">① Fragmentation ← You are here</strong>
+    <p class="sub" style="margin-top:2px;">DNA broken to 150–500 bp target size by sonication, enzymes, or Tn5 transposase.</p>
+  </div>
+  <div class="card" style="padding:12px 16px;"><strong>② End repair</strong><p class="sub" style="margin-top:2px;">Ragged 3′/5′ ends polished to blunt ends using polymerase and exonuclease activity.</p></div>
+  <div class="card" style="padding:12px 16px;"><strong>③ A-tailing</strong><p class="sub" style="margin-top:2px;">Single adenine added to the 3′ end for adapter ligation compatibility.</p></div>
+  <div class="card" style="padding:12px 16px;"><strong>④ Adapter ligation</strong><p class="sub" style="margin-top:2px;">Platform-specific adapters and index barcodes ligated to both ends of each fragment.</p></div>
+  <div class="card" style="padding:12px 16px;"><strong>⑤ Size selection</strong><p class="sub" style="margin-top:2px;">SPRI beads or gel electrophoresis remove very small and very large fragments.</p></div>
+  <div class="card" style="padding:12px 16px;"><strong>⑥ PCR amplification</strong><p class="sub" style="margin-top:2px;">Library amplified (optional) to sufficient quantity for sequencing. Excessive cycles increase duplicates.</p></div>
+</div>
+
+<!-- Glossary -->
+<h4 style="margin:18px 0 10px;font-size:0.92em;font-weight:600;">Key terms</h4>
+<div class="card-grid card-grid-2" style="gap:8px;margin-bottom:14px;">
+  <div class="card" style="padding:12px;"><strong>Phosphodiester bond</strong><p class="sub" style="margin-top:3px;">The covalent bond linking nucleotides in a DNA strand. All fragmentation methods ultimately break this bond.</p></div>
+  <div class="card" style="padding:12px;"><strong>Cavitation</strong><p class="sub" style="margin-top:3px;">Formation and violent collapse of microscopic bubbles in liquid, driven by ultrasonic energy. The mechanical force shatters DNA.</p></div>
+  <div class="card" style="padding:12px;"><strong>AFA (Adaptive Focused Acoustics)</strong><p class="sub" style="margin-top:3px;">Covaris technology using a focused acoustic transducer to shear DNA without any probe touching the sample — eliminating cross-contamination.</p></div>
+  <div class="card" style="padding:12px;"><strong>DNase I</strong><p class="sub" style="margin-top:3px;">An endonuclease that cleaves both strands of dsDNA, commonly used in enzymatic fragmentation kits.</p></div>
+  <div class="card" style="padding:12px;"><strong>Tn5 transposase</strong><p class="sub" style="margin-top:3px;">A bacterial enzyme that inserts into dsDNA and simultaneously cuts and ligates adapters — the basis of tagmentation.</p></div>
+  <div class="card" style="padding:12px;"><strong>SPRI beads</strong><p class="sub" style="margin-top:3px;">Solid-Phase Reversible Immobilisation — magnetic beads used to selectively bind DNA fragments by size during cleanup steps.</p></div>
+  <div class="card" style="padding:12px;"><strong>Sequence bias</strong><p class="sub" style="margin-top:3px;">Tendency of a fragmentation method to over- or under-represent certain nucleotide sequences, affecting coverage uniformity.</p></div>
+  <div class="card" style="padding:12px;"><strong>ATAC-seq</strong><p class="sub" style="margin-top:3px;">Assay for Transposase-Accessible Chromatin — uses Tn5 tagmentation to map open chromatin regions genome-wide.</p></div>
+</div>
+
+<div class="chips" style="margin-top:14px;">
+  <span class="chip">Probe sonication = cavitation-based shearing</span>
+  <span class="chip">Covaris AFA = gold standard</span>
+  <span class="chip">Enzymatic = no specialist equipment</span>
+  <span class="chip">Tn5 = fragmentation + adapter in one step</span>
+  <span class="chip">Target: 150–300 bp for Illumina</span>
+  <span class="chip">ATAC-seq requires tagmentation</span>
+</div>

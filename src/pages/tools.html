@@ -1,0 +1,121 @@
+<!--
+path: /tools
+id: tools
+nav: tools
+hero: dark
+scripts: tools.js
+kind: Tools
+title: Bioinformatics tools: RNAflow and the roadmap | BioInfoCodex
+description: RNAflow, a free open-source desktop app for RNA-seq analysis, is available now. See what else is planned and ask to be told when it is ready.
+-->
+<div class="tools-hero">
+  <canvas id="tools-dots-canvas" aria-hidden="true"></canvas>
+  <div class="label">Software</div>
+  <h1 class="h1">Tools</h1>
+  <p class="lead">One tool is finished and in use: RNAflow. The others below are planned, and are listed so you can see where the project is going.</p>
+</div>
+
+<div class="section">
+
+  <div class="tool-category">
+    <h2 class="tool-category-title">Available now</h2>
+
+    <a class="tool-hub-card live tool-feature-card" href="/tools/rnaflow">
+      <div class="tool-top">
+        <div class="tool-icon-wrap"><svg class="ico" aria-hidden="true"><use href="#i-chart"></use></svg></div>
+        <div class="tool-meta">
+          <div class="tool-name">RNAflow</div>
+          <div class="tool-version">v%%RNAFLOW_VERSION%% · released %%RNAFLOW_RELEASED%% · MIT licence</div>
+        </div>
+        <span class="tag tag-green">Available</span>
+      </div>
+      <p class="tool-desc">A guided desktop app for bulk RNA-seq analysis, from raw FASTQ files to differential expression and pathway enrichment. It writes the commands for your project, runs them with one click, and explains each result. Includes a small RNA route and can start from a count table.</p>
+      <div class="chips">
+        <span class="chip">FastQC</span><span class="chip">fastp</span><span class="chip">Salmon</span>
+        <span class="chip">HISAT2</span><span class="chip">featureCounts</span><span class="chip">DESeq2</span>
+        <span class="chip">edgeR</span><span class="chip">limma-voom</span><span class="chip">fgsea</span>
+      </div>
+      <div class="tool-card-foot">
+        <span>macOS</span><span>Linux</span><span>Windows through WSL2</span>
+        <span class="tool-card-go">Overview and manual<svg class="ico" aria-hidden="true"><use href="#i-arrow"></use></svg></span>
+      </div>
+    </a>
+
+    <div class="btn-row tool-quick-links">
+      <a class="btn btn-green" href="/download">Download RNAflow</a>
+      <a class="btn btn-outline" href="/tools/rnaflow/changelog">Changelog</a>
+      <a class="btn btn-outline" href="/cite">How to cite</a>
+      <a class="btn btn-outline" href="%%RNAFLOW_REPO%%" rel="noopener">Source code</a>
+    </div>
+  </div>
+
+  <div class="tool-category" id="roadmap">
+    <h2 class="tool-category-title">Roadmap</h2>
+    <p class="sub roadmap-intro">These are not available yet and have no release dates. The order below is roughly the order of work.</p>
+
+    <div class="roadmap-grid">
+      <a class="roadmap-card" href="/tools/genenet">
+        <div class="roadmap-head"><span class="roadmap-name">GeneNet Lab</span><span class="tag tag-orange">In development</span></div>
+        <p>Self-hosted lab notebook and sample inventory with an audit trail, electronic signatures and automatic backups.</p>
+        <span class="roadmap-more">Read the details<svg class="ico" aria-hidden="true"><use href="#i-arrow"></use></svg></span>
+      </a>
+      <div class="roadmap-card">
+        <div class="roadmap-head"><span class="roadmap-name">NGSuite</span><span class="tag tag-orange">In development</span></div>
+        <p>Whole-genome and exome sequencing: variant calling with GATK, SNP and indel annotation, structural variants.</p>
+      </div>
+      <div class="roadmap-card">
+        <div class="roadmap-head"><span class="roadmap-name">PlasmidMap</span><span class="tag tag-orange">In development</span></div>
+        <p>Plasmid annotation: import GenBank files, find restriction sites, and export circular maps for publication.</p>
+      </div>
+      <div class="roadmap-card">
+        <div class="roadmap-head"><span class="roadmap-name">ChIPflow</span><span class="tag tag-dim">Planned</span></div>
+        <p>ChIP-seq and ATAC-seq: peak calling with MACS2, motif analysis with HOMER, differential accessibility.</p>
+      </div>
+      <div class="roadmap-card">
+        <div class="roadmap-head"><span class="roadmap-name">MetaFlow</span><span class="tag tag-dim">Planned</span></div>
+        <p>Metagenomics and 16S rRNA: taxonomic classification, alpha and beta diversity, differential abundance.</p>
+      </div>
+      <div class="roadmap-card">
+        <div class="roadmap-head"><span class="roadmap-name">scRNAflow</span><span class="tag tag-dim">Planned</span></div>
+        <p>Single-cell RNA-seq with Seurat: clustering, UMAP, marker genes and trajectory analysis.</p>
+      </div>
+      <div class="roadmap-card">
+        <div class="roadmap-head"><span class="roadmap-name">ProteomicsLab</span><span class="tag tag-dim">Planned</span></div>
+        <p>Mass spectrometry proteomics: label-free and TMT quantification, PTM analysis, pathway enrichment.</p>
+      </div>
+    </div>
+
+    <div class="notify-card" id="notify">
+      <div>
+        <h3 class="h3">Tell me when a tool is ready</h3>
+        <p class="sub">Leave your email and pick what you are waiting for. You will get one message when it is released and nothing else.</p>
+      </div>
+      <div>
+        <form class="inline-form" data-endpoint="%%FORM_ENDPOINT%%" data-fallback="%%EMAIL%%">
+          <input type="hidden" name="_subject" value="Notify me: tool release">
+          <input type="hidden" name="form" value="tool-notify">
+          <label class="form-label" for="notify-email">Email address</label>
+          <input class="form-input" id="notify-email" type="email" name="email" required autocomplete="email" placeholder="you@university.edu">
+          <label class="form-label" for="notify-tool">Tool</label>
+          <select class="form-select" id="notify-tool" name="tool">
+            <option>Any new tool</option>
+            <option>GeneNet Lab</option>
+            <option>NGSuite</option>
+            <option>PlasmidMap</option>
+            <option>ChIPflow</option>
+            <option>MetaFlow</option>
+            <option>scRNAflow</option>
+            <option>ProteomicsLab</option>
+          </select>
+          <button class="btn btn-green" type="submit">Notify me</button>
+          <p class="form-status" data-form-status role="status"></p>
+        </form>
+        <div class="form-success" data-form-success>
+          <strong>You are on the list.</strong><br>
+          <span>You will hear from us once, when it is released.</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>

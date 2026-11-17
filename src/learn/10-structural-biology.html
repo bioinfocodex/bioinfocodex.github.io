@@ -1,0 +1,110 @@
+<!--
+module: 10
+slug: structural-biology
+short: Structural Biology
+label: Module 10 · Structural Bioinformatics
+title: Protein Structure &amp; AlphaFold
+-->
+<p class="lead">Protein function is determined by its three-dimensional structure. Structural bioinformatics uses computational methods to predict, analyse, and visualise protein structures — revolutionised by AlphaFold, which can predict structures with near-experimental accuracy.</p>
+
+<!--topic 10.1: Protein Structure Levels &amp; Databases-->
+          <p class="sub">Proteins fold into defined 3D structures that determine their function. Understanding the four levels of protein structure is fundamental to structural bioinformatics and drug design.</p>
+
+          <h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">The Four Levels of Structure</h3>
+          <div class="card-grid card-grid-2" style="gap:10px;margin-top:8px;">
+            <div class="card" style="padding:14px;"><strong>Primary (1°)</strong><p class="sub" style="margin-top:4px;">The linear amino acid sequence. Determines all higher levels. Read from gene sequence. 20 standard amino acids linked by peptide bonds.</p></div>
+            <div class="card" style="padding:14px;"><strong>Secondary (2°)</strong><p class="sub" style="margin-top:4px;">Local folding patterns: <strong>α-helices</strong> (3.6 residues per turn, stabilised by i→i+4 hydrogen bonds) and <strong>β-sheets</strong> (parallel or antiparallel strands). Loops connect regular elements.</p></div>
+            <div class="card" style="padding:14px;"><strong>Tertiary (3°)</strong><p class="sub" style="margin-top:4px;">The complete 3D fold of a single polypeptide chain. Stabilised by hydrophobic core packing, disulfide bonds, salt bridges, and hydrogen bonds. This is what we see in PDB structures.</p></div>
+            <div class="card" style="padding:14px;"><strong>Quaternary (4°)</strong><p class="sub" style="margin-top:4px;">Assembly of multiple polypeptide chains (subunits) into a functional complex. Example: haemoglobin is a tetramer (α2β2). Many enzymes and receptors function as oligomers.</p></div>
+          </div>
+
+          <h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">Key Structural Databases</h3>
+          <div class="card-grid card-grid-3" style="gap:10px;margin-top:8px;">
+            <div class="card" style="padding:14px;"><strong>PDB (rcsb.org)</strong><p class="sub" style="margin-top:4px;">~220,000 experimentally determined structures. Solved by X-ray crystallography (~87%), cryo-EM (~10%), or NMR (~3%). The primary source for known structures.</p></div>
+            <div class="card" style="padding:14px;"><strong>AlphaFold DB</strong><p class="sub" style="margin-top:4px;">~200 million predicted structures covering nearly all known proteins. Free access at alphafold.ebi.ac.uk. Quality indicated by pLDDT confidence score (blue = high, orange = low).</p></div>
+            <div class="card" style="padding:14px;"><strong>UniProt</strong><p class="sub" style="margin-top:4px;">Links sequence → structure → function. Cross-references PDB and AlphaFold entries. Shows domain architecture, active sites, binding sites, and post-translational modifications.</p></div>
+          </div>
+
+          <div class="code-block"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button><span class="code-comment"># Download a PDB structure</span>
+wget https://files.rcsb.org/download/1UBQ.pdb
+
+<span class="code-comment"># Download AlphaFold prediction by UniProt ID</span>
+wget https://alphafold.ebi.ac.uk/files/AF-P04637-F1-model_v6.pdb   <span class="code-comment"># human p53</span>
+
+<span class="code-comment"># Batch download AlphaFold structures for a proteome</span>
+wget https://ftp.ebi.ac.uk/pub/databases/alphafold/latest/UP000005640_9606_HUMAN_v6.tar
+
+<span class="code-comment"># Visualise (install PyMOL or ChimeraX)</span>
+mamba install -c conda-forge pymol-open-source
+pymol 1UBQ.pdb</div>
+
+          <div class="info-box note"><svg class="ico" aria-hidden="true"><use href="#i-note"></use></svg><div><strong>Reading pLDDT scores:</strong> AlphaFold provides a per-residue confidence score (pLDDT, 0–100). &gt;90 = very high confidence (core domains). 70–90 = confident. 50–70 = low confidence (may be flexible). &lt;50 = disordered/unstructured regions. Always check pLDDT before interpreting predicted structures.</div></div>
+
+          <div class="chips" style="margin-top:14px;"><span class="chip">PDB for experimental structures</span><span class="chip">AlphaFold for predictions</span><span class="chip">pLDDT &gt; 70 = trustworthy</span><span class="chip">PyMOL or ChimeraX for visualisation</span></div>
+
+<!--topic 10.2: Structure Prediction — AlphaFold &amp; ColabFold-->
+          <p class="sub">AlphaFold2, developed by DeepMind, solved the protein structure prediction problem in 2020. It predicts 3D structures from amino acid sequence alone with near-experimental accuracy. ColabFold makes it easy to run AlphaFold predictions using Google Colab — no local GPU required.</p>
+
+          <h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">How AlphaFold Works (Simplified)</h3>
+          <p class="sub">(1) <strong>MSA generation</strong> — searches sequence databases to find homologous proteins (evolutionary information). (2) <strong>Template search</strong> — finds known structures of related proteins in PDB. (3) <strong>Evoformer</strong> — a deep neural network processes the MSA and pairwise features through 48 attention-based blocks. (4) <strong>Structure module</strong> — converts learned representations into 3D atomic coordinates. (5) <strong>Recycling</strong> — repeats the prediction 3 times, feeding output back as input, improving accuracy each time.</p>
+
+          <h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">Running ColabFold</h3>
+          <div class="info-box tip"><svg class="ico" aria-hidden="true"><use href="#i-tip"></use></svg><div><strong>Easiest way to predict a structure:</strong> Go to <strong>colab.research.google.com</strong> and search for "ColabFold" notebook. Paste your amino acid sequence, click "Runtime → Run all". The prediction takes 5–30 minutes depending on protein size. Output: PDB file + pLDDT scores + PAE (predicted aligned error) plot.</div></div>
+
+          <div class="code-block"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button><span class="code-comment"># ─── Local AlphaFold (requires GPU + ~2 TB databases) ───</span>
+<span class="code-comment"># Use LocalColabFold for easier local installation:</span>
+git clone https://github.com/YoshitakaMo/localcolabfold.git
+cd localcolabfold
+bash install_colabbatch_linux.sh
+
+<span class="code-comment"># Predict a single protein</span>
+colabfold_batch input.fasta output_dir/
+
+<span class="code-comment"># Predict a protein complex (separate chains with :)</span>
+<span class="code-comment"># In FASTA: &gt;complex\nSEQUENCE_CHAIN_A:SEQUENCE_CHAIN_B</span>
+colabfold_batch complex.fasta output_dir/ --model-type alphafold2_multimer_v3
+
+<span class="code-comment"># ─── AlphaFold3 (online, free for academics) ───</span>
+<span class="code-comment"># Visit alphafoldserver.com — predicts proteins, DNA, RNA, ligands, ions</span>
+<span class="code-comment"># Supports complexes of any type (protein-DNA, protein-drug, etc.)</span></div>
+
+          <div class="info-box warn"><svg class="ico" aria-hidden="true"><use href="#i-warn"></use></svg><div><strong>Limitations of AlphaFold:</strong> (1) Does not predict conformational changes — gives a single static structure. (2) Disordered regions (low pLDDT) should not be interpreted structurally. (3) Cannot predict effects of mutations reliably. (4) Ligand/cofactor binding sites may not be accurate without the ligand present. (5) AlphaFold2 struggles with protein-protein interfaces — use AlphaFold-Multimer or AlphaFold3 for complexes.</div></div>
+
+          <div class="chips" style="margin-top:14px;"><span class="chip">ColabFold = easiest way to predict</span><span class="chip">AlphaFold3 for complexes</span><span class="chip">Check pLDDT and PAE</span><span class="chip">Static structure only</span></div>
+
+<!--topic 10.3: Molecular Docking &amp; Drug Discovery-->
+          <p class="sub">Molecular docking predicts how a small molecule (ligand/drug) binds to a protein target. It is a cornerstone of computer-aided drug design (CADD). The goal is to find the binding pose (orientation + conformation) and estimate binding affinity. Virtual screening uses docking to test millions of compounds computationally before synthesising the most promising ones.</p>
+
+          <h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">Docking Tools</h3>
+          <div class="card-grid card-grid-3" style="gap:10px;margin-top:8px;">
+            <div class="card" style="padding:14px;border-left:3px solid var(--green);"><strong>AutoDock Vina</strong><p class="sub" style="margin-top:4px;">The most widely used docking tool. Fast, accurate, free. Flexible ligand + rigid receptor. Easy to use via command line.</p><span class="tag tag-green" style="margin-top:6px;">Start here</span></div>
+            <div class="card" style="padding:14px;"><strong>Gnina</strong><p class="sub" style="margin-top:4px;">CNN-based scoring function built on Vina. Better pose prediction than classical scoring. GPU-accelerated.</p></div>
+            <div class="card" style="padding:14px;"><strong>DiffDock</strong><p class="sub" style="margin-top:4px;">Diffusion model for docking. Does not require predefined binding site. State-of-the-art blind docking accuracy.</p></div>
+          </div>
+
+          <div class="code-block"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button><span class="code-comment"># ─── AutoDock Vina workflow ───</span>
+mamba install -c conda-forge autodock-vina
+mamba install -c conda-forge openbabel   # For format conversion
+
+<span class="code-comment"># 1. Prepare receptor (remove water, add hydrogens)</span>
+<span class="code-comment"># Use ADFR suite or Open Babel:</span>
+obabel receptor.pdb -O receptor.pdbqt -h
+
+<span class="code-comment"># 2. Prepare ligand</span>
+obabel ligand.sdf -O ligand.pdbqt --gen3d -h
+
+<span class="code-comment"># 3. Define search box (center on binding site)</span>
+<span class="code-comment"># 4. Run docking</span>
+vina --receptor receptor.pdbqt --ligand ligand.pdbqt \
+     --center_x 10.0 --center_y 20.0 --center_z 15.0 \
+     --size_x 20 --size_y 20 --size_z 20 \
+     --exhaustiveness 32 --num_modes 9 \
+     --out docked_poses.pdbqt
+
+<span class="code-comment"># Output: ranked poses with binding affinity (kcal/mol)</span>
+<span class="code-comment"># More negative = stronger predicted binding</span>
+<span class="code-comment"># Typical drug: -7 to -12 kcal/mol</span></div>
+
+          <div class="info-box warn"><svg class="ico" aria-hidden="true"><use href="#i-warn"></use></svg><div><strong>Docking limitations:</strong> Docking scoring functions are approximate — they estimate binding affinity with ~2 kcal/mol error. Use docking for <strong>ranking</strong> (which compounds bind better), not absolute binding energy prediction. Always validate top hits experimentally. For more accurate binding free energies, use molecular dynamics with free energy perturbation (FEP) or MM-PBSA methods.</div></div>
+
+          <div class="chips" style="margin-top:14px;"><span class="chip">AutoDock Vina to start</span><span class="chip">DiffDock for blind docking</span><span class="chip">Use for ranking, not absolute affinity</span><span class="chip">Always validate experimentally</span></div>

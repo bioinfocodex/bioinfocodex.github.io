@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{{title}}</title>
+<meta name="description" content="{{description}}">
+{{robots}}<link rel="canonical" href="{{canonical}}">
+<meta property="og:title" content="{{title}}">
+<meta property="og:description" content="{{description}}">
+<meta property="og:url" content="{{canonical}}">
+<meta property="og:type" content="{{og_type}}">
+<meta property="og:site_name" content="BioInfoCodex">
+<meta property="og:image" content="{{og_image}}">
+<meta property="og:image:alt" content="{{og_image_alt}}">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="{{title}}">
+<meta name="twitter:description" content="{{description}}">
+<meta name="twitter:image" content="{{og_image}}">
+
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/favicon.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<meta name="theme-color" content="#00c896">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300..800&family=DM+Mono:wght@400;500&family=Space+Grotesk:wght@700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{{css}}">
+{{jsonld}}{{analytics}}</head>
+<body data-hero="{{hero}}" data-nav="{{nav}}">
+<a class="skip-link" href="#main">Skip to content</a>
+{{sprite}}
+<div class="bg-grid"></div>
+
+<nav aria-label="Main">
+  <a class="nav-logo" href="/" aria-label="BioInfoCodex home">
+{{logo}}
+  </a>
+
+  <div class="nav-tabs">
+    <a class="nav-tab{{nav_home}}" href="/"><svg class="ico" aria-hidden="true"><use href="#i-home"></use></svg>Home</a>
+    <a class="nav-tab{{nav_tools}}" href="/tools"><svg class="ico" aria-hidden="true"><use href="#i-tools"></use></svg>Tools</a>
+    <a class="nav-tab{{nav_learn}}" href="/learn"><svg class="ico" aria-hidden="true"><use href="#i-learn"></use></svg>Learn</a>
+    <a class="nav-tab{{nav_resources}}" href="/resources"><svg class="ico" aria-hidden="true"><use href="#i-link"></use></svg>Resources</a>
+    <a class="nav-tab{{nav_download}}" href="/download"><svg class="ico" aria-hidden="true"><use href="#i-download"></use></svg>Download</a>
+    <a class="nav-tab{{nav_about}}" href="/about"><svg class="ico" aria-hidden="true"><use href="#i-note"></use></svg>About</a>
+    <a class="nav-tab{{nav_contact}}" href="/contact"><svg class="ico" aria-hidden="true"><use href="#i-mail"></use></svg>Contact</a>
+  </div>
+
+  <div class="nav-spacer"></div>
+  <form class="nav-search" action="/search" method="get" role="search">
+    <svg class="ico" aria-hidden="true"><use href="#i-search"></use></svg>
+    <input type="search" name="q" placeholder="Search the site" aria-label="Search the site" autocomplete="off">
+  </form>
+  <button class="nav-burger" onclick="toggleMobile()" aria-label="Open menu" aria-controls="mobile-menu">☰</button>
+</nav>
+
+<div class="mobile-menu" id="mobile-menu">
+  <form class="nav-search nav-search-mobile" action="/search" method="get" role="search">
+    <svg class="ico" aria-hidden="true"><use href="#i-search"></use></svg>
+    <input type="search" name="q" placeholder="Search the site" aria-label="Search the site" autocomplete="off">
+  </form>
+  <a class="nav-tab{{nav_home}}" href="/"><svg class="ico" aria-hidden="true"><use href="#i-home"></use></svg>Home</a>
+  <a class="nav-tab{{nav_tools}}" href="/tools"><svg class="ico" aria-hidden="true"><use href="#i-tools"></use></svg>Tools</a>
+  <a class="nav-tab{{nav_learn}}" href="/learn"><svg class="ico" aria-hidden="true"><use href="#i-learn"></use></svg>Learn</a>
+  <a class="nav-tab{{nav_resources}}" href="/resources"><svg class="ico" aria-hidden="true"><use href="#i-link"></use></svg>Resources</a>
+  <a class="nav-tab{{nav_download}}" href="/download"><svg class="ico" aria-hidden="true"><use href="#i-download"></use></svg>Download</a>
+  <a class="nav-tab{{nav_about}}" href="/about"><svg class="ico" aria-hidden="true"><use href="#i-note"></use></svg>About</a>
+  <a class="nav-tab{{nav_contact}}" href="/contact"><svg class="ico" aria-hidden="true"><use href="#i-mail"></use></svg>Contact</a>
+</div>
+
+<main class="page active" id="page-{{id}}">
+<span id="main"></span>
+{{content}}
+</main>
+
+<footer>
+  <div class="footer-grid">
+    <div>
+      <div class="footer-brand-name">BioInfo<span>Codex</span></div>
+      <p class="footer-brand-desc">Open-source bioinformatics software and a free course for researchers who have data but not a bioinformatics background.</p>
+    </div>
+    <div class="footer-col">
+      <h2 class="footer-col-title">RNAflow</h2>
+      <ul>
+        <li><a href="/tools/rnaflow">Overview and manual</a></li>
+        <li><a href="/download">Download</a></li>
+        <li><a href="/tools/rnaflow/changelog">Changelog</a></li>
+        <li><a href="/cite">How to cite</a></li>
+        <li><a href="/tools#roadmap">Roadmap</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h2 class="footer-col-title">Learn</h2>
+      <ul>
+        <li><a href="/learn">Course modules</a></li>
+        <li><a href="/learn/rna-seq">RNA-seq module</a></li>
+        <li><a href="/learn/practice-dataset">Practice dataset</a></li>
+        <li><a href="/learn/cheat-sheets">Cheat sheets</a></li>
+        <li><a href="/learn/glossary">Glossary</a></li>
+        <li><a href="/lessons">Video lessons</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h2 class="footer-col-title">Project</h2>
+      <ul>
+        <li><a href="/about">About</a></li>
+        <li><a href="/contact">Contact</a></li>
+        <li><a href="/resources">Resources</a></li>
+        <li><a href="{{github_org}}" rel="noopener">GitHub</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div>© {{year}} BioInfoCodex · RNAflow is released under the MIT licence</div>
+    <div>Free · Open source · No ads</div>
+  </div>
+</footer>
+
+{{scripts}}
+</body>
+</html>

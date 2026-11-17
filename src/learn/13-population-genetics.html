@@ -1,0 +1,87 @@
+<!--
+module: 13
+slug: population-genetics
+short: Population Genetics
+label: Module 13 · Population Genetics &amp; GWAS
+title: Genetic Variation in Populations
+-->
+<p class="lead">Population genetics studies how allele frequencies change within and between populations over time. Genome-wide association studies (GWAS) connect genetic variants to phenotypes and diseases, forming the basis of precision medicine.</p>
+
+<!--topic 13.1: Population Structure &amp; Hardy-Weinberg Equilibrium-->
+          <p class="sub">Hardy-Weinberg Equilibrium (HWE) describes the expected genotype frequencies in a population with no evolutionary forces acting. For a variant with allele frequencies p (reference) and q (alternative), expected genotype frequencies are: p² (homozygous ref), 2pq (heterozygous), q² (homozygous alt). Deviations from HWE can indicate selection, population stratification, genotyping errors, or inbreeding.</p>
+
+          <h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">Key Population Genetics Concepts</h3>
+          <div class="card-grid card-grid-2" style="gap:10px;margin-top:8px;">
+            <div class="card" style="padding:14px;"><strong>Allele Frequency</strong><p class="sub" style="margin-top:4px;">The proportion of a specific allele in a population. If 80 of 200 chromosomes carry the T allele, frequency = 0.40. Minor allele frequency (MAF) &lt; 0.01 = rare variant.</p></div>
+            <div class="card" style="padding:14px;"><strong>Genetic Drift</strong><p class="sub" style="margin-top:4px;">Random fluctuation of allele frequencies due to finite population size. Stronger in small populations. Founder effect and bottleneck are examples of extreme drift.</p></div>
+            <div class="card" style="padding:14px;"><strong>FST (Fixation Index)</strong><p class="sub" style="margin-top:4px;">Measures genetic differentiation between populations. FST = 0 means identical; FST = 1 means completely different. Human populations: FST ≈ 0.12 globally.</p></div>
+            <div class="card" style="padding:14px;"><strong>Linkage Disequilibrium (LD)</strong><p class="sub" style="margin-top:4px;">Non-random association between alleles at different loci. Nearby variants are in LD (inherited together). Measured by r². LD decays with physical distance due to recombination.</p></div>
+          </div>
+
+          <div class="code-block"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button><span class="code-comment"># ─── Population structure analysis with PLINK ───</span>
+mamba install -c bioconda plink2
+
+<span class="code-comment"># 1. Basic QC filtering</span>
+plink2 --vcf cohort.vcf.gz --maf 0.01 --geno 0.05 --hwe 1e-6 \
+    --mind 0.1 --make-pgen --out filtered
+
+<span class="code-comment"># 2. LD pruning (remove correlated variants for PCA)</span>
+plink2 --pfile filtered --indep-pairwise 50 5 0.2 --out pruned
+plink2 --pfile filtered --extract pruned.prune.in --make-pgen --out pruned_data
+
+<span class="code-comment"># 3. PCA for population structure</span>
+plink2 --pfile pruned_data --pca 20 --out pca_results
+
+<span class="code-comment"># 4. Plot PC1 vs PC2 in R:</span>
+<span class="code-comment">#   pca &lt;- read.table("pca_results.eigenvec", header=TRUE)</span>
+<span class="code-comment">#   plot(pca$PC1, pca$PC2, col=as.factor(pca$Population))</span>
+
+<span class="code-comment"># 5. ADMIXTURE analysis (ancestry proportions)</span>
+mamba install -c bioconda admixture
+<span class="code-comment"># Convert to BED format first, then:</span>
+for K in 2 3 4 5; do
+    admixture pruned_data.bed $K --cv -j16
+done</div>
+
+          <div class="info-box note"><svg class="ico" aria-hidden="true"><use href="#i-note"></use></svg><div><strong>Population stratification in GWAS:</strong> If cases and controls come from different ancestral backgrounds, allele frequency differences due to ancestry (not disease) will create false associations. This is why GWAS always includes PCA components as covariates — to correct for population structure. Typically the top 10–20 PCs are included.</div></div>
+
+          <div class="chips" style="margin-top:14px;"><span class="chip">HWE test for QC</span><span class="chip">PCA reveals population structure</span><span class="chip">PLINK2 for genetic analysis</span><span class="chip">FST measures differentiation</span><span class="chip">LD decays with distance</span></div>
+
+<!--topic 13.2: GWAS — Genome-Wide Association Studies-->
+          <p class="sub">GWAS tests each genetic variant across the genome for association with a phenotype (disease, height, drug response, etc.). It is a hypothesis-free approach — no prior knowledge of which genes are involved is needed. Since millions of variants are tested simultaneously, very stringent significance thresholds are required (p &lt; 5×10⁻⁸ for genome-wide significance). GWAS results are visualised as Manhattan plots.</p>
+
+          <h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">GWAS Pipeline</h3>
+          <div class="code-block"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button><span class="code-comment"># ─── GWAS with PLINK2 ───</span>
+<span class="code-comment"># Assumes: genotypes in VCF/PGEN, phenotype file (FID IID PHENO)</span>
+
+<span class="code-comment"># 1. Sample &amp; variant QC</span>
+plink2 --vcf genotypes.vcf.gz \
+    --maf 0.01 \            # Remove rare variants (MAF &lt; 1%)
+    --geno 0.02 \           # Remove variants missing in &gt;2% of samples
+    --mind 0.05 \           # Remove samples missing &gt;5% of variants
+    --hwe 1e-6 \            # Remove variants violating HWE
+    --make-pgen --out qc_data
+
+<span class="code-comment"># 2. Calculate PCs for population stratification</span>
+plink2 --pfile qc_data --indep-pairwise 50 5 0.2 --out prune
+plink2 --pfile qc_data --extract prune.prune.in --pca 20 --out pcs
+
+<span class="code-comment"># 3. Run association (logistic for case/control, linear for quantitative)</span>
+plink2 --pfile qc_data \
+    --pheno pheno.txt --pheno-name Disease \
+    --covar pcs.eigenvec --covar-col-nums 3-12 \
+    --glm --out gwas_results
+
+<span class="code-comment"># 4. Genome-wide significance threshold: p &lt; 5e-8</span>
+<span class="code-comment"># Suggestive significance: p &lt; 1e-5</span>
+
+<span class="code-comment"># 5. Manhattan plot in R:</span>
+<span class="code-comment">#   library(qqman)</span>
+<span class="code-comment">#   manhattan(gwas, chr="CHROM", bp="POS", p="P", snp="ID")</span></div>
+
+          <h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">Interpreting GWAS Results</h3>
+          <div class="info-box warn"><svg class="ico" aria-hidden="true"><use href="#i-warn"></use></svg><div><strong>GWAS finds associations, not causation.</strong> A significant SNP is usually a <strong>tag SNP</strong> in LD with the true causal variant — not the causal variant itself. Fine-mapping (credible set analysis, SuSiE) is needed to narrow down the causal variant. Functional validation (CRISPR, reporter assays) is needed to prove causality. Most GWAS hits are in non-coding regions (enhancers, promoters), not in protein-coding exons.</div></div>
+
+          <div class="info-box tip"><svg class="ico" aria-hidden="true"><use href="#i-tip"></use></svg><div><strong>Post-GWAS analysis:</strong> After finding significant loci, perform: (1) <strong>Fine-mapping</strong> — identify the most likely causal variant. (2) <strong>Colocalization</strong> (coloc, eCAVIAR) — test if a GWAS signal and an eQTL signal share the same causal variant. (3) <strong>Gene mapping</strong> — assign GWAS hits to likely target genes using eQTL data, chromatin interaction (Hi-C), and distance. (4) <strong>Pathway enrichment</strong> — test if GWAS hits are enriched in specific biological pathways. (5) <strong>Polygenic Risk Scores</strong> — combine effects of all variants to predict individual risk.</div></div>
+
+          <div class="chips" style="margin-top:14px;"><span class="chip">p &lt; 5e-8 for genome-wide significance</span><span class="chip">Always correct for population structure</span><span class="chip">GWAS = association, not causation</span><span class="chip">Fine-mapping for causal variants</span><span class="chip">Manhattan plot for visualisation</span></div>
