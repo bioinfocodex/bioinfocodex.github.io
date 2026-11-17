@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 250" width="720" height="250" role="img" font-family="system-ui,-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif">
+<title>Read lengths of Illumina, PacBio HiFi and Oxford Nanopore sequencing</title>
+<rect width="720" height="250" fill="#ffffff"/>
+<text x="20" y="26" font-size="12.5" fill="#0d1117" text-anchor="start" font-weight="700">Typical read length by platform (log scale)</text>
+<line x1="170" y1="44" x2="170" y2="196" stroke="#e3e7ec" stroke-width="1" stroke-linecap="round"/>
+<text x="170" y="214" font-size="10.5" fill="#5b6472" text-anchor="middle" font-weight="400">100 bp</text>
+<line x1="300" y1="44" x2="300" y2="196" stroke="#e3e7ec" stroke-width="1" stroke-linecap="round"/>
+<text x="300" y="214" font-size="10.5" fill="#5b6472" text-anchor="middle" font-weight="400">1 kb</text>
+<line x1="430" y1="44" x2="430" y2="196" stroke="#e3e7ec" stroke-width="1" stroke-linecap="round"/>
+<text x="430" y="214" font-size="10.5" fill="#5b6472" text-anchor="middle" font-weight="400">10 kb</text>
+<line x1="560" y1="44" x2="560" y2="196" stroke="#e3e7ec" stroke-width="1" stroke-linecap="round"/>
+<text x="560" y="214" font-size="10.5" fill="#5b6472" text-anchor="middle" font-weight="400">100 kb</text>
+<line x1="690" y1="44" x2="690" y2="196" stroke="#e3e7ec" stroke-width="1" stroke-linecap="round"/>
+<text x="690" y="214" font-size="10.5" fill="#5b6472" text-anchor="middle" font-weight="400">1 Mb</text>
+<text x="20" y="70" font-size="12.5" fill="#0d1117" text-anchor="start" font-weight="600">Illumina</text>
+<text x="20" y="85" font-size="10.5" fill="#5b6472" text-anchor="start" font-weight="400">short reads</text>
+<rect x="170" y="58" width="62.0258" height="26" rx="5" fill="#e7f1fd" stroke="#0969da" stroke-width="1.5"/>
+<text x="20" y="118" font-size="12.5" fill="#0d1117" text-anchor="start" font-weight="600">PacBio HiFi</text>
+<text x="20" y="133" font-size="10.5" fill="#5b6472" text-anchor="start" font-weight="400">accurate long reads</text>
+<rect x="430" y="106" width="51.7322" height="26" rx="5" fill="#f1eafe" stroke="#7c3aed" stroke-width="1.5"/>
+<text x="20" y="166" font-size="12.5" fill="#0d1117" text-anchor="start" font-weight="600">Oxford Nanopore</text>
+<text x="20" y="181" font-size="10.5" fill="#5b6472" text-anchor="start" font-weight="400">long to ultra-long</text>
+<rect x="390.866" y="154" width="231.16" height="26" rx="5" fill="#e6faf5" stroke="#00a87e" stroke-width="1.5"/>
+<text x="360" y="238" font-size="11" fill="#5b6472" text-anchor="middle" font-weight="400">Short reads are cheap and precise; long reads span repeats and whole transcripts</text>
+</svg>

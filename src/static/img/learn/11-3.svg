@@ -1,0 +1,87 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 250" width="720" height="250" role="img" font-family="system-ui,-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif">
+<title>Bisulfite conversion distinguishes methylated from unmethylated cytosines</title>
+<rect width="720" height="250" fill="#ffffff"/>
+<text x="220" y="55" font-size="12" fill="#0d1117" text-anchor="end" font-weight="600">Original DNA</text>
+<rect x="240" y="36" width="30" height="26" rx="4" fill="#f6f8fa" stroke="#b6bfca" stroke-width="1.5"/>
+<text x="255" y="55" font-size="14" fill="#4a5568" text-anchor="middle" font-weight="700" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace">A</text>
+<rect x="274" y="36" width="30" height="26" rx="4" fill="#e6faf5" stroke="#00a87e" stroke-width="1.5"/>
+<text x="289" y="55" font-size="14" fill="#01664b" text-anchor="middle" font-weight="700" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace">C</text>
+<rect x="308" y="36" width="30" height="26" rx="4" fill="#f6f8fa" stroke="#b6bfca" stroke-width="1.5"/>
+<text x="323" y="55" font-size="14" fill="#4a5568" text-anchor="middle" font-weight="700" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace">G</text>
+<rect x="342" y="36" width="30" height="26" rx="4" fill="#f6f8fa" stroke="#b6bfca" stroke-width="1.5"/>
+<text x="357" y="55" font-size="14" fill="#4a5568" text-anchor="middle" font-weight="700" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace">T</text>
+<rect x="376" y="36" width="30" height="26" rx="4" fill="#f6f8fa" stroke="#b6bfca" stroke-width="1.5"/>
+<text x="391" y="55" font-size="14" fill="#4a5568" text-anchor="middle" font-weight="700" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace">T</text>
+<rect x="410" y="36" width="30" height="26" rx="4" fill="#fef3ea" stroke="#e0762a" stroke-width="1.5"/>
+<text x="425" y="55" font-size="14" fill="#9a4a06" text-anchor="middle" font-weight="700" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace">C</text>
+<rect x="444" y="36" width="30" height="26" rx="4" fill="#f6f8fa" stroke="#b6bfca" stroke-width="1.5"/>
+<text x="459" y="55" font-size="14" fill="#4a5568" text-anchor="middle" font-weight="700" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace">G</text>
+<rect x="478" y="36" width="30" height="26" rx="4" fill="#f6f8fa" stroke="#b6bfca" stroke-width="1.5"/>
+<text x="493" y="55" font-size="14" fill="#4a5568" text-anchor="middle" font-weight="700" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace">G</text>
+<rect x="512" y="36" width="30" height="26" rx="4" fill="#f6f8fa" stroke="#b6bfca" stroke-width="1.5"/>
+<text x="527" y="55" font-size="14" fill="#4a5568" text-anchor="middle" font-weight="700" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace">A</text>
+<rect x="546" y="36" width="30" height="26" rx="4" fill="#fef3ea" stroke="#e0762a" stroke-width="1.5"/>
+<text x="561" y="55" font-size="14" fill="#9a4a06" text-anchor="middle" font-weight="700" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace">C</text>
+<rect x="580" y="36" width="30" height="26" rx="4" fill="#f6f8fa" stroke="#b6bfca" stroke-width="1.5"/>
+<text x="595" y="55" font-size="14" fill="#4a5568" text-anchor="middle" font-weight="700" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace">G</text>
+<rect x="614" y="36" width="30" height="26" rx="4" fill="#f6f8fa" stroke="#b6bfca" stroke-width="1.5"/>
+<text x="629" y="55" font-size="14" fill="#4a5568" text-anchor="middle" font-weight="700" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace">A</text>
+<text x="289" y="26" font-size="10.5" fill="#01664b" text-anchor="middle" font-weight="400">methylated</text>
+<text x="220" y="123" font-size="12" fill="#0d1117" text-anchor="end" font-weight="600">After bisulfite</text>
+<rect x="240" y="104" width="30" height="26" rx="4" fill="#f6f8fa" stroke="#b6bfca" stroke-width="1.5"/>
+<text x="255" y="123" font-size="14" fill="#4a5568" text-anchor="middle" font-weight="700" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace">A</text>
+<rect x="274" y="104" width="30" height="26" rx="4" fill="#e6faf5" stroke="#00a87e" stroke-width="1.5"/>
+<text x="289" y="123" font-size="14" fill="#01664b" text-anchor="middle" font-weight="700" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace">C</text>
+<rect x="308" y="104" width="30" height="26" rx="4" fill="#f6f8fa" stroke="#b6bfca" stroke-width="1.5"/>
+<text x="323" y="123" font-size="14" fill="#4a5568" text-anchor="middle" font-weight="700" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace">G</text>
+<rect x="342" y="104" width="30" height="26" rx="4" fill="#f6f8fa" stroke="#b6bfca" stroke-width="1.5"/>
+<text x="357" y="123" font-size="14" fill="#4a5568" text-anchor="middle" font-weight="700" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace">T</text>
+<rect x="376" y="104" width="30" height="26" rx="4" fill="#f6f8fa" stroke="#b6bfca" stroke-width="1.5"/>
+<text x="391" y="123" font-size="14" fill="#4a5568" text-anchor="middle" font-weight="700" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace">T</text>
+<rect x="410" y="104" width="30" height="26" rx="4" fill="#fef3ea" stroke="#e0762a" stroke-width="1.5"/>
+<text x="425" y="123" font-size="14" fill="#9a4a06" text-anchor="middle" font-weight="700" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace">U</text>
+<rect x="444" y="104" width="30" height="26" rx="4" fill="#f6f8fa" stroke="#b6bfca" stroke-width="1.5"/>
+<text x="459" y="123" font-size="14" fill="#4a5568" text-anchor="middle" font-weight="700" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace">G</text>
+<rect x="478" y="104" width="30" height="26" rx="4" fill="#f6f8fa" stroke="#b6bfca" stroke-width="1.5"/>
+<text x="493" y="123" font-size="14" fill="#4a5568" text-anchor="middle" font-weight="700" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace">G</text>
+<rect x="512" y="104" width="30" height="26" rx="4" fill="#f6f8fa" stroke="#b6bfca" stroke-width="1.5"/>
+<text x="527" y="123" font-size="14" fill="#4a5568" text-anchor="middle" font-weight="700" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace">A</text>
+<rect x="546" y="104" width="30" height="26" rx="4" fill="#fef3ea" stroke="#e0762a" stroke-width="1.5"/>
+<text x="561" y="123" font-size="14" fill="#9a4a06" text-anchor="middle" font-weight="700" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace">U</text>
+<rect x="580" y="104" width="30" height="26" rx="4" fill="#f6f8fa" stroke="#b6bfca" stroke-width="1.5"/>
+<text x="595" y="123" font-size="14" fill="#4a5568" text-anchor="middle" font-weight="700" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace">G</text>
+<rect x="614" y="104" width="30" height="26" rx="4" fill="#f6f8fa" stroke="#b6bfca" stroke-width="1.5"/>
+<text x="629" y="123" font-size="14" fill="#4a5568" text-anchor="middle" font-weight="700" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace">A</text>
+<text x="220" y="191" font-size="12" fill="#0d1117" text-anchor="end" font-weight="600">After PCR, as read</text>
+<rect x="240" y="172" width="30" height="26" rx="4" fill="#f6f8fa" stroke="#b6bfca" stroke-width="1.5"/>
+<text x="255" y="191" font-size="14" fill="#4a5568" text-anchor="middle" font-weight="700" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace">A</text>
+<rect x="274" y="172" width="30" height="26" rx="4" fill="#e6faf5" stroke="#00a87e" stroke-width="1.5"/>
+<text x="289" y="191" font-size="14" fill="#01664b" text-anchor="middle" font-weight="700" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace">C</text>
+<rect x="308" y="172" width="30" height="26" rx="4" fill="#f6f8fa" stroke="#b6bfca" stroke-width="1.5"/>
+<text x="323" y="191" font-size="14" fill="#4a5568" text-anchor="middle" font-weight="700" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace">G</text>
+<rect x="342" y="172" width="30" height="26" rx="4" fill="#f6f8fa" stroke="#b6bfca" stroke-width="1.5"/>
+<text x="357" y="191" font-size="14" fill="#4a5568" text-anchor="middle" font-weight="700" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace">T</text>
+<rect x="376" y="172" width="30" height="26" rx="4" fill="#f6f8fa" stroke="#b6bfca" stroke-width="1.5"/>
+<text x="391" y="191" font-size="14" fill="#4a5568" text-anchor="middle" font-weight="700" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace">T</text>
+<rect x="410" y="172" width="30" height="26" rx="4" fill="#fef3ea" stroke="#e0762a" stroke-width="1.5"/>
+<text x="425" y="191" font-size="14" fill="#9a4a06" text-anchor="middle" font-weight="700" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace">T</text>
+<rect x="444" y="172" width="30" height="26" rx="4" fill="#f6f8fa" stroke="#b6bfca" stroke-width="1.5"/>
+<text x="459" y="191" font-size="14" fill="#4a5568" text-anchor="middle" font-weight="700" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace">G</text>
+<rect x="478" y="172" width="30" height="26" rx="4" fill="#f6f8fa" stroke="#b6bfca" stroke-width="1.5"/>
+<text x="493" y="191" font-size="14" fill="#4a5568" text-anchor="middle" font-weight="700" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace">G</text>
+<rect x="512" y="172" width="30" height="26" rx="4" fill="#f6f8fa" stroke="#b6bfca" stroke-width="1.5"/>
+<text x="527" y="191" font-size="14" fill="#4a5568" text-anchor="middle" font-weight="700" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace">A</text>
+<rect x="546" y="172" width="30" height="26" rx="4" fill="#fef3ea" stroke="#e0762a" stroke-width="1.5"/>
+<text x="561" y="191" font-size="14" fill="#9a4a06" text-anchor="middle" font-weight="700" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace">T</text>
+<rect x="580" y="172" width="30" height="26" rx="4" fill="#f6f8fa" stroke="#b6bfca" stroke-width="1.5"/>
+<text x="595" y="191" font-size="14" fill="#4a5568" text-anchor="middle" font-weight="700" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace">G</text>
+<rect x="614" y="172" width="30" height="26" rx="4" fill="#f6f8fa" stroke="#b6bfca" stroke-width="1.5"/>
+<text x="629" y="191" font-size="14" fill="#4a5568" text-anchor="middle" font-weight="700" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace">A</text>
+<line x1="440" y1="70" x2="440" y2="86" stroke="#8b95a3" stroke-width="1.6" stroke-linecap="round"/>
+<polygon points="440.0,94.0 444.5,86.0 435.5,86.0" fill="#8b95a3"/>
+<line x1="440" y1="138" x2="440" y2="154" stroke="#8b95a3" stroke-width="1.6" stroke-linecap="round"/>
+<polygon points="440.0,162.0 444.5,154.0 435.5,154.0" fill="#8b95a3"/>
+<text x="452" y="88" font-size="10.5" fill="#5b6472" text-anchor="start" font-weight="400">unmethylated C becomes U</text>
+<text x="452" y="156" font-size="10.5" fill="#5b6472" text-anchor="start" font-weight="400">U is copied as T</text>
+<text x="360" y="230" font-size="11.5" fill="#0d1117" text-anchor="middle" font-weight="600">A C that is still read as C was methylated; a C read as T was not</text>
+</svg>

@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 240" width="720" height="240" role="img" font-family="system-ui,-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif">
+<title>A bash loop applying the same steps to every sample</title>
+<rect width="720" height="240" fill="#ffffff"/>
+<rect x="20" y="80" width="120" height="80" rx="8" fill="#fef3ea" stroke="#e0762a" stroke-width="1.5"/>
+<text x="80" y="115" font-size="13" fill="#9a4a06" text-anchor="middle" font-weight="600">samples.txt</text>
+<text x="80" y="132" font-size="11" fill="#5b6472" text-anchor="middle" font-weight="400">one name per line</text>
+<rect x="180" y="40" width="400" height="160" rx="8" fill="#fbfdff" stroke="#0969da" stroke-width="1.5" stroke-dasharray="6 4"/>
+<text x="380" y="62" font-size="11.5" fill="#0a4fa3" text-anchor="middle" font-weight="400" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace">for sample in $(cat samples.txt); do ... done</text>
+<rect x="200" y="92" width="106" height="50" rx="8" fill="#e6faf5" stroke="#00a87e" stroke-width="1.5"/>
+<text x="253" y="112" font-size="13" fill="#01664b" text-anchor="middle" font-weight="600">fastqc</text>
+<text x="253" y="129" font-size="11" fill="#5b6472" text-anchor="middle" font-weight="400">check</text>
+<rect x="326" y="92" width="106" height="50" rx="8" fill="#e6faf5" stroke="#00a87e" stroke-width="1.5"/>
+<text x="379" y="112" font-size="13" fill="#01664b" text-anchor="middle" font-weight="600">fastp</text>
+<text x="379" y="129" font-size="11" fill="#5b6472" text-anchor="middle" font-weight="400">trim</text>
+<line x1="306" y1="117" x2="316" y2="117" stroke="#8b95a3" stroke-width="1.6" stroke-linecap="round"/>
+<polygon points="324.0,117.0 316.0,112.5 316.0,121.5" fill="#8b95a3"/>
+<rect x="452" y="92" width="106" height="50" rx="8" fill="#e6faf5" stroke="#00a87e" stroke-width="1.5"/>
+<text x="505" y="112" font-size="13" fill="#01664b" text-anchor="middle" font-weight="600">hisat2</text>
+<text x="505" y="129" font-size="11" fill="#5b6472" text-anchor="middle" font-weight="400">align</text>
+<line x1="432" y1="117" x2="442" y2="117" stroke="#8b95a3" stroke-width="1.6" stroke-linecap="round"/>
+<polygon points="450.0,117.0 442.0,112.5 442.0,121.5" fill="#8b95a3"/>
+<text x="380" y="176" font-size="11" fill="#5b6472" text-anchor="middle" font-weight="400">the same three steps run once for every sample</text>
+<line x1="142" y1="120" x2="170" y2="120" stroke="#8b95a3" stroke-width="1.6" stroke-linecap="round"/>
+<polygon points="178.0,120.0 170.0,115.5 170.0,124.5" fill="#8b95a3"/>
+<line x1="582" y1="120" x2="608" y2="120" stroke="#8b95a3" stroke-width="1.6" stroke-linecap="round"/>
+<polygon points="616.0,120.0 608.0,115.5 608.0,124.5" fill="#8b95a3"/>
+<rect x="618" y="80" width="86" height="80" rx="8" fill="#f1eafe" stroke="#7c3aed" stroke-width="1.5"/>
+<text x="661" y="115" font-size="13" fill="#5b21b6" text-anchor="middle" font-weight="600">results/</text>
+<text x="661" y="132" font-size="11" fill="#5b6472" text-anchor="middle" font-weight="400">one per sample</text>
+<text x="360" y="226" font-size="11" fill="#5b6472" text-anchor="middle" font-weight="400">A script records exactly what was run, so the analysis can be repeated</text>
+</svg>

@@ -1,0 +1,1109 @@
+{
+ "1.1": {
+  "fig": "Every project runs the same way: a question, an experiment, raw data, analysis, and an answer. Bioinformatics is the analysis step, and it needs biology, computing and statistics together.",
+  "more": [
+   [
+    "video",
+    "What is Bioinformatics?",
+    "The Explorer's Guide to Biology · 6 min",
+    "https://www.youtube.com/watch?v=W-Ov2cUaYQY"
+   ],
+   [
+    "course",
+    "Bioinformatics for the terrified",
+    "EMBL-EBI Training · free online course",
+    "https://www.ebi.ac.uk/training/online/courses/bioinformatics-terrified/"
+   ],
+   [
+    "read",
+    "A Quick Guide for Developing Effective Bioinformatics Programming Skills",
+    "PLOS Computational Biology · open access",
+    "https://doi.org/10.1371/journal.pcbi.1000589"
+   ]
+  ]
+ },
+ "1.2": {
+  "fig": "Information flows from DNA to RNA to protein. Reverse transcription (dashed) is the exception, and it is the reaction used in the lab to turn RNA into cDNA for sequencing.",
+  "more": [
+   [
+    "video",
+    "From DNA to protein, in 3D",
+    "yourgenome · 3 min",
+    "https://www.youtube.com/watch?v=gG7uCskUOrA"
+   ],
+   [
+    "video",
+    "Protein Synthesis: Transcription and Translation",
+    "Amoeba Sisters · 9 min",
+    "https://www.youtube.com/watch?v=oefAI2x2CQM"
+   ],
+   [
+    "course",
+    "Central dogma of molecular biology",
+    "Khan Academy · free lessons",
+    "https://www.khanacademy.org/science/ap-biology/gene-expression-and-regulation"
+   ]
+  ]
+ },
+ "1.3": {
+  "fig": "A gene on the genome includes a promoter, untranslated regions, exons and introns. Splicing removes the introns, and a cap and poly-A tail are added to make the mature mRNA.",
+  "more": [
+   [
+    "video",
+    "Introns vs Exons",
+    "Kyle Kobe · 7 min",
+    "https://www.youtube.com/watch?v=_asGjfCTLNE"
+   ],
+   [
+    "video",
+    "Gene Expression and Regulation",
+    "Amoeba Sisters · 10 min",
+    "https://www.youtube.com/watch?v=ebIpkw3XapE"
+   ],
+   [
+    "read",
+    "What is a gene?",
+    "MedlinePlus Genetics · US National Library of Medicine",
+    "https://medlineplus.gov/genetics/understanding/basics/gene/"
+   ]
+  ]
+ },
+ "1.4": {
+  "fig": "Typical read lengths on a log scale. Illumina reads are short and very accurate; PacBio HiFi and Oxford Nanopore reads are thousands of bases long.",
+  "more": [
+   [
+    "video",
+    "Overview of Illumina Sequencing by Synthesis",
+    "Illumina · 5 min",
+    "https://www.youtube.com/watch?v=fCd6B5HRaZ8"
+   ],
+   [
+    "video",
+    "PacBio sequencing: how it works",
+    "PacBio · 3 min",
+    "https://www.youtube.com/watch?v=7yYPHatccgw"
+   ],
+   [
+    "video",
+    "Nanopore DNA sequencing",
+    "National DNA Database · 5 min",
+    "https://www.youtube.com/watch?v=E9-Rm5AoZGw"
+   ],
+   [
+    "read",
+    "DNA Sequencing Fact Sheet",
+    "National Human Genome Research Institute",
+    "https://www.genome.gov/about-genomics/fact-sheets/DNA-Sequencing-Fact-Sheet"
+   ]
+  ]
+ },
+ "2.1": {
+  "fig": "A typical project folder. Raw data, scripts and results are kept apart, and three commands tell you where you are, what is there, and how to move.",
+  "more": [
+   [
+    "video",
+    "Essential unix for bioinformatics, part 1",
+    "Barry Grant · 19 min",
+    "https://www.youtube.com/watch?v=qsDzjQm_Wp0"
+   ],
+   [
+    "course",
+    "The Unix Shell",
+    "Software Carpentry · free hands-on lesson",
+    "https://swcarpentry.github.io/shell-novice/"
+   ],
+   [
+    "course",
+    "Introduction to the Command Line for Genomics",
+    "Data Carpentry · free hands-on lesson",
+    "https://datacarpentry.github.io/shell-genomics/"
+   ]
+  ]
+ },
+ "2.2": {
+  "fig": "Channels are where packages come from. Each environment holds its own tool versions, so an old pipeline and a new one can live on the same computer.",
+  "more": [
+   [
+    "video",
+    "Demystifying Conda (Anaconda, Miniconda and Bioconda)",
+    "Bioinformagician · video",
+    "https://www.youtube.com/watch?v=2bXGm0ZnJ38"
+   ],
+   [
+    "docs",
+    "Getting started with conda",
+    "conda documentation",
+    "https://docs.conda.io/projects/conda/en/latest/user-guide/getting-started.html"
+   ],
+   [
+    "docs",
+    "Bioconda: usage and available packages",
+    "Bioconda",
+    "https://bioconda.github.io/"
+   ]
+  ]
+ },
+ "2.3": {
+  "fig": "A loop runs the same steps for every sample name in a list, which is how three commands become a pipeline.",
+  "more": [
+   [
+    "video",
+    "Bash Scripting Tutorial for Beginners",
+    "freeCodeCamp · 48 min",
+    "https://www.youtube.com/watch?v=tK9Oc6AEnR4"
+   ],
+   [
+    "course",
+    "The Unix Shell: Loops",
+    "Software Carpentry · free hands-on lesson",
+    "https://swcarpentry.github.io/shell-novice/05-loop.html"
+   ],
+   [
+    "docs",
+    "ShellCheck: find mistakes in your shell scripts",
+    "shellcheck.net · free tool",
+    "https://www.shellcheck.net/"
+   ]
+  ]
+ },
+ "2.4": {
+  "fig": "R itself is small. Most of what you use comes from CRAN (general packages) and Bioconductor (biology packages), usually through an editor such as RStudio.",
+  "more": [
+   [
+    "video",
+    "R programming for absolute beginners",
+    "R Programming 101 · 14 min",
+    "https://www.youtube.com/watch?v=FY8BISK5DpM"
+   ],
+   [
+    "read",
+    "R for Data Science (2nd edition)",
+    "Wickham, Çetinkaya-Rundel and Grolemund · free online book",
+    "https://r4ds.hadley.nz/"
+   ],
+   [
+    "course",
+    "Introduction to data analysis with R and Bioconductor",
+    "Carpentries Incubator · free hands-on lesson",
+    "https://carpentries-incubator.github.io/bioc-intro/"
+   ]
+  ]
+ },
+ "3.1": {
+  "fig": "The main public databases grouped by what they hold. Most analyses touch at least three of these groups.",
+  "more": [
+   [
+    "video",
+    "How to Use the NCBI's Bioinformatics Tools and Databases",
+    "Science Buddies · 11 min",
+    "https://www.youtube.com/watch?v=QLcmEqBayr0"
+   ],
+   [
+    "course",
+    "EMBL-EBI on-demand training",
+    "EMBL-EBI Training · free online courses",
+    "https://www.ebi.ac.uk/training/on-demand"
+   ],
+   [
+    "read",
+    "The NCBI Handbook",
+    "National Center for Biotechnology Information · free book",
+    "https://www.ncbi.nlm.nih.gov/books/NBK143764/"
+   ]
+  ]
+ },
+ "3.2": {
+  "fig": "How the formats connect. Reads (FASTQ) are aligned to a reference (FASTA) to give alignments (BAM), which are turned into variants (VCF) or, with an annotation (GTF), into counts.",
+  "more": [
+   [
+    "video",
+    "Understanding Bioinformatics File Formats: FASTA and FASTQ",
+    "Bioinformagician · 4 min",
+    "https://www.youtube.com/watch?v=xYEre9DtIqA"
+   ],
+   [
+    "video",
+    "Understanding Bioinformatics File Formats: SAM/BAM",
+    "Bioinformagician · 7 min",
+    "https://www.youtube.com/watch?v=vh6l9aPFUgU"
+   ],
+   [
+    "docs",
+    "SAM/BAM format specification",
+    "samtools / hts-specs · PDF",
+    "https://samtools.github.io/hts-specs/SAMv1.pdf"
+   ],
+   [
+    "docs",
+    "Explain SAM flags",
+    "Broad Institute · interactive tool",
+    "https://broadinstitute.github.io/picard/explain-flags.html"
+   ]
+  ]
+ },
+ "3.3": {
+  "fig": "Accession numbers nest inside each other. A GEO series holds samples, each sample links to an SRA experiment, and each experiment has one or more runs that you download as FASTQ.",
+  "more": [
+   [
+    "video",
+    "How to download sequencing data from SRA NCBI",
+    "Bioinformagician · 13 min",
+    "https://www.youtube.com/watch?v=zE851fWCYQg"
+   ],
+   [
+    "docs",
+    "SRA Toolkit: download and usage",
+    "NCBI on GitHub",
+    "https://github.com/ncbi/sra-tools/wiki"
+   ],
+   [
+    "docs",
+    "SRA Explorer: get direct download links for any study",
+    "sra-explorer.info · free tool",
+    "https://sra-explorer.info/"
+   ]
+  ]
+ },
+ "4.1": {
+  "fig": "BLAST does not align the query to every sequence. It finds short exact word matches (seeds) and only extends those, which is why it is fast.",
+  "more": [
+   [
+    "video",
+    "Webinar: A Practical Guide to NCBI BLAST",
+    "NCBI · video",
+    "https://www.youtube.com/watch?v=KLBE0AuH-Sk"
+   ],
+   [
+    "docs",
+    "BLAST help and documentation",
+    "NCBI",
+    "https://blast.ncbi.nlm.nih.gov/doc/blast-help/"
+   ],
+   [
+    "read",
+    "BLAST Command Line Applications User Manual",
+    "NCBI Bookshelf · free book",
+    "https://www.ncbi.nlm.nih.gov/books/NBK279690/"
+   ]
+  ]
+ },
+ "4.2": {
+  "fig": "Four related sequences aligned. Shaded columns are identical in all species and usually mark the positions the protein cannot change.",
+  "more": [
+   [
+    "video",
+    "Beginners guide to Clustal Omega: multiple sequence alignment",
+    "Sanket Bapat · 7 min",
+    "https://www.youtube.com/watch?v=3qLdCZBIXME"
+   ],
+   [
+    "docs",
+    "Multiple sequence alignment tools: Clustal Omega, MAFFT, MUSCLE",
+    "EMBL-EBI · run them in the browser",
+    "https://www.ebi.ac.uk/jdispatcher/msa"
+   ],
+   [
+    "docs",
+    "MAFFT: algorithms and when to use each",
+    "MAFFT documentation",
+    "https://mafft.cbrc.jp/alignment/software/algorithms/algorithms.html"
+   ]
+  ]
+ },
+ "4.3": {
+  "fig": "Reading a rooted tree. Branch length along the horizontal axis is the amount of change, and the numbers at the nodes say how well the data support each grouping.",
+  "more": [
+   [
+    "video",
+    "There are a million wrong ways to read a phylogenetic tree",
+    "Clint Explains · 8 min",
+    "https://www.youtube.com/watch?v=SqmblucbOzk"
+   ],
+   [
+    "video",
+    "Intro to Cladograms and Phylogenetic Trees",
+    "Amoeba Sisters · 10 min",
+    "https://www.youtube.com/watch?v=cIQobFHFwcM"
+   ],
+   [
+    "docs",
+    "IQ-TREE beginner tutorial",
+    "IQ-TREE documentation",
+    "https://iqtree.github.io/doc/Tutorial"
+   ]
+  ]
+ },
+ "5.1": {
+  "fig": "Left: every control sample was processed on day 1 and every treated sample on day 2, so the two effects cannot be told apart. Right: each day holds both conditions.",
+  "more": [
+   [
+    "video",
+    "A gentle introduction to RNA-seq",
+    "StatQuest with Josh Starmer · 18 min",
+    "https://www.youtube.com/watch?v=tlf6wYJrwKY"
+   ],
+   [
+    "course",
+    "Experimental design considerations",
+    "Harvard Chan Bioinformatics Core · free lesson",
+    "https://hbctraining.github.io/Intro-to-bulk-RNAseq/lessons/02_experimental_planning_considerations.html"
+   ],
+   [
+    "paper",
+    "A survey of best practices for RNA-seq data analysis",
+    "Conesa et al., Genome Biology 2016 · open access",
+    "https://doi.org/10.1186/s13059-016-0881-8"
+   ]
+  ]
+ },
+ "5.2": {
+  "fig": "The FastQC per-base quality plot. Quality usually falls towards the end of the read, and trimming removes the low-quality tail.",
+  "more": [
+   [
+    "video",
+    "Understanding FastQC and MultiQC",
+    "Alex Soupir · 29 min",
+    "https://www.youtube.com/watch?v=xHyclzQiay4"
+   ],
+   [
+    "docs",
+    "FastQC: what each analysis module means",
+    "Babraham Bioinformatics",
+    "https://www.bioinformatics.babraham.ac.uk/projects/fastqc/Help/3%20Analysis%20Modules/"
+   ],
+   [
+    "docs",
+    "MultiQC documentation",
+    "multiqc.info",
+    "https://docs.seqera.io/multiqc"
+   ]
+  ]
+ },
+ "5.3": {
+  "fig": "Blue reads sit inside one exon. Orange reads were made from a spliced mRNA, so on the genome they are split across an intron.",
+  "more": [
+   [
+    "video",
+    "STAR: RNA-Seq Read Aligner",
+    "Alex Wu · 5 min",
+    "https://www.youtube.com/watch?v=XbBS9o-4100"
+   ],
+   [
+    "docs",
+    "HISAT2 manual",
+    "Kim Lab",
+    "https://daehwankimlab.github.io/hisat2/manual/"
+   ],
+   [
+    "course",
+    "Reference-based RNA-Seq data analysis",
+    "Galaxy Training Network · free hands-on tutorial",
+    "https://training.galaxyproject.org/training-material/topics/transcriptomics/tutorials/ref-based/tutorial.html"
+   ]
+  ]
+ },
+ "5.4": {
+  "fig": "How reads are assigned. Reads inside one gene are counted; reads that overlap two genes, fall outside any exon, or map to several places are set aside and reported in the summary.",
+  "more": [
+   [
+    "video",
+    "RNA-seq pipeline from scratch: FASTQ reads to counts",
+    "Bioinformagician · 32 min",
+    "https://www.youtube.com/watch?v=lG11JjovJHE"
+   ],
+   [
+    "docs",
+    "Subread and featureCounts users guide",
+    "Bioconductor (Rsubread) · PDF",
+    "https://bioconductor.org/packages/release/bioc/vignettes/Rsubread/inst/doc/SubreadUsersGuide.pdf"
+   ],
+   [
+    "course",
+    "Counting reads with featureCounts",
+    "Harvard Chan Bioinformatics Core · free lesson",
+    "https://hbctraining.github.io/Intro-to-rnaseq-hpc-O2/lessons/05_counting_reads.html"
+   ]
+  ]
+ },
+ "5.5": {
+  "fig": "A volcano plot. Genes far to the left or right changed a lot; genes high up are statistically convincing. The interesting genes are in the top corners.",
+  "more": [
+   [
+    "video",
+    "DESeq2 workflow tutorial: differential gene expression analysis",
+    "Bioinformagician · 20 min",
+    "https://www.youtube.com/watch?v=OzNzO8qwwp0"
+   ],
+   [
+    "video",
+    "DESeq2, part 1: library normalization",
+    "StatQuest with Josh Starmer · 13 min",
+    "https://www.youtube.com/watch?v=UFB993xufUU"
+   ],
+   [
+    "docs",
+    "Analyzing RNA-seq data with DESeq2 (the official vignette)",
+    "Bioconductor",
+    "https://bioconductor.org/packages/release/bioc/vignettes/DESeq2/inst/doc/DESeq2.html"
+   ],
+   [
+    "course",
+    "Differential gene expression workshop",
+    "Harvard Chan Bioinformatics Core · free course",
+    "https://hbctraining.github.io/Intro-to-DGE/"
+   ]
+  ]
+ },
+ "6.1": {
+  "fig": "The GATK germline pipeline. The top row runs once per sample; the bottom row runs once on all samples together.",
+  "more": [
+   [
+    "video",
+    "WGS variant calling with GATK, part 1",
+    "Bioinformagician · 48 min",
+    "https://www.youtube.com/watch?v=iHkiQvxyr5c"
+   ],
+   [
+    "docs",
+    "Germline short variant discovery (SNPs and indels)",
+    "GATK Best Practices · Broad Institute",
+    "https://gatk.broadinstitute.org/hc/en-us/articles/360035535932-Germline-short-variant-discovery-SNPs-Indels"
+   ],
+   [
+    "course",
+    "Data Wrangling and Processing for Genomics",
+    "Data Carpentry · free hands-on lesson",
+    "https://datacarpentry.github.io/wrangling-genomics/"
+   ]
+  ]
+ },
+ "6.2": {
+  "fig": "One VCF record. The first eight columns describe the site; the FORMAT column explains how to read the per-sample columns that follow.",
+  "more": [
+   [
+    "video",
+    "Understanding file formats: VCF and gVCF",
+    "Bioinformagician · 26 min",
+    "https://www.youtube.com/watch?v=cBDZSGf9HRE"
+   ],
+   [
+    "docs",
+    "The Variant Call Format specification (v4.3)",
+    "samtools / hts-specs · PDF",
+    "https://samtools.github.io/hts-specs/VCFv4.3.pdf"
+   ],
+   [
+    "docs",
+    "Ensembl Variant Effect Predictor (VEP)",
+    "Ensembl · run it in the browser",
+    "https://www.ensembl.org/info/docs/tools/vep/index.html"
+   ]
+  ]
+ },
+ "6.3": {
+  "fig": "The four steps of library preparation, and what the finished molecule looks like. The insert is your DNA; everything else is added so the sequencer can bind, read and identify it.",
+  "more": [
+   [
+    "video",
+    "Next Generation Sequencing 2: Illumina NGS Sample Preparation",
+    "Eric Chow, iBiology Techniques · 25 min",
+    "https://www.youtube.com/watch?v=PFwSe09dJX0"
+   ],
+   [
+    "video",
+    "Overview of Illumina Sequencing by Synthesis",
+    "Illumina · 5 min",
+    "https://www.youtube.com/watch?v=fCd6B5HRaZ8"
+   ],
+   [
+    "read",
+    "Coming of age: ten years of next-generation sequencing technologies",
+    "Goodwin et al., Nature Reviews Genetics 2016",
+    "https://doi.org/10.1038/nrg.2016.49"
+   ]
+  ]
+ },
+ "7.1": {
+  "fig": "What a healthy set of p-values looks like. Genes with no real effect give a flat (uniform) background; genes with a real effect pile up near zero.",
+  "more": [
+   [
+    "video",
+    "p-values: what they are and how to interpret them",
+    "StatQuest with Josh Starmer · 11 min",
+    "https://www.youtube.com/watch?v=vemZtEM63GY"
+   ],
+   [
+    "video",
+    "False Discovery Rates, FDR, clearly explained",
+    "StatQuest with Josh Starmer · 19 min",
+    "https://www.youtube.com/watch?v=K8LQSvtjcEo"
+   ],
+   [
+    "read",
+    "How to interpret a p-value histogram",
+    "David Robinson, Variance Explained",
+    "http://varianceexplained.org/statistics/interpreting-pvalue-histogram/"
+   ]
+  ]
+ },
+ "7.2": {
+  "fig": "The same gene in two samples. Sample B has twice the raw count only because it was sequenced twice as deeply; normalisation removes that.",
+  "more": [
+   [
+    "video",
+    "RPKM, FPKM and TPM, clearly explained",
+    "StatQuest with Josh Starmer · 10 min",
+    "https://www.youtube.com/watch?v=TTUrtCY2k-w"
+   ],
+   [
+    "video",
+    "DESeq2, part 1: library normalization",
+    "StatQuest with Josh Starmer · 13 min",
+    "https://www.youtube.com/watch?v=UFB993xufUU"
+   ],
+   [
+    "course",
+    "Count normalization with DESeq2",
+    "Harvard Chan Bioinformatics Core · free lesson",
+    "https://hbctraining.github.io/Intro-to-DGE/lessons/02_DGE_count_normalization.html"
+   ]
+  ]
+ },
+ "7.3": {
+  "fig": "A PCA plot for quality control. Replicates of one condition should sit together, the conditions should separate, and a sample far from its group needs a closer look.",
+  "more": [
+   [
+    "video",
+    "Principal Component Analysis (PCA), step by step",
+    "StatQuest with Josh Starmer · 22 min",
+    "https://www.youtube.com/watch?v=FgakZw6K1QQ"
+   ],
+   [
+    "video",
+    "Hierarchical Clustering",
+    "StatQuest with Josh Starmer · 11 min",
+    "https://www.youtube.com/watch?v=7xHsRkOdVwo"
+   ],
+   [
+    "course",
+    "Quality control: sample-level QC with PCA and clustering",
+    "Harvard Chan Bioinformatics Core · free lesson",
+    "https://hbctraining.github.io/Intro-to-DGE/lessons/03_DGE_QC_analysis.html"
+   ]
+  ]
+ },
+ "8.1": {
+  "fig": "Droplet single-cell RNA-seq. Each droplet holds one cell and one bead; the bead adds a barcode that marks the cell and a UMI that marks each original molecule.",
+  "more": [
+   [
+    "video",
+    "Single Cell Sequencing",
+    "Eric Chow, iBiology Techniques · 25 min",
+    "https://www.youtube.com/watch?v=k9VFNLLQP8c"
+   ],
+   [
+    "video",
+    "Introduction to single-cell RNA-seq and Seurat",
+    "Bioinformagician · 6 min",
+    "https://www.youtube.com/watch?v=xbX49h7BiUU"
+   ],
+   [
+    "course",
+    "Single-cell RNA-seq data analysis workshop",
+    "Harvard Chan Bioinformatics Core · free course",
+    "https://hbctraining.github.io/Intro-to-scRNAseq/"
+   ],
+   [
+    "read",
+    "Single-cell best practices",
+    "Heumos et al. · free online book",
+    "https://www.sc-best-practices.org/"
+   ]
+  ]
+ },
+ "8.2": {
+  "fig": "Over-representation analysis is a two by two table. The question is whether the overlap between your gene list and a pathway is larger than chance would give.",
+  "more": [
+   [
+    "video",
+    "Pathway enrichment analysis: simple explanation",
+    "Biostatsquid · 13 min",
+    "https://www.youtube.com/watch?v=H1cUs6pql9s"
+   ],
+   [
+    "video",
+    "Gene Set Enrichment Analysis (GSEA), simply explained",
+    "Biostatsquid · 8 min",
+    "https://www.youtube.com/watch?v=egO7Lt92gDY"
+   ],
+   [
+    "read",
+    "Biomedical Knowledge Mining using GOSemSim and clusterProfiler",
+    "Guangchuang Yu · free online book",
+    "https://yulab-smu.top/biomedical-knowledge-mining-book/"
+   ],
+   [
+    "paper",
+    "Pathway enrichment analysis and visualization of omics data",
+    "Reimand et al., Nature Protocols 2019",
+    "https://doi.org/10.1038/s41596-018-0103-9"
+   ]
+  ]
+ },
+ "8.3": {
+  "fig": "Five-fold cross-validation. The data are split into five parts, and each part takes one turn as the test set while the model trains on the other four.",
+  "more": [
+   [
+    "video",
+    "Random Forests, part 1: building, using and evaluating",
+    "StatQuest with Josh Starmer · 10 min",
+    "https://www.youtube.com/watch?v=J4Wdy0Wc_xQ"
+   ],
+   [
+    "video",
+    "Deep learning for genomics: introduction and examples",
+    "James Zou, IPAM · 49 min",
+    "https://www.youtube.com/watch?v=JYt1IqdDAPc"
+   ],
+   [
+    "docs",
+    "Cross-validation: evaluating estimator performance",
+    "scikit-learn user guide",
+    "https://scikit-learn.org/stable/modules/cross_validation.html"
+   ],
+   [
+    "paper",
+    "Navigating the pitfalls of applying machine learning in genomics",
+    "Whalen et al., Nature Reviews Genetics 2022",
+    "https://doi.org/10.1038/s41576-021-00434-9"
+   ]
+  ]
+ },
+ "8.4": {
+  "fig": "Two ways to study a microbial community. Amplicon sequencing reads one marker gene; shotgun sequencing reads everything.",
+  "more": [
+   [
+    "video",
+    "Metagenomics principles and workflow",
+    "EMBL · 4 min",
+    "https://www.youtube.com/watch?v=RcYXTpNS_XU"
+   ],
+   [
+    "video",
+    "16S rRNA gene sequencing vs shotgun metagenomic sequencing",
+    "Microbiome Insights · 16 min",
+    "https://www.youtube.com/watch?v=SDbYFCAHX8s"
+   ],
+   [
+    "docs",
+    "QIIME 2 tutorials",
+    "QIIME 2 documentation",
+    "https://docs.qiime2.org/"
+   ],
+   [
+    "course",
+    "Metagenomics tutorials",
+    "Galaxy Training Network · free hands-on tutorials",
+    "https://training.galaxyproject.org/training-material/topics/microbiome/"
+   ]
+  ]
+ },
+ "9.1": {
+  "fig": "Bottom-up proteomics. Proteins are cut into peptides, separated, ionised and measured twice: once intact (MS1) and once after being broken into fragments (MS2).",
+  "more": [
+   [
+    "video",
+    "MS-based proteomics: a short introduction to the core concepts",
+    "Lars Juhl Jensen · 11 min",
+    "https://www.youtube.com/watch?v=wx4F6kGy1Fs"
+   ],
+   [
+    "video",
+    "Mass Spectrometry explained: how it works",
+    "Henrik's Lab · 5 min",
+    "https://www.youtube.com/watch?v=6O_85tKfZHc"
+   ],
+   [
+    "course",
+    "Proteomics: an introduction",
+    "EMBL-EBI Training · free online course",
+    "https://www.ebi.ac.uk/training/online/courses/proteomics-an-introduction/"
+   ]
+  ]
+ },
+ "9.2": {
+  "fig": "A search engine scores each spectrum against the database. Decoy sequences, which cannot be real, show how high a wrong match can score, and that sets the cut-off.",
+  "more": [
+   [
+    "video",
+    "De novo peptide sequencing from mass spectrometry data",
+    "Matt Padula · 11 min",
+    "https://www.youtube.com/watch?v=zZsI8GM45gc"
+   ],
+   [
+    "video",
+    "Introduction to Database Searching using Mascot",
+    "Matrix Science · 26 min",
+    "https://www.youtube.com/watch?v=tB3cR2vDCKc"
+   ],
+   [
+    "course",
+    "Bioinformatics for proteomics: tutorials",
+    "CompOmics, Ghent University · free tutorials",
+    "https://compomics.com/bioinformatics-for-proteomics/"
+   ]
+  ]
+ },
+ "9.3": {
+  "fig": "The three approaches differ in when the samples are combined. Samples mixed early share every later source of variation, which is why SILAC is the most precise and label-free the most flexible.",
+  "more": [
+   [
+    "video",
+    "Intro to Proteomics and Mass Spectrometry",
+    "The Ahmed Lab, Northwestern · 21 min",
+    "https://www.youtube.com/watch?v=JPpKL1uzE0I"
+   ],
+   [
+    "docs",
+    "MSstats: statistical analysis of quantitative proteomics",
+    "MSstats documentation",
+    "https://vitek-lab.github.io/MSstats/"
+   ],
+   [
+    "course",
+    "Proteomics tutorials (MaxQuant, label-free, TMT)",
+    "Galaxy Training Network · free hands-on tutorials",
+    "https://training.galaxyproject.org/training-material/topics/proteomics/"
+   ]
+  ]
+ },
+ "10.1": {
+  "fig": "From a chain of amino acids to a working complex. Each level is built from the one before it.",
+  "more": [
+   [
+    "video",
+    "Protein Structure and Folding",
+    "Amoeba Sisters · 8 min",
+    "https://www.youtube.com/watch?v=hok2hyED9go"
+   ],
+   [
+    "course",
+    "PDB-101: Guide to understanding PDB data",
+    "RCSB Protein Data Bank · free guide",
+    "https://pdb101.rcsb.org/learn/guide-to-understanding-pdb-data/introduction"
+   ],
+   [
+    "docs",
+    "Mol* viewer: open any structure in the browser",
+    "RCSB PDB · free tool",
+    "https://www.rcsb.org/3d-view"
+   ]
+  ]
+ },
+ "10.2": {
+  "fig": "AlphaFold2 in outline. The sequence is turned into an alignment of relatives, a neural network reasons over it, and the output is a 3D model with a confidence score for every residue.",
+  "more": [
+   [
+    "video",
+    "AlphaFold: The making of a scientific breakthrough",
+    "Google DeepMind · 8 min",
+    "https://www.youtube.com/watch?v=gg7WjuFs8F4"
+   ],
+   [
+    "course",
+    "AlphaFold: a practical guide",
+    "EMBL-EBI Training · free online course",
+    "https://www.ebi.ac.uk/training/online/courses/alphafold/"
+   ],
+   [
+    "docs",
+    "ColabFold: run a prediction in your browser",
+    "ColabFold on GitHub",
+    "https://github.com/sokrypton/ColabFold"
+   ],
+   [
+    "paper",
+    "Highly accurate protein structure prediction with AlphaFold",
+    "Jumper et al., Nature 2021 · open access",
+    "https://doi.org/10.1038/s41586-021-03819-2"
+   ]
+  ]
+ },
+ "10.3": {
+  "fig": "A docking run. Both molecules are prepared, a search box is placed over the binding pocket, many poses are tried, and each is given an estimated binding energy.",
+  "more": [
+   [
+    "video",
+    "Molecular Docking Tutorial: AutoDock Vina, part 1",
+    "Sanket Bapat · 18 min",
+    "https://www.youtube.com/watch?v=Sux91FJ3Xe8"
+   ],
+   [
+    "docs",
+    "AutoDock Vina documentation and tutorials",
+    "AutoDock Vina",
+    "https://autodock-vina.readthedocs.io/en/latest/"
+   ],
+   [
+    "paper",
+    "AutoDock Vina 1.2.0: new docking methods, expanded force field, and Python bindings",
+    "Eberhardt et al., J. Chem. Inf. Model. 2021",
+    "https://doi.org/10.1021/acs.jcim.1c00203"
+   ]
+  ]
+ },
+ "11.1": {
+  "fig": "ChIP-seq signal along a stretch of genome. Transcription factors give narrow peaks, some histone marks give broad domains, and the input control shows the background to compare against.",
+  "more": [
+   [
+    "video",
+    "A gentle introduction to ChIP-Seq",
+    "StatQuest with Josh Starmer · 7 min",
+    "https://www.youtube.com/watch?v=nkWGmaYRues"
+   ],
+   [
+    "course",
+    "Introduction to ChIP-seq",
+    "Harvard Chan Bioinformatics Core · free course",
+    "https://hbctraining.github.io/Investigating-chromatin-biology-ChIPseq/"
+   ],
+   [
+    "docs",
+    "The ENCODE ChIP-seq pipeline",
+    "ENCODE-DCC on GitHub",
+    "https://github.com/ENCODE-DCC/chip-seq-pipeline2"
+   ]
+  ]
+ },
+ "11.2": {
+  "fig": "Tn5 transposase can only reach DNA that is not wrapped around nucleosomes. It cuts there and adds sequencing adapters in one step, so reads mark the open regions.",
+  "more": [
+   [
+    "paper",
+    "From reads to insight: a hitchhiker's guide to ATAC-seq data analysis",
+    "Yan et al., Genome Biology 2020 · open access",
+    "https://doi.org/10.1186/s13059-020-1929-3"
+   ],
+   [
+    "course",
+    "ATAC-Seq data analysis",
+    "Galaxy Training Network · free hands-on tutorial",
+    "https://training.galaxyproject.org/training-material/topics/epigenetics/tutorials/atac-seq/tutorial.html"
+   ],
+   [
+    "docs",
+    "The ENCODE ATAC-seq pipeline",
+    "ENCODE-DCC on GitHub",
+    "https://github.com/ENCODE-DCC/atac-seq-pipeline"
+   ]
+  ]
+ },
+ "11.3": {
+  "fig": "Bisulfite converts unmethylated cytosine to uracil, which is read as T. Methylated cytosine is protected and still reads as C.",
+  "more": [
+   [
+    "video",
+    "Bisulfite Sequencing: detect DNA methylation",
+    "Henrik's Lab · 4 min",
+    "https://www.youtube.com/watch?v=OcIazFGQv0g"
+   ],
+   [
+    "video",
+    "DNA methylation and Bisulfite Sequencing",
+    "OmicsLogic · 13 min",
+    "https://www.youtube.com/watch?v=5NEoqa-k3xM"
+   ],
+   [
+    "docs",
+    "Bismark user guide",
+    "Bismark documentation",
+    "https://felixkrueger.github.io/Bismark/"
+   ]
+  ]
+ },
+ "12.1": {
+  "fig": "Assembly in four stages. Overlapping reads are merged into contigs, contigs are ordered into scaffolds with gaps, and the gaps are closed to give chromosomes.",
+  "more": [
+   [
+    "video",
+    "De Bruijn graphs and Eulerian walks",
+    "Ben Langmead, Johns Hopkins · 9 min",
+    "https://www.youtube.com/watch?v=TNYZZKrjCSk"
+   ],
+   [
+    "video",
+    "de Bruijn graph assembly for DNA sequences",
+    "Rob Edwards · 4 min",
+    "https://www.youtube.com/watch?v=OY9Q_rUCGDw"
+   ],
+   [
+    "course",
+    "Genome assembly tutorials",
+    "Galaxy Training Network · free hands-on tutorials",
+    "https://training.galaxyproject.org/training-material/topics/assembly/"
+   ],
+   [
+    "paper",
+    "The complete sequence of a human genome",
+    "Nurk et al., Science 2022",
+    "https://doi.org/10.1126/science.abj6987"
+   ]
+  ]
+ },
+ "12.2": {
+  "fig": "Working out N50 for seven contigs totalling 300 kb. Walking from the longest contig, the 150 kb mark falls inside the second one, so N50 is 70 kb.",
+  "more": [
+   [
+    "video",
+    "Assembly Metrics with QUAST",
+    "Hubbard Center for Genome Studies · 6 min",
+    "https://www.youtube.com/watch?v=eGlNmC6AuN8"
+   ],
+   [
+    "docs",
+    "BUSCO user guide",
+    "BUSCO",
+    "https://busco.ezlab.org/busco_userguide.html"
+   ],
+   [
+    "docs",
+    "QUAST: quality assessment tool for genome assemblies",
+    "QUAST on GitHub",
+    "https://github.com/ablab/quast"
+   ]
+  ]
+ },
+ "12.3": {
+  "fig": "Gene models are built from several kinds of evidence. Where RNA-seq, protein alignments and the prediction program agree, the model is trusted.",
+  "more": [
+   [
+    "video",
+    "Genome Annotation",
+    "Tim Hubbard, Serious Science · 10 min",
+    "https://www.youtube.com/watch?v=_u3UMTjkqG4"
+   ],
+   [
+    "docs",
+    "BRAKER: gene prediction with RNA-seq and protein evidence",
+    "BRAKER on GitHub",
+    "https://github.com/Gaius-Augustus/BRAKER"
+   ],
+   [
+    "course",
+    "Genome annotation tutorials",
+    "Galaxy Training Network · free hands-on tutorials",
+    "https://training.galaxyproject.org/training-material/topics/genome-annotation/"
+   ]
+  ]
+ },
+ "13.1": {
+  "fig": "Expected genotype frequencies under Hardy-Weinberg equilibrium, for every possible allele frequency. A population far from these curves is telling you something.",
+  "more": [
+   [
+    "video",
+    "Hardy-Weinberg Equilibrium",
+    "Amoeba Sisters · 10 min",
+    "https://www.youtube.com/watch?v=7S4WMwesMts"
+   ],
+   [
+    "video",
+    "Solving Hardy Weinberg Problems",
+    "Bozeman Science · 11 min",
+    "https://www.youtube.com/watch?v=xPkOAnK20kw"
+   ],
+   [
+    "docs",
+    "PLINK 2.0 documentation",
+    "PLINK",
+    "https://www.cog-genomics.org/plink/2.0/"
+   ]
+  ]
+ },
+ "13.2": {
+  "fig": "A Manhattan plot. Every dot is one SNP, placed by its position in the genome and by how strongly it is associated with the trait.",
+  "more": [
+   [
+    "video",
+    "Genome-Wide Association Study: an explanation for beginners",
+    "Nuno Carvalho · 8 min",
+    "https://www.youtube.com/watch?v=sOP8WacfBM8"
+   ],
+   [
+    "video",
+    "Genome-Wide Association Studies",
+    "Karen Mohlke, NHGRI lecture · 88 min",
+    "https://www.youtube.com/watch?v=HHvdupHgeFg"
+   ],
+   [
+    "paper",
+    "A tutorial on conducting genome-wide association studies: quality control and statistical analysis",
+    "Marees et al., Int. J. Methods Psychiatr. Res. 2018 · open access",
+    "https://doi.org/10.1002/mpr.1608"
+   ],
+   [
+    "docs",
+    "GWAS Catalog: published associations",
+    "NHGRI-EBI",
+    "https://www.ebi.ac.uk/gwas/"
+   ]
+  ]
+ },
+ "14.1": {
+  "fig": "A small interaction network. The hub has many partners, each module is a tightly connected group, and the bridging edge is the only link between them.",
+  "more": [
+   [
+    "video",
+    "Basic stringApp tutorial: STRING networks in Cytoscape",
+    "Lars Juhl Jensen · 5 min",
+    "https://www.youtube.com/watch?v=kRQyPDMF_8k"
+   ],
+   [
+    "video",
+    "STRING: protein-protein interactions overview",
+    "JSU Bioinformatics · 10 min",
+    "https://www.youtube.com/watch?v=8-IPJqXYQ3Q"
+   ],
+   [
+    "docs",
+    "STRING database",
+    "string-db.org",
+    "https://string-db.org/"
+   ],
+   [
+    "course",
+    "Cytoscape tutorials",
+    "Cytoscape Consortium · free tutorials",
+    "https://tutorials.cytoscape.org/"
+   ]
+  ]
+ },
+ "14.2": {
+  "fig": "Each omics layer measures a different step between genotype and phenotype. Integration looks for patterns that several layers share.",
+  "more": [
+   [
+    "video",
+    "Introduction to Weighted Gene Co-expression Network Analysis (WGCNA)",
+    "Bioinformagician · 11 min",
+    "https://www.youtube.com/watch?v=PvBf65Y8Cqk"
+   ],
+   [
+    "video",
+    "Intro to Multiomics",
+    "MHSc Medical Genomics · 15 min",
+    "https://www.youtube.com/watch?v=o0KckPa4oQw"
+   ],
+   [
+    "docs",
+    "MOFA2: Multi-Omics Factor Analysis",
+    "MOFA documentation and tutorials",
+    "https://biofam.github.io/MOFA2/"
+   ],
+   [
+    "paper",
+    "Multi-omics approaches to disease",
+    "Hasin, Seldin and Lusis, Genome Biology 2017 · open access",
+    "https://doi.org/10.1186/s13059-017-1215-1"
+   ]
+  ]
+ }
+}

@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 250" width="720" height="250" role="img" font-family="system-ui,-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif">
+<title>Structure of a eukaryotic gene and its mature mRNA</title>
+<rect width="720" height="250" fill="#ffffff"/>
+<text x="20" y="20" font-size="12.5" fill="#0d1117" text-anchor="start" font-weight="700">Gene on the genome (DNA)</text>
+<line x1="20" y1="62" x2="700" y2="62" stroke="#8b95a3" stroke-width="2" stroke-linecap="round"/>
+<rect x="40" y="48" width="60" height="28" rx="4" fill="#fef3ea" stroke="#e0762a" stroke-width="1.5"/>
+<text x="70" y="94" font-size="10.5" fill="#5b6472" text-anchor="middle" font-weight="400">promoter</text>
+<rect x="110" y="48" width="36" height="28" rx="4" fill="#f6f8fa" stroke="#b6bfca" stroke-width="1.5"/>
+<text x="128" y="94" font-size="10.5" fill="#5b6472" text-anchor="middle" font-weight="400">5' UTR</text>
+<rect x="146" y="48" width="90" height="28" rx="4" fill="#e6faf5" stroke="#00a87e" stroke-width="1.5"/>
+<text x="191" y="94" font-size="10.5" fill="#5b6472" text-anchor="middle" font-weight="400">exon 1</text>
+<rect x="330" y="48" width="80" height="28" rx="4" fill="#e6faf5" stroke="#00a87e" stroke-width="1.5"/>
+<text x="370" y="94" font-size="10.5" fill="#5b6472" text-anchor="middle" font-weight="400">exon 2</text>
+<rect x="510" y="48" width="90" height="28" rx="4" fill="#e6faf5" stroke="#00a87e" stroke-width="1.5"/>
+<text x="555" y="94" font-size="10.5" fill="#5b6472" text-anchor="middle" font-weight="400">exon 3</text>
+<rect x="600" y="48" width="44" height="28" rx="4" fill="#f6f8fa" stroke="#b6bfca" stroke-width="1.5"/>
+<text x="622" y="94" font-size="10.5" fill="#5b6472" text-anchor="middle" font-weight="400">3' UTR</text>
+<text x="283" y="56" font-size="10.5" fill="#5b6472" text-anchor="middle" font-weight="400">intron 1</text>
+<text x="460" y="56" font-size="10.5" fill="#5b6472" text-anchor="middle" font-weight="400">intron 2</text>
+<line x1="110" y1="40" x2="132" y2="40" stroke="#e0762a" stroke-width="1.6" stroke-linecap="round"/>
+<polygon points="140.0,40.0 132.0,35.5 132.0,44.5" fill="#e0762a"/>
+<text x="146" y="43" font-size="10" fill="#9a4a06" text-anchor="start" font-weight="400">TSS</text>
+<line x1="360" y1="108" x2="360" y2="132" stroke="#8b95a3" stroke-width="1.6" stroke-linecap="round"/>
+<polygon points="360.0,140.0 364.5,132.0 355.5,132.0" fill="#8b95a3"/>
+<text x="372" y="128" font-size="11" fill="#5b6472" text-anchor="start" font-weight="400">transcription, then splicing removes the introns</text>
+<text x="20" y="166" font-size="12.5" fill="#0d1117" text-anchor="start" font-weight="700">Mature mRNA</text>
+<circle cx="136" cy="196" r="9" fill="#f1eafe" stroke="#7c3aed" stroke-width="1.5"/>
+<text x="136" y="222" font-size="10.5" fill="#5b6472" text-anchor="middle" font-weight="400">cap</text>
+<rect x="150" y="182" width="36" height="28" rx="4" fill="#f6f8fa" stroke="#b6bfca" stroke-width="1.5"/>
+<rect x="186" y="182" width="90" height="28" rx="4" fill="#e6faf5" stroke="#00a87e" stroke-width="1.5"/>
+<rect x="276" y="182" width="80" height="28" rx="4" fill="#e6faf5" stroke="#00a87e" stroke-width="1.5"/>
+<rect x="356" y="182" width="90" height="28" rx="4" fill="#e6faf5" stroke="#00a87e" stroke-width="1.5"/>
+<rect x="446" y="182" width="44" height="28" rx="4" fill="#f6f8fa" stroke="#b6bfca" stroke-width="1.5"/>
+<text x="524" y="201" font-size="12" fill="#5b21b6" text-anchor="middle" font-weight="400" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace">AAAAAA</text>
+<text x="524" y="222" font-size="10.5" fill="#5b6472" text-anchor="middle" font-weight="400">poly-A tail</text>
+<line x1="186" y1="218" x2="446" y2="218" stroke="#00a87e" stroke-width="2" stroke-linecap="round"/>
+<text x="316" y="236" font-size="10.5" fill="#01664b" text-anchor="middle" font-weight="400">coding sequence (CDS): start codon to stop codon</text>
+</svg>

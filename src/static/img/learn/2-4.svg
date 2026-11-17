@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 240" width="720" height="240" role="img" font-family="system-ui,-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif">
+<title>The R ecosystem: base R, CRAN, Bioconductor and an editor</title>
+<rect width="720" height="240" fill="#ffffff"/>
+<rect x="40" y="170" width="640" height="40" rx="8" fill="#f6f8fa" stroke="#b6bfca" stroke-width="1.5"/>
+<text x="360" y="193.5" font-size="13" fill="#4a5568" text-anchor="middle" font-weight="600">R  (the language and base packages)</text>
+<rect x="40" y="110" width="310" height="50" rx="8" fill="#e7f1fd" stroke="#0969da" stroke-width="1.5"/>
+<text x="195" y="130" font-size="13" fill="#0a4fa3" text-anchor="middle" font-weight="600">CRAN</text>
+<text x="195" y="147" font-size="11" fill="#5b6472" text-anchor="middle" font-weight="400">ggplot2, dplyr, tidyr, pheatmap</text>
+<rect x="370" y="110" width="310" height="50" rx="8" fill="#e6faf5" stroke="#00a87e" stroke-width="1.5"/>
+<text x="525" y="130" font-size="13" fill="#01664b" text-anchor="middle" font-weight="600">Bioconductor</text>
+<text x="525" y="147" font-size="11" fill="#5b6472" text-anchor="middle" font-weight="400">DESeq2, edgeR, clusterProfiler</text>
+<rect x="40" y="50" width="640" height="50" rx="8" fill="#f1eafe" stroke="#7c3aed" stroke-width="1.5"/>
+<text x="360" y="70" font-size="13" fill="#5b21b6" text-anchor="middle" font-weight="600">RStudio or Positron</text>
+<text x="360" y="87" font-size="11" fill="#5b6472" text-anchor="middle" font-weight="400">editor, console, plots and help in one window</text>
+<text x="360" y="28" font-size="12.5" fill="#0d1117" text-anchor="middle" font-weight="700">What you install, from the bottom up</text>
+<text x="195" y="230" font-size="11" fill="#0a4fa3" text-anchor="middle" font-weight="400" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace">install.packages("ggplot2")</text>
+<text x="525" y="230" font-size="11" fill="#01664b" text-anchor="middle" font-weight="400" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace">BiocManager::install("DESeq2")</text>
+</svg>

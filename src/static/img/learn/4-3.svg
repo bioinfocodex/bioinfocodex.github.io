@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 260" width="720" height="260" role="img" font-family="system-ui,-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif">
+<title>How to read a rooted phylogenetic tree with bootstrap values</title>
+<rect width="720" height="260" fill="#ffffff"/>
+<text x="520" y="44" font-size="12" fill="#0d1117" text-anchor="start" font-weight="400">Human</text>
+<text x="520" y="80" font-size="12" fill="#0d1117" text-anchor="start" font-weight="400">Chimpanzee</text>
+<text x="520" y="116" font-size="12" fill="#0d1117" text-anchor="start" font-weight="400">Mouse</text>
+<text x="520" y="152" font-size="12" fill="#0d1117" text-anchor="start" font-weight="400">Rat</text>
+<text x="520" y="188" font-size="12" fill="#0d1117" text-anchor="start" font-weight="400">Chicken</text>
+<text x="520" y="224" font-size="12" fill="#0d1117" text-anchor="start" font-weight="400">Zebrafish (outgroup)</text>
+<line x1="420" y1="40" x2="510" y2="40" stroke="#0d1117" stroke-width="1.8" stroke-linecap="round"/>
+<line x1="420" y1="76" x2="510" y2="76" stroke="#0d1117" stroke-width="1.8" stroke-linecap="round"/>
+<line x1="330" y1="58" x2="420" y2="58" stroke="#0d1117" stroke-width="1.8" stroke-linecap="round"/>
+<line x1="400" y1="112" x2="510" y2="112" stroke="#0d1117" stroke-width="1.8" stroke-linecap="round"/>
+<line x1="400" y1="148" x2="510" y2="148" stroke="#0d1117" stroke-width="1.8" stroke-linecap="round"/>
+<line x1="330" y1="130" x2="400" y2="130" stroke="#0d1117" stroke-width="1.8" stroke-linecap="round"/>
+<line x1="230" y1="94" x2="330" y2="94" stroke="#0d1117" stroke-width="1.8" stroke-linecap="round"/>
+<line x1="230" y1="184" x2="510" y2="184" stroke="#0d1117" stroke-width="1.8" stroke-linecap="round"/>
+<line x1="140" y1="139" x2="230" y2="139" stroke="#0d1117" stroke-width="1.8" stroke-linecap="round"/>
+<line x1="140" y1="220" x2="510" y2="220" stroke="#0d1117" stroke-width="1.8" stroke-linecap="round"/>
+<line x1="90" y1="180" x2="140" y2="180" stroke="#0d1117" stroke-width="1.8" stroke-linecap="round"/>
+<line x1="420" y1="40" x2="420" y2="76" stroke="#0d1117" stroke-width="1.8" stroke-linecap="round"/>
+<line x1="400" y1="112" x2="400" y2="148" stroke="#0d1117" stroke-width="1.8" stroke-linecap="round"/>
+<line x1="330" y1="58" x2="330" y2="130" stroke="#0d1117" stroke-width="1.8" stroke-linecap="round"/>
+<line x1="230" y1="94" x2="230" y2="184" stroke="#0d1117" stroke-width="1.8" stroke-linecap="round"/>
+<line x1="140" y1="139" x2="140" y2="220" stroke="#0d1117" stroke-width="1.8" stroke-linecap="round"/>
+<text x="414" y="52" font-size="10.5" fill="#0a4fa3" text-anchor="end" font-weight="600">100</text>
+<text x="394" y="124" font-size="10.5" fill="#0a4fa3" text-anchor="end" font-weight="600">98</text>
+<text x="324" y="88" font-size="10.5" fill="#0a4fa3" text-anchor="end" font-weight="600">95</text>
+<text x="224" y="133" font-size="10.5" fill="#0a4fa3" text-anchor="end" font-weight="600">72</text>
+<text x="84" y="184" font-size="10.5" fill="#5b6472" text-anchor="end" font-weight="400">root</text>
+<line x1="160" y1="244" x2="250" y2="244" stroke="#0d1117" stroke-width="1.6" stroke-linecap="round"/>
+<text x="205" y="258" font-size="10" fill="#5b6472" text-anchor="middle" font-weight="400">0.1 substitutions per site</text>
+<text x="30" y="30" font-size="11" fill="#0a4fa3" text-anchor="start" font-weight="400">Blue numbers: bootstrap support (%)</text>
+<text x="30" y="48" font-size="11" fill="#5b6472" text-anchor="start" font-weight="400">Horizontal length: amount of change</text>
+<text x="30" y="66" font-size="11" fill="#5b6472" text-anchor="start" font-weight="400">Vertical lines carry no meaning</text>
+</svg>

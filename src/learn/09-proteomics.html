@@ -29,6 +29,49 @@ title: Mass Spectrometry &amp; Protein Analysis
 
 <div class="info-box tip"><svg class="ico" aria-hidden="true"><use href="#i-tip"></use></svg><div><strong>Modern trend:</strong> DIA with tools like <strong>DIA-NN</strong> or <strong>Spectronaut</strong> is rapidly replacing DDA for most applications. DIA-NN can identify 8,000–10,000 proteins from a single human cell line in a 90-minute gradient, with excellent quantitative reproducibility.</div></div>
 
+
+<div class="deep">
+<h3>What the instrument actually measures</h3>
+<p class="sub">A mass spectrometer never measures mass directly. It measures the <strong>mass-to-charge ratio (m/z)</strong> of ions. Electrospray ionisation adds protons to a peptide, so a peptide of neutral mass M carrying z protons appears at:</p>
+<div class="code-block">m/z = (M + z × 1.00728) / z
+
+<span class="code-comment"># Example: a peptide with M = 1,500.00 Da</span>
+z = 1  →  m/z 1501.01
+z = 2  →  m/z  751.01
+z = 3  →  m/z  501.01</div>
+<p class="sub">Tryptic peptides are usually seen at charge 2+ or 3+. The charge is read from the <strong>isotope pattern</strong>: because about 1.1% of carbon is the heavier <sup>13</sup>C, every peptide gives a small ladder of peaks, and the spacing between them is 1/z (0.5 for 2+, 0.33 for 3+).</p>
+
+<h3>Mass analysers compared</h3>
+<table class="ref-table">
+  <tr><th>Analyser</th><th>How it separates ions</th><th>Strength</th><th>Typical use</th></tr>
+  <tr><td><strong>Quadrupole</strong></td><td>Only ions of a chosen m/z have a stable path between four rods</td><td>Fast, cheap, good as a filter</td><td>Selecting the precursor before fragmentation</td></tr>
+  <tr><td><strong>Time of flight (TOF)</strong></td><td>Lighter ions reach the detector sooner</td><td>Very fast scans</td><td>DIA and ion-mobility instruments (timsTOF)</td></tr>
+  <tr><td><strong>Orbitrap</strong></td><td>Ions oscillate around a spindle; frequency gives m/z</td><td>Very high resolution, mass error under 5 ppm</td><td>Most discovery proteomics</td></tr>
+  <tr><td><strong>Ion trap</strong></td><td>Ions are held and ejected in order of m/z</td><td>Sensitive, fast MS2</td><td>Low-abundance samples, lower resolution</td></tr>
+</table>
+<p class="sub">Mass accuracy is quoted in parts per million: <strong>ppm = (observed − theoretical) / theoretical × 1,000,000</strong>. A 5 ppm error on a peptide at m/z 750 is only 0.004.</p>
+
+<h3>Fragmentation: b and y ions</h3>
+<p class="sub">In MS2 the selected peptide is broken by collision with gas (CID or HCD). The peptide bond breaks, giving two families of fragments: <strong>b ions</strong> contain the N-terminus and <strong>y ions</strong> contain the C-terminus. The mass difference between neighbouring peaks in a series equals one amino acid, which is how a sequence is read from a spectrum. A gentler method, ETD, produces c and z ions and keeps fragile modifications such as phosphorylation attached, so it is used when the exact modified residue matters.</p>
+
+<h3>Why trypsin?</h3>
+<ul>
+  <li>It cuts after lysine (K) and arginine (R), except when the next residue is proline, so the cut sites are predictable.</li>
+  <li>The peptides are mostly 7 to 25 residues long, which is the range that flies and fragments well.</li>
+  <li>Every peptide ends in a basic residue, which holds a proton at the C-terminus and gives strong y-ion series.</li>
+</ul>
+
+<h3>DDA and DIA: two ways to choose what to fragment</h3>
+<table class="ref-table">
+  <tr><th></th><th>Data-dependent (DDA)</th><th>Data-independent (DIA)</th></tr>
+  <tr><td><strong>Selection</strong></td><td>The top 10 to 20 most intense precursors in each MS1 scan</td><td>Everything, in consecutive wide m/z windows</td></tr>
+  <tr><td><strong>Spectra</strong></td><td>One peptide per spectrum, easy to interpret</td><td>Many peptides mixed in each spectrum</td></tr>
+  <tr><td><strong>Missing values</strong></td><td>Common: low-abundance peptides are picked in some runs only</td><td>Few: the same windows are measured in every run</td></tr>
+  <tr><td><strong>Software</strong></td><td>MaxQuant, FragPipe, Proteome Discoverer</td><td>DIA-NN, Spectronaut, FragPipe</td></tr>
+</table>
+<div class="info-box tip"><svg class="ico" aria-hidden="true"><use href="#i-tip"></use></svg><div><strong>Practical consequence:</strong> for comparing many samples, DIA usually gives a more complete data matrix. DDA remains the simpler choice for small studies, for building spectral libraries, and for finding modifications you did not expect.</div></div>
+</div>
+
 <div class="chips" style="margin-top:14px;"><span class="chip">LC-MS/MS is standard workflow</span><span class="chip">Trypsin cleaves at K and R</span><span class="chip">Orbitrap = high resolution</span><span class="chip">DIA &gt; DDA for reproducibility</span><span class="chip">DIA-NN for library-free analysis</span></div>
 
 <!--topic 9.2: Protein Identification &amp; Database Searching-->
@@ -73,7 +116,49 @@ diann --f sample1.raw --f sample2.raw --f sample3.raw \
 
           <div class="info-box warn"><svg class="ico" aria-hidden="true"><use href="#i-warn"></use></svg><div><strong>Target-Decoy FDR:</strong> All search engines use a decoy database (reversed or shuffled sequences) to estimate false discovery rate. At 1% FDR: for every 100 identified proteins, ~1 is expected to be wrong. Always use 1% FDR at both PSM (peptide-spectrum match) and protein level. Never relax this to 5%.</div></div>
 
-          <div class="chips" style="margin-top:14px;"><span class="chip">1% FDR is mandatory</span><span class="chip">MaxQuant for DDA</span><span class="chip">DIA-NN for DIA</span><span class="chip">FragPipe = fastest</span><span class="chip">Use reviewed UniProt FASTA</span></div>
+          
+<div class="deep">
+<h3>How a database search works, step by step</h3>
+<ol>
+  <li><strong>Digest in silico.</strong> Every protein in the FASTA file is cut by the rules of your enzyme, allowing up to two missed cleavages.</li>
+  <li><strong>Filter by precursor mass.</strong> For each spectrum, only peptides whose mass matches the measured precursor within the tolerance (for example 10 ppm) are kept as candidates.</li>
+  <li><strong>Predict fragments.</strong> The b and y ions of each candidate are calculated.</li>
+  <li><strong>Score.</strong> The predicted fragments are compared with the observed peaks. The best candidate becomes a peptide-spectrum match (PSM).</li>
+  <li><strong>Control errors.</strong> A decoy database decides which scores can be trusted.</li>
+</ol>
+
+<h3>Search settings you must get right</h3>
+<table class="ref-table">
+  <tr><th>Setting</th><th>Typical value</th><th>Why it matters</th></tr>
+  <tr><td><strong>Enzyme</strong></td><td>Trypsin/P, 2 missed cleavages</td><td>Wrong enzyme means the right peptide is never a candidate</td></tr>
+  <tr><td><strong>Precursor tolerance</strong></td><td>10 to 20 ppm (Orbitrap, TOF)</td><td>Too tight loses real matches; too wide adds false ones</td></tr>
+  <tr><td><strong>Fragment tolerance</strong></td><td>0.02 Da (high resolution) or 0.5 Da (ion trap)</td><td>Must match the analyser used for MS2</td></tr>
+  <tr><td><strong>Fixed modification</strong></td><td>Carbamidomethyl on C (+57.021 Da)</td><td>Added during sample preparation to every cysteine</td></tr>
+  <tr><td><strong>Variable modifications</strong></td><td>Oxidation on M (+15.995), acetyl on protein N-terminus (+42.011)</td><td>Each one multiplies the number of candidates, so add only what you expect</td></tr>
+  <tr><td><strong>Database</strong></td><td>UniProt reference proteome plus common contaminants</td><td>Keratin, trypsin and serum albumin are in almost every sample</td></tr>
+</table>
+
+<h3>The target-decoy method</h3>
+<p class="sub">A reversed or shuffled copy of every protein is added to the database. Decoy peptides cannot be in the sample, so any spectrum that matches a decoy is a known false match. Because a wrong match is equally likely to hit a target or a decoy, the number of decoys above a score threshold estimates the number of false targets above it:</p>
+<div class="code-block">FDR ≈ (decoy matches above the threshold) / (target matches above the threshold)
+
+<span class="code-comment"># 10,000 target PSMs and 100 decoy PSMs pass  →  FDR ≈ 1%</span></div>
+<p class="sub">FDR is applied at three levels, and all three matter: <strong>PSM</strong>, <strong>peptide</strong> and <strong>protein</strong>. Errors accumulate at the protein level, because one wrong peptide is enough to report a wrong protein. That is why reliable results require a 1% protein-level FDR, and many labs also require two peptides per protein.</p>
+
+<h3>The protein inference problem</h3>
+<p class="sub">Mass spectrometry identifies peptides, not proteins. A peptide that occurs in several proteins (isoforms, paralogues) cannot say which one was present. Search engines therefore report <strong>protein groups</strong>: sets of proteins that cannot be told apart with the peptides found. Shared peptides are usually given to the group with the most other evidence (the "razor" rule). When you see a gene with several isoforms listed in one row, this is the reason.</p>
+
+<h3>Checking a search before you trust it</h3>
+<ul>
+  <li><strong>Identification rate:</strong> 30 to 60% of MS2 spectra identified is normal for DDA. Much lower suggests a wrong database, wrong tolerances or a poor run.</li>
+  <li><strong>Missed cleavages:</strong> more than about 20 to 25% of peptides with a missed cleavage points to incomplete digestion.</li>
+  <li><strong>Mass error:</strong> the distribution should be narrow and centred on zero ppm.</li>
+  <li><strong>Contaminants:</strong> a sample dominated by keratin means handling contamination.</li>
+</ul>
+<div class="info-box note"><svg class="ico" aria-hidden="true"><use href="#i-note"></use></svg><div><strong>Search engines in common use:</strong> Andromeda (inside MaxQuant), MSFragger (inside FragPipe), Comet, Sage and Mascot for DDA; DIA-NN and Spectronaut for DIA. FragPipe, MaxQuant and DIA-NN are free for academic use.</div></div>
+</div>
+
+<div class="chips" style="margin-top:14px;"><span class="chip">1% FDR is mandatory</span><span class="chip">MaxQuant for DDA</span><span class="chip">DIA-NN for DIA</span><span class="chip">FragPipe = fastest</span><span class="chip">Use reviewed UniProt FASTA</span></div>
 
 <!--topic 9.3: Quantitative Proteomics &amp; Statistical Analysis-->
           <p class="sub">Quantitative proteomics measures how much of each protein is present, enabling comparison between conditions. There are two main strategies: <strong>label-free quantification (LFQ)</strong>, which compares ion intensities directly, and <strong>labelling methods</strong> (TMT, SILAC), which use chemical or metabolic tags to multiplex samples.</p>
@@ -126,4 +211,47 @@ cat(nrow(sig), "significantly changed proteins (|logFC|>1, FDR<0.05)\n")</div>
 
           <div class="info-box tip"><svg class="ico" aria-hidden="true"><use href="#i-tip"></use></svg><div><strong>Missing values in proteomics:</strong> Unlike RNA-seq, proteomics data has many missing values (10–30% typically). These can be <strong>MCAR</strong> (missing completely at random — stochastic), <strong>MNAR</strong> (missing not at random — protein is below detection limit), or a mixture. Imputation strategy matters: use <strong>MinProb</strong> for MNAR, <strong>kNN</strong> for MCAR. Better yet, use statistical methods that handle missingness directly: <strong>DEqMS</strong>, <strong>msqrob2</strong>, or <strong>proDA</strong>.</div></div>
 
-          <div class="chips" style="margin-top:14px;"><span class="chip">LFQ for most experiments</span><span class="chip">TMT for multiplexing</span><span class="chip">limma works well for proteomics</span><span class="chip">Handle missing values carefully</span><span class="chip">|logFC| &gt; 1 + FDR &lt; 0.05</span></div>
+          
+<div class="deep">
+<h3>Choosing a quantification strategy</h3>
+<table class="ref-table">
+  <tr><th>Method</th><th>How abundance is read</th><th>Samples per run</th><th>Strength</th><th>Weakness</th></tr>
+  <tr><td><strong>Label-free (LFQ)</strong></td><td>MS1 peak area of each peptide</td><td>1</td><td>No labelling cost, any number of samples</td><td>Run-to-run variation, more missing values in DDA</td></tr>
+  <tr><td><strong>DIA label-free</strong></td><td>Fragment-ion peak areas</td><td>1</td><td>Most complete data matrix</td><td>Analysis depends on good software and settings</td></tr>
+  <tr><td><strong>SILAC</strong></td><td>Ratio of light and heavy peptide pairs in MS1</td><td>2 to 3</td><td>Most precise: samples are mixed before any handling</td><td>Needs cells that grow in culture with labelled amino acids</td></tr>
+  <tr><td><strong>TMT / iTRAQ</strong></td><td>Reporter ions released in MS2 or MS3</td><td>Up to 18</td><td>Few missing values within a set, deep fractionation possible</td><td>Ratio compression; batch effects between sets</td></tr>
+</table>
+<p class="sub"><strong>Ratio compression</strong> is the main trap with TMT. Other peptides that are co-isolated with the target contribute their own reporter ions, pulling every ratio towards 1:1. A true four-fold change may be reported as two-fold. Measuring reporters at the MS3 level (SPS-MS3) reduces the problem at the cost of speed.</p>
+
+<h3>From intensities to a result table</h3>
+<ol>
+  <li><strong>Remove</strong> contaminants, decoy hits and proteins identified only by a modification site.</li>
+  <li><strong>Log2-transform</strong> the intensities. Intensities span five or more orders of magnitude and are roughly normal only after the log.</li>
+  <li><strong>Normalise</strong> so that the samples are comparable, most simply by aligning the medians. This assumes most proteins do not change.</li>
+  <li><strong>Filter by missing values</strong>, for example keeping proteins measured in at least 70% of the samples of one group.</li>
+  <li><strong>Impute</strong> what is still missing, choosing the method by the reason for missingness (below).</li>
+  <li><strong>Test</strong> each protein with a moderated t-test (limma) or a mixed model (MSstats), then correct for multiple testing with Benjamini-Hochberg.</li>
+</ol>
+
+<h3>Missing values are not all the same</h3>
+<div class="card-grid card-grid-2" style="gap:12px;margin-top:0;">
+  <div class="card" style="padding:16px;border-left:3px solid var(--orange);"><strong>Missing not at random (MNAR)</strong><p class="sub" style="margin-top:6px;">The protein is below the detection limit. This is the usual case when a protein is absent from one condition. Impute with small values, for example drawn from a normal distribution shifted down by 1.8 standard deviations (the Perseus default).</p></div>
+  <div class="card" style="padding:16px;border-left:3px solid var(--blue);"><strong>Missing at random (MAR)</strong><p class="sub" style="margin-top:6px;">The peptide was present but was not picked for fragmentation in that run. Impute from similar proteins or samples, for example with k-nearest neighbours.</p></div>
+</div>
+<div class="code-block" style="margin-top:14px;"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button><span class="code-comment"># Differential abundance with limma (R)</span>
+<span class="code-comment"># mat: log2 intensities, proteins in rows, samples in columns</span>
+library(limma)
+group  <- factor(c("ctrl","ctrl","ctrl","treat","treat","treat"))
+design <- model.matrix(~ 0 + group)
+colnames(design) <- levels(group)
+
+fit  <- lmFit(mat, design)
+fit2 <- eBayes(contrasts.fit(fit, makeContrasts(treat - ctrl, levels = design)))
+res  <- topTable(fit2, number = Inf, adjust.method = "BH")
+
+<span class="code-comment"># Significant proteins: adjusted p below 0.05 and at least 1.5-fold change</span>
+sig <- subset(res, adj.P.Val < 0.05 & abs(logFC) > log2(1.5))</div>
+<div class="info-box warn"><svg class="ico" aria-hidden="true"><use href="#i-warn"></use></svg><div><strong>Imputation can create results.</strong> A protein with three real values in one group and three imputed values in the other will look highly significant. Always check how many measured values stand behind each hit, and report the imputation method you used.</div></div>
+</div>
+
+<div class="chips" style="margin-top:14px;"><span class="chip">LFQ for most experiments</span><span class="chip">TMT for multiplexing</span><span class="chip">limma works well for proteomics</span><span class="chip">Handle missing values carefully</span><span class="chip">|logFC| &gt; 1 + FDR &lt; 0.05</span></div>

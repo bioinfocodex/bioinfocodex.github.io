@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 250" width="720" height="250" role="img" font-family="system-ui,-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif">
+<title>16S amplicon sequencing compared with shotgun metagenomics</title>
+<rect width="720" height="250" fill="#ffffff"/>
+<rect x="20" y="95" width="130" height="60" rx="8" fill="#f6f8fa" stroke="#b6bfca" stroke-width="1.5"/>
+<text x="85" y="120" font-size="13" fill="#4a5568" text-anchor="middle" font-weight="600">Sample DNA</text>
+<text x="85" y="137" font-size="11" fill="#5b6472" text-anchor="middle" font-weight="400">gut, soil, water</text>
+<text x="190" y="40" font-size="12.5" fill="#0a4fa3" text-anchor="start" font-weight="700">16S amplicon</text>
+<rect x="190" y="50" width="110" height="54" rx="8" fill="#e7f1fd" stroke="#0969da" stroke-width="1.5"/>
+<text x="245" y="72" font-size="11.5" fill="#0a4fa3" text-anchor="middle" font-weight="600">PCR one</text>
+<text x="245" y="87.5" font-size="11.5" fill="#0a4fa3" text-anchor="middle" font-weight="600">marker gene</text>
+<rect x="320" y="50" width="110" height="54" rx="8" fill="#e7f1fd" stroke="#0969da" stroke-width="1.5"/>
+<text x="375" y="72" font-size="11.5" fill="#0a4fa3" text-anchor="middle" font-weight="600">Denoise</text>
+<text x="375" y="87.5" font-size="11.5" fill="#0a4fa3" text-anchor="middle" font-weight="600">to ASVs</text>
+<line x1="303" y1="77" x2="309" y2="77" stroke="#8b95a3" stroke-width="1.6" stroke-linecap="round"/>
+<polygon points="317.0,77.0 309.0,72.5 309.0,81.5" fill="#8b95a3"/>
+<rect x="450" y="50" width="110" height="54" rx="8" fill="#e7f1fd" stroke="#0969da" stroke-width="1.5"/>
+<text x="505" y="79.75" font-size="11.5" fill="#0a4fa3" text-anchor="middle" font-weight="600">Taxonomy</text>
+<line x1="433" y1="77" x2="439" y2="77" stroke="#8b95a3" stroke-width="1.6" stroke-linecap="round"/>
+<polygon points="447.0,77.0 439.0,72.5 439.0,81.5" fill="#8b95a3"/>
+<rect x="580" y="50" width="124" height="54" rx="8" fill="#e7f1fd" stroke="#0969da" stroke-width="1.5"/>
+<text x="642" y="72" font-size="12" fill="#0a4fa3" text-anchor="middle" font-weight="600">Who is there</text>
+<text x="642" y="88" font-size="10" fill="#5b6472" text-anchor="middle" font-weight="400">genus level</text>
+<line x1="562" y1="77" x2="570" y2="77" stroke="#8b95a3" stroke-width="1.6" stroke-linecap="round"/>
+<polygon points="578.0,77.0 570.0,72.5 570.0,81.5" fill="#8b95a3"/>
+<text x="190" y="146" font-size="12.5" fill="#01664b" text-anchor="start" font-weight="700">Shotgun metagenomics</text>
+<rect x="190" y="156" width="110" height="54" rx="8" fill="#e6faf5" stroke="#00a87e" stroke-width="1.5"/>
+<text x="245" y="178" font-size="11.5" fill="#01664b" text-anchor="middle" font-weight="600">Sequence</text>
+<text x="245" y="193.5" font-size="11.5" fill="#01664b" text-anchor="middle" font-weight="600">all DNA</text>
+<rect x="320" y="156" width="110" height="54" rx="8" fill="#e6faf5" stroke="#00a87e" stroke-width="1.5"/>
+<text x="375" y="178" font-size="11.5" fill="#01664b" text-anchor="middle" font-weight="600">Remove</text>
+<text x="375" y="193.5" font-size="11.5" fill="#01664b" text-anchor="middle" font-weight="600">host reads</text>
+<line x1="303" y1="183" x2="309" y2="183" stroke="#8b95a3" stroke-width="1.6" stroke-linecap="round"/>
+<polygon points="317.0,183.0 309.0,178.5 309.0,187.5" fill="#8b95a3"/>
+<rect x="450" y="156" width="110" height="54" rx="8" fill="#e6faf5" stroke="#00a87e" stroke-width="1.5"/>
+<text x="505" y="178" font-size="11.5" fill="#01664b" text-anchor="middle" font-weight="600">Classify or</text>
+<text x="505" y="193.5" font-size="11.5" fill="#01664b" text-anchor="middle" font-weight="600">assemble</text>
+<line x1="433" y1="183" x2="439" y2="183" stroke="#8b95a3" stroke-width="1.6" stroke-linecap="round"/>
+<polygon points="447.0,183.0 439.0,178.5 439.0,187.5" fill="#8b95a3"/>
+<rect x="580" y="156" width="124" height="54" rx="8" fill="#e6faf5" stroke="#00a87e" stroke-width="1.5"/>
+<text x="642" y="178" font-size="12" fill="#01664b" text-anchor="middle" font-weight="600">Who + what</text>
+<text x="642" y="194" font-size="12" fill="#01664b" text-anchor="middle" font-weight="600">they can do</text>
+<line x1="562" y1="183" x2="570" y2="183" stroke="#8b95a3" stroke-width="1.6" stroke-linecap="round"/>
+<polygon points="578.0,183.0 570.0,178.5 570.0,187.5" fill="#8b95a3"/>
+<line x1="152" y1="112" x2="182.021" y2="85.3149" stroke="#8b95a3" stroke-width="1.6" stroke-linecap="round"/>
+<polygon points="188.0,80.0 179.0,82.0 185.0,88.7" fill="#8b95a3"/>
+<line x1="152" y1="138" x2="182.794" y2="173.926" stroke="#8b95a3" stroke-width="1.6" stroke-linecap="round"/>
+<polygon points="188.0,180.0 186.2,171.0 179.4,176.9" fill="#8b95a3"/>
+<text x="360" y="236" font-size="11" fill="#5b6472" text-anchor="middle" font-weight="400">Amplicon sequencing is cheaper; shotgun adds species, strains, genes and pathways</text>
+</svg>

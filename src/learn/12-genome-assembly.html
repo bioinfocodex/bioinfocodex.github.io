@@ -44,7 +44,60 @@ pilon --genome flye_output/assembly.fasta \
 
           <div class="info-box note"><svg class="ico" aria-hidden="true"><use href="#i-note"></use></svg><div><strong>Assembly quality metrics:</strong> <strong>N50</strong> = the contig length such that 50% of the assembly is in contigs of this size or larger. Higher N50 = more contiguous. <strong>L50</strong> = how many contigs make up 50% of the assembly. Lower L50 = better. <strong>BUSCO</strong> = completeness assessment based on universal single-copy orthologs (aim for &gt;95% complete). Always report all three.</div></div>
 
-          <div class="chips" style="margin-top:14px;"><span class="chip">hifiasm for HiFi reads</span><span class="chip">SPAdes for bacteria</span><span class="chip">N50 measures contiguity</span><span class="chip">BUSCO measures completeness</span><span class="chip">Polish Nanopore with Illumina</span></div>
+          
+<div class="deep">
+<h3>Why assembly is hard</h3>
+<p class="sub">Assembly is the problem of reconstructing a text from short overlapping excerpts, where the text contains long passages repeated word for word. Those repeats are the whole difficulty. If a repeat is longer than your reads, no read spans it, and the assembler cannot tell how many copies there are or what order the surrounding regions come in. Roughly half of the human genome is repetitive, which is why short-read assemblies of large genomes stop at fragments.</p>
+
+<h3>Two kinds of assembler</h3>
+<table class="ref-table">
+  <tr><th></th><th>De Bruijn graph</th><th>Overlap-layout-consensus (OLC)</th></tr>
+  <tr><td><strong>Idea</strong></td><td>Cut every read into k-mers; each k-mer is an edge, and a path through the graph is a contig</td><td>Compare reads to each other, lay out the overlaps, then take a consensus sequence</td></tr>
+  <tr><td><strong>Suits</strong></td><td>Short, accurate reads in huge numbers</td><td>Long reads, where all-against-all comparison is affordable</td></tr>
+  <tr><td><strong>Cost</strong></td><td>Memory-hungry, but avoids comparing every read with every other</td><td>Compute-hungry comparison, simpler graph</td></tr>
+  <tr><td><strong>Tools</strong></td><td>SPAdes, MEGAHIT, ABySS, SOAPdenovo</td><td>Canu, Flye, hifiasm, miniasm</td></tr>
+</table>
+<p class="sub">The choice of <strong>k</strong> in a de Bruijn assembler is a trade-off: a small k gives better coverage of low-depth regions but tangles repeats; a large k resolves repeats but needs deeper, cleaner data. SPAdes sidesteps this by assembling with several values of k and combining the results.</p>
+
+<h3>What long reads changed</h3>
+<p class="sub">A PacBio HiFi read is 15 to 25 kb at over 99.9% accuracy, and a nanopore read can be hundreds of kb. Most repeats are shorter than that, so single reads span them. The practical consequences are large:</p>
+<ul>
+  <li>A bacterial genome from HiFi data routinely assembles into one circular contig per replicon.</li>
+  <li>Human assemblies reach contig N50 values in the tens of megabases, where short reads gave tens of kilobases.</li>
+  <li><strong>Phasing</strong> becomes possible: the two parental copies of each chromosome can be assembled separately instead of being merged into one average sequence. Tools such as hifiasm produce such haplotype-resolved assemblies, especially with parental data (trio binning) or Hi-C.</li>
+</ul>
+
+<h3>A workflow that works today</h3>
+<div class="code-block"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button><span class="code-comment"># Check the data before assembling: genome size, heterozygosity, repeat content</span>
+jellyfish count -C -m 21 -s 1G -t 8 reads.fq -o counts.jf
+jellyfish histo counts.jf > counts.histo
+<span class="code-comment"># upload counts.histo to GenomeScope2 for the estimate</span>
+
+<span class="code-comment"># Bacterial genome from nanopore reads</span>
+flye --nano-hq reads.fq.gz --out-dir flye_out --threads 16
+
+<span class="code-comment"># Eukaryotic genome from PacBio HiFi (add Hi-C for phasing)</span>
+hifiasm -o asm -t 32 hifi_reads.fq.gz
+awk '/^S/{print ">"$2"\n"$3}' asm.bp.p_ctg.gfa > assembly.fasta
+
+<span class="code-comment"># Polish nanopore assemblies (HiFi assemblies rarely need it)</span>
+medaka_consensus -i reads.fq.gz -d assembly.fasta -o polished -t 8</div>
+
+<h3>Coverage and read-length targets</h3>
+<table class="ref-table">
+  <tr><th>Data</th><th>Depth to aim for</th><th>Note</th></tr>
+  <tr><td>PacBio HiFi</td><td>25 to 40×</td><td>Enough for a phased assembly of most genomes</td></tr>
+  <tr><td>Nanopore (simplex)</td><td>50 to 60×</td><td>Polishing matters more; prefer the longest reads for scaffolding</td></tr>
+  <tr><td>Illumina only</td><td>60 to 100×</td><td>Expect a fragmented draft for anything larger than a bacterium</td></tr>
+  <tr><td>Hi-C</td><td>Add 30 to 100 million read pairs</td><td>Orders and orients contigs into chromosome-scale scaffolds</td></tr>
+</table>
+
+<h3>Scaffolding, gaps and what "chromosome-level" means</h3>
+<p class="sub">Contigs are stretches of continuous sequence. <strong>Scaffolding</strong> orders and orients them using longer-range information (Hi-C contacts, optical maps, linked reads, or a related genome) and joins them with runs of N characters standing for gaps of estimated length. A "chromosome-level" assembly has scaffolds the size of chromosomes; it may still contain many gaps. A <strong>telomere-to-telomere</strong> assembly has none. When you download a genome, check the number of scaffolds, the number of gaps, and whether the sequence is phased, before treating it as complete.</p>
+<div class="info-box warn"><svg class="ico" aria-hidden="true"><use href="#i-warn"></use></svg><div><strong>Contamination is normal in draft assemblies.</strong> Bacterial, fungal and adapter sequence slips into most projects. Screen with BlobTools (which plots contigs by GC content, coverage and taxonomy) or NCBI's FCS tool before submission, and remove organellar contigs into their own files.</div></div>
+</div>
+
+<div class="chips" style="margin-top:14px;"><span class="chip">hifiasm for HiFi reads</span><span class="chip">SPAdes for bacteria</span><span class="chip">N50 measures contiguity</span><span class="chip">BUSCO measures completeness</span><span class="chip">Polish Nanopore with Illumina</span></div>
 
 <!--topic 12.2: Assembly QC — BUSCO &amp; QUAST-->
           <p class="sub">An assembly is only useful if it is correct and complete. Quality assessment uses two complementary approaches: <strong>contiguity statistics</strong> (N50, total length, number of contigs) measured by QUAST, and <strong>gene completeness</strong> measured by BUSCO (Benchmarking Universal Single-Copy Orthologs), which checks whether expected genes are present and intact.</p>
@@ -76,7 +129,52 @@ busco -i assembly.fa -o busco_output -m genome \
 
           <div class="info-box tip"><svg class="ico" aria-hidden="true"><use href="#i-tip"></use></svg><div><strong>Merqury</strong> is a reference-free assembly evaluation tool that uses k-mer counts from raw reads to assess completeness, accuracy, and phasing of haplotype-resolved assemblies. It is now the gold standard for HiFi assemblies.</div></div>
 
-          <div class="chips" style="margin-top:14px;"><span class="chip">BUSCO &gt;95% = excellent</span><span class="chip">QUAST for contiguity stats</span><span class="chip">Merqury for k-mer QC</span><span class="chip">Choose correct BUSCO lineage</span></div>
+          
+<div class="deep">
+<h3>Three questions, three kinds of metric</h3>
+<p class="sub">Assembly quality is not one number. Ask three separate questions, and use a different tool for each:</p>
+<div class="card-grid card-grid-2" style="gap:12px;margin-top:0;">
+  <div class="card" style="padding:16px;border-left:3px solid var(--blue);"><strong>Is it contiguous?</strong><p class="sub" style="margin-top:6px;">N50, L50, number of contigs, longest contig, total length. QUAST reports all of these. They say how broken the assembly is, and nothing about whether it is correct.</p></div>
+  <div class="card" style="padding:16px;border-left:3px solid var(--green);"><strong>Is it complete?</strong><p class="sub" style="margin-top:6px;">BUSCO: the fraction of a set of genes expected in single copy in this lineage that can be found. Also compare the assembly size with the GenomeScope estimate.</p></div>
+  <div class="card" style="padding:16px;border-left:3px solid var(--orange);"><strong>Is it accurate?</strong><p class="sub" style="margin-top:6px;">Merqury: compares k-mers in the reads with k-mers in the assembly, giving a base-level quality value (QV) and a k-mer completeness, without needing a reference.</p></div>
+</div>
+
+<h3>Reading N50 correctly</h3>
+<p class="sub">N50 is the length of the contig at which half the assembly is contained in contigs of that length or longer. It is useful but easy to game: joining two contigs incorrectly raises N50 and makes the assembly worse. Two companions make it honest:</p>
+<ul>
+  <li><strong>NG50</strong> uses the expected genome size instead of the assembled size, so two assemblies of different total length can be compared.</li>
+  <li><strong>NGA50</strong> (QUAST, with a reference) breaks contigs at misassemblies first. A large gap between N50 and NGA50 means many wrong joins.</li>
+</ul>
+
+<h3>What BUSCO numbers are telling you</h3>
+<table class="ref-table">
+  <tr><th>Category</th><th>Meaning</th><th>Concern when</th></tr>
+  <tr><td><strong>Complete, single-copy (S)</strong></td><td>Found once, as expected</td><td>This should be the large majority</td></tr>
+  <tr><td><strong>Complete, duplicated (D)</strong></td><td>Found more than once</td><td>Above about 5% in a haploid assembly suggests unmerged haplotypes (purge with purge_dups) or a real recent duplication</td></tr>
+  <tr><td><strong>Fragmented (F)</strong></td><td>Found only in part</td><td>Points to a broken or under-polished assembly</td></tr>
+  <tr><td><strong>Missing (M)</strong></td><td>Not found</td><td>High values mean incompleteness, or that the chosen lineage dataset is wrong</td></tr>
+</table>
+<div class="code-block"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button><span class="code-comment"># Contiguity</span>
+quast.py assembly.fasta -o quast_out --threads 8
+
+<span class="code-comment"># Completeness (pick the closest lineage; --auto-lineage if unsure)</span>
+busco -i assembly.fasta -l vertebrata_odb10 -m genome -o busco_out -c 8
+
+<span class="code-comment"># Base accuracy, reference-free, from the reads themselves</span>
+meryl count k=21 reads.fq.gz output reads.meryl
+merqury.sh reads.meryl assembly.fasta merqury_out
+<span class="code-comment"># QV 40 = 1 error in 10,000 bases; QV 50 = 1 in 100,000</span></div>
+
+<h3>Benchmarks to judge against</h3>
+<ul>
+  <li><strong>Bacterial, HiFi or good nanopore:</strong> one contig per replicon, BUSCO complete above 98%, QV above 50.</li>
+  <li><strong>Vertebrate, HiFi plus Hi-C:</strong> contig N50 in the tens of Mb, scaffold N50 at chromosome scale, BUSCO above 95%, QV above 40 (the standard set by the Vertebrate Genomes Project).</li>
+  <li><strong>Illumina-only draft of a large genome:</strong> contig N50 in the tens of kb, BUSCO 85 to 95%. Usable for gene content, not for structural work.</li>
+</ul>
+<div class="info-box tip"><svg class="ico" aria-hidden="true"><use href="#i-tip"></use></svg><div><strong>Report all three.</strong> An assembly described only by its N50 tells a reader almost nothing. "Contig N50 18.4 Mb, BUSCO 97.2% complete (1.1% duplicated), QV 52" is a complete description in one line.</div></div>
+</div>
+
+<div class="chips" style="margin-top:14px;"><span class="chip">BUSCO &gt;95% = excellent</span><span class="chip">QUAST for contiguity stats</span><span class="chip">Merqury for k-mer QC</span><span class="chip">Choose correct BUSCO lineage</span></div>
 
 <!--topic 12.3: Gene Prediction &amp; Genome Annotation-->
           <p class="sub">After assembling a genome, the next step is annotation — finding where the genes are and what they encode. Gene prediction uses ab initio methods (statistical models trained on known gene structures), homology-based methods (aligning known proteins or transcripts), and evidence-based methods (using RNA-seq data from the same organism). Modern pipelines combine all three approaches.</p>
@@ -114,4 +212,46 @@ interproscan.sh -i predicted_proteins.faa -f tsv -dp -goterms -pa</div>
 
           <div class="info-box warn"><svg class="ico" aria-hidden="true"><use href="#i-warn"></use></svg><div><strong>Repeat masking is essential:</strong> Eukaryotic genomes can be 40–80% repetitive. Without masking, gene predictors will predict thousands of spurious genes in transposable elements. Always run RepeatMasker before gene prediction. Use soft-masking (lowercase, not N-replacement) so gene predictors can still use the sequence information.</div></div>
 
-          <div class="chips" style="margin-top:14px;"><span class="chip">Prokka for bacteria</span><span class="chip">BRAKER3 for eukaryotes</span><span class="chip">RepeatMasker before gene prediction</span><span class="chip">RNA-seq evidence improves accuracy</span><span class="chip">InterProScan for functional annotation</span></div>
+          
+<div class="deep">
+<h3>Structural and functional annotation are different jobs</h3>
+<p class="sub"><strong>Structural annotation</strong> decides where the genes are: the coordinates of exons, introns, start and stop codons, and alternative transcripts. <strong>Functional annotation</strong> decides what those genes do, by transferring information from characterised homologues and domain databases. The first is a prediction problem on your genome; the second is a search problem against existing knowledge.</p>
+
+<h3>Three sources of evidence</h3>
+<table class="ref-table">
+  <tr><th>Evidence</th><th>Strength</th><th>Weakness</th></tr>
+  <tr><td><strong>RNA-seq from the same organism</strong></td><td>Direct proof of transcription and of exact splice sites</td><td>Misses genes not expressed in the tissues sampled</td></tr>
+  <tr><td><strong>Protein alignments from relatives</strong></td><td>Finds conserved genes even when unexpressed</td><td>Misses fast-evolving and lineage-specific genes</td></tr>
+  <tr><td><strong>Ab initio prediction</strong></td><td>Covers the whole genome; needs no data beyond the sequence</td><td>Invents plausible but false exons; must be trained on the species</td></tr>
+</table>
+<p class="sub">Modern pipelines combine all three. <strong>BRAKER3</strong> trains GeneMark and AUGUSTUS using RNA-seq and protein evidence together; <strong>MAKER</strong> weighs evidence tracks and produces a consensus; <strong>Funannotate</strong> wraps the whole process for fungi and small eukaryotes. For prokaryotes the problem is far easier, because genes are dense and rarely spliced: <strong>Prokka</strong> or <strong>Bakta</strong> annotate a bacterial genome in minutes.</p>
+
+<h3>Repeats first</h3>
+<p class="sub">Transposable elements carry their own open reading frames, and an unmasked genome yields thousands of spurious "genes" that are really transposon fragments. Annotation therefore starts with repeat identification: build a repeat library for the species with <strong>RepeatModeler</strong>, then <strong>soft-mask</strong> the genome with RepeatMasker (repeats in lowercase). Soft masking lets the predictor avoid starting a gene inside a repeat while still allowing an exon to extend through one.</p>
+<div class="code-block"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button><span class="code-comment"># 1. Build a repeat library and soft-mask</span>
+BuildDatabase -name mygenome assembly.fasta
+RepeatModeler -database mygenome -threads 16
+RepeatMasker -lib mygenome-families.fa -xsmall -pa 8 assembly.fasta
+
+<span class="code-comment"># 2. Structural annotation with RNA-seq and protein evidence</span>
+braker.pl --genome=assembly.fasta.masked --threads=16 \
+          --bam=rnaseq.bam --prot_seq=orthodb_proteins.fa
+
+<span class="code-comment"># 3. Functional annotation of the predicted proteins</span>
+interproscan.sh -i braker/braker.aa -f TSV -goterms -pa -cpu 8
+emapper.py -i braker/braker.aa -o eggnog --cpu 8   <span class="code-comment"># eggNOG-mapper: GO, KEGG, COG</span></div>
+
+<h3>Checking an annotation</h3>
+<ul>
+  <li><strong>BUSCO in protein mode</strong> on the predicted proteins. A genome that scored 97% complete but whose annotation scores 80% has a problem in the annotation, not the assembly.</li>
+  <li><strong>Gene count and structure</strong> against close relatives. A plant with 80,000 predicted genes, or a vertebrate whose average gene has one exon, signals over-prediction or a frame problem.</li>
+  <li><strong>Support per model.</strong> What fraction of genes is backed by RNA-seq or protein alignment? Models supported by nothing but the predictor deserve a lower-confidence flag.</li>
+  <li><strong>Look at a browser.</strong> Load the GFF3 with the RNA-seq coverage in IGV or JBrowse and inspect twenty genes by eye. Systematic errors are usually obvious within minutes.</li>
+</ul>
+
+<h3>GFF3 in practice</h3>
+<p class="sub">Annotations are distributed as GFF3 or GTF: one feature per line, with coordinates, a type (gene, mRNA, exon, CDS) and attributes. The part that causes most trouble is the parent-child hierarchy, where each exon points to an mRNA and each mRNA to a gene through <code>ID</code> and <code>Parent</code> attributes. Tools disagree about details, so validate the file (<code>gff3_QC</code> from GFF3toolkit, or AGAT) before handing it to a counting tool or a browser; a silently malformed GFF3 is a common cause of zero counts in an RNA-seq run.</p>
+<div class="info-box note"><svg class="ico" aria-hidden="true"><use href="#i-note"></use></svg><div><strong>Naming genes:</strong> "transferred from the best BLAST hit" is a weak basis for a name, and errors propagate between databases. Prefer evidence from domain databases (InterPro, Pfam) and orthology (OrthoFinder, eggNOG), state the method in your methods section, and keep a stable identifier of your own alongside any transferred name.</div></div>
+</div>
+
+<div class="chips" style="margin-top:14px;"><span class="chip">Prokka for bacteria</span><span class="chip">BRAKER3 for eukaryotes</span><span class="chip">RepeatMasker before gene prediction</span><span class="chip">RNA-seq evidence improves accuracy</span><span class="chip">InterProScan for functional annotation</span></div>

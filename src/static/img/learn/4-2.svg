@@ -1,0 +1,93 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 240" width="720" height="240" role="img" font-family="system-ui,-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif">
+<title>A multiple sequence alignment with conserved columns and a gap</title>
+<rect width="720" height="240" fill="#ffffff"/>
+<rect x="150" y="34" width="30" height="140" rx="4" fill="#e6faf5" stroke="#00a87e" stroke-width="0"/>
+<rect x="252" y="34" width="30" height="140" rx="4" fill="#e6faf5" stroke="#00a87e" stroke-width="0"/>
+<rect x="320" y="34" width="30" height="140" rx="4" fill="#e6faf5" stroke="#00a87e" stroke-width="0"/>
+<rect x="354" y="34" width="30" height="140" rx="4" fill="#e6faf5" stroke="#00a87e" stroke-width="0"/>
+<rect x="422" y="34" width="30" height="140" rx="4" fill="#e6faf5" stroke="#00a87e" stroke-width="0"/>
+<rect x="490" y="34" width="30" height="140" rx="4" fill="#e6faf5" stroke="#00a87e" stroke-width="0"/>
+<rect x="524" y="34" width="30" height="140" rx="4" fill="#e6faf5" stroke="#00a87e" stroke-width="0"/>
+<rect x="592" y="34" width="30" height="140" rx="4" fill="#e6faf5" stroke="#00a87e" stroke-width="0"/>
+<text x="130" y="60" font-size="12" fill="#0d1117" text-anchor="end" font-weight="600">Human</text>
+<text x="165" y="60" font-size="14" fill="#0d1117" text-anchor="middle" font-weight="600" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace">M</text>
+<text x="199" y="60" font-size="14" fill="#0d1117" text-anchor="middle" font-weight="600" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace">K</text>
+<text x="233" y="60" font-size="14" fill="#0d1117" text-anchor="middle" font-weight="600" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace">V</text>
+<text x="267" y="60" font-size="14" fill="#0d1117" text-anchor="middle" font-weight="600" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace">L</text>
+<text x="301" y="60" font-size="14" fill="#0d1117" text-anchor="middle" font-weight="600" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace">A</text>
+<text x="335" y="60" font-size="14" fill="#0d1117" text-anchor="middle" font-weight="600" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace">A</text>
+<text x="369" y="60" font-size="14" fill="#0d1117" text-anchor="middle" font-weight="600" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace">G</text>
+<text x="403" y="60" font-size="14" fill="#0d1117" text-anchor="middle" font-weight="600" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace">I</text>
+<text x="437" y="60" font-size="14" fill="#0d1117" text-anchor="middle" font-weight="600" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace">V</text>
+<text x="471" y="60" font-size="14" fill="#0d1117" text-anchor="middle" font-weight="600" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace">G</text>
+<text x="505" y="60" font-size="14" fill="#0d1117" text-anchor="middle" font-weight="600" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace">L</text>
+<text x="539" y="60" font-size="14" fill="#0d1117" text-anchor="middle" font-weight="600" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace">L</text>
+<text x="573" y="60" font-size="14" fill="#0d1117" text-anchor="middle" font-weight="600" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace">L</text>
+<text x="607" y="60" font-size="14" fill="#0d1117" text-anchor="middle" font-weight="600" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace">A</text>
+<text x="641" y="60" font-size="14" fill="#0d1117" text-anchor="middle" font-weight="600" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace">Q</text>
+<text x="130" y="94" font-size="12" fill="#0d1117" text-anchor="end" font-weight="600">Mouse</text>
+<text x="165" y="94" font-size="14" fill="#0d1117" text-anchor="middle" font-weight="600" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace">M</text>
+<text x="199" y="94" font-size="14" fill="#0d1117" text-anchor="middle" font-weight="600" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace">K</text>
+<text x="233" y="94" font-size="14" fill="#0d1117" text-anchor="middle" font-weight="600" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace">V</text>
+<text x="267" y="94" font-size="14" fill="#0d1117" text-anchor="middle" font-weight="600" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace">L</text>
+<text x="301" y="94" font-size="14" fill="#0d1117" text-anchor="middle" font-weight="600" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace">A</text>
+<text x="335" y="94" font-size="14" fill="#0d1117" text-anchor="middle" font-weight="600" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace">A</text>
+<text x="369" y="94" font-size="14" fill="#0d1117" text-anchor="middle" font-weight="600" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace">G</text>
+<text x="403" y="94" font-size="14" fill="#0d1117" text-anchor="middle" font-weight="600" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace">I</text>
+<text x="437" y="94" font-size="14" fill="#0d1117" text-anchor="middle" font-weight="600" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace">V</text>
+<text x="471" y="94" font-size="14" fill="#0d1117" text-anchor="middle" font-weight="600" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace">A</text>
+<text x="505" y="94" font-size="14" fill="#0d1117" text-anchor="middle" font-weight="600" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace">L</text>
+<text x="539" y="94" font-size="14" fill="#0d1117" text-anchor="middle" font-weight="600" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace">L</text>
+<text x="573" y="94" font-size="14" fill="#0d1117" text-anchor="middle" font-weight="600" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace">L</text>
+<text x="607" y="94" font-size="14" fill="#0d1117" text-anchor="middle" font-weight="600" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace">A</text>
+<text x="641" y="94" font-size="14" fill="#0d1117" text-anchor="middle" font-weight="600" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace">Q</text>
+<text x="130" y="128" font-size="12" fill="#0d1117" text-anchor="end" font-weight="600">Chicken</text>
+<text x="165" y="128" font-size="14" fill="#0d1117" text-anchor="middle" font-weight="600" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace">M</text>
+<text x="199" y="128" font-size="14" fill="#0d1117" text-anchor="middle" font-weight="600" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace">K</text>
+<text x="233" y="128" font-size="14" fill="#0d1117" text-anchor="middle" font-weight="600" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace">I</text>
+<text x="267" y="128" font-size="14" fill="#0d1117" text-anchor="middle" font-weight="600" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace">L</text>
+<text x="301" y="128" font-size="14" fill="#0d1117" text-anchor="middle" font-weight="600" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace">S</text>
+<text x="335" y="128" font-size="14" fill="#0d1117" text-anchor="middle" font-weight="600" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace">A</text>
+<text x="369" y="128" font-size="14" fill="#0d1117" text-anchor="middle" font-weight="600" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace">G</text>
+<text x="403" y="128" font-size="14" fill="#0d1117" text-anchor="middle" font-weight="600" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace">I</text>
+<text x="437" y="128" font-size="14" fill="#0d1117" text-anchor="middle" font-weight="600" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace">V</text>
+<text x="471" y="128" font-size="14" fill="#a4262c" text-anchor="middle" font-weight="600" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace">-</text>
+<text x="505" y="128" font-size="14" fill="#0d1117" text-anchor="middle" font-weight="600" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace">L</text>
+<text x="539" y="128" font-size="14" fill="#0d1117" text-anchor="middle" font-weight="600" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace">L</text>
+<text x="573" y="128" font-size="14" fill="#0d1117" text-anchor="middle" font-weight="600" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace">L</text>
+<text x="607" y="128" font-size="14" fill="#0d1117" text-anchor="middle" font-weight="600" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace">A</text>
+<text x="641" y="128" font-size="14" fill="#0d1117" text-anchor="middle" font-weight="600" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace">K</text>
+<text x="130" y="162" font-size="12" fill="#0d1117" text-anchor="end" font-weight="600">Zebrafish</text>
+<text x="165" y="162" font-size="14" fill="#0d1117" text-anchor="middle" font-weight="600" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace">M</text>
+<text x="199" y="162" font-size="14" fill="#0d1117" text-anchor="middle" font-weight="600" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace">R</text>
+<text x="233" y="162" font-size="14" fill="#0d1117" text-anchor="middle" font-weight="600" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace">V</text>
+<text x="267" y="162" font-size="14" fill="#0d1117" text-anchor="middle" font-weight="600" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace">L</text>
+<text x="301" y="162" font-size="14" fill="#0d1117" text-anchor="middle" font-weight="600" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace">A</text>
+<text x="335" y="162" font-size="14" fill="#0d1117" text-anchor="middle" font-weight="600" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace">A</text>
+<text x="369" y="162" font-size="14" fill="#0d1117" text-anchor="middle" font-weight="600" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace">G</text>
+<text x="403" y="162" font-size="14" fill="#0d1117" text-anchor="middle" font-weight="600" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace">L</text>
+<text x="437" y="162" font-size="14" fill="#0d1117" text-anchor="middle" font-weight="600" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace">V</text>
+<text x="471" y="162" font-size="14" fill="#a4262c" text-anchor="middle" font-weight="600" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace">-</text>
+<text x="505" y="162" font-size="14" fill="#0d1117" text-anchor="middle" font-weight="600" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace">L</text>
+<text x="539" y="162" font-size="14" fill="#0d1117" text-anchor="middle" font-weight="600" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace">L</text>
+<text x="573" y="162" font-size="14" fill="#0d1117" text-anchor="middle" font-weight="600" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace">F</text>
+<text x="607" y="162" font-size="14" fill="#0d1117" text-anchor="middle" font-weight="600" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace">A</text>
+<text x="641" y="162" font-size="14" fill="#0d1117" text-anchor="middle" font-weight="600" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace">Q</text>
+<text x="165" y="196" font-size="14" fill="#01664b" text-anchor="middle" font-weight="700" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace">*</text>
+<text x="199" y="196" font-size="14" fill="#01664b" text-anchor="middle" font-weight="700" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace"> </text>
+<text x="233" y="196" font-size="14" fill="#01664b" text-anchor="middle" font-weight="700" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace"> </text>
+<text x="267" y="196" font-size="14" fill="#01664b" text-anchor="middle" font-weight="700" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace">*</text>
+<text x="301" y="196" font-size="14" fill="#01664b" text-anchor="middle" font-weight="700" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace"> </text>
+<text x="335" y="196" font-size="14" fill="#01664b" text-anchor="middle" font-weight="700" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace">*</text>
+<text x="369" y="196" font-size="14" fill="#01664b" text-anchor="middle" font-weight="700" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace">*</text>
+<text x="403" y="196" font-size="14" fill="#01664b" text-anchor="middle" font-weight="700" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace"> </text>
+<text x="437" y="196" font-size="14" fill="#01664b" text-anchor="middle" font-weight="700" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace">*</text>
+<text x="471" y="196" font-size="14" fill="#01664b" text-anchor="middle" font-weight="700" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace"> </text>
+<text x="505" y="196" font-size="14" fill="#01664b" text-anchor="middle" font-weight="700" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace">*</text>
+<text x="539" y="196" font-size="14" fill="#01664b" text-anchor="middle" font-weight="700" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace">*</text>
+<text x="573" y="196" font-size="14" fill="#01664b" text-anchor="middle" font-weight="700" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace"> </text>
+<text x="607" y="196" font-size="14" fill="#01664b" text-anchor="middle" font-weight="700" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace">*</text>
+<text x="641" y="196" font-size="14" fill="#01664b" text-anchor="middle" font-weight="700" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace"> </text>
+<text x="130" y="196" font-size="11" fill="#5b6472" text-anchor="end" font-weight="400">conserved</text>
+<text x="360" y="226" font-size="11" fill="#5b6472" text-anchor="middle" font-weight="400">Shaded columns are identical in every species; the red dash is a gap (an insertion or deletion)</text>
+</svg>

@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 240" width="720" height="240" role="img" font-family="system-ui,-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif">
+<title>The GATK germline short-variant pipeline</title>
+<rect width="720" height="240" fill="#ffffff"/>
+<text x="20" y="24" font-size="12" fill="#0d1117" text-anchor="start" font-weight="700">Per sample</text>
+<rect x="16" y="36" width="99.6667" height="60" rx="8" fill="#fef3ea" stroke="#e0762a" stroke-width="1.5"/>
+<text x="65.8333" y="61" font-size="12" fill="#9a4a06" text-anchor="middle" font-weight="600">FASTQ</text>
+<text x="65.8333" y="77" font-size="10" fill="#5b6472" text-anchor="middle" font-weight="400">reads</text>
+<rect x="133.667" y="36" width="99.6667" height="60" rx="8" fill="#e7f1fd" stroke="#0969da" stroke-width="1.5"/>
+<text x="183.5" y="61" font-size="12" fill="#0a4fa3" text-anchor="middle" font-weight="600">BWA-MEM</text>
+<text x="183.5" y="77" font-size="10" fill="#5b6472" text-anchor="middle" font-weight="400">align</text>
+<line x1="118.667" y1="66" x2="122.667" y2="66" stroke="#8b95a3" stroke-width="1.6" stroke-linecap="round"/>
+<polygon points="130.7,66.0 122.7,61.5 122.7,70.5" fill="#8b95a3"/>
+<rect x="251.333" y="36" width="99.6667" height="60" rx="8" fill="#e7f1fd" stroke="#0969da" stroke-width="1.5"/>
+<text x="301.167" y="61" font-size="12" fill="#0a4fa3" text-anchor="middle" font-weight="600">Sort</text>
+<text x="301.167" y="77" font-size="10" fill="#5b6472" text-anchor="middle" font-weight="400">by position</text>
+<line x1="236.333" y1="66" x2="240.333" y2="66" stroke="#8b95a3" stroke-width="1.6" stroke-linecap="round"/>
+<polygon points="248.3,66.0 240.3,61.5 240.3,70.5" fill="#8b95a3"/>
+<rect x="369" y="36" width="99.6667" height="60" rx="8" fill="#e7f1fd" stroke="#0969da" stroke-width="1.5"/>
+<text x="418.833" y="61" font-size="12" fill="#0a4fa3" text-anchor="middle" font-weight="600">Mark</text>
+<text x="418.833" y="77" font-size="12" fill="#0a4fa3" text-anchor="middle" font-weight="600">duplicates</text>
+<line x1="354" y1="66" x2="358" y2="66" stroke="#8b95a3" stroke-width="1.6" stroke-linecap="round"/>
+<polygon points="366.0,66.0 358.0,61.5 358.0,70.5" fill="#8b95a3"/>
+<rect x="486.667" y="36" width="99.6667" height="60" rx="8" fill="#e7f1fd" stroke="#0969da" stroke-width="1.5"/>
+<text x="536.5" y="61" font-size="12" fill="#0a4fa3" text-anchor="middle" font-weight="600">BQSR</text>
+<text x="536.5" y="77" font-size="10" fill="#5b6472" text-anchor="middle" font-weight="400">recalibrate</text>
+<line x1="471.667" y1="66" x2="475.667" y2="66" stroke="#8b95a3" stroke-width="1.6" stroke-linecap="round"/>
+<polygon points="483.7,66.0 475.7,61.5 475.7,70.5" fill="#8b95a3"/>
+<rect x="604.333" y="36" width="99.6667" height="60" rx="8" fill="#e6faf5" stroke="#00a87e" stroke-width="1.5"/>
+<text x="654.167" y="61" font-size="12" fill="#01664b" text-anchor="middle" font-weight="600">Haplotype</text>
+<text x="654.167" y="77" font-size="12" fill="#01664b" text-anchor="middle" font-weight="600">Caller</text>
+<line x1="589.333" y1="66" x2="593.333" y2="66" stroke="#8b95a3" stroke-width="1.6" stroke-linecap="round"/>
+<polygon points="601.3,66.0 593.3,61.5 593.3,70.5" fill="#8b95a3"/>
+<text x="704" y="140" font-size="12" fill="#0d1117" text-anchor="end" font-weight="700">All samples together</text>
+<rect x="16" y="150" width="154" height="54" rx="8" fill="#e6faf5" stroke="#00a87e" stroke-width="1.5"/>
+<text x="93" y="180" font-size="12" fill="#01664b" text-anchor="middle" font-weight="600">GVCF per sample</text>
+<rect x="194" y="150" width="154" height="54" rx="8" fill="#f1eafe" stroke="#7c3aed" stroke-width="1.5"/>
+<text x="271" y="180" font-size="12" fill="#5b21b6" text-anchor="middle" font-weight="600">Joint genotyping</text>
+<line x1="173" y1="177" x2="183" y2="177" stroke="#8b95a3" stroke-width="1.6" stroke-linecap="round"/>
+<polygon points="191.0,177.0 183.0,172.5 183.0,181.5" fill="#8b95a3"/>
+<rect x="372" y="150" width="154" height="54" rx="8" fill="#f1eafe" stroke="#7c3aed" stroke-width="1.5"/>
+<text x="449" y="180" font-size="12" fill="#5b21b6" text-anchor="middle" font-weight="600">Filter (VQSR or hard)</text>
+<line x1="351" y1="177" x2="361" y2="177" stroke="#8b95a3" stroke-width="1.6" stroke-linecap="round"/>
+<polygon points="369.0,177.0 361.0,172.5 361.0,181.5" fill="#8b95a3"/>
+<rect x="550" y="150" width="154" height="54" rx="8" fill="#feecec" stroke="#e5484d" stroke-width="1.5"/>
+<text x="627" y="180" font-size="12" fill="#a4262c" text-anchor="middle" font-weight="600">Annotated VCF</text>
+<line x1="529" y1="177" x2="539" y2="177" stroke="#8b95a3" stroke-width="1.6" stroke-linecap="round"/>
+<polygon points="547.0,177.0 539.0,172.5 539.0,181.5" fill="#8b95a3"/>
+<path d="M650 96 C650 126 80 116 80 148" fill="none" stroke="#8b95a3" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4 4"/>
+<text x="360" y="230" font-size="11" fill="#5b6472" text-anchor="middle" font-weight="400">Calling each sample to a GVCF first lets new samples be added without redoing the alignment</text>
+</svg>

@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 250" width="720" height="250" role="img" font-family="system-ui,-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif">
+<title>The BLAST seed and extend strategy</title>
+<rect width="720" height="250" fill="#ffffff"/>
+<text x="20" y="24" font-size="12" fill="#0d1117" text-anchor="start" font-weight="700">1  Break the query into short words</text>
+<text x="40" y="48" font-size="12.5" fill="#0d1117" text-anchor="start" font-weight="400" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace">Query:  M K V L A A G I V</text>
+<rect x="360" y="32" width="70" height="24" rx="8" fill="#e7f1fd" stroke="#0969da" stroke-width="1.5"/>
+<text x="395" y="46.75" font-size="11.5" fill="#0a4fa3" text-anchor="middle" font-weight="600">MKV</text>
+<rect x="442" y="32" width="70" height="24" rx="8" fill="#e7f1fd" stroke="#0969da" stroke-width="1.5"/>
+<text x="477" y="46.75" font-size="11.5" fill="#0a4fa3" text-anchor="middle" font-weight="600">KVL</text>
+<rect x="524" y="32" width="70" height="24" rx="8" fill="#fef3ea" stroke="#e0762a" stroke-width="1.5"/>
+<text x="559" y="46.75" font-size="11.5" fill="#9a4a06" text-anchor="middle" font-weight="600">VLA</text>
+<rect x="606" y="32" width="70" height="24" rx="8" fill="#e7f1fd" stroke="#0969da" stroke-width="1.5"/>
+<text x="641" y="46.75" font-size="11.5" fill="#0a4fa3" text-anchor="middle" font-weight="600">LAA</text>
+<text x="20" y="92" font-size="12" fill="#0d1117" text-anchor="start" font-weight="700">2  Find exact word hits in the database (seeds)</text>
+<rect x="60" y="104" width="600" height="20" rx="4" fill="#f6f8fa" stroke="#b6bfca" stroke-width="1.5"/>
+<rect x="300" y="104" width="60" height="20" rx="4" fill="#fef3ea" stroke="#e0762a" stroke-width="1.5"/>
+<text x="680" y="119" font-size="10.5" fill="#5b6472" text-anchor="start" font-weight="400">subject</text>
+<text x="330" y="119" font-size="10.5" fill="#9a4a06" text-anchor="middle" font-weight="700">VLA</text>
+<text x="20" y="160" font-size="12" fill="#0d1117" text-anchor="start" font-weight="700">3  Extend the seed in both directions while the score keeps rising</text>
+<rect x="60" y="172" width="600" height="20" rx="4" fill="#f6f8fa" stroke="#b6bfca" stroke-width="1.5"/>
+<rect x="190" y="172" width="290" height="20" rx="4" fill="#e6faf5" stroke="#00a87e" stroke-width="1.5"/>
+<rect x="300" y="172" width="60" height="20" rx="4" fill="#fef3ea" stroke="#e0762a" stroke-width="1.5"/>
+<line x1="296" y1="204" x2="204" y2="204" stroke="#00a87e" stroke-width="1.6" stroke-linecap="round"/>
+<polygon points="196.0,204.0 204.0,208.5 204.0,199.5" fill="#00a87e"/>
+<line x1="364" y1="204" x2="466" y2="204" stroke="#00a87e" stroke-width="1.6" stroke-linecap="round"/>
+<polygon points="474.0,204.0 466.0,199.5 466.0,208.5" fill="#00a87e"/>
+<text x="335" y="228" font-size="11" fill="#5b6472" text-anchor="middle" font-weight="400">high-scoring segment pair (HSP), reported with a bit score and an E-value</text>
+</svg>

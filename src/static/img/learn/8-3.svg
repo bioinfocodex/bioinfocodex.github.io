@@ -1,0 +1,77 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 250" width="720" height="250" role="img" font-family="system-ui,-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif">
+<title>Five-fold cross-validation</title>
+<rect width="720" height="250" fill="#ffffff"/>
+<text x="360" y="22" font-size="13" fill="#0d1117" text-anchor="middle" font-weight="700">5-fold cross-validation</text>
+<text x="96" y="54" font-size="11" fill="#5b6472" text-anchor="end" font-weight="400">Round 1</text>
+<rect x="108" y="38" width="84" height="22" rx="3" fill="#fef3ea" stroke="#e0762a" stroke-width="1.5"/>
+<text x="150" y="53" font-size="10.5" fill="#9a4a06" text-anchor="middle" font-weight="600">test</text>
+<rect x="196" y="38" width="84" height="22" rx="3" fill="#e7f1fd" stroke="#0969da" stroke-width="1.5"/>
+<text x="238" y="53" font-size="10.5" fill="#0a4fa3" text-anchor="middle" font-weight="400">train</text>
+<rect x="284" y="38" width="84" height="22" rx="3" fill="#e7f1fd" stroke="#0969da" stroke-width="1.5"/>
+<text x="326" y="53" font-size="10.5" fill="#0a4fa3" text-anchor="middle" font-weight="400">train</text>
+<rect x="372" y="38" width="84" height="22" rx="3" fill="#e7f1fd" stroke="#0969da" stroke-width="1.5"/>
+<text x="414" y="53" font-size="10.5" fill="#0a4fa3" text-anchor="middle" font-weight="400">train</text>
+<rect x="460" y="38" width="84" height="22" rx="3" fill="#e7f1fd" stroke="#0969da" stroke-width="1.5"/>
+<text x="502" y="53" font-size="10.5" fill="#0a4fa3" text-anchor="middle" font-weight="400">train</text>
+<line x1="552" y1="49" x2="572" y2="49" stroke="#8b95a3" stroke-width="1.6" stroke-linecap="round"/>
+<polygon points="580.0,49.0 572.0,44.5 572.0,53.5" fill="#8b95a3"/>
+<text x="586" y="53" font-size="11" fill="#0d1117" text-anchor="start" font-weight="400">score 1</text>
+<text x="96" y="84" font-size="11" fill="#5b6472" text-anchor="end" font-weight="400">Round 2</text>
+<rect x="108" y="68" width="84" height="22" rx="3" fill="#e7f1fd" stroke="#0969da" stroke-width="1.5"/>
+<text x="150" y="83" font-size="10.5" fill="#0a4fa3" text-anchor="middle" font-weight="400">train</text>
+<rect x="196" y="68" width="84" height="22" rx="3" fill="#fef3ea" stroke="#e0762a" stroke-width="1.5"/>
+<text x="238" y="83" font-size="10.5" fill="#9a4a06" text-anchor="middle" font-weight="600">test</text>
+<rect x="284" y="68" width="84" height="22" rx="3" fill="#e7f1fd" stroke="#0969da" stroke-width="1.5"/>
+<text x="326" y="83" font-size="10.5" fill="#0a4fa3" text-anchor="middle" font-weight="400">train</text>
+<rect x="372" y="68" width="84" height="22" rx="3" fill="#e7f1fd" stroke="#0969da" stroke-width="1.5"/>
+<text x="414" y="83" font-size="10.5" fill="#0a4fa3" text-anchor="middle" font-weight="400">train</text>
+<rect x="460" y="68" width="84" height="22" rx="3" fill="#e7f1fd" stroke="#0969da" stroke-width="1.5"/>
+<text x="502" y="83" font-size="10.5" fill="#0a4fa3" text-anchor="middle" font-weight="400">train</text>
+<line x1="552" y1="79" x2="572" y2="79" stroke="#8b95a3" stroke-width="1.6" stroke-linecap="round"/>
+<polygon points="580.0,79.0 572.0,74.5 572.0,83.5" fill="#8b95a3"/>
+<text x="586" y="83" font-size="11" fill="#0d1117" text-anchor="start" font-weight="400">score 2</text>
+<text x="96" y="114" font-size="11" fill="#5b6472" text-anchor="end" font-weight="400">Round 3</text>
+<rect x="108" y="98" width="84" height="22" rx="3" fill="#e7f1fd" stroke="#0969da" stroke-width="1.5"/>
+<text x="150" y="113" font-size="10.5" fill="#0a4fa3" text-anchor="middle" font-weight="400">train</text>
+<rect x="196" y="98" width="84" height="22" rx="3" fill="#e7f1fd" stroke="#0969da" stroke-width="1.5"/>
+<text x="238" y="113" font-size="10.5" fill="#0a4fa3" text-anchor="middle" font-weight="400">train</text>
+<rect x="284" y="98" width="84" height="22" rx="3" fill="#fef3ea" stroke="#e0762a" stroke-width="1.5"/>
+<text x="326" y="113" font-size="10.5" fill="#9a4a06" text-anchor="middle" font-weight="600">test</text>
+<rect x="372" y="98" width="84" height="22" rx="3" fill="#e7f1fd" stroke="#0969da" stroke-width="1.5"/>
+<text x="414" y="113" font-size="10.5" fill="#0a4fa3" text-anchor="middle" font-weight="400">train</text>
+<rect x="460" y="98" width="84" height="22" rx="3" fill="#e7f1fd" stroke="#0969da" stroke-width="1.5"/>
+<text x="502" y="113" font-size="10.5" fill="#0a4fa3" text-anchor="middle" font-weight="400">train</text>
+<line x1="552" y1="109" x2="572" y2="109" stroke="#8b95a3" stroke-width="1.6" stroke-linecap="round"/>
+<polygon points="580.0,109.0 572.0,104.5 572.0,113.5" fill="#8b95a3"/>
+<text x="586" y="113" font-size="11" fill="#0d1117" text-anchor="start" font-weight="400">score 3</text>
+<text x="96" y="144" font-size="11" fill="#5b6472" text-anchor="end" font-weight="400">Round 4</text>
+<rect x="108" y="128" width="84" height="22" rx="3" fill="#e7f1fd" stroke="#0969da" stroke-width="1.5"/>
+<text x="150" y="143" font-size="10.5" fill="#0a4fa3" text-anchor="middle" font-weight="400">train</text>
+<rect x="196" y="128" width="84" height="22" rx="3" fill="#e7f1fd" stroke="#0969da" stroke-width="1.5"/>
+<text x="238" y="143" font-size="10.5" fill="#0a4fa3" text-anchor="middle" font-weight="400">train</text>
+<rect x="284" y="128" width="84" height="22" rx="3" fill="#e7f1fd" stroke="#0969da" stroke-width="1.5"/>
+<text x="326" y="143" font-size="10.5" fill="#0a4fa3" text-anchor="middle" font-weight="400">train</text>
+<rect x="372" y="128" width="84" height="22" rx="3" fill="#fef3ea" stroke="#e0762a" stroke-width="1.5"/>
+<text x="414" y="143" font-size="10.5" fill="#9a4a06" text-anchor="middle" font-weight="600">test</text>
+<rect x="460" y="128" width="84" height="22" rx="3" fill="#e7f1fd" stroke="#0969da" stroke-width="1.5"/>
+<text x="502" y="143" font-size="10.5" fill="#0a4fa3" text-anchor="middle" font-weight="400">train</text>
+<line x1="552" y1="139" x2="572" y2="139" stroke="#8b95a3" stroke-width="1.6" stroke-linecap="round"/>
+<polygon points="580.0,139.0 572.0,134.5 572.0,143.5" fill="#8b95a3"/>
+<text x="586" y="143" font-size="11" fill="#0d1117" text-anchor="start" font-weight="400">score 4</text>
+<text x="96" y="174" font-size="11" fill="#5b6472" text-anchor="end" font-weight="400">Round 5</text>
+<rect x="108" y="158" width="84" height="22" rx="3" fill="#e7f1fd" stroke="#0969da" stroke-width="1.5"/>
+<text x="150" y="173" font-size="10.5" fill="#0a4fa3" text-anchor="middle" font-weight="400">train</text>
+<rect x="196" y="158" width="84" height="22" rx="3" fill="#e7f1fd" stroke="#0969da" stroke-width="1.5"/>
+<text x="238" y="173" font-size="10.5" fill="#0a4fa3" text-anchor="middle" font-weight="400">train</text>
+<rect x="284" y="158" width="84" height="22" rx="3" fill="#e7f1fd" stroke="#0969da" stroke-width="1.5"/>
+<text x="326" y="173" font-size="10.5" fill="#0a4fa3" text-anchor="middle" font-weight="400">train</text>
+<rect x="372" y="158" width="84" height="22" rx="3" fill="#e7f1fd" stroke="#0969da" stroke-width="1.5"/>
+<text x="414" y="173" font-size="10.5" fill="#0a4fa3" text-anchor="middle" font-weight="400">train</text>
+<rect x="460" y="158" width="84" height="22" rx="3" fill="#fef3ea" stroke="#e0762a" stroke-width="1.5"/>
+<text x="502" y="173" font-size="10.5" fill="#9a4a06" text-anchor="middle" font-weight="600">test</text>
+<line x1="552" y1="169" x2="572" y2="169" stroke="#8b95a3" stroke-width="1.6" stroke-linecap="round"/>
+<polygon points="580.0,169.0 572.0,164.5 572.0,173.5" fill="#8b95a3"/>
+<text x="586" y="173" font-size="11" fill="#0d1117" text-anchor="start" font-weight="400">score 5</text>
+<text x="360" y="206" font-size="11" fill="#5b6472" text-anchor="middle" font-weight="400">Every sample is tested exactly once, and never by a model that saw it during training</text>
+<text x="360" y="228" font-size="11" fill="#5b6472" text-anchor="middle" font-weight="400">Report the mean and spread of the five scores, then confirm on a held-out test set</text>
+</svg>

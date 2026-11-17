@@ -230,8 +230,43 @@ def write_page(path, title, description, content, *, page_id='page', nav='', her
 TOPIC = re.compile(r'^<!--topic ([\d.]+): (.*?)-->$', re.M)
 
 
+MORE_KINDS = {'video': 'Video', 'read': 'Read', 'course': 'Tutorial', 'docs': 'Manual', 'paper': 'Paper'}
+
+
+def decorate_topic(num, text, extras):
+    """Add the topic's figure (after its opening paragraph) and its
+    "Watch and read more" list, both described in src/data/topic-extras.json."""
+    ex = extras.get(num, {})
+    svg = SRC / 'static' / 'img' / 'learn' / (num.replace('.', '-') + '.svg')
+    if ex.get('fig') and svg.exists():
+        m = re.search(r'viewBox="0 0 (\d+) (\d+)"', svg.read_text(encoding='utf-8'))
+        w, h = (m.group(1), m.group(2)) if m else ('720', '250')
+        src = '/img/learn/%s.svg' % num.replace('.', '-')
+        fig = ('\n<figure class="topic-fig"><div class="topic-fig-scroll">'
+               '<a href="%s" target="_blank" rel="noopener" aria-label="Open figure %s at full size">'
+               '<img src="%s" alt="%s" width="%s" height="%s" loading="lazy"></a></div>'
+               '<figcaption><strong>Figure %s.</strong> %s '
+               '<span class="fig-hint">Tap the figure to open it at full size.</span>'
+               '</figcaption></figure>\n') % (src, num, src, esc(plain(ex['fig'])), w, h, num, ex['fig'])
+        cut = text.find('</p>')
+        text = text[:cut + 4] + fig + text[cut + 4:] if cut != -1 else fig + text
+    if ex.get('more'):
+        items = ''.join(
+            '<li><a class="more-link more-%s" href="%s" target="_blank" rel="noopener">'
+            '<span class="more-kind">%s</span><span class="more-body"><span class="more-title">%s</span>'
+            '<span class="more-src">%s</span></span></a></li>' % (
+                kind, esc(url), MORE_KINDS.get(kind, 'Read'), title, source)
+            for kind, title, source, url in ex['more'])
+        text += ('\n<section class="topic-more"><h3>Watch and read more</h3>'
+                 '<p class="sub">Free material from other teachers and from the people who wrote the tools. '
+                 'Each link opens in a new tab.</p><ul class="more-list">%s</ul></section>\n') % items
+    return text
+
+
 def load_modules():
     mods = []
+    extras_file = SRC / 'data' / 'topic-extras.json'
+    extras = json.loads(extras_file.read_text(encoding='utf-8')) if extras_file.exists() else {}
     for p in sorted((SRC / 'learn').glob('*.html')):
         meta, body = front_matter(p.read_text(encoding='utf-8'))
         parts = TOPIC.split(body)
@@ -239,6 +274,7 @@ def load_modules():
                'title': meta['title'], 'intro': parts[0].strip(), 'topics': [], 'path': '/learn/' + meta['slug']}
         for i in range(1, len(parts), 3):
             num, title, text = parts[i], parts[i + 1], parts[i + 2].strip()
+            text = decorate_topic(num, text, extras)
             mod['topics'].append({'num': num, 'title': title, 'body': text,
                                   'path': '%s/%s' % (mod['path'], slugify(title)), 'module': mod})
         mods.append(mod)

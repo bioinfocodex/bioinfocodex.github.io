@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 260" width="720" height="260" role="img" font-family="system-ui,-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif">
+<title>A project directory tree and the commands used to move around it</title>
+<rect width="720" height="260" fill="#ffffff"/>
+<rect x="320" y="14" width="80" height="34" rx="8" fill="#f6f8fa" stroke="#b6bfca" stroke-width="1.5"/>
+<text x="360" y="35" font-size="14" fill="#4a5568" text-anchor="middle" font-weight="600">/</text>
+<rect x="300" y="74" width="120" height="34" rx="8" fill="#f6f8fa" stroke="#b6bfca" stroke-width="1.5"/>
+<text x="360" y="94.5" font-size="13" fill="#4a5568" text-anchor="middle" font-weight="600">home</text>
+<rect x="290" y="134" width="140" height="34" rx="8" fill="#e7f1fd" stroke="#0969da" stroke-width="1.5"/>
+<text x="360" y="154.5" font-size="13" fill="#0a4fa3" text-anchor="middle" font-weight="600">you</text>
+<text x="444" y="156" font-size="11" fill="#5b6472" text-anchor="start" font-weight="400">~  (your home directory)</text>
+<line x1="360" y1="48" x2="360" y2="74" stroke="#8b95a3" stroke-width="1.5" stroke-linecap="round"/>
+<line x1="360" y1="108" x2="360" y2="134" stroke="#8b95a3" stroke-width="1.5" stroke-linecap="round"/>
+<rect x="90" y="196" width="140" height="46" rx="8" fill="#fef3ea" stroke="#e0762a" stroke-width="1.5"/>
+<text x="160" y="214" font-size="13" fill="#9a4a06" text-anchor="middle" font-weight="600">raw_data</text>
+<text x="160" y="231" font-size="11" fill="#5b6472" text-anchor="middle" font-weight="400">FASTQ files</text>
+<line x1="360" y1="168" x2="160" y2="196" stroke="#8b95a3" stroke-width="1.5" stroke-linecap="round"/>
+<rect x="290" y="196" width="140" height="46" rx="8" fill="#f1eafe" stroke="#7c3aed" stroke-width="1.5"/>
+<text x="360" y="214" font-size="13" fill="#5b21b6" text-anchor="middle" font-weight="600">scripts</text>
+<text x="360" y="231" font-size="11" fill="#5b6472" text-anchor="middle" font-weight="400">run_qc.sh</text>
+<line x1="360" y1="168" x2="360" y2="196" stroke="#8b95a3" stroke-width="1.5" stroke-linecap="round"/>
+<rect x="490" y="196" width="140" height="46" rx="8" fill="#e6faf5" stroke="#00a87e" stroke-width="1.5"/>
+<text x="560" y="214" font-size="13" fill="#01664b" text-anchor="middle" font-weight="600">results</text>
+<text x="560" y="231" font-size="11" fill="#5b6472" text-anchor="middle" font-weight="400">BAM, counts</text>
+<line x1="360" y1="168" x2="560" y2="196" stroke="#8b95a3" stroke-width="1.5" stroke-linecap="round"/>
+<text x="20" y="30" font-size="12" fill="#0a4fa3" text-anchor="start" font-weight="400" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace">pwd</text>
+<text x="60" y="30" font-size="11" fill="#5b6472" text-anchor="start" font-weight="400">where am I?</text>
+<text x="20" y="52" font-size="12" fill="#0a4fa3" text-anchor="start" font-weight="400" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace">ls</text>
+<text x="60" y="52" font-size="11" fill="#5b6472" text-anchor="start" font-weight="400">what is here?</text>
+<text x="20" y="74" font-size="12" fill="#0a4fa3" text-anchor="start" font-weight="400" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace">cd</text>
+<text x="60" y="74" font-size="11" fill="#5b6472" text-anchor="start" font-weight="400">move somewhere else</text>
+<text x="700" y="30" font-size="11" fill="#5b6472" text-anchor="end" font-weight="400" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace">absolute:  /home/you/raw_data</text>
+<text x="700" y="52" font-size="11" fill="#5b6472" text-anchor="end" font-weight="400" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace">relative:  ../results</text>
+</svg>

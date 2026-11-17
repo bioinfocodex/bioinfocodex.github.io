@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 260" width="720" height="260" role="img" font-family="system-ui,-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif">
+<title>Layers of omics data integrated to explain a phenotype</title>
+<rect width="720" height="260" fill="#ffffff"/>
+<rect x="30" y="16" width="300" height="36" rx="8" fill="#e7f1fd" stroke="#0969da" stroke-width="1.5"/>
+<text x="46" y="38" font-size="12.5" fill="#0a4fa3" text-anchor="start" font-weight="700">Genome</text>
+<text x="316" y="38" font-size="10.5" fill="#5b6472" text-anchor="end" font-weight="400">variants, CNV</text>
+<line x1="332" y1="34" x2="402.49" y2="108.2" stroke="#8b95a3" stroke-width="1.6" stroke-linecap="round"/>
+<polygon points="408.0,114.0 405.8,105.1 399.2,111.3" fill="#8b95a3"/>
+<rect x="30" y="60" width="300" height="36" rx="8" fill="#f1eafe" stroke="#7c3aed" stroke-width="1.5"/>
+<text x="46" y="82" font-size="12.5" fill="#5b21b6" text-anchor="start" font-weight="700">Epigenome</text>
+<text x="316" y="82" font-size="10.5" fill="#5b6472" text-anchor="end" font-weight="400">methylation, accessibility</text>
+<line x1="180" y1="52" x2="180" y2="51" stroke="#8b95a3" stroke-width="1.6" stroke-linecap="round"/>
+<polygon points="180.0,59.0 184.5,51.0 175.5,51.0" fill="#8b95a3"/>
+<line x1="332" y1="78" x2="400.998" y2="116.131" stroke="#8b95a3" stroke-width="1.6" stroke-linecap="round"/>
+<polygon points="408.0,120.0 403.2,112.2 398.8,120.1" fill="#8b95a3"/>
+<rect x="30" y="104" width="300" height="36" rx="8" fill="#e6faf5" stroke="#00a87e" stroke-width="1.5"/>
+<text x="46" y="126" font-size="12.5" fill="#01664b" text-anchor="start" font-weight="700">Transcriptome</text>
+<text x="316" y="126" font-size="10.5" fill="#5b6472" text-anchor="end" font-weight="400">mRNA abundance</text>
+<line x1="180" y1="96" x2="180" y2="95" stroke="#8b95a3" stroke-width="1.6" stroke-linecap="round"/>
+<polygon points="180.0,103.0 184.5,95.0 175.5,95.0" fill="#8b95a3"/>
+<line x1="332" y1="122" x2="400.011" y2="125.58" stroke="#8b95a3" stroke-width="1.6" stroke-linecap="round"/>
+<polygon points="408.0,126.0 400.2,121.1 399.8,130.1" fill="#8b95a3"/>
+<rect x="30" y="148" width="300" height="36" rx="8" fill="#fef3ea" stroke="#e0762a" stroke-width="1.5"/>
+<text x="46" y="170" font-size="12.5" fill="#9a4a06" text-anchor="start" font-weight="700">Proteome</text>
+<text x="316" y="170" font-size="10.5" fill="#5b6472" text-anchor="end" font-weight="400">protein abundance, PTMs</text>
+<line x1="180" y1="140" x2="180" y2="139" stroke="#8b95a3" stroke-width="1.6" stroke-linecap="round"/>
+<polygon points="180.0,147.0 184.5,139.0 175.5,139.0" fill="#8b95a3"/>
+<line x1="332" y1="166" x2="400.697" y2="135.267" stroke="#8b95a3" stroke-width="1.6" stroke-linecap="round"/>
+<polygon points="408.0,132.0 398.9,131.2 402.5,139.4" fill="#8b95a3"/>
+<rect x="30" y="192" width="300" height="36" rx="8" fill="#feecec" stroke="#e5484d" stroke-width="1.5"/>
+<text x="46" y="214" font-size="12.5" fill="#a4262c" text-anchor="start" font-weight="700">Metabolome</text>
+<text x="316" y="214" font-size="10.5" fill="#5b6472" text-anchor="end" font-weight="400">small molecules</text>
+<line x1="180" y1="184" x2="180" y2="183" stroke="#8b95a3" stroke-width="1.6" stroke-linecap="round"/>
+<polygon points="180.0,191.0 184.5,183.0 175.5,183.0" fill="#8b95a3"/>
+<line x1="332" y1="210" x2="402.192" y2="143.502" stroke="#8b95a3" stroke-width="1.6" stroke-linecap="round"/>
+<polygon points="408.0,138.0 399.1,140.2 405.3,146.8" fill="#8b95a3"/>
+<rect x="410" y="86" width="130" height="80" rx="8" fill="#f6f8fa" stroke="#b6bfca" stroke-width="1.5"/>
+<text x="475" y="121" font-size="13" fill="#4a5568" text-anchor="middle" font-weight="600">Integration</text>
+<text x="475" y="138" font-size="11" fill="#5b6472" text-anchor="middle" font-weight="400">MOFA, DIABLO</text>
+<line x1="542" y1="126" x2="580" y2="126" stroke="#8b95a3" stroke-width="1.6" stroke-linecap="round"/>
+<polygon points="588.0,126.0 580.0,121.5 580.0,130.5" fill="#8b95a3"/>
+<rect x="590" y="86" width="114" height="80" rx="8" fill="#0d1117" stroke="#0d1117" stroke-width="1.5"/>
+<text x="647" y="129.5" font-size="13" fill="#ffffff" text-anchor="middle" font-weight="600">Phenotype</text>
+<text x="360" y="250" font-size="11" fill="#5b6472" text-anchor="middle" font-weight="400">Each layer explains part of the phenotype; shared factors across layers point to mechanism</text>
+</svg>

@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 250" width="720" height="250" role="img" font-family="system-ui,-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif">
+<title>Genome assembly from reads to contigs, scaffolds and chromosomes</title>
+<rect width="720" height="250" fill="#ffffff"/>
+<text x="20" y="26" font-size="12" fill="#0d1117" text-anchor="start" font-weight="700">Reads</text>
+<rect x="126.622" y="14" width="90" height="6" rx="2" fill="#0969da" stroke="#0969da" stroke-width="0" opacity="0.8"/>
+<rect x="454.001" y="25" width="90" height="6" rx="2" fill="#0969da" stroke="#0969da" stroke-width="0" opacity="0.8"/>
+<rect x="253.678" y="36" width="90" height="6" rx="2" fill="#0969da" stroke="#0969da" stroke-width="0" opacity="0.8"/>
+<rect x="154.362" y="47" width="90" height="6" rx="2" fill="#0969da" stroke="#0969da" stroke-width="0" opacity="0.8"/>
+<rect x="325.699" y="14" width="90" height="6" rx="2" fill="#0969da" stroke="#0969da" stroke-width="0" opacity="0.8"/>
+<rect x="165.866" y="25" width="90" height="6" rx="2" fill="#0969da" stroke="#0969da" stroke-width="0" opacity="0.8"/>
+<rect x="263.164" y="36" width="90" height="6" rx="2" fill="#0969da" stroke="#0969da" stroke-width="0" opacity="0.8"/>
+<rect x="147.187" y="47" width="90" height="6" rx="2" fill="#0969da" stroke="#0969da" stroke-width="0" opacity="0.8"/>
+<rect x="517.23" y="14" width="90" height="6" rx="2" fill="#0969da" stroke="#0969da" stroke-width="0" opacity="0.8"/>
+<rect x="449.862" y="25" width="90" height="6" rx="2" fill="#0969da" stroke="#0969da" stroke-width="0" opacity="0.8"/>
+<rect x="202.263" y="36" width="90" height="6" rx="2" fill="#0969da" stroke="#0969da" stroke-width="0" opacity="0.8"/>
+<rect x="139.28" y="47" width="90" height="6" rx="2" fill="#0969da" stroke="#0969da" stroke-width="0" opacity="0.8"/>
+<rect x="383.557" y="14" width="90" height="6" rx="2" fill="#0969da" stroke="#0969da" stroke-width="0" opacity="0.8"/>
+<rect x="377.847" y="25" width="90" height="6" rx="2" fill="#0969da" stroke="#0969da" stroke-width="0" opacity="0.8"/>
+<rect x="101.515" y="36" width="90" height="6" rx="2" fill="#0969da" stroke="#0969da" stroke-width="0" opacity="0.8"/>
+<rect x="470.861" y="47" width="90" height="6" rx="2" fill="#0969da" stroke="#0969da" stroke-width="0" opacity="0.8"/>
+<line x1="360" y1="64" x2="360" y2="74" stroke="#8b95a3" stroke-width="1.6" stroke-linecap="round"/>
+<polygon points="360.0,82.0 364.5,74.0 355.5,74.0" fill="#8b95a3"/>
+<text x="372" y="78" font-size="10.5" fill="#5b6472" text-anchor="start" font-weight="400">find overlaps</text>
+<text x="20" y="106" font-size="12" fill="#0d1117" text-anchor="start" font-weight="700">Contigs</text>
+<rect x="100" y="94" width="150" height="16" rx="4" fill="#00a87e" stroke="#00a87e" stroke-width="0"/>
+<rect x="280" y="94" width="90" height="16" rx="4" fill="#00a87e" stroke="#00a87e" stroke-width="0"/>
+<rect x="400" y="94" width="190" height="16" rx="4" fill="#00a87e" stroke="#00a87e" stroke-width="0"/>
+<rect x="620" y="94" width="60" height="16" rx="4" fill="#00a87e" stroke="#00a87e" stroke-width="0"/>
+<text x="265" y="88" font-size="9.5" fill="#a4262c" text-anchor="middle" font-weight="400">repeat</text>
+<text x="385" y="88" font-size="9.5" fill="#a4262c" text-anchor="middle" font-weight="400">repeat</text>
+<line x1="360" y1="120" x2="360" y2="130" stroke="#8b95a3" stroke-width="1.6" stroke-linecap="round"/>
+<polygon points="360.0,138.0 364.5,130.0 355.5,130.0" fill="#8b95a3"/>
+<text x="372" y="134" font-size="10.5" fill="#5b6472" text-anchor="start" font-weight="400">link with long reads or Hi-C</text>
+<text x="20" y="162" font-size="12" fill="#0d1117" text-anchor="start" font-weight="700">Scaffolds</text>
+<rect x="100" y="150" width="150" height="16" rx="4" fill="#7c3aed" stroke="#7c3aed" stroke-width="0"/>
+<rect x="280" y="150" width="90" height="16" rx="4" fill="#7c3aed" stroke="#7c3aed" stroke-width="0"/>
+<rect x="400" y="150" width="190" height="16" rx="4" fill="#7c3aed" stroke="#7c3aed" stroke-width="0"/>
+<line x1="250" y1="158" x2="280" y2="158" stroke="#7c3aed" stroke-width="1.4" stroke-linecap="round" stroke-dasharray="3 3"/>
+<text x="265" y="180" font-size="9.5" fill="#5b6472" text-anchor="middle" font-weight="400" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace">NNN</text>
+<line x1="370" y1="158" x2="400" y2="158" stroke="#7c3aed" stroke-width="1.4" stroke-linecap="round" stroke-dasharray="3 3"/>
+<text x="385" y="180" font-size="9.5" fill="#5b6472" text-anchor="middle" font-weight="400" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace">NNN</text>
+<rect x="620" y="150" width="60" height="16" rx="4" fill="#7c3aed" stroke="#7c3aed" stroke-width="0"/>
+<line x1="360" y1="186" x2="360" y2="196" stroke="#8b95a3" stroke-width="1.6" stroke-linecap="round"/>
+<polygon points="360.0,204.0 364.5,196.0 355.5,196.0" fill="#8b95a3"/>
+<text x="20" y="226" font-size="12" fill="#0d1117" text-anchor="start" font-weight="700">Chromosome</text>
+<rect x="100" y="214" width="580" height="16" rx="8" fill="#e0762a" stroke="#e0762a" stroke-width="0"/>
+<text x="390" y="246" font-size="10.5" fill="#5b6472" text-anchor="middle" font-weight="400">telomere to telomere when every gap is closed</text>
+</svg>

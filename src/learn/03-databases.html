@@ -69,6 +69,34 @@ mamba install -c bioconda entrez-direct</div>
           &bull; Use NCBI E-utilities for programmatic access in automated pipelines<br>
           &bull; Always cite the databases and their version/release numbers in publications</div></div>
 
+
+<div class="deep">
+<h3>Primary and secondary databases</h3>
+<p class="sub">A <strong>primary</strong> (archival) database stores what someone submitted, unchanged: GenBank, SRA, the PDB. The record belongs to its author, errors included. A <strong>secondary</strong> (curated) database adds review, non-redundancy and annotation: RefSeq, Swiss-Prot, Ensembl. Knowing which one you are reading explains most apparent contradictions between databases.</p>
+<table class="ref-table">
+  <tr><th>Pair</th><th>Primary</th><th>Curated counterpart</th></tr>
+  <tr><td>Nucleotide sequence</td><td>GenBank / ENA / DDBJ: every submission, duplicates and all</td><td>RefSeq: one reviewed representative per gene and transcript</td></tr>
+  <tr><td>Protein sequence</td><td>TrEMBL: automatic translations, roughly 250 million entries</td><td>Swiss-Prot: manually reviewed, roughly 570,000 entries</td></tr>
+  <tr><td>Expression</td><td>GEO / ArrayExpress: submitted experiments</td><td>Expression Atlas: reprocessed with one consistent pipeline</td></tr>
+</table>
+<p class="sub">In UniProt the distinction is visible in the accession: reviewed Swiss-Prot entries are marked with a gold star, TrEMBL entries are not. When a paper cites a protein function, check which of the two it came from.</p>
+
+<h3>Identifiers, and how to move between them</h3>
+<table class="ref-table">
+  <tr><th>Prefix</th><th>Database</th><th>Example</th></tr>
+  <tr><td><code>ENSG / ENST / ENSP</code></td><td>Ensembl gene, transcript, protein</td><td>ENSG00000141510</td></tr>
+  <tr><td><code>NM_ / NR_ / NP_</code></td><td>RefSeq mRNA, non-coding RNA, protein</td><td>NM_000546</td></tr>
+  <tr><td><code>P / Q / O</code> followed by digits</td><td>UniProt accession</td><td>P04637</td></tr>
+  <tr><td>Plain number</td><td>NCBI Gene ID</td><td>7157</td></tr>
+  <tr><td><code>HGNC:</code></td><td>Approved human gene symbol record</td><td>HGNC:11998 (TP53)</td></tr>
+</table>
+<p class="sub">Identifier conversion loses entries. One Ensembl gene may map to several RefSeq transcripts, some identifiers are retired, and mappings differ between annotation releases. Use <strong>biomaRt</strong>, the <strong>UniProt ID mapping</strong> service or <strong>MyGene.info</strong>, always record the release you used, and report how many identifiers failed to map rather than quietly dropping them.</p>
+<div class="info-box warn"><svg class="ico" aria-hidden="true"><use href="#i-warn"></use></svg><div><strong>Never store gene symbols in a spreadsheet without protection.</strong> Excel converts SEPT9 to a date and MARCH1 to another. A 2016 survey found such errors in about 20% of papers with supplementary gene lists. HGNC has since renamed the worst offenders (SEPTIN9, MARCHF1), but older data are still affected. Import as text, or work with stable accessions and attach symbols only at the end.</div></div>
+
+<h3>Version your references</h3>
+<p class="sub">Genome assemblies and annotations change. GRCh38 coordinates are not GRCh37 coordinates, and gene models differ between Ensembl releases. Three habits prevent a great deal of confusion: pin the exact assembly and annotation release in your methods, keep the same pair throughout one project, and use <strong>liftOver</strong> or <strong>CrossMap</strong> rather than assuming coordinates transfer between assemblies.</p>
+</div>
+
 <!--topic 3.2: Essential File Formats Explained-->
           <p class="sub">Each step of a bioinformatics analysis produces a different file format. Recognising these formats, understanding their structure, and knowing how to convert between them is essential. Misinterpreting a file format is one of the most common causes of analysis errors.</p>
 
@@ -144,6 +172,49 @@ md5sum -c file.md5                                 <span class="code-comment"># 
           &bull; Watch out for coordinate systems: BED is 0-based half-open; GTF and VCF are 1-based inclusive<br>
           &bull; Use samtools and bedtools for format conversion and manipulation<br>
           &bull; Always verify file integrity with checksums (md5sum) after transfers</div></div>
+
+
+<div class="deep">
+<h3>Reading a FASTQ record</h3>
+<div class="code-block">@SRR1039508.1 HWI-ST177:290:C0TECACXX:1:1101:1225:2130/1   <span class="code-comment"># 1 read name</span>
+GGACATCTTTGCCCACGTTGACCTGCTGTTCATGGTCCTGGGTGTAG           <span class="code-comment"># 2 sequence</span>
++                                                          <span class="code-comment"># 3 separator</span>
+HJJJJJJJJJJJJJJJJJJJJJIJJJJJIJJJHHHHHFFFFFEEEEED           <span class="code-comment"># 4 quality, one character per base</span></div>
+<p class="sub">Each quality character encodes a <strong>Phred score</strong> as its ASCII value minus 33. The score is the probability that the base call is wrong, on a log scale:</p>
+<div class="code-block">Q = −10 × log₁₀(P_error)
+
+Q10 → 1 error in 10 bases    (90% accurate)
+Q20 → 1 error in 100         (99%)
+Q30 → 1 error in 1,000       (99.9%)   ← the usual target
+Q40 → 1 error in 10,000      (99.99%)</div>
+
+<h3>Coordinates: the mistake everyone makes once</h3>
+<table class="ref-table">
+  <tr><th>Convention</th><th>Formats</th><th>First base of a chromosome</th></tr>
+  <tr><td><strong>1-based, inclusive</strong></td><td>SAM, VCF, GFF3/GTF, genome browser search boxes</td><td>chr1:1-100 covers 100 bases</td></tr>
+  <tr><td><strong>0-based, half-open</strong></td><td>BED, BAM (internally), bedGraph</td><td>chr1 0 100 covers the same 100 bases</td></tr>
+</table>
+<p class="sub">Mixing the two shifts every feature by one base. It is the most common silent error in interval work, and it is why <code>bedtools</code> and <code>bcftools</code> disagree about a position if you hand-edit files. When a result is off by exactly one base, this is the first thing to check.</p>
+
+<h3>Why BAM, CRAM and the index files exist</h3>
+<ul>
+  <li><strong>SAM</strong> is the plain-text alignment format: readable, enormous.</li>
+  <li><strong>BAM</strong> is the same data in compressed binary, in BGZF blocks, so a region can be decompressed without reading the whole file.</li>
+  <li><strong>CRAM</strong> stores only the differences from the reference, typically 30 to 60% smaller than BAM, and needs that exact reference to read.</li>
+  <li><strong>Index files</strong> (<code>.bai</code>, <code>.csi</code>, <code>.tbi</code>) let a tool jump straight to a region. Indexing requires the file to be sorted by coordinate first, which is why nearly every pipeline runs <code>samtools sort</code> then <code>samtools index</code>.</li>
+</ul>
+<div class="code-block"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button><span class="code-comment"># Compress and index any tab-delimited, position-sorted file</span>
+bgzip variants.vcf && tabix -p vcf variants.vcf.gz
+tabix variants.vcf.gz chr7:140753000-140754000    <span class="code-comment"># instant region query</span>
+
+<span class="code-comment"># Convert BAM to CRAM (and back), keeping the reference with the data</span>
+samtools view -C -T GRCh38.fa -o sample.cram sample.bam
+samtools index sample.cram</div>
+<p class="sub">Note that <code>gzip</code> and <code>bgzip</code> both produce <code>.gz</code> files, but only BGZF files can be indexed. A file compressed with plain gzip will be rejected by tabix.</p>
+
+<h3>GTF and GFF3</h3>
+<p class="sub">Both describe features on a genome in nine tab-separated columns, differing only in how the ninth (attributes) column is written: GTF uses <code>gene_id "X"; transcript_id "Y";</code> while GFF3 uses <code>ID=X;Parent=Y</code>. Counting tools usually want GTF, browsers accept both. The attribute names matter: <code>featureCounts</code> defaults to counting <code>exon</code> features grouped by <code>gene_id</code>, so an annotation that names things differently silently produces zero counts.</p>
+</div>
 
 <!--topic 3.3: Downloading Data from SRA &amp; Ensembl-->
           <p class="sub">Most bioinformatics projects begin by downloading data — either raw sequencing data from public repositories (to reproduce or extend a study) or reference genomes and annotations for alignment. This section covers how to find, download, and verify data efficiently.</p>
@@ -229,3 +300,44 @@ done &lt; mapping.txt</div>
           &bull; ENA (European) often provides faster downloads with pre-compressed FASTQ files<br>
           &bull; Always verify downloads with md5sum and check that R1/R2 files have matching read counts<br>
           &bull; Keep genome FASTA and GTF from the same Ensembl release to avoid naming mismatches</div></div>
+
+<div class="deep">
+<h3>Which repository to use</h3>
+<table class="ref-table">
+  <tr><th>Repository</th><th>Holds</th><th>Download with</th></tr>
+  <tr><td><strong>SRA</strong> (NCBI)</td><td>Raw reads from almost every public sequencing study</td><td>SRA Toolkit (<code>prefetch</code>, <code>fasterq-dump</code>)</td></tr>
+  <tr><td><strong>ENA</strong> (EMBL-EBI)</td><td>The same data, mirrored, but served as plain FASTQ over FTP</td><td><code>wget</code> or <code>curl</code>: often simpler and faster</td></tr>
+  <tr><td><strong>GEO</strong></td><td>Processed expression data and sample metadata</td><td><code>GEOquery</code> in R, or the web interface</td></tr>
+  <tr><td><strong>Ensembl / GENCODE</strong></td><td>Reference genomes and annotation</td><td>FTP; choose the matching release for both files</td></tr>
+  <tr><td><strong>dbGaP / EGA</strong></td><td>Human data with identifiable information</td><td>Controlled access: an application is required</td></tr>
+</table>
+
+<h3>Downloading reliably</h3>
+<div class="code-block"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button><span class="code-comment"># Option A: SRA Toolkit. prefetch first, then convert; resumes if interrupted</span>
+prefetch SRR1039508 SRR1039509
+fasterq-dump --split-files --threads 8 --outdir fastq/ SRR1039508
+pigz -p 8 fastq/*.fastq
+
+<span class="code-comment"># Option B: ENA, straight to gzipped FASTQ (no conversion step)</span>
+curl -s "https://www.ebi.ac.uk/ena/portal/api/filereport?accession=PRJNA229998&result=read_run&fields=run_accession,fastq_ftp,fastq_md5" > runs.tsv
+<span class="code-comment"># then fetch each URL in the fastq_ftp column with wget -c</span>
+
+<span class="code-comment"># Always verify what arrived</span>
+md5sum -c checksums.txt</div>
+<p class="sub"><code>--split-files</code> matters: without it, paired-end reads are written interleaved into a single file and every downstream tool will treat the library as single-end. Check that the two files have equal line counts before aligning.</p>
+
+<h3>Getting a reference genome right</h3>
+<div class="code-block"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button><span class="code-comment"># Genome and annotation must come from the same source and release</span>
+wget https://ftp.ensembl.org/pub/release-112/fasta/homo_sapiens/dna/Homo_sapiens.GRCh38.dna.primary_assembly.fa.gz
+wget https://ftp.ensembl.org/pub/release-112/gtf/homo_sapiens/Homo_sapiens.GRCh38.112.gtf.gz</div>
+<ul>
+  <li>Use the <strong>primary assembly</strong>, not the "toplevel" file: toplevel includes haplotype and patch scaffolds, which make reads multi-map and inflate the index.</li>
+  <li><strong>Chromosome naming must match</strong> between your genome, annotation and any BED files. Ensembl writes <code>1</code>, UCSC writes <code>chr1</code>. A mismatch gives an empty result rather than an error.</li>
+  <li>Keep the exact URLs, release numbers and checksums in a file in the project. Six months later this is the difference between a reproducible analysis and a guess.</li>
+</ul>
+
+<h3>Metadata deserves as much care as the reads</h3>
+<p class="sub">An SRA run accession alone does not tell you which sample is a control. Download the run table (the <strong>SRA Run Selector</strong> gives it as CSV, or use <code>esearch</code> and <code>efetch</code> from Entrez Direct) and keep it in the project as the single source of truth for group assignments. Reconstructing the design from file names is how samples get swapped.</p>
+<div class="info-box tip"><svg class="ico" aria-hidden="true"><use href="#i-tip"></use></svg><div><strong>Check sizes before you start.</strong> One human RNA-seq sample is roughly 2 to 6 GB of compressed FASTQ; a whole-genome sample at 30× is 50 to 100 GB. A study of forty genomes needs a few terabytes before any analysis. Plan storage, and download to a scratch area rather than your home directory.</div></div>
+</div>
+

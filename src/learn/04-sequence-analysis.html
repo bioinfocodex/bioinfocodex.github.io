@@ -64,7 +64,44 @@ blastp -query speciesB.fa -db speciesA_db -outfmt 6 -evalue 1e-10 > B_vs_A.tsv</
           <div class="info-box tip"><svg class="ico" aria-hidden="true"><use href="#i-tip"></use></svg><div><strong>When BLAST isn't enough:</strong> BLAST misses very divergent homologues. For sensitive remote homology detection, use <strong>HMMER</strong> (profile-HMM searches — much more sensitive than PSI-BLAST) or <strong>HHblits</strong> (hidden Markov model vs HMM database). These tools are standard for protein domain annotation.</div></div>
 
           <h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">Key Takeaways</h3>
-          <div class="chips"><span class="chip">E-value &lt; 1e-5 for significance</span><span class="chip">blastp more sensitive than blastn</span><span class="chip">Always check query coverage, not just E-value</span><span class="chip">Use DIAMOND for large-scale searches</span><span class="chip">Reciprocal Best Hit for orthology</span></div>
+          
+<div class="deep">
+<h3>Choosing the right BLAST program</h3>
+<table class="ref-table">
+  <tr><th>Program</th><th>Query</th><th>Database</th><th>Use for</th></tr>
+  <tr><td><code>blastn</code></td><td>Nucleotide</td><td>Nucleotide</td><td>Closely related sequences, primers, identifying a clone</td></tr>
+  <tr><td><code>blastp</code></td><td>Protein</td><td>Protein</td><td>Finding homologues and inferring function</td></tr>
+  <tr><td><code>blastx</code></td><td>Nucleotide, translated</td><td>Protein</td><td>What protein does my unknown DNA encode?</td></tr>
+  <tr><td><code>tblastn</code></td><td>Protein</td><td>Nucleotide, translated</td><td>Finding an unannotated gene in a genome or transcriptome</td></tr>
+</table>
+<p class="sub">For anything beyond close relatives, search at the protein level. Protein sequence is far more conserved than DNA: two genes may be recognisably homologous in protein while their DNA has diverged past recognition. Within <code>blastn</code>, the <code>-task</code> option matters too: <code>megablast</code> (the default) is tuned for near-identical sequences, <code>blastn</code> for more distant ones.</p>
+
+<h3>Reading the statistics</h3>
+<ul>
+  <li><strong>E-value</strong> is the number of hits this good expected by chance in a database of this size. It therefore depends on database size: the same alignment gives a larger E-value in a bigger database. As a guide, below 1×10<sup>−5</sup> is probably homologous, below 1×10<sup>−50</sup> is strong, and values near 1 are noise.</li>
+  <li><strong>Bit score</strong> is independent of database size, so it is the better quantity for comparing results across searches.</li>
+  <li><strong>Query coverage</strong> is often more revealing than identity. A hit at 95% identity over 8% of your query is probably a shared domain, not a related protein.</li>
+  <li><strong>Identity</strong> above roughly 30% over a full-length protein alignment usually implies homology; between 20 and 30% lies the "twilight zone" where sequence alone cannot decide.</li>
+</ul>
+
+<h3>Running BLAST locally</h3>
+<div class="code-block"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button><span class="code-comment"># Build a database from your own sequences</span>
+makeblastdb -in proteins.fa -dbtype prot -out mydb -parse_seqids
+
+<span class="code-comment"># Search, with tabular output that is easy to parse</span>
+blastp -query query.fa -db mydb -evalue 1e-5 -max_target_seqs 10 \
+       -num_threads 8 -outfmt "6 qseqid sseqid pident length evalue bitscore qcovs stitle" \
+       -out hits.tsv
+
+<span class="code-comment"># Columns: query, subject, % identity, alignment length, E-value,</span>
+<span class="code-comment">#          bit score, % query coverage, subject description</span></div>
+<div class="info-box warn"><svg class="ico" aria-hidden="true"><use href="#i-warn"></use></svg><div><strong><code>-max_target_seqs</code> is not "the top N hits".</strong> It limits how many sequences the search keeps while running, so setting it to 1 does not reliably return the best hit. Keep a larger value (10 or more) and sort the output by bit score yourself.</div></div>
+
+<h3>When BLAST is the wrong tool</h3>
+<p class="sub">BLAST is designed for sensitive searching of one or a few sequences. For other scales, use the tool built for the job: <strong>DIAMOND</strong> for protein searches of millions of sequences (hundreds of times faster, used for metagenomes), <strong>MMseqs2</strong> for clustering and very large searches, <strong>HMMER</strong> for profile searches that find remote homologues BLAST misses, and <strong>minimap2</strong> or <strong>BWA</strong> for mapping sequencing reads to a genome, which is a different problem altogether.</p>
+</div>
+
+<div class="chips"><span class="chip">E-value &lt; 1e-5 for significance</span><span class="chip">blastp more sensitive than blastn</span><span class="chip">Always check query coverage, not just E-value</span><span class="chip">Use DIAMOND for large-scale searches</span><span class="chip">Reciprocal Best Hit for orthology</span></div>
 
 <!--topic 4.2: Multiple Sequence Alignment (MSA)-->
           <p class="sub">Multiple Sequence Alignment (MSA) arranges three or more biological sequences so that corresponding positions (homologous residues) line up in columns. This reveals evolutionary conservation: columns where all sequences have the same residue are under strong selective pressure — they are functionally important. MSA is the foundation for phylogenetics, protein domain identification, and functional annotation.</p>
@@ -114,7 +151,45 @@ trimal -in aligned.fa -sident             # Show sequence identity matrix
           <div class="info-box warn"><svg class="ico" aria-hidden="true"><use href="#i-warn"></use></svg><div><strong>Common MSA mistakes:</strong> (1) Including too-divergent sequences — they add noise, not signal. Remove sequences with &lt;20% identity. (2) Not trimming before phylogenetics — gappy regions create artefactual branches. (3) Using ClustalW — it is outdated and less accurate than MAFFT/MUSCLE. Use modern tools.</div></div>
 
           <h3 style="margin:16px 0 8px;font-size:0.92em;font-weight:600;">Key Takeaways</h3>
-          <div class="chips"><span class="chip">MAFFT --auto for most cases</span><span class="chip">Always trim before tree building</span><span class="chip">L-INS-i for best accuracy (&lt;200 seqs)</span><span class="chip">Visualise with Jalview or AliView</span><span class="chip">Conserved columns = functional importance</span></div>
+          
+<div class="deep">
+<h3>What the algorithms actually do</h3>
+<p class="sub">Aligning two sequences optimally is a solved problem (Needleman-Wunsch). Aligning N sequences optimally is not computationally feasible, so every practical tool approximates. The dominant approach is <strong>progressive alignment</strong>: estimate a rough tree of the sequences (a guide tree), align the two most similar sequences, then add the rest in order of decreasing similarity, aligning profiles rather than single sequences at each step.</p>
+<p class="sub">The weakness is that a mistake made early is never revisited, which is why <strong>iterative refinement</strong> (used by MAFFT's L-INS-i and MUSCLE) repeatedly splits the alignment and realigns the halves, and why <strong>consistency-based</strong> methods (T-Coffee, MAFFT's accurate modes) weigh each pairwise alignment against all the others before building.</p>
+
+<h3>Choosing a tool and a mode</h3>
+<table class="ref-table">
+  <tr><th>Tool and mode</th><th>Best for</th><th>Practical limit</th></tr>
+  <tr><td><strong>MAFFT L-INS-i</strong></td><td>Up to a few hundred sequences where accuracy matters most</td><td>Slow above ~200 sequences</td></tr>
+  <tr><td><strong>MAFFT FFT-NS-2</strong> / <code>--auto</code></td><td>General use; <code>--auto</code> picks a mode from the input size</td><td>Thousands of sequences</td></tr>
+  <tr><td><strong>Clustal Omega</strong></td><td>Very large protein sets</td><td>Hundreds of thousands</td></tr>
+  <tr><td><strong>MUSCLE 5</strong></td><td>General use; can produce an ensemble of alignments to show uncertainty</td><td>Thousands</td></tr>
+  <tr><td><strong>PRANK</strong></td><td>Alignments used for evolutionary inference: it treats insertions and deletions properly</td><td>Slow; small datasets</td></tr>
+  <tr><td><strong>MACSE</strong> / translate-align-back</td><td>Coding DNA, where gaps must be multiples of three</td><td>Coding sequences only</td></tr>
+</table>
+<div class="code-block"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button><span class="code-comment"># Accurate alignment of a small protein family</span>
+mafft --localpair --maxiterate 1000 --thread 8 family.fa > family.aln
+
+<span class="code-comment"># Large set: let MAFFT choose a strategy</span>
+mafft --auto large.fa > large.aln
+
+<span class="code-comment"># Remove poorly aligned columns before building a tree</span>
+trimal -in family.aln -out family.trim.aln -automated1</div>
+
+<h3>Judging an alignment</h3>
+<ul>
+  <li><strong>Look at it.</strong> Open it in Jalview, AliView or MEGA. Alignment errors are usually visible: a lone sequence out of register, or a block of gaps where one sequence has an unrelated region.</li>
+  <li><strong>Check the ends.</strong> Partial sequences create long terminal gaps that drag the whole alignment. Trim incomplete sequences, or remove them.</li>
+  <li><strong>Watch for gap-rich columns.</strong> Columns present in only a few sequences carry little information and add noise. <code>trimAl</code> or <code>Gblocks</code> remove them, which usually improves downstream trees.</li>
+  <li><strong>Align coding DNA as protein.</strong> Translate, align, then map the alignment back onto the codons. A nucleotide aligner will happily insert a one-base gap and destroy the reading frame.</li>
+</ul>
+
+<h3>What an alignment is for</h3>
+<p class="sub">An alignment is rarely the end product. It is the input to a <strong>phylogenetic tree</strong>, to a <strong>profile HMM</strong> for searching (HMMER, Pfam), to a <strong>sequence logo</strong> showing which residues are conserved at each position, to <strong>conservation scores</strong> mapped onto a structure, and to <strong>variant interpretation</strong>: a mutation at a column conserved across all vertebrates is far more likely to matter than one at a variable column. Because every one of these inherits the alignment's errors, the time spent checking it is repaid at each step.</p>
+<div class="info-box note"><svg class="ico" aria-hidden="true"><use href="#i-note"></use></svg><div><strong>Structure beats sequence in the twilight zone.</strong> When sequence identity falls below about 20%, alignments become unreliable. If structures or confident predicted models exist, align those instead (with DALI, TM-align or Foldseek); structural alignment stays informative far past the point where sequence alignment fails.</div></div>
+</div>
+
+<div class="chips"><span class="chip">MAFFT --auto for most cases</span><span class="chip">Always trim before tree building</span><span class="chip">L-INS-i for best accuracy (&lt;200 seqs)</span><span class="chip">Visualise with Jalview or AliView</span><span class="chip">Conserved columns = functional importance</span></div>
 
 <!--topic 4.3: Phylogenetic Trees — Evolutionary Analysis-->
           <p class="sub">A phylogenetic tree is a branching diagram that represents the evolutionary relationships among biological sequences or species. Trees are constructed from multiple sequence alignments and use mathematical models to infer how sequences have diverged over time. Understanding how to build, read, and interpret phylogenetic trees is a core skill in evolutionary biology, epidemiology, and comparative genomics.</p>

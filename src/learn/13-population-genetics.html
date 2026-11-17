@@ -45,7 +45,55 @@ done</div>
 
           <div class="info-box note"><svg class="ico" aria-hidden="true"><use href="#i-note"></use></svg><div><strong>Population stratification in GWAS:</strong> If cases and controls come from different ancestral backgrounds, allele frequency differences due to ancestry (not disease) will create false associations. This is why GWAS always includes PCA components as covariates — to correct for population structure. Typically the top 10–20 PCs are included.</div></div>
 
-          <div class="chips" style="margin-top:14px;"><span class="chip">HWE test for QC</span><span class="chip">PCA reveals population structure</span><span class="chip">PLINK2 for genetic analysis</span><span class="chip">FST measures differentiation</span><span class="chip">LD decays with distance</span></div>
+          
+<div class="deep">
+<h3>The null model that everything else is measured against</h3>
+<p class="sub">Hardy-Weinberg equilibrium says that in a large, randomly mating population with no selection, mutation or migration, allele frequencies stay the same from generation to generation, and genotype frequencies follow from them:</p>
+<div class="code-block">p = frequency of allele A        q = frequency of allele a        p + q = 1
+
+AA = p²        Aa = 2pq        aa = q²        p² + 2pq + q² = 1
+
+<span class="code-comment"># Example: in 1,000 people, 360 AA, 480 Aa, 160 aa</span>
+<span class="code-comment"># p = (2×360 + 480) / 2000 = 0.6    q = 0.4</span>
+<span class="code-comment"># Expected: AA = 360, Aa = 480, aa = 160  →  this locus is in equilibrium</span></div>
+<p class="sub">The value of the model is not that populations obey it. It is that departures from it are informative, and that in practice almost every departure a genomicist meets is a technical fault rather than biology.</p>
+
+<h3>Why HWE is a quality-control filter</h3>
+<p class="sub">In a GWAS, sites that deviate strongly from HWE are routinely removed. The reason is that genotyping errors produce characteristic deviations: a failing probe may call heterozygotes as homozygotes, giving far too few heterozygotes, while a probe hitting a duplicated region gives far too many. Conventions:</p>
+<ul>
+  <li>Test HWE in <strong>controls only</strong>. At a locus genuinely associated with disease, cases are expected to deviate, so testing them discards real signal.</li>
+  <li>Typical thresholds are p &lt; 1×10<sup>−6</sup> in controls, and a laxer p &lt; 1×10<sup>−10</sup> in cases.</li>
+  <li>Test within each ancestry group separately. Mixing populations with different allele frequencies creates an apparent heterozygote deficit (the Wahlund effect) at nearly every locus.</li>
+</ul>
+
+<h3>Measuring population structure</h3>
+<table class="ref-table">
+  <tr><th>Quantity</th><th>What it measures</th><th>Rule of thumb</th></tr>
+  <tr><td><strong>F<sub>ST</sub></strong></td><td>Proportion of genetic variation that lies between populations rather than within them</td><td>0 to 0.05 little differentiation; 0.05 to 0.15 moderate; above 0.25 strong. Human continental groups sit near 0.10 to 0.15</td></tr>
+  <tr><td><strong>Observed vs expected heterozygosity</strong></td><td>Inbreeding and structure within a sample</td><td>H<sub>obs</sub> well below H<sub>exp</sub> suggests inbreeding, structure, or genotyping error</td></tr>
+  <tr><td><strong>F (inbreeding coefficient)</strong></td><td>Excess homozygosity in an individual</td><td>Used to flag inbred samples and contaminated ones (negative F)</td></tr>
+  <tr><td><strong>Linkage disequilibrium (r²)</strong></td><td>How strongly alleles at two sites are inherited together</td><td>Decays with distance; the reason a GWAS can tag a causal variant it never genotyped</td></tr>
+</table>
+
+<h3>Seeing structure in your own data</h3>
+<div class="code-block"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button><span class="code-comment"># Standard quality control before any population analysis (PLINK 2)</span>
+plink2 --vcf cohort.vcf.gz --make-bed --out raw
+
+plink2 --bfile raw \
+       --geno 0.02 \          <span class="code-comment"># drop variants missing in >2% of samples</span>
+       --mind 0.02 \          <span class="code-comment"># drop samples missing >2% of variants</span>
+       --maf 0.01 \           <span class="code-comment"># drop very rare variants</span>
+       --hwe 1e-6 \           <span class="code-comment"># drop variants far from equilibrium</span>
+       --make-bed --out qc
+
+<span class="code-comment"># Prune correlated variants: structure analyses assume near-independence</span>
+plink2 --bfile qc --indep-pairwise 50 5 0.2 --out pruned
+plink2 --bfile qc --extract pruned.prune.in --pca 10 --out pca</div>
+<p class="sub">Plotting the first two principal components separates samples by ancestry. The same components are then used as covariates in association testing, which is the standard way to stop ancestry differences producing false associations.</p>
+<div class="info-box warn"><svg class="ico" aria-hidden="true"><use href="#i-warn"></use></svg><div><strong>Check relatedness as well.</strong> Duplicated samples and close relatives break the independence that association tests assume. Estimate kinship (KING, or PLINK's <code>--king-cutoff 0.0884</code> for second-degree relatives) and either remove one of each pair or move to a mixed model that accounts for relatedness.</div></div>
+</div>
+
+<div class="chips" style="margin-top:14px;"><span class="chip">HWE test for QC</span><span class="chip">PCA reveals population structure</span><span class="chip">PLINK2 for genetic analysis</span><span class="chip">FST measures differentiation</span><span class="chip">LD decays with distance</span></div>
 
 <!--topic 13.2: GWAS — Genome-Wide Association Studies-->
           <p class="sub">GWAS tests each genetic variant across the genome for association with a phenotype (disease, height, drug response, etc.). It is a hypothesis-free approach — no prior knowledge of which genes are involved is needed. Since millions of variants are tested simultaneously, very stringent significance thresholds are required (p &lt; 5×10⁻⁸ for genome-wide significance). GWAS results are visualised as Manhattan plots.</p>
@@ -84,4 +132,52 @@ plink2 --pfile qc_data \
 
           <div class="info-box tip"><svg class="ico" aria-hidden="true"><use href="#i-tip"></use></svg><div><strong>Post-GWAS analysis:</strong> After finding significant loci, perform: (1) <strong>Fine-mapping</strong> — identify the most likely causal variant. (2) <strong>Colocalization</strong> (coloc, eCAVIAR) — test if a GWAS signal and an eQTL signal share the same causal variant. (3) <strong>Gene mapping</strong> — assign GWAS hits to likely target genes using eQTL data, chromatin interaction (Hi-C), and distance. (4) <strong>Pathway enrichment</strong> — test if GWAS hits are enriched in specific biological pathways. (5) <strong>Polygenic Risk Scores</strong> — combine effects of all variants to predict individual risk.</div></div>
 
-          <div class="chips" style="margin-top:14px;"><span class="chip">p &lt; 5e-8 for genome-wide significance</span><span class="chip">Always correct for population structure</span><span class="chip">GWAS = association, not causation</span><span class="chip">Fine-mapping for causal variants</span><span class="chip">Manhattan plot for visualisation</span></div>
+          
+<div class="deep">
+<h3>What a GWAS actually tests</h3>
+<p class="sub">For each variant in turn, a GWAS fits a regression of the phenotype on the genotype, coded as the number of effect alleles (0, 1 or 2), with covariates:</p>
+<div class="code-block">Quantitative trait:  y  = β₀ + β·genotype + covariates + ε          (linear)
+Binary trait:        logit(P) = β₀ + β·genotype + covariates        (logistic)
+
+<span class="code-comment"># Covariates almost always include: age, sex, genotyping batch,</span>
+<span class="code-comment"># and the first 10 principal components of ancestry</span></div>
+<p class="sub">β is the effect size: change in the trait per copy of the allele, or the log odds ratio for a disease. The output is one p-value and one effect size per variant, for millions of variants.</p>
+
+<h3>Why the threshold is 5 × 10⁻⁸</h3>
+<p class="sub">Testing a million independent variants at p &lt; 0.05 would give 50,000 false positives. The common human genome contains roughly one million independent blocks of linkage disequilibrium, so a Bonferroni correction gives 0.05 / 1,000,000 = 5 × 10<sup>−8</sup>. The threshold is conventional rather than exact, and studies of rare variants or of non-European populations with shorter LD blocks may need a stricter one.</p>
+
+<h3>The plots and what they say</h3>
+<div class="card-grid card-grid-2" style="gap:12px;margin-top:0;">
+  <div class="card" style="padding:16px;border-left:3px solid var(--blue);"><strong>Manhattan plot</strong><p class="sub" style="margin-top:6px;">Every variant by position and significance. Real associations appear as towers, because the causal variant drags its LD neighbours up with it. An isolated single dot with no supporting neighbours is usually a genotyping artefact.</p></div>
+  <div class="card" style="padding:16px;border-left:3px solid var(--purple);"><strong>Q-Q plot</strong><p class="sub" style="margin-top:6px;">Observed p-values against those expected by chance. The line should follow the diagonal and lift only at the far right. A line raised along its whole length means uncorrected structure or relatedness.</p></div>
+</div>
+<p class="sub">The accompanying number is <strong>lambda (genomic inflation)</strong>, the ratio of the median observed test statistic to its expected value. Values between 1.0 and 1.05 are healthy; much above that, add ancestry components or move to a mixed model. In very large studies lambda rises with true polygenic signal too, so LD score regression is used to separate confounding from genuine polygenicity.</p>
+
+<h3>From a hit to a mechanism</h3>
+<p class="sub">A genome-wide significant association names a region, not a gene. Over 90% of hits fall outside coding sequence, in regulatory regions. The work after the scan is the harder half:</p>
+<ol>
+  <li><strong>Fine-mapping</strong> (SuSiE, FINEMAP) narrows the signal to a credible set of variants that could be causal.</li>
+  <li><strong>Colocalisation</strong> with eQTL data asks whether the same variant that affects the trait also affects the expression of a nearby gene.</li>
+  <li><strong>Functional annotation</strong> checks whether the credible-set variants sit in enhancers or open chromatin active in a relevant cell type.</li>
+  <li><strong>Experimental follow-up</strong>, such as a reporter assay or base editing, tests the candidate directly.</li>
+</ol>
+
+<h3>Running one</h3>
+<div class="code-block"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button><span class="code-comment"># Simple case-control scan with covariates (PLINK 2)</span>
+plink2 --bfile qc \
+       --glm hide-covar \
+       --pheno phenotypes.txt --pheno-name disease \
+       --covar pca.eigenvec --covar-name PC1-PC10 \
+       --out gwas
+
+<span class="code-comment"># With relatedness or population structure, prefer a mixed model:</span>
+<span class="code-comment">#   REGENIE, SAIGE (binary traits with unbalanced case numbers), or BOLT-LMM</span>
+
+<span class="code-comment"># Plot in R</span>
+<span class="code-comment"># library(qqman); res <- read.table("gwas.disease.glm.logistic", header=TRUE)</span>
+<span class="code-comment"># manhattan(res, chr="X.CHROM", bp="POS", p="P", snp="ID")</span>
+<span class="code-comment"># qq(res$P)</span></div>
+<div class="info-box note"><svg class="ico" aria-hidden="true"><use href="#i-note"></use></svg><div><strong>Effect sizes are small, and portability is limited.</strong> Typical odds ratios for common variants are 1.05 to 1.2, which is why sample sizes run to hundreds of thousands. Polygenic scores built in one population also predict poorly in another, because LD patterns and allele frequencies differ. Most published GWAS data come from European-ancestry cohorts, and this remains one of the field's largest open problems.</div></div>
+</div>
+
+<div class="chips" style="margin-top:14px;"><span class="chip">p &lt; 5e-8 for genome-wide significance</span><span class="chip">Always correct for population structure</span><span class="chip">GWAS = association, not causation</span><span class="chip">Fine-mapping for causal variants</span><span class="chip">Manhattan plot for visualisation</span></div>

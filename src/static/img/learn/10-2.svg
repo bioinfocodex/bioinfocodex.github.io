@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 250" width="720" height="250" role="img" font-family="system-ui,-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif">
+<title>The AlphaFold2 prediction pipeline and its pLDDT confidence scale</title>
+<rect width="720" height="250" fill="#ffffff"/>
+<rect x="16" y="60" width="110" height="60" rx="8" fill="#e7f1fd" stroke="#0969da" stroke-width="1.5"/>
+<text x="71" y="85" font-size="13" fill="#0a4fa3" text-anchor="middle" font-weight="600">Sequence</text>
+<text x="71" y="102" font-size="11" fill="#5b6472" text-anchor="middle" font-weight="400">FASTA</text>
+<rect x="156" y="30" width="130" height="50" rx="8" fill="#e6faf5" stroke="#00a87e" stroke-width="1.5"/>
+<text x="221" y="50" font-size="13" fill="#01664b" text-anchor="middle" font-weight="600">MSA</text>
+<text x="221" y="67" font-size="11" fill="#5b6472" text-anchor="middle" font-weight="400">related sequences</text>
+<rect x="156" y="100" width="130" height="50" rx="8" fill="#f6f8fa" stroke="#b6bfca" stroke-width="1.5"/>
+<text x="221" y="120" font-size="13" fill="#4a5568" text-anchor="middle" font-weight="600">Templates</text>
+<text x="221" y="137" font-size="11" fill="#5b6472" text-anchor="middle" font-weight="400">known structures</text>
+<rect x="316" y="60" width="120" height="60" rx="8" fill="#f1eafe" stroke="#7c3aed" stroke-width="1.5"/>
+<text x="376" y="85" font-size="13" fill="#5b21b6" text-anchor="middle" font-weight="600">Evoformer</text>
+<text x="376" y="102" font-size="11" fill="#5b6472" text-anchor="middle" font-weight="400">48 blocks</text>
+<rect x="466" y="60" width="120" height="60" rx="8" fill="#f1eafe" stroke="#7c3aed" stroke-width="1.5"/>
+<text x="526" y="85" font-size="13" fill="#5b21b6" text-anchor="middle" font-weight="600">Structure</text>
+<text x="526" y="102" font-size="13" fill="#5b21b6" text-anchor="middle" font-weight="600">module</text>
+<rect x="616" y="60" width="90" height="60" rx="8" fill="#fef3ea" stroke="#e0762a" stroke-width="1.5"/>
+<text x="661" y="85" font-size="13" fill="#9a4a06" text-anchor="middle" font-weight="600">3D model</text>
+<text x="661" y="102" font-size="11" fill="#5b6472" text-anchor="middle" font-weight="400">+ pLDDT</text>
+<line x1="128" y1="82" x2="147.893" y2="65.1675" stroke="#8b95a3" stroke-width="1.6" stroke-linecap="round"/>
+<polygon points="154.0,60.0 145.0,61.7 150.8,68.6" fill="#8b95a3"/>
+<line x1="128" y1="98" x2="147.893" y2="114.832" stroke="#8b95a3" stroke-width="1.6" stroke-linecap="round"/>
+<polygon points="154.0,120.0 150.8,111.4 145.0,118.3" fill="#8b95a3"/>
+<line x1="288" y1="56" x2="308.122" y2="74.5738" stroke="#8b95a3" stroke-width="1.6" stroke-linecap="round"/>
+<polygon points="314.0,80.0 311.2,71.3 305.1,77.9" fill="#8b95a3"/>
+<line x1="288" y1="124" x2="308.122" y2="105.426" stroke="#8b95a3" stroke-width="1.6" stroke-linecap="round"/>
+<polygon points="314.0,100.0 305.1,102.1 311.2,108.7" fill="#8b95a3"/>
+<line x1="438" y1="90" x2="456" y2="90" stroke="#8b95a3" stroke-width="1.6" stroke-linecap="round"/>
+<polygon points="464.0,90.0 456.0,85.5 456.0,94.5" fill="#8b95a3"/>
+<line x1="588" y1="90" x2="606" y2="90" stroke="#8b95a3" stroke-width="1.6" stroke-linecap="round"/>
+<polygon points="614.0,90.0 606.0,85.5 606.0,94.5" fill="#8b95a3"/>
+<path d="M526 122 C526 160 376 160 376 124" fill="none" stroke="#8b95a3" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4 4"/>
+<line x1="376" y1="128" x2="376" y2="130" stroke="#8b95a3" stroke-width="1.6" stroke-linecap="round"/>
+<polygon points="376.0,122.0 371.5,130.0 380.5,130.0" fill="#8b95a3"/>
+<text x="451" y="168" font-size="10.5" fill="#5b6472" text-anchor="middle" font-weight="400">recycle 3 times</text>
+<text x="20" y="204" font-size="11.5" fill="#0d1117" text-anchor="start" font-weight="700">pLDDT confidence:</text>
+<rect x="150" y="192" width="18" height="16" rx="3" fill="#0053d6" stroke="#b6bfca" stroke-width="0"/>
+<text x="174" y="205" font-size="11" fill="#0d1117" text-anchor="start" font-weight="400">&gt; 90 very high</text>
+<rect x="290" y="192" width="18" height="16" rx="3" fill="#65cbf3" stroke="#b6bfca" stroke-width="0"/>
+<text x="314" y="205" font-size="11" fill="#0d1117" text-anchor="start" font-weight="400">70 to 90 confident</text>
+<rect x="430" y="192" width="18" height="16" rx="3" fill="#ffdb13" stroke="#b6bfca" stroke-width="0"/>
+<text x="454" y="205" font-size="11" fill="#0d1117" text-anchor="start" font-weight="400">50 to 70 low</text>
+<rect x="570" y="192" width="18" height="16" rx="3" fill="#ff7d45" stroke="#b6bfca" stroke-width="0"/>
+<text x="594" y="205" font-size="11" fill="#0d1117" text-anchor="start" font-weight="400">&lt; 50 very low</text>
+<text x="360" y="236" font-size="11" fill="#5b6472" text-anchor="middle" font-weight="400">Low-confidence regions are often flexible linkers or intrinsically disordered</text>
+</svg>

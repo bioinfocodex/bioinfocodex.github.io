@@ -40,7 +40,43 @@ pymol 1UBQ.pdb</div>
 
           <div class="info-box note"><svg class="ico" aria-hidden="true"><use href="#i-note"></use></svg><div><strong>Reading pLDDT scores:</strong> AlphaFold provides a per-residue confidence score (pLDDT, 0–100). &gt;90 = very high confidence (core domains). 70–90 = confident. 50–70 = low confidence (may be flexible). &lt;50 = disordered/unstructured regions. Always check pLDDT before interpreting predicted structures.</div></div>
 
-          <div class="chips" style="margin-top:14px;"><span class="chip">PDB for experimental structures</span><span class="chip">AlphaFold for predictions</span><span class="chip">pLDDT &gt; 70 = trustworthy</span><span class="chip">PyMOL or ChimeraX for visualisation</span></div>
+          
+<div class="deep">
+<h3>What holds a fold together</h3>
+<ul>
+  <li><strong>The hydrophobic effect</strong> is the main driving force. Non-polar side chains (Leu, Ile, Val, Phe) pack into the core, away from water.</li>
+  <li><strong>Hydrogen bonds</strong> between backbone N-H and C=O groups form the regular secondary structures.</li>
+  <li><strong>Salt bridges</strong> between oppositely charged side chains (Lys or Arg with Asp or Glu) and <strong>disulfide bonds</strong> between cysteines add stability, the latter mostly in secreted proteins.</li>
+</ul>
+<p class="sub">An <strong>α-helix</strong> has 3.6 residues per turn, and each backbone C=O bonds to the N-H four residues further on. A <strong>β-sheet</strong> is made of extended strands lying side by side, running in the same direction (parallel) or in opposite directions (antiparallel). The backbone can only take certain combinations of its two rotation angles, phi and psi; a <strong>Ramachandran plot</strong> shows them, and residues in forbidden regions are a standard sign of an error in a model.</p>
+
+<h3>Domains, motifs and families</h3>
+<p class="sub">Most proteins are built from <strong>domains</strong>: compact units of roughly 50 to 250 residues that fold on their own and are reused across many proteins. A kinase domain or an SH2 domain does the same job wherever it appears. Databases such as <strong>Pfam</strong> and <strong>InterPro</strong> find domains from sequence alone, and <strong>CATH</strong> and <strong>SCOP</strong> classify known structures by fold. Recognising a domain is often the fastest route to a first guess at function.</p>
+
+<h3>How structures are determined</h3>
+<table class="ref-table">
+  <tr><th>Method</th><th>Needs</th><th>Best for</th><th>Limits</th></tr>
+  <tr><td><strong>X-ray crystallography</strong></td><td>A well-ordered crystal</td><td>Atomic detail, small-molecule complexes</td><td>Many proteins will not crystallise; shows one frozen state</td></tr>
+  <tr><td><strong>Cryo-electron microscopy</strong></td><td>Purified sample frozen in thin ice</td><td>Large complexes and membrane proteins</td><td>Small proteins (under about 50 kDa) are hard</td></tr>
+  <tr><td><strong>NMR spectroscopy</strong></td><td>Concentrated, isotope-labelled protein in solution</td><td>Dynamics and flexible proteins</td><td>Mostly limited to proteins under about 30 kDa</td></tr>
+</table>
+
+<h3>Reading a PDB entry critically</h3>
+<ul>
+  <li><strong>Resolution</strong> (in Å): lower is better. Under 2.0 Å side chains and waters are clear; above 3.5 Å only the overall fold is reliable.</li>
+  <li><strong>R-free:</strong> how well the model predicts data that were held back during refinement. Values near 0.20 to 0.25 are typical for a good crystal structure.</li>
+  <li><strong>B-factor:</strong> how much each atom moves or how uncertain its position is. High B-factors mark flexible loops.</li>
+  <li><strong>What is missing:</strong> disordered loops and termini are often simply absent from the file. Check the sequence coverage before assuming a region has no structure.</li>
+</ul>
+<div class="code-block"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button><span class="code-comment"># Download an experimental structure (haemoglobin, PDB 1A3N)</span>
+curl -O https://files.rcsb.org/download/1A3N.cif
+
+<span class="code-comment"># Download the AlphaFold model for a UniProt accession (human p53, P04637)</span>
+curl -O https://alphafold.ebi.ac.uk/files/AF-P04637-F1-model_v4.pdb</div>
+<div class="info-box note"><svg class="ico" aria-hidden="true"><use href="#i-note"></use></svg><div><strong>File formats:</strong> the old <code>.pdb</code> format cannot hold very large structures, so the archive's standard format is now <strong>mmCIF</strong> (<code>.cif</code>). Viewers such as Mol*, ChimeraX and PyMOL read both.</div></div>
+</div>
+
+<div class="chips" style="margin-top:14px;"><span class="chip">PDB for experimental structures</span><span class="chip">AlphaFold for predictions</span><span class="chip">pLDDT &gt; 70 = trustworthy</span><span class="chip">PyMOL or ChimeraX for visualisation</span></div>
 
 <!--topic 10.2: Structure Prediction — AlphaFold &amp; ColabFold-->
           <p class="sub">AlphaFold2, developed by DeepMind, solved the protein structure prediction problem in 2020. It predicts 3D structures from amino acid sequence alone with near-experimental accuracy. ColabFold makes it easy to run AlphaFold predictions using Google Colab — no local GPU required.</p>
@@ -70,7 +106,41 @@ colabfold_batch complex.fasta output_dir/ --model-type alphafold2_multimer_v3
 
           <div class="info-box warn"><svg class="ico" aria-hidden="true"><use href="#i-warn"></use></svg><div><strong>Limitations of AlphaFold:</strong> (1) Does not predict conformational changes — gives a single static structure. (2) Disordered regions (low pLDDT) should not be interpreted structurally. (3) Cannot predict effects of mutations reliably. (4) Ligand/cofactor binding sites may not be accurate without the ligand present. (5) AlphaFold2 struggles with protein-protein interfaces — use AlphaFold-Multimer or AlphaFold3 for complexes.</div></div>
 
-          <div class="chips" style="margin-top:14px;"><span class="chip">ColabFold = easiest way to predict</span><span class="chip">AlphaFold3 for complexes</span><span class="chip">Check pLDDT and PAE</span><span class="chip">Static structure only</span></div>
+          
+<div class="deep">
+<h3>Why the alignment matters so much</h3>
+<p class="sub">Two residues that touch in the folded protein tend to change together during evolution: if one mutates, the other often mutates to compensate. A deep multiple sequence alignment reveals these <strong>co-evolving pairs</strong>, and they tell the network which residues are close in space. This is why a protein with thousands of known relatives is usually predicted well, and an orphan protein with few relatives is not.</p>
+
+<h3>Reading the confidence scores</h3>
+<table class="ref-table">
+  <tr><th>Score</th><th>What it describes</th><th>How to use it</th></tr>
+  <tr><td><strong>pLDDT</strong> (0 to 100, per residue)</td><td>Confidence in the local structure around each residue</td><td>Above 90: side chains usable. 70 to 90: backbone reliable. Below 50: do not interpret, often disordered</td></tr>
+  <tr><td><strong>PAE</strong> (in Å, per residue pair)</td><td>Expected error in the position of one residue when the model is aligned on another</td><td>Low PAE between two domains means their relative arrangement can be trusted</td></tr>
+  <tr><td><strong>pTM</strong> (0 to 1)</td><td>Confidence in the overall fold</td><td>Above 0.5 suggests the fold is broadly right</td></tr>
+  <tr><td><strong>ipTM</strong> (0 to 1, complexes)</td><td>Confidence in the interface between chains</td><td>Above 0.8 is a confident complex; below 0.6 is usually a failed prediction</td></tr>
+</table>
+<div class="info-box warn"><svg class="ico" aria-hidden="true"><use href="#i-warn"></use></svg><div><strong>A common mistake:</strong> high pLDDT in two domains does not mean their relative position is correct. Two confident domains joined by a flexible linker can be placed anywhere. Always look at the PAE plot before drawing conclusions about how domains or chains sit together.</div></div>
+
+<h3>What a prediction cannot tell you</h3>
+<ul>
+  <li><strong>One static shape.</strong> Proteins move between conformations; a prediction gives one, usually the best-represented in the PDB.</li>
+  <li><strong>Effect of point mutations.</strong> The model for a disease variant usually looks almost identical to the wild type. Predicted structures are not a stability calculator.</li>
+  <li><strong>Ligands, ions and modifications.</strong> AlphaFold2 models the protein chain only. AlphaFold 3 and similar newer models add nucleic acids, small molecules and ions.</li>
+  <li><strong>Disordered regions.</strong> Low-confidence ribbons are placeholders, not structure.</li>
+</ul>
+
+<h3>Which tool for which job</h3>
+<table class="ref-table">
+  <tr><th>Tool</th><th>Use it when</th></tr>
+  <tr><td><strong>AlphaFold Protein Structure Database</strong></td><td>Your protein is in UniProt. More than 200 million models are already computed, so check here first</td></tr>
+  <tr><td><strong>ColabFold</strong></td><td>You need a new prediction or a complex. It replaces the slow alignment step with MMseqs2 and runs in a free notebook</td></tr>
+  <tr><td><strong>ESMFold</strong></td><td>You need thousands of quick predictions. It uses a protein language model and no alignment, with somewhat lower accuracy</td></tr>
+  <tr><td><strong>AlphaFold 3 server</strong></td><td>You need a protein with DNA, RNA, ligands or ions</td></tr>
+</table>
+<p class="sub"><strong>A sensible routine:</strong> look for an experimental structure in the PDB, then the AlphaFold database, and only then run your own prediction. Colour the model by pLDDT, open the PAE plot, and compare with any homologue that has an experimental structure.</p>
+</div>
+
+<div class="chips" style="margin-top:14px;"><span class="chip">ColabFold = easiest way to predict</span><span class="chip">AlphaFold3 for complexes</span><span class="chip">Check pLDDT and PAE</span><span class="chip">Static structure only</span></div>
 
 <!--topic 10.3: Molecular Docking &amp; Drug Discovery-->
           <p class="sub">Molecular docking predicts how a small molecule (ligand/drug) binds to a protein target. It is a cornerstone of computer-aided drug design (CADD). The goal is to find the binding pose (orientation + conformation) and estimate binding affinity. Virtual screening uses docking to test millions of compounds computationally before synthesising the most promising ones.</p>
@@ -107,4 +177,43 @@ vina --receptor receptor.pdbqt --ligand ligand.pdbqt \
 
           <div class="info-box warn"><svg class="ico" aria-hidden="true"><use href="#i-warn"></use></svg><div><strong>Docking limitations:</strong> Docking scoring functions are approximate — they estimate binding affinity with ~2 kcal/mol error. Use docking for <strong>ranking</strong> (which compounds bind better), not absolute binding energy prediction. Always validate top hits experimentally. For more accurate binding free energies, use molecular dynamics with free energy perturbation (FEP) or MM-PBSA methods.</div></div>
 
-          <div class="chips" style="margin-top:14px;"><span class="chip">AutoDock Vina to start</span><span class="chip">DiffDock for blind docking</span><span class="chip">Use for ranking, not absolute affinity</span><span class="chip">Always validate experimentally</span></div>
+          
+<div class="deep">
+<h3>Two separate problems: posing and scoring</h3>
+<p class="sub">Docking does two things. <strong>Posing</strong> asks where and in what orientation the ligand sits in the pocket. <strong>Scoring</strong> asks how strongly it binds. Current programs are good at the first and much weaker at the second: the correct pose is often among the top few, but the estimated energies correlate only loosely with measured affinities. Treat docking as a way to rank and filter candidates, not as a measurement.</p>
+<p class="sub">For scale, binding energy and the dissociation constant are linked by ΔG = RT ln K<sub>d</sub>. At 25 °C, every ten-fold improvement in K<sub>d</sub> is worth about 1.4 kcal/mol, so a score difference of 0.5 kcal/mol between two compounds is well inside the error of the method.</p>
+
+<h3>Preparation decides the result</h3>
+<table class="ref-table">
+  <tr><th>Step</th><th>What to do</th><th>Common error</th></tr>
+  <tr><td><strong>Choose the receptor</strong></td><td>Prefer a structure solved with a bound ligand, at good resolution</td><td>Using an empty (apo) structure whose pocket is closed</td></tr>
+  <tr><td><strong>Clean it</strong></td><td>Remove solvent and unrelated molecules; keep waters or metal ions that take part in binding</td><td>Deleting a catalytic zinc or a bridging water</td></tr>
+  <tr><td><strong>Add hydrogens and charges</strong></td><td>Assign protonation states for pH 7.4, especially histidines</td><td>Wrong histidine state reverses a hydrogen bond</td></tr>
+  <tr><td><strong>Prepare the ligand</strong></td><td>Generate a 3D structure with the right charge state and tautomer</td><td>Docking a flat 2D structure or the wrong ionisation state</td></tr>
+  <tr><td><strong>Place the search box</strong></td><td>Centre on the known ligand, a few Å larger than it on every side</td><td>A box around the whole protein, which wastes the search</td></tr>
+</table>
+<div class="code-block"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button><span class="code-comment"># conf.txt for AutoDock Vina</span>
+receptor = receptor.pdbqt
+ligand   = ligand.pdbqt
+
+center_x = 12.5
+center_y = -3.2
+center_z = 24.8
+size_x   = 22
+size_y   = 22
+size_z   = 22
+
+exhaustiveness = 16      <span class="code-comment"># default 8; higher searches more thoroughly</span>
+num_modes      = 9
+
+<span class="code-comment"># Run:  vina --config conf.txt --out poses.pdbqt</span></div>
+
+<h3>Validate before you screen</h3>
+<ol>
+  <li><strong>Re-dock the known ligand.</strong> Remove the ligand from the crystal structure and dock it back. A top pose within 2 Å RMSD of the crystal pose shows that your setup works.</li>
+  <li><strong>Test enrichment.</strong> Dock known binders mixed with decoys (similar properties, presumed inactive). The binders should rank near the top.</li>
+  <li><strong>Inspect poses by eye.</strong> Look for the hydrogen bonds and contacts that known ligands make. A good score with no sensible interactions is a warning.</li>
+</ol>
+</div>
+
+<div class="chips" style="margin-top:14px;"><span class="chip">AutoDock Vina to start</span><span class="chip">DiffDock for blind docking</span><span class="chip">Use for ranking, not absolute affinity</span><span class="chip">Always validate experimentally</span></div>

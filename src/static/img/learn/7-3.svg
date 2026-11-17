@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 270" width="720" height="270" role="img" font-family="system-ui,-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif">
+<title>A PCA plot used for sample quality control</title>
+<rect width="720" height="270" fill="#ffffff"/>
+<line x1="80" y1="20" x2="80" y2="216" stroke="#0d1117" stroke-width="1.4" stroke-linecap="round"/>
+<line x1="80" y1="216" x2="640" y2="216" stroke="#0d1117" stroke-width="1.4" stroke-linecap="round"/>
+<text x="360" y="246" font-size="12" fill="#5b6472" text-anchor="middle" font-weight="400">PC1: 62% of variance</text>
+<text x="46" y="118" font-size="12" fill="#5b6472" text-anchor="middle" font-weight="400" transform="rotate(-90 46 118)">PC2: 18% of variance</text>
+<ellipse cx="190" cy="120" rx="66" ry="52" fill="#e7f1fd" stroke="#0969da" stroke-dasharray="4 4"/>
+<circle cx="202.201" cy="112.897" r="7" fill="#0969da" stroke="#0969da" stroke-width="1.5"/>
+<circle cx="177.762" cy="97.816" r="7" fill="#0969da" stroke="#0969da" stroke-width="1.5"/>
+<circle cx="178.498" cy="133.401" r="7" fill="#0969da" stroke="#0969da" stroke-width="1.5"/>
+<circle cx="216.23" cy="117.961" r="7" fill="#0969da" stroke="#0969da" stroke-width="1.5"/>
+<circle cx="209.437" cy="138.315" r="7" fill="#0969da" stroke="#0969da" stroke-width="1.5"/>
+<ellipse cx="500" cy="110" rx="66" ry="52" fill="#fef3ea" stroke="#e0762a" stroke-dasharray="4 4"/>
+<circle cx="474.485" cy="81.8161" r="7" fill="#e0762a" stroke="#e0762a" stroke-width="1.5"/>
+<circle cx="485.783" cy="84.2396" r="7" fill="#e0762a" stroke="#e0762a" stroke-width="1.5"/>
+<circle cx="490.6" cy="139.57" r="7" fill="#e0762a" stroke="#e0762a" stroke-width="1.5"/>
+<circle cx="503.551" cy="86.3298" r="7" fill="#e0762a" stroke="#e0762a" stroke-width="1.5"/>
+<circle cx="430" cy="186" r="7" fill="#e0762a" stroke="#e0762a" stroke-width="1.5"/>
+<line x1="380" y1="196" x2="412.12" y2="190.379" stroke="#e5484d" stroke-width="1.6" stroke-linecap="round"/>
+<polygon points="420.0,189.0 411.3,185.9 412.9,194.8" fill="#e5484d"/>
+<text x="374" y="200" font-size="11" fill="#a4262c" text-anchor="end" font-weight="400">outlier: check this sample</text>
+<text x="190" y="46" font-size="12" fill="#0a4fa3" text-anchor="middle" font-weight="700">control</text>
+<text x="500" y="40" font-size="12" fill="#9a4a06" text-anchor="middle" font-weight="700">treated</text>
+<text x="345" y="124" font-size="10.5" fill="#5b6472" text-anchor="middle" font-weight="400">separation along PC1</text>
+<text x="345" y="138" font-size="10.5" fill="#5b6472" text-anchor="middle" font-weight="400">= the treatment effect</text>
+<text x="360" y="262" font-size="10.5" fill="#5b6472" text-anchor="middle" font-weight="400">Illustration. Replicates should cluster together and conditions should separate.</text>
+</svg>

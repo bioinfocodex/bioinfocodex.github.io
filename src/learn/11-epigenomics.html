@@ -48,7 +48,72 @@ findMotifsGenome.pl peaks/my_tf_peaks.narrowPeak hg38 motif_output/ -size 200</d
 
           <div class="info-box tip"><svg class="ico" aria-hidden="true"><use href="#i-tip"></use></svg><div><strong>CUT&amp;RUN / CUT&amp;Tag:</strong> Modern alternatives to ChIP-seq that require far fewer cells (100–1,000 vs millions), have lower background, and are cheaper. CUT&amp;Tag is especially popular — it uses a protein A-Tn5 fusion to cut and tag DNA near the antibody target. Analysis is similar to ChIP-seq but use SEACR instead of MACS2 for peak calling.</div></div>
 
-          <div class="chips" style="margin-top:14px;"><span class="chip">Bowtie2 for alignment</span><span class="chip">MACS2 for peak calling</span><span class="chip">Always include input control</span><span class="chip">HOMER for motif analysis</span><span class="chip">CUT&amp;Tag is replacing ChIP-seq</span></div>
+          
+<div class="deep">
+<h3>What the experiment measures</h3>
+<p class="sub">ChIP-seq answers one question: where on the genome was a given protein sitting when the cells were fixed? Cells are treated with formaldehyde, which freezes proteins onto the DNA they touch. The chromatin is then broken into fragments of a few hundred base pairs, an antibody pulls down the fragments carrying the protein of interest, the links are reversed, and the released DNA is sequenced. Positions where many fragments accumulate are the places the protein occupied.</p>
+
+<h3>The two signal shapes</h3>
+<table class="ref-table">
+  <tr><th></th><th>Narrow (point-source)</th><th>Broad (domain)</th></tr>
+  <tr><td><strong>Typical targets</strong></td><td>Transcription factors, CTCF, Pol II at promoters, H3K4me3</td><td>H3K27me3, H3K9me3, H3K36me3</td></tr>
+  <tr><td><strong>Width</strong></td><td>200 bp to 1 kb</td><td>5 kb to several hundred kb</td></tr>
+  <tr><td><strong>Depth needed</strong></td><td>20 million usable reads</td><td>40 to 60 million usable reads</td></tr>
+  <tr><td><strong>MACS3 setting</strong></td><td>default</td><td><code>--broad</code></td></tr>
+</table>
+<p class="sub">Knowing which shape to expect decides the depth you buy and the peak caller you use. Running a broad mark through a narrow caller gives a scatter of fragmentary peaks instead of one domain.</p>
+
+<h3>Controls are not optional</h3>
+<p class="sub">Sequencing coverage is never flat. Open chromatin shears more easily, repeats attract mapping errors, and copy-number differences change the local read density. All of this produces hills that look like peaks. The control removes them:</p>
+<ul>
+  <li><strong>Input:</strong> chromatin taken from the same sample before the antibody step. This is the standard control and the one to use unless you have a reason not to.</li>
+  <li><strong>IgG:</strong> a pull-down with a non-specific antibody. It measures antibody background but usually yields very little DNA, so the library is low-complexity.</li>
+  <li>Sequence the control at least as deeply as the ChIP sample, from the same batch of cells.</li>
+</ul>
+
+<h3>From reads to peaks</h3>
+<div class="code-block"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button><span class="code-comment"># 1. Align (no splicing: this is DNA)</span>
+bowtie2 -x genome -1 chip_R1.fq.gz -2 chip_R2.fq.gz -p 8 | samtools sort -o chip.bam
+samtools index chip.bam
+
+<span class="code-comment"># 2. Keep properly paired, uniquely mapped reads; drop duplicates and blacklist regions</span>
+samtools view -b -f 2 -q 30 chip.bam > chip.filt.bam
+picard MarkDuplicates I=chip.filt.bam O=chip.dedup.bam M=dup.txt REMOVE_DUPLICATES=true
+bedtools intersect -v -abam chip.dedup.bam -b blacklist.bed > chip.clean.bam
+
+<span class="code-comment"># 3. Call peaks against the input control</span>
+macs3 callpeak -t chip.clean.bam -c input.clean.bam -f BAMPE -g hs \
+      -n TF_rep1 --outdir peaks/ -q 0.05
+
+<span class="code-comment">#    ... or, for a broad histone mark</span>
+macs3 callpeak -t k27me3.clean.bam -c input.clean.bam -f BAMPE -g hs \
+      -n K27me3 --broad --broad-cutoff 0.1
+
+<span class="code-comment"># 4. Make a normalised track to look at in a genome browser</span>
+bamCoverage -b chip.clean.bam -o chip.bw --normalizeUsing CPM --binSize 10</div>
+<p class="sub">The <strong>ENCODE blacklist</strong> is a list of regions that give extreme signal in every experiment, mostly repeats and assembly artefacts. Removing them is one of the cheapest quality improvements available.</p>
+
+<h3>Quality metrics worth checking</h3>
+<table class="ref-table">
+  <tr><th>Metric</th><th>What it means</th><th>Aim for</th></tr>
+  <tr><td><strong>FRiP</strong></td><td>Fraction of reads inside called peaks</td><td>Above 1% (ENCODE minimum); good TF experiments reach 5 to 20%</td></tr>
+  <tr><td><strong>NSC / RSC</strong></td><td>Strand cross-correlation: how strongly reads form the expected two-strand pattern</td><td>NSC above 1.05, RSC above 0.8</td></tr>
+  <tr><td><strong>Library complexity</strong></td><td>Fraction of distinct fragments</td><td>NRF above 0.8; a high duplicate rate means too little starting material</td></tr>
+  <tr><td><strong>Replicate agreement</strong></td><td>IDR: peaks reproducible between two replicates</td><td>Report the IDR peak set, not the union of all peaks</td></tr>
+</table>
+
+<h3>Making sense of the peaks</h3>
+<ul>
+  <li><strong>Annotate</strong> them relative to genes (ChIPseeker, HOMER): what fraction sit at promoters, in introns, or far from any gene?</li>
+  <li><strong>Find motifs</strong> (MEME-ChIP, HOMER). For a transcription factor, recovering its known motif as the top enriched sequence is the strongest evidence that the experiment worked.</li>
+  <li><strong>Compare conditions</strong> with DiffBind or csaw, which test read counts in a consensus peak set the same way DESeq2 tests genes.</li>
+  <li><strong>Link to expression:</strong> peaks alone show binding, not effect. Pair them with RNA-seq from the same system to see which bound genes actually change.</li>
+</ul>
+<div class="info-box warn"><svg class="ico" aria-hidden="true"><use href="#i-warn"></use></svg><div><strong>The antibody is the experiment.</strong> Most failed ChIP-seq is a failed antibody. Use a ChIP-validated lot, and where possible confirm with a tagged version of the protein (CUT&amp;RUN or CUT&amp;Tag with a tag antibody), or with a knockout sample as a negative control.</div></div>
+<div class="info-box note"><svg class="ico" aria-hidden="true"><use href="#i-note"></use></svg><div><strong>Newer alternatives:</strong> CUT&amp;RUN and CUT&amp;Tag cut the DNA where the antibody binds instead of fragmenting everything. They need far fewer cells and far fewer reads (3 to 8 million), with much lower background. The analysis is similar, but peak callers are run with settings suited to the sparser background (SEACR, or MACS3 without a control).</div></div>
+</div>
+
+<div class="chips" style="margin-top:14px;"><span class="chip">Bowtie2 for alignment</span><span class="chip">MACS2 for peak calling</span><span class="chip">Always include input control</span><span class="chip">HOMER for motif analysis</span><span class="chip">CUT&amp;Tag is replacing ChIP-seq</span></div>
 
 <!--topic 11.2: ATAC-seq — Chromatin Accessibility-->
           <p class="sub">ATAC-seq (Assay for Transposase-Accessible Chromatin using sequencing) maps open chromatin regions genome-wide. It uses the Tn5 transposase, which preferentially inserts sequencing adapters into accessible (open) chromatin, avoiding tightly packed nucleosome-occupied regions. Open chromatin corresponds to active regulatory elements — promoters, enhancers, and transcription factor binding sites.</p>
@@ -86,7 +151,62 @@ bamCoverage -b atac_shifted.bam -o atac.bw --normalizeUsing RPGC \
 
           <div class="info-box note"><svg class="ico" aria-hidden="true"><use href="#i-note"></use></svg><div><strong>Fragment size distribution:</strong> A good ATAC-seq library shows a characteristic nucleosomal ladder pattern: a peak at ~200 bp (nucleosome-free), ~400 bp (mono-nucleosome), ~600 bp (di-nucleosome). If you see only the ~200 bp peak, your transposition worked well. If the distribution is broad without clear peaks, the experiment may have had too many or too few Tn5 insertions.</div></div>
 
-          <div class="chips" style="margin-top:14px;"><span class="chip">Remove chrM reads first</span><span class="chip">Tn5 shift correction is essential</span><span class="chip">Nucleosomal ladder = good QC</span><span class="chip">No input control needed</span></div>
+          
+<div class="deep">
+<h3>How the Tn5 trick works</h3>
+<p class="sub">Tn5 transposase does two jobs in one reaction: it cuts DNA and ligates sequencing adapters onto the cut ends. This is called <strong>tagmentation</strong>. In ATAC-seq the enzyme is added to intact nuclei, so it can only reach DNA that is not wrapped around a nucleosome or covered by a bound protein. Reads therefore mark accessible chromatin: promoters, active enhancers, and sites held open by transcription factors. The whole protocol takes a few hours from 50,000 nuclei, with no antibody and no crosslinking.</p>
+
+<h3>Fragment sizes carry information</h3>
+<p class="sub">A good ATAC-seq library shows a clear ladder in its fragment-size distribution, and this plot is the fastest quality check available:</p>
+<ul>
+  <li><strong>Under 100 bp:</strong> nucleosome-free fragments, from stretches of naked accessible DNA. These carry the sharpest signal.</li>
+  <li><strong>About 180 to 250 bp:</strong> fragments spanning one nucleosome.</li>
+  <li><strong>About 350 to 500 bp:</strong> two nucleosomes, and so on, with each step fading.</li>
+</ul>
+<p class="sub">The periodicity of roughly 150 to 200 bp reflects the size of a nucleosome plus its linker. A smooth distribution with no ladder means the nuclei were over-digested or the chromatin was degraded.</p>
+
+<h3>The two problems specific to ATAC-seq</h3>
+<div class="card-grid card-grid-2" style="gap:12px;margin-top:0;">
+  <div class="card" style="padding:16px;border-left:3px solid var(--orange);"><strong>Mitochondrial reads</strong><p class="sub" style="margin-top:6px;">Mitochondrial DNA has no nucleosomes, so Tn5 attacks it freely. In early protocols it took 20 to 80% of all reads. Omni-ATAC reduces this with a detergent wash; whatever the protocol, remove chrM reads before counting anything, and judge depth by the reads that remain.</p></div>
+  <div class="card" style="padding:16px;border-left:3px solid var(--blue);"><strong>The 9 bp offset</strong><p class="sub" style="margin-top:6px;">Tn5 binds as a dimer and inserts adapters 9 bp apart. For base-resolution work such as footprinting, shift reads on the plus strand by +4 and on the minus strand by −5 so the cut sites line up exactly.</p></div>
+</div>
+<div class="code-block" style="margin-top:14px;"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button><span class="code-comment"># Align, then remove mitochondrial and duplicate reads</span>
+bowtie2 -x genome -1 atac_R1.fq.gz -2 atac_R2.fq.gz -X 2000 -p 8 \
+  | samtools sort -o atac.bam
+samtools index atac.bam
+samtools idxstats atac.bam | cut -f1,3        <span class="code-comment"># how many reads are chrM?</span>
+
+samtools view -b -f 2 -q 30 atac.bam $(samtools idxstats atac.bam | cut -f1 | grep -v -e chrM -e '\*') > atac.nochrM.bam
+picard MarkDuplicates I=atac.nochrM.bam O=atac.dedup.bam M=dup.txt REMOVE_DUPLICATES=true
+
+<span class="code-comment"># Fragment-size distribution (the key QC plot)</span>
+bamPEFragmentSize -b atac.dedup.bam -hist fragment_sizes.png
+
+<span class="code-comment"># Peaks: no input control exists, so call against the local background</span>
+macs3 callpeak -t atac.dedup.bam -f BAMPE -g hs -n atac --outdir peaks/ \
+      -q 0.01 --nomodel --shift -75 --extsize 150</div>
+
+<h3>Quality targets</h3>
+<table class="ref-table">
+  <tr><th>Metric</th><th>Aim for</th></tr>
+  <tr><td>Usable reads after removing chrM and duplicates</td><td>25 million or more for a human sample (50 million for footprinting)</td></tr>
+  <tr><td>TSS enrichment score</td><td>Above 6 (ENCODE); above 10 is good</td></tr>
+  <tr><td>FRiP</td><td>Above 0.2</td></tr>
+  <tr><td>Fragment-size plot</td><td>Visible nucleosome ladder</td></tr>
+</table>
+<p class="sub">The <strong>TSS enrichment score</strong> compares read density at transcription start sites with a flanking background. Promoters are accessible in nearly every cell type, so a flat TSS profile means the experiment did not work, whatever the peak count says.</p>
+
+<h3>What you can ask of the data</h3>
+<ul>
+  <li><strong>Differential accessibility:</strong> count reads in a consensus peak set and test with DESeq2 or csaw, exactly as for gene counts.</li>
+  <li><strong>Motif enrichment:</strong> which transcription factor motifs are over-represented in the regions that opened or closed? chromVAR scores this per sample, HOMER and MEME per peak set.</li>
+  <li><strong>Footprinting:</strong> a bound factor protects a few base pairs from Tn5, leaving a dip inside an otherwise open region. TOBIAS and HINT-ATAC detect these, but only with deep data.</li>
+  <li><strong>Linking enhancers to genes:</strong> accessibility alone does not say which gene a distal peak controls. Correlate with expression across samples, or use Hi-C or similar contact data.</li>
+</ul>
+<div class="info-box tip"><svg class="ico" aria-hidden="true"><use href="#i-tip"></use></svg><div><strong>ATAC-seq or ChIP-seq?</strong> ATAC-seq shows where chromatin is open, without naming the protein responsible. ChIP-seq, CUT&amp;RUN and CUT&amp;Tag show where one named protein sits. A common pairing is ATAC-seq to find the regulatory regions that change, motif analysis to suggest which factors act there, and a targeted CUT&amp;RUN to confirm that one factor.</div></div>
+</div>
+
+<div class="chips" style="margin-top:14px;"><span class="chip">Remove chrM reads first</span><span class="chip">Tn5 shift correction is essential</span><span class="chip">Nucleosomal ladder = good QC</span><span class="chip">No input control needed</span></div>
 
 <!--topic 11.3: DNA Methylation &amp; Bisulfite Sequencing-->
           <p class="sub">DNA methylation — the addition of a methyl group to the 5th carbon of cytosine (5mC) — is the most studied epigenetic modification. In mammals, it occurs predominantly at CpG dinucleotides. Methylation of gene promoters generally silences transcription. It plays critical roles in development, X-chromosome inactivation, genomic imprinting, and cancer (where aberrant methylation is a hallmark).</p>
@@ -124,4 +244,56 @@ bismark2report</div>
 
           <div class="info-box tip"><svg class="ico" aria-hidden="true"><use href="#i-tip"></use></svg><div><strong>Interpreting methylation:</strong> CpG island methylation at promoters = gene silencing. Gene body methylation = correlated with active transcription (paradoxically). Enhancer methylation = generally low at active enhancers. In cancer, look for promoter <strong>hypermethylation</strong> of tumour suppressors and global <strong>hypomethylation</strong> (genomic instability). DMRs (Differentially Methylated Regions) are typically more biologically meaningful than individual CpG changes — use tools like <strong>dmrseq</strong> or <strong>DSS</strong> for DMR calling.</div></div>
 
-          <div class="chips" style="margin-top:14px;"><span class="chip">WGBS = gold standard</span><span class="chip">Bismark for alignment</span><span class="chip">CpG islands at promoters</span><span class="chip">DMRs &gt; individual CpGs</span><span class="chip">Promoter methylation = silencing</span></div>
+          
+<div class="deep">
+<h3>What is being measured, and where</h3>
+<p class="sub">DNA methylation in mammals is a methyl group on the 5-carbon of cytosine, almost always in a <strong>CpG</strong> dinucleotide. Most of the genome's CpGs are methylated. The exceptions matter: <strong>CpG islands</strong>, short CG-rich stretches found at about 60% of human promoters, are usually unmethylated, and methylation there is associated with a silenced gene. In plants, and in mammalian stem cells and brain, methylation also occurs in CHG and CHH contexts, which is why alignment tools report the three contexts separately.</p>
+
+<h3>Reading the result</h3>
+<p class="sub">Methylation at a site is reported as a <strong>beta value</strong>: the proportion of reads at that cytosine that stayed C.</p>
+<div class="code-block">beta = methylated reads / (methylated + unmethylated reads)
+
+<span class="code-comment"># 0.0  every copy unmethylated</span>
+<span class="code-comment"># 0.5  half the copies methylated (or one allele of two)</span>
+<span class="code-comment"># 1.0  every copy methylated</span></div>
+<p class="sub">Because beta values are bounded between 0 and 1, their variance depends on the mean, which breaks ordinary linear models. Many tools therefore use the <strong>M value</strong>, log2(beta / (1 − beta)), for statistics, and report beta values for interpretation.</p>
+
+<h3>Methods compared</h3>
+<table class="ref-table">
+  <tr><th>Method</th><th>Coverage</th><th>Cost</th><th>Best for</th></tr>
+  <tr><td><strong>WGBS</strong> (whole-genome bisulfite)</td><td>Nearly every CpG</td><td>High: needs 30× or more</td><td>Discovery, non-model organisms, distal regulatory regions</td></tr>
+  <tr><td><strong>RRBS</strong> (reduced representation)</td><td>CpG-dense regions, about 10% of CpGs</td><td>Low</td><td>Promoters and islands in many samples</td></tr>
+  <tr><td><strong>EPIC array</strong></td><td>About 935,000 fixed sites (human only)</td><td>Low, very reproducible</td><td>Large human cohorts, clinical studies, epigenetic clocks</td></tr>
+  <tr><td><strong>EM-seq</strong></td><td>Like WGBS</td><td>Moderate</td><td>Enzymatic conversion instead of bisulfite: less DNA damage, more even coverage</td></tr>
+  <tr><td><strong>Nanopore</strong></td><td>Whole genome, long reads</td><td>Moderate</td><td>Methylation and sequence from the same molecule; phasing by allele; no conversion at all</td></tr>
+</table>
+
+<h3>Why the analysis is different</h3>
+<p class="sub">After conversion the two DNA strands are no longer complementary, and most Cs have become Ts. A normal aligner fails. Tools such as <strong>Bismark</strong> handle this by converting both the reads and the reference entirely to Ts in silico, aligning in that reduced alphabet, and then restoring the original bases to score each cytosine.</p>
+<div class="code-block"><button class="copy-code-btn" onclick="copyCode(this)">Copy</button><span class="code-comment"># Prepare the converted reference once per genome</span>
+bismark_genome_preparation --verbose /ref/GRCh38/
+
+<span class="code-comment"># Align, remove duplicates, then extract per-cytosine methylation</span>
+bismark --genome /ref/GRCh38/ -1 sample_R1.fq.gz -2 sample_R2.fq.gz -p 4
+deduplicate_bismark --paired sample_R1_bismark_bt2_pe.bam
+bismark_methylation_extractor --gzip --bedGraph --comprehensive \
+    sample_R1_bismark_bt2_pe.deduplicated.bam
+
+<span class="code-comment"># The report gives the conversion rate: check it before anything else</span>
+bismark2report</div>
+
+<h3>The checks that decide whether the data are usable</h3>
+<ul>
+  <li><strong>Conversion rate.</strong> Unmethylated lambda DNA is spiked in; because it has no methylation, any C still read as C is a conversion failure. Expect above 99%. At 97% conversion, a genuinely unmethylated site appears 3% methylated, which is enough to invent small differences.</li>
+  <li><strong>Coverage per site.</strong> A beta value from 3 reads is almost meaningless. Require at least 5 to 10 reads per cytosine in every sample before testing it.</li>
+  <li><strong>M-bias plot.</strong> Methylation should not depend on the position within the read. A bias at the start or end means the first or last few bases should be trimmed.</li>
+  <li><strong>Mapping rate.</strong> Bisulfite libraries map less well than normal ones; 50 to 70% is typical, not a fault.</li>
+  <li><strong>Cell composition.</strong> In blood or tissue, a change in the mix of cell types shifts methylation genome-wide and mimics a biological effect. Estimate and adjust for cell proportions (for example with the Houseman method) in any human cohort study.</li>
+</ul>
+
+<h3>Finding differences</h3>
+<p class="sub">Single sites are noisy, so most studies look for <strong>differentially methylated regions (DMRs)</strong>: runs of neighbouring CpGs that change together. Tools in common use are <strong>methylKit</strong> and <strong>DSS</strong> (for sequencing data) and <strong>limma</strong> or <strong>minfi</strong> (for arrays). Report the size of the change as well as its p-value: a statistically significant shift of 3% in beta is rarely interesting, whereas a 30% shift across a promoter usually is.</p>
+<div class="info-box note"><svg class="ico" aria-hidden="true"><use href="#i-note"></use></svg><div><strong>Standard bisulfite cannot tell 5mC from 5hmC.</strong> Both survive conversion and read as C. Distinguishing them needs oxidative bisulfite (oxBS-seq), TAB-seq, or a nanopore model trained on both. This matters most in brain and stem cells, where hydroxymethylation is abundant.</div></div>
+</div>
+
+<div class="chips" style="margin-top:14px;"><span class="chip">WGBS = gold standard</span><span class="chip">Bismark for alignment</span><span class="chip">CpG islands at promoters</span><span class="chip">DMRs &gt; individual CpGs</span><span class="chip">Promoter methylation = silencing</span></div>

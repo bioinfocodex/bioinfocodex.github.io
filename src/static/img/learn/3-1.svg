@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 260" width="720" height="260" role="img" font-family="system-ui,-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif">
+<title>The main biological databases grouped by the kind of data they hold</title>
+<rect width="720" height="260" fill="#ffffff"/>
+<text x="360" y="24" font-size="13" fill="#0d1117" text-anchor="middle" font-weight="700">Which database holds what</text>
+<rect x="20" y="44" width="164" height="80" rx="8" fill="#fef3ea" stroke="#e0762a" stroke-width="1.5"/>
+<text x="102" y="87.25" font-size="12.5" fill="#9a4a06" text-anchor="middle" font-weight="600">Raw reads</text>
+<text x="102" y="110" font-size="9.8" fill="#5b6472" text-anchor="middle" font-weight="400">SRA · ENA · DDBJ</text>
+<rect x="192" y="44" width="164" height="80" rx="8" fill="#e7f1fd" stroke="#0969da" stroke-width="1.5"/>
+<text x="274" y="87.25" font-size="12.5" fill="#0a4fa3" text-anchor="middle" font-weight="600">Sequences</text>
+<text x="274" y="110" font-size="9.8" fill="#5b6472" text-anchor="middle" font-weight="400">GenBank · RefSeq</text>
+<rect x="364" y="44" width="164" height="80" rx="8" fill="#e6faf5" stroke="#00a87e" stroke-width="1.5"/>
+<text x="446" y="87.25" font-size="12.5" fill="#01664b" text-anchor="middle" font-weight="600">Genomes + annotation</text>
+<text x="446" y="110" font-size="9.8" fill="#5b6472" text-anchor="middle" font-weight="400">Ensembl · UCSC · NCBI</text>
+<rect x="536" y="44" width="164" height="80" rx="8" fill="#f1eafe" stroke="#7c3aed" stroke-width="1.5"/>
+<text x="618" y="87.25" font-size="12.5" fill="#5b21b6" text-anchor="middle" font-weight="600">Expression</text>
+<text x="618" y="110" font-size="9.8" fill="#5b6472" text-anchor="middle" font-weight="400">GEO · ArrayExpress · GTEx</text>
+<rect x="20" y="140" width="164" height="80" rx="8" fill="#e7f1fd" stroke="#0969da" stroke-width="1.5"/>
+<text x="102" y="183.25" font-size="12.5" fill="#0a4fa3" text-anchor="middle" font-weight="600">Proteins + structures</text>
+<text x="102" y="206" font-size="9.8" fill="#5b6472" text-anchor="middle" font-weight="400">UniProt · PDB · AlphaFold DB</text>
+<rect x="192" y="140" width="164" height="80" rx="8" fill="#feecec" stroke="#e5484d" stroke-width="1.5"/>
+<text x="274" y="183.25" font-size="12.5" fill="#a4262c" text-anchor="middle" font-weight="600">Variants</text>
+<text x="274" y="206" font-size="9.8" fill="#5b6472" text-anchor="middle" font-weight="400">dbSNP · ClinVar · gnomAD</text>
+<rect x="364" y="140" width="164" height="80" rx="8" fill="#e6faf5" stroke="#00a87e" stroke-width="1.5"/>
+<text x="446" y="183.25" font-size="12.5" fill="#01664b" text-anchor="middle" font-weight="600">Function + pathways</text>
+<text x="446" y="206" font-size="9.8" fill="#5b6472" text-anchor="middle" font-weight="400">GO · KEGG · Reactome</text>
+<rect x="536" y="140" width="164" height="80" rx="8" fill="#f6f8fa" stroke="#b6bfca" stroke-width="1.5"/>
+<text x="618" y="183.25" font-size="12.5" fill="#4a5568" text-anchor="middle" font-weight="600">Literature</text>
+<text x="618" y="206" font-size="9.8" fill="#5b6472" text-anchor="middle" font-weight="400">PubMed · Europe PMC</text>
+<text x="360" y="250" font-size="11" fill="#5b6472" text-anchor="middle" font-weight="400">INSDC partners (NCBI, EMBL-EBI, DDBJ) exchange sequence data daily</text>
+</svg>

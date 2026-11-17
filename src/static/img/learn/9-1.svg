@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 260" width="720" height="260" role="img" font-family="system-ui,-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif">
+<title>The bottom-up proteomics workflow with MS1 and MS2 spectra</title>
+<rect width="720" height="260" fill="#ffffff"/>
+<rect x="16" y="18" width="86.2857" height="54" rx="8" fill="#f1eafe" stroke="#7c3aed" stroke-width="1.5"/>
+<text x="59.1429" y="47.75" font-size="11.5" fill="#5b21b6" text-anchor="middle" font-weight="600">Proteins</text>
+<rect x="116.286" y="18" width="86.2857" height="54" rx="8" fill="#fef3ea" stroke="#e0762a" stroke-width="1.5"/>
+<text x="159.429" y="40" font-size="11.5" fill="#9a4a06" text-anchor="middle" font-weight="600">Trypsin</text>
+<text x="159.429" y="55.5" font-size="11.5" fill="#9a4a06" text-anchor="middle" font-weight="600">digest</text>
+<line x1="105.286" y1="45" x2="105.286" y2="45" stroke="#8b95a3" stroke-width="1.6" stroke-linecap="round"/>
+<polygon points="113.3,45.0 105.3,40.5 105.3,49.5" fill="#8b95a3"/>
+<rect x="216.571" y="18" width="86.2857" height="54" rx="8" fill="#e7f1fd" stroke="#0969da" stroke-width="1.5"/>
+<text x="259.714" y="40" font-size="11.5" fill="#0a4fa3" text-anchor="middle" font-weight="600">LC</text>
+<text x="259.714" y="55.5" font-size="11.5" fill="#0a4fa3" text-anchor="middle" font-weight="600">separation</text>
+<line x1="205.571" y1="45" x2="205.571" y2="45" stroke="#8b95a3" stroke-width="1.6" stroke-linecap="round"/>
+<polygon points="213.6,45.0 205.6,40.5 205.6,49.5" fill="#8b95a3"/>
+<rect x="316.857" y="18" width="86.2857" height="54" rx="8" fill="#e7f1fd" stroke="#0969da" stroke-width="1.5"/>
+<text x="360" y="40" font-size="11.5" fill="#0a4fa3" text-anchor="middle" font-weight="600">Ionise</text>
+<text x="360" y="55.5" font-size="11.5" fill="#0a4fa3" text-anchor="middle" font-weight="600">(ESI)</text>
+<line x1="305.857" y1="45" x2="305.857" y2="45" stroke="#8b95a3" stroke-width="1.6" stroke-linecap="round"/>
+<polygon points="313.9,45.0 305.9,40.5 305.9,49.5" fill="#8b95a3"/>
+<rect x="417.143" y="18" width="86.2857" height="54" rx="8" fill="#e6faf5" stroke="#00a87e" stroke-width="1.5"/>
+<text x="460.286" y="40" font-size="11.5" fill="#01664b" text-anchor="middle" font-weight="600">MS1</text>
+<text x="460.286" y="55.5" font-size="9.5" fill="#5b6472" text-anchor="middle" font-weight="400">peptide m/z</text>
+<line x1="406.143" y1="45" x2="406.143" y2="45" stroke="#8b95a3" stroke-width="1.6" stroke-linecap="round"/>
+<polygon points="414.1,45.0 406.1,40.5 406.1,49.5" fill="#8b95a3"/>
+<rect x="517.429" y="18" width="86.2857" height="54" rx="8" fill="#fef3ea" stroke="#e0762a" stroke-width="1.5"/>
+<text x="560.571" y="47.75" font-size="11.5" fill="#9a4a06" text-anchor="middle" font-weight="600">Fragment</text>
+<line x1="506.429" y1="45" x2="506.429" y2="45" stroke="#8b95a3" stroke-width="1.6" stroke-linecap="round"/>
+<polygon points="514.4,45.0 506.4,40.5 506.4,49.5" fill="#8b95a3"/>
+<rect x="617.714" y="18" width="86.2857" height="54" rx="8" fill="#e6faf5" stroke="#00a87e" stroke-width="1.5"/>
+<text x="660.857" y="40" font-size="11.5" fill="#01664b" text-anchor="middle" font-weight="600">MS2</text>
+<text x="660.857" y="55.5" font-size="9.5" fill="#5b6472" text-anchor="middle" font-weight="400">fragment m/z</text>
+<line x1="606.714" y1="45" x2="606.714" y2="45" stroke="#8b95a3" stroke-width="1.6" stroke-linecap="round"/>
+<polygon points="614.7,45.0 606.7,40.5 606.7,49.5" fill="#8b95a3"/>
+<text x="190" y="108" font-size="12" fill="#0d1117" text-anchor="middle" font-weight="700">MS1: intact peptides</text>
+<line x1="50" y1="220" x2="330" y2="220" stroke="#0d1117" stroke-width="1.3" stroke-linecap="round"/>
+<line x1="50" y1="120" x2="50" y2="220" stroke="#0d1117" stroke-width="1.3" stroke-linecap="round"/>
+<line x1="90" y1="220" x2="90" y2="190" stroke="#0969da" stroke-width="2.4" stroke-linecap="round"/>
+<line x1="138" y1="220" x2="138" y2="134" stroke="#0969da" stroke-width="2.4" stroke-linecap="round"/>
+<line x1="146" y1="220" x2="146" y2="176" stroke="#0969da" stroke-width="2.4" stroke-linecap="round"/>
+<line x1="200" y1="220" x2="200" y2="168" stroke="#0969da" stroke-width="2.4" stroke-linecap="round"/>
+<line x1="255" y1="220" x2="255" y2="198" stroke="#0969da" stroke-width="2.4" stroke-linecap="round"/>
+<line x1="290" y1="220" x2="290" y2="182" stroke="#0969da" stroke-width="2.4" stroke-linecap="round"/>
+<text x="190" y="238" font-size="10.5" fill="#5b6472" text-anchor="middle" font-weight="400">m/z</text>
+<text x="40" y="170" font-size="10.5" fill="#5b6472" text-anchor="middle" font-weight="400" transform="rotate(-90 40 170)">intensity</text>
+<text x="540" y="108" font-size="12" fill="#0d1117" text-anchor="middle" font-weight="700">MS2: fragments of one peptide</text>
+<line x1="400" y1="220" x2="680" y2="220" stroke="#0d1117" stroke-width="1.3" stroke-linecap="round"/>
+<line x1="400" y1="120" x2="400" y2="220" stroke="#0d1117" stroke-width="1.3" stroke-linecap="round"/>
+<line x1="424" y1="220" x2="424" y2="192" stroke="#00a87e" stroke-width="2.4" stroke-linecap="round"/>
+<line x1="452" y1="220" x2="452" y2="170" stroke="#00a87e" stroke-width="2.4" stroke-linecap="round"/>
+<line x1="484" y1="220" x2="484" y2="184" stroke="#00a87e" stroke-width="2.4" stroke-linecap="round"/>
+<line x1="512" y1="220" x2="512" y2="140" stroke="#00a87e" stroke-width="2.4" stroke-linecap="round"/>
+<line x1="544" y1="220" x2="544" y2="162" stroke="#00a87e" stroke-width="2.4" stroke-linecap="round"/>
+<line x1="576" y1="220" x2="576" y2="180" stroke="#00a87e" stroke-width="2.4" stroke-linecap="round"/>
+<line x1="610" y1="220" x2="610" y2="154" stroke="#00a87e" stroke-width="2.4" stroke-linecap="round"/>
+<line x1="646" y1="220" x2="646" y2="196" stroke="#00a87e" stroke-width="2.4" stroke-linecap="round"/>
+<text x="540" y="238" font-size="10.5" fill="#5b6472" text-anchor="middle" font-weight="400">m/z</text>
+<text x="390" y="170" font-size="10.5" fill="#5b6472" text-anchor="middle" font-weight="400" transform="rotate(-90 390 170)">intensity</text>
+<line x1="140" y1="126" x2="140" y2="126" stroke="#e0762a" stroke-width="1.6" stroke-linecap="round"/>
+<polygon points="140.0,134.0 144.5,126.0 135.5,126.0" fill="#e0762a"/>
+<path d="M140 124 C200 96 330 100 396 150" fill="none" stroke="#e0762a" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4 4"/>
+<text x="300" y="130" font-size="10.5" fill="#9a4a06" text-anchor="middle" font-weight="400">select one, fragment it</text>
+</svg>

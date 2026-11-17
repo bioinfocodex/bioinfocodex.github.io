@@ -1,0 +1,110 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 250" width="720" height="250" role="img" font-family="system-ui,-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif">
+<title>Droplet-based single-cell RNA-seq from tissue to clusters</title>
+<rect width="720" height="250" fill="#ffffff"/>
+<rect x="16" y="20" width="101.333" height="50" rx="8" fill="#fef3ea" stroke="#e0762a" stroke-width="1.5"/>
+<text x="66.6667" y="47.9" font-size="11.8" fill="#9a4a06" text-anchor="middle" font-weight="600">Tissue</text>
+<rect x="133.333" y="20" width="101.333" height="50" rx="8" fill="#fef3ea" stroke="#e0762a" stroke-width="1.5"/>
+<text x="184" y="40" font-size="11.8" fill="#9a4a06" text-anchor="middle" font-weight="600">Single cells</text>
+<text x="184" y="55.8" font-size="9.8" fill="#5b6472" text-anchor="middle" font-weight="400">suspension</text>
+<line x1="120.333" y1="45" x2="122.333" y2="45" stroke="#8b95a3" stroke-width="1.6" stroke-linecap="round"/>
+<polygon points="130.3,45.0 122.3,40.5 122.3,49.5" fill="#8b95a3"/>
+<rect x="250.667" y="20" width="101.333" height="50" rx="8" fill="#e7f1fd" stroke="#0969da" stroke-width="1.5"/>
+<text x="301.333" y="40" font-size="11.8" fill="#0a4fa3" text-anchor="middle" font-weight="600">Droplets</text>
+<text x="301.333" y="55.8" font-size="9.8" fill="#5b6472" text-anchor="middle" font-weight="400">cell + bead</text>
+<line x1="237.667" y1="45" x2="239.667" y2="45" stroke="#8b95a3" stroke-width="1.6" stroke-linecap="round"/>
+<polygon points="247.7,45.0 239.7,40.5 239.7,49.5" fill="#8b95a3"/>
+<rect x="368" y="20" width="101.333" height="50" rx="8" fill="#e7f1fd" stroke="#0969da" stroke-width="1.5"/>
+<text x="418.667" y="40" font-size="11.8" fill="#0a4fa3" text-anchor="middle" font-weight="600">Library</text>
+<text x="418.667" y="55.8" font-size="9.8" fill="#5b6472" text-anchor="middle" font-weight="400">barcoded cDNA</text>
+<line x1="355" y1="45" x2="357" y2="45" stroke="#8b95a3" stroke-width="1.6" stroke-linecap="round"/>
+<polygon points="365.0,45.0 357.0,40.5 357.0,49.5" fill="#8b95a3"/>
+<rect x="485.333" y="20" width="101.333" height="50" rx="8" fill="#f1eafe" stroke="#7c3aed" stroke-width="1.5"/>
+<text x="536" y="47.9" font-size="11.8" fill="#5b21b6" text-anchor="middle" font-weight="600">Sequencing</text>
+<line x1="472.333" y1="45" x2="474.333" y2="45" stroke="#8b95a3" stroke-width="1.6" stroke-linecap="round"/>
+<polygon points="482.3,45.0 474.3,40.5 474.3,49.5" fill="#8b95a3"/>
+<rect x="602.667" y="20" width="101.333" height="50" rx="8" fill="#e6faf5" stroke="#00a87e" stroke-width="1.5"/>
+<text x="653.333" y="40" font-size="11.8" fill="#01664b" text-anchor="middle" font-weight="600">Count matrix</text>
+<text x="653.333" y="55.8" font-size="9.8" fill="#5b6472" text-anchor="middle" font-weight="400">cells × genes</text>
+<line x1="589.667" y1="45" x2="591.667" y2="45" stroke="#8b95a3" stroke-width="1.6" stroke-linecap="round"/>
+<polygon points="599.7,45.0 591.7,40.5 591.7,49.5" fill="#8b95a3"/>
+<text x="180" y="104" font-size="12" fill="#0d1117" text-anchor="middle" font-weight="700">Inside one droplet</text>
+<circle cx="110" cy="170" r="52" fill="#e7f1fd" stroke="#0969da" stroke-width="1.5"/>
+<circle cx="92" cy="172" r="20" fill="#fef3ea" stroke="#e0762a" stroke-width="1.5"/>
+<text x="92" y="176" font-size="10.5" fill="#9a4a06" text-anchor="middle" font-weight="400">cell</text>
+<circle cx="134" cy="166" r="15" fill="#f1eafe" stroke="#7c3aed" stroke-width="1.5"/>
+<text x="134" y="170" font-size="9.5" fill="#5b21b6" text-anchor="middle" font-weight="400">bead</text>
+<rect x="196" y="152" width="70" height="30" rx="3" fill="#f1eafe" stroke="#7c3aed" stroke-width="1.5"/>
+<text x="231" y="171" font-size="10.5" fill="#5b21b6" text-anchor="middle" font-weight="600">cell barcode</text>
+<rect x="266" y="152" width="50" height="30" rx="3" fill="#fef3ea" stroke="#e0762a" stroke-width="1.5"/>
+<text x="291" y="171" font-size="10.5" fill="#9a4a06" text-anchor="middle" font-weight="600">UMI</text>
+<rect x="316" y="152" width="60" height="30" rx="3" fill="#f6f8fa" stroke="#b6bfca" stroke-width="1.5"/>
+<text x="346" y="171" font-size="10.5" fill="#4a5568" text-anchor="middle" font-weight="600">poly-T</text>
+<rect x="376" y="152" width="90" height="30" rx="3" fill="#e6faf5" stroke="#00a87e" stroke-width="1.5"/>
+<text x="421" y="171" font-size="10.5" fill="#01664b" text-anchor="middle" font-weight="600">cDNA</text>
+<text x="331" y="204" font-size="10.5" fill="#5b6472" text-anchor="middle" font-weight="400">barcode says which cell; UMI says which original molecule</text>
+<circle cx="563.05" cy="141.775" r="2.4" fill="#0969da" opacity="0.8"/>
+<circle cx="552.256" cy="166.076" r="2.4" fill="#0969da" opacity="0.8"/>
+<circle cx="551.687" cy="159.941" r="2.4" fill="#0969da" opacity="0.8"/>
+<circle cx="562.31" cy="157.557" r="2.4" fill="#0969da" opacity="0.8"/>
+<circle cx="581.738" cy="153.296" r="2.4" fill="#0969da" opacity="0.8"/>
+<circle cx="578.602" cy="154.96" r="2.4" fill="#0969da" opacity="0.8"/>
+<circle cx="568.591" cy="155.07" r="2.4" fill="#0969da" opacity="0.8"/>
+<circle cx="553.095" cy="150.625" r="2.4" fill="#0969da" opacity="0.8"/>
+<circle cx="576.595" cy="134.023" r="2.4" fill="#0969da" opacity="0.8"/>
+<circle cx="581.061" cy="158.336" r="2.4" fill="#0969da" opacity="0.8"/>
+<circle cx="564.963" cy="158.83" r="2.4" fill="#0969da" opacity="0.8"/>
+<circle cx="551.721" cy="157.082" r="2.4" fill="#0969da" opacity="0.8"/>
+<circle cx="573.923" cy="142.178" r="2.4" fill="#0969da" opacity="0.8"/>
+<circle cx="573.947" cy="138.854" r="2.4" fill="#0969da" opacity="0.8"/>
+<circle cx="541.265" cy="141.021" r="2.4" fill="#0969da" opacity="0.8"/>
+<circle cx="564.171" cy="140.456" r="2.4" fill="#0969da" opacity="0.8"/>
+<circle cx="605.383" cy="206.418" r="2.4" fill="#00a87e" opacity="0.8"/>
+<circle cx="633.605" cy="196.243" r="2.4" fill="#00a87e" opacity="0.8"/>
+<circle cx="636.956" cy="179.405" r="2.4" fill="#00a87e" opacity="0.8"/>
+<circle cx="609.911" cy="191.727" r="2.4" fill="#00a87e" opacity="0.8"/>
+<circle cx="607.387" cy="176.327" r="2.4" fill="#00a87e" opacity="0.8"/>
+<circle cx="598.436" cy="182.998" r="2.4" fill="#00a87e" opacity="0.8"/>
+<circle cx="620.124" cy="206.074" r="2.4" fill="#00a87e" opacity="0.8"/>
+<circle cx="606.151" cy="193.884" r="2.4" fill="#00a87e" opacity="0.8"/>
+<circle cx="628.987" cy="206.659" r="2.4" fill="#00a87e" opacity="0.8"/>
+<circle cx="605.403" cy="191.801" r="2.4" fill="#00a87e" opacity="0.8"/>
+<circle cx="609.633" cy="183.568" r="2.4" fill="#00a87e" opacity="0.8"/>
+<circle cx="604.616" cy="188.225" r="2.4" fill="#00a87e" opacity="0.8"/>
+<circle cx="632.269" cy="191.33" r="2.4" fill="#00a87e" opacity="0.8"/>
+<circle cx="603.057" cy="196.709" r="2.4" fill="#00a87e" opacity="0.8"/>
+<circle cx="641.761" cy="182.739" r="2.4" fill="#00a87e" opacity="0.8"/>
+<circle cx="620.807" cy="200.417" r="2.4" fill="#00a87e" opacity="0.8"/>
+<circle cx="639.239" cy="115.16" r="2.4" fill="#e0762a" opacity="0.8"/>
+<circle cx="651.042" cy="136.075" r="2.4" fill="#e0762a" opacity="0.8"/>
+<circle cx="671.342" cy="120.372" r="2.4" fill="#e0762a" opacity="0.8"/>
+<circle cx="633.768" cy="134.3" r="2.4" fill="#e0762a" opacity="0.8"/>
+<circle cx="641.218" cy="117.365" r="2.4" fill="#e0762a" opacity="0.8"/>
+<circle cx="630.119" cy="115.236" r="2.4" fill="#e0762a" opacity="0.8"/>
+<circle cx="643.405" cy="126.551" r="2.4" fill="#e0762a" opacity="0.8"/>
+<circle cx="656.355" cy="125.438" r="2.4" fill="#e0762a" opacity="0.8"/>
+<circle cx="648.728" cy="120.801" r="2.4" fill="#e0762a" opacity="0.8"/>
+<circle cx="664.678" cy="140.937" r="2.4" fill="#e0762a" opacity="0.8"/>
+<circle cx="661.316" cy="137.774" r="2.4" fill="#e0762a" opacity="0.8"/>
+<circle cx="637.995" cy="120.428" r="2.4" fill="#e0762a" opacity="0.8"/>
+<circle cx="633.888" cy="124.951" r="2.4" fill="#e0762a" opacity="0.8"/>
+<circle cx="645.752" cy="145.513" r="2.4" fill="#e0762a" opacity="0.8"/>
+<circle cx="651.416" cy="119.823" r="2.4" fill="#e0762a" opacity="0.8"/>
+<circle cx="655.958" cy="119.949" r="2.4" fill="#e0762a" opacity="0.8"/>
+<circle cx="569.3" cy="204.674" r="2.4" fill="#7c3aed" opacity="0.8"/>
+<circle cx="598.537" cy="192.818" r="2.4" fill="#7c3aed" opacity="0.8"/>
+<circle cx="564.168" cy="200.381" r="2.4" fill="#7c3aed" opacity="0.8"/>
+<circle cx="587.119" cy="195.576" r="2.4" fill="#7c3aed" opacity="0.8"/>
+<circle cx="583.443" cy="208.693" r="2.4" fill="#7c3aed" opacity="0.8"/>
+<circle cx="594.404" cy="213.906" r="2.4" fill="#7c3aed" opacity="0.8"/>
+<circle cx="559.788" cy="195.397" r="2.4" fill="#7c3aed" opacity="0.8"/>
+<circle cx="600.223" cy="206.324" r="2.4" fill="#7c3aed" opacity="0.8"/>
+<circle cx="564.56" cy="199.838" r="2.4" fill="#7c3aed" opacity="0.8"/>
+<circle cx="595.416" cy="212.458" r="2.4" fill="#7c3aed" opacity="0.8"/>
+<circle cx="598.395" cy="217.205" r="2.4" fill="#7c3aed" opacity="0.8"/>
+<circle cx="568.656" cy="222.96" r="2.4" fill="#7c3aed" opacity="0.8"/>
+<circle cx="569.053" cy="213.04" r="2.4" fill="#7c3aed" opacity="0.8"/>
+<circle cx="575.345" cy="195.965" r="2.4" fill="#7c3aed" opacity="0.8"/>
+<circle cx="570.646" cy="192.391" r="2.4" fill="#7c3aed" opacity="0.8"/>
+<circle cx="595.704" cy="202.056" r="2.4" fill="#7c3aed" opacity="0.8"/>
+<text x="606" y="104" font-size="12" fill="#0d1117" text-anchor="middle" font-weight="700">Clusters = cell types</text>
+</svg>

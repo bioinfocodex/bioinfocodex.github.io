@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 250" width="720" height="250" role="img" font-family="system-ui,-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif">
+<title>A molecular docking workflow</title>
+<rect width="720" height="250" fill="#ffffff"/>
+<rect x="16" y="26" width="150" height="50" rx="8" fill="#e7f1fd" stroke="#0969da" stroke-width="1.5"/>
+<text x="91" y="46" font-size="13" fill="#0a4fa3" text-anchor="middle" font-weight="600">Receptor</text>
+<text x="91" y="63" font-size="11" fill="#5b6472" text-anchor="middle" font-weight="400">add H, charges</text>
+<rect x="16" y="96" width="150" height="50" rx="8" fill="#fef3ea" stroke="#e0762a" stroke-width="1.5"/>
+<text x="91" y="116" font-size="13" fill="#9a4a06" text-anchor="middle" font-weight="600">Ligand</text>
+<text x="91" y="133" font-size="11" fill="#5b6472" text-anchor="middle" font-weight="400">3D, protonation</text>
+<rect x="200" y="56" width="112.5" height="60" rx="8" fill="#f1eafe" stroke="#7c3aed" stroke-width="1.5"/>
+<text x="256.25" y="81" font-size="12" fill="#5b21b6" text-anchor="middle" font-weight="600">Define</text>
+<text x="256.25" y="97" font-size="12" fill="#5b21b6" text-anchor="middle" font-weight="600">search box</text>
+<rect x="330.5" y="56" width="112.5" height="60" rx="8" fill="#f1eafe" stroke="#7c3aed" stroke-width="1.5"/>
+<text x="386.75" y="81" font-size="12" fill="#5b21b6" text-anchor="middle" font-weight="600">Sample</text>
+<text x="386.75" y="97" font-size="12" fill="#5b21b6" text-anchor="middle" font-weight="600">poses</text>
+<line x1="315.5" y1="86" x2="319.5" y2="86" stroke="#8b95a3" stroke-width="1.6" stroke-linecap="round"/>
+<polygon points="327.5,86.0 319.5,81.5 319.5,90.5" fill="#8b95a3"/>
+<rect x="461" y="56" width="112.5" height="60" rx="8" fill="#e6faf5" stroke="#00a87e" stroke-width="1.5"/>
+<text x="517.25" y="81" font-size="12" fill="#01664b" text-anchor="middle" font-weight="600">Score</text>
+<text x="517.25" y="97" font-size="10" fill="#5b6472" text-anchor="middle" font-weight="400">kcal/mol</text>
+<line x1="446" y1="86" x2="450" y2="86" stroke="#8b95a3" stroke-width="1.6" stroke-linecap="round"/>
+<polygon points="458.0,86.0 450.0,81.5 450.0,90.5" fill="#8b95a3"/>
+<rect x="591.5" y="56" width="112.5" height="60" rx="8" fill="#e6faf5" stroke="#00a87e" stroke-width="1.5"/>
+<text x="647.75" y="81" font-size="12" fill="#01664b" text-anchor="middle" font-weight="600">Rank</text>
+<text x="647.75" y="97" font-size="10" fill="#5b6472" text-anchor="middle" font-weight="400">top poses</text>
+<line x1="576.5" y1="86" x2="580.5" y2="86" stroke="#8b95a3" stroke-width="1.6" stroke-linecap="round"/>
+<polygon points="588.5,86.0 580.5,81.5 580.5,90.5" fill="#8b95a3"/>
+<line x1="168" y1="51" x2="192.054" y2="72.6483" stroke="#8b95a3" stroke-width="1.6" stroke-linecap="round"/>
+<polygon points="198.0,78.0 195.1,69.3 189.0,76.0" fill="#8b95a3"/>
+<line x1="168" y1="121" x2="192.054" y2="99.3517" stroke="#8b95a3" stroke-width="1.6" stroke-linecap="round"/>
+<polygon points="198.0,94.0 189.0,96.0 195.1,102.7" fill="#8b95a3"/>
+<rect x="60" y="168" width="130" height="68" rx="8" fill="#e7f1fd" stroke="#0969da" stroke-width="1.5"/>
+<path d="M92 168 C92 200 158 200 158 168" fill="#ffffff" stroke="#0969da" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+<polygon points="112,172 138,172 148,188 125,200 102,188" fill="#fef3ea" stroke="#e0762a" stroke-width="1.5"/>
+<rect x="84" y="160" width="82" height="48" rx="2" fill="none" stroke="#7c3aed" stroke-width="1.5" stroke-dasharray="4 3"/>
+<text x="125" y="228" font-size="10.5" fill="#0a4fa3" text-anchor="middle" font-weight="400">binding pocket</text>
+<text x="210" y="184" font-size="10.5" fill="#5b21b6" text-anchor="start" font-weight="400">dashed box = search space</text>
+<text x="540" y="176" font-size="11.5" fill="#0d1117" text-anchor="middle" font-weight="700">Validate before trusting a score:</text>
+<text x="540" y="196" font-size="11" fill="#5b6472" text-anchor="middle" font-weight="400">re-dock the known ligand (RMSD under 2 Å), compare with</text>
+<text x="540" y="212" font-size="11" fill="#5b6472" text-anchor="middle" font-weight="400">known binders and decoys, then test the best in the lab</text>
+</svg>

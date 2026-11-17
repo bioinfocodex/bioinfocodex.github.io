@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 240" width="720" height="240" role="img" font-family="system-ui,-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif">
+<title>How the common file formats connect in a sequencing analysis</title>
+<rect width="720" height="240" fill="#ffffff"/>
+<rect x="40" y="40" width="140" height="62" rx="8" fill="#fef3ea" stroke="#e0762a" stroke-width="1.5"/>
+<text x="110" y="66" font-size="12.5" fill="#9a4a06" text-anchor="middle" font-weight="600">FASTQ</text>
+<text x="110" y="82.5" font-size="10.5" fill="#5b6472" text-anchor="middle" font-weight="400">reads + qualities</text>
+<rect x="290" y="40" width="140" height="62" rx="8" fill="#e7f1fd" stroke="#0969da" stroke-width="1.5"/>
+<text x="360" y="66" font-size="12.5" fill="#0a4fa3" text-anchor="middle" font-weight="600">SAM / BAM</text>
+<text x="360" y="82.5" font-size="10.5" fill="#5b6472" text-anchor="middle" font-weight="400">reads on the genome</text>
+<line x1="183" y1="71" x2="279" y2="71" stroke="#8b95a3" stroke-width="1.6" stroke-linecap="round"/>
+<polygon points="287.0,71.0 279.0,66.5 279.0,75.5" fill="#8b95a3"/>
+<rect x="540" y="40" width="140" height="62" rx="8" fill="#feecec" stroke="#e5484d" stroke-width="1.5"/>
+<text x="610" y="66" font-size="12.5" fill="#a4262c" text-anchor="middle" font-weight="600">VCF</text>
+<text x="610" y="82.5" font-size="10.5" fill="#5b6472" text-anchor="middle" font-weight="400">variants vs reference</text>
+<line x1="433" y1="71" x2="529" y2="71" stroke="#8b95a3" stroke-width="1.6" stroke-linecap="round"/>
+<polygon points="537.0,71.0 529.0,66.5 529.0,75.5" fill="#8b95a3"/>
+<text x="235" y="62" font-size="11" fill="#5b6472" text-anchor="middle" font-weight="400">align</text>
+<text x="485" y="62" font-size="11" fill="#5b6472" text-anchor="middle" font-weight="400">call variants</text>
+<rect x="30" y="150" width="150" height="54" rx="8" fill="#e6faf5" stroke="#00a87e" stroke-width="1.5"/>
+<text x="105" y="172" font-size="13" fill="#01664b" text-anchor="middle" font-weight="600">FASTA</text>
+<text x="105" y="189" font-size="11" fill="#5b6472" text-anchor="middle" font-weight="400">reference sequence</text>
+<rect x="210" y="150" width="150" height="54" rx="8" fill="#f1eafe" stroke="#7c3aed" stroke-width="1.5"/>
+<text x="285" y="172" font-size="13" fill="#5b21b6" text-anchor="middle" font-weight="600">GTF / GFF</text>
+<text x="285" y="189" font-size="11" fill="#5b6472" text-anchor="middle" font-weight="400">where the genes are</text>
+<rect x="450" y="150" width="150" height="54" rx="8" fill="#e6faf5" stroke="#00a87e" stroke-width="1.5"/>
+<text x="525" y="172" font-size="13" fill="#01664b" text-anchor="middle" font-weight="600">Counts table</text>
+<text x="525" y="189" font-size="11" fill="#5b6472" text-anchor="middle" font-weight="400">reads per gene</text>
+<line x1="105" y1="150" x2="292.214" y2="105.837" stroke="#8b95a3" stroke-width="1.6" stroke-linecap="round" stroke-dasharray="4 4"/>
+<polygon points="300.0,104.0 291.2,101.5 293.2,110.2" fill="#8b95a3"/>
+<line x1="285" y1="150" x2="343.47" y2="108.621" stroke="#8b95a3" stroke-width="1.6" stroke-linecap="round" stroke-dasharray="4 4"/>
+<polygon points="350.0,104.0 340.9,104.9 346.1,112.3" fill="#8b95a3"/>
+<line x1="370" y1="104" x2="492.458" y2="147.331" stroke="#8b95a3" stroke-width="1.6" stroke-linecap="round"/>
+<polygon points="500.0,150.0 494.0,143.1 491.0,151.6" fill="#8b95a3"/>
+<text x="455" y="122" font-size="11" fill="#5b6472" text-anchor="middle" font-weight="400">count</text>
+<text x="190" y="226" font-size="11" fill="#5b6472" text-anchor="middle" font-weight="400">reference files (dashed) are inputs to alignment and counting</text>
+</svg>
